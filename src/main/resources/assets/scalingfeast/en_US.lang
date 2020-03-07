@@ -1,3 +1,5 @@
-enchantment.scalingfeast.fasting.name=Fasting
+enchantment.scalingfeast.fasting=Fasting
+enchantment.scalingfeast.gluttony=Gluttony
 
 enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10% per level.
+enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level.

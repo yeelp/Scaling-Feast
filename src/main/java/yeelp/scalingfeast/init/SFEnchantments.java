@@ -16,12 +16,14 @@ import yeelp.scalingfeast.enchantments.*;
 public class SFEnchantments 
 {
 	public static Enchantment fasting;
+	public static Enchantment gluttony;
 	
 	@SubscribeEvent
 	public void registerEnchantments(RegistryEvent.Register<Enchantment> event)
 	{
 		fasting = new EnchantmentFasting();
-		
+		gluttony = new EnchantmentGluttony();
 		event.getRegistry().register(fasting);
+		event.getRegistry().register(gluttony);
 	}
 }
