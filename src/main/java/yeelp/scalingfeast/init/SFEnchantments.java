@@ -17,13 +17,16 @@ public class SFEnchantments
 {
 	public static Enchantment fasting;
 	public static Enchantment gluttony;
+	public static Enchantment famine;
 	
 	@SubscribeEvent
 	public void registerEnchantments(RegistryEvent.Register<Enchantment> event)
 	{
 		fasting = new EnchantmentFasting();
 		gluttony = new EnchantmentGluttony();
+		famine = new EnchantmentFamine();
 		event.getRegistry().register(fasting);
 		event.getRegistry().register(gluttony);
+		event.getRegistry().register(famine);
 	}
 }

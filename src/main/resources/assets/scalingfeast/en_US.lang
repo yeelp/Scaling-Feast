@@ -1,5 +1,7 @@
-enchantment.scalingfeast.fasting=Fasting
-enchantment.scalingfeast.gluttony=Gluttony
+enchantment.fasting=Fasting
+enchantment.gluttony=Gluttony
+enchantment.famine=Famine
 
 enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10% per level.
 enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level.
+enchantment.scalingfeast.famine.desc=Severely drains hunger from a target struck with this enchantment. Also applies a weakness debuff. The strength of these effects depend on the enchantment level.
