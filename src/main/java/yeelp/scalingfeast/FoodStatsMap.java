@@ -58,6 +58,15 @@ public class FoodStatsMap
 		map.put(player, fs);
 	}
 	/**
+	 * Does the map contain a specified player?
+	 * @param player The UUID of the player to check for
+	 * @return true if the player is tracked in the map, false otherwise.
+	 */
+	public static boolean hasPlayer(UUID player)
+	{
+		return map.containsKey(player);
+	}
+	/**
 	 * Get the extra food levels the stat map provides a player
 	 * @param player The UUID of the player
 	 * @return The extra food level the stat map gives this player
@@ -183,5 +192,54 @@ public class FoodStatsMap
 	public static void increaseMax(UUID player)
 	{
 		map.get(player).setMax((short) (map.get(player).getMaxFoodLevel() + incInterval));
+	}
+	/**
+	 * Consume a point of saturation. This method will never set extra saturation to a negative number.
+	 * @param player the player to target
+	 * @param amount The amount of saturation to consume
+	 * @return The amount of saturation consumed
+	 */
+	public static float consumeSat(UUID player, float amount)
+	{
+		float sat = map.get(player).getSatLevel();
+		if(sat < amount)
+		{
+			map.get(player).setSatLevel(0);
+			return sat;
+		}
+		else
+		{
+			map.get(player).setSatLevel(sat - amount);
+			return amount;
+		}
+	}
+	/**
+	 * Consume a point of hunger. This method checks if a player's extra foodLevel is non-zero before deducting.
+	 * @param player the player to target
+	 * @return The amount of food consumed
+	 */
+	public static int consumeFood(UUID player, int amount)
+	{
+		short food = map.get(player).getFoodLevel();
+		if(food < amount)
+		{
+			map.get(player).setFoodLevel((short) 0);
+			return food;
+		}
+		else
+		{
+			map.get(player).setFoodLevel((short) (food - amount));
+			return amount;
+		}
+	}
+	/**
+	 * Does this player have non-zero food stats? This method only needs to check that this player's extra food level is
+	 * greater than zero. It follows immediately that saturation must be zero if the food level is zero from the cap on saturation
+	 * @param player The player to target
+	 * @return true if this player's extra food level is greater than zero, false otherwise
+	 */
+	public static boolean hasStats(UUID player)
+	{
+		return map.get(player).getFoodLevel() > 0;
 	}
 }
