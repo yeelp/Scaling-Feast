@@ -14,9 +14,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
-import yeelp.scalingfeast.FoodStatsMap;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.util.FoodStatsMap;
 
 public class EnchantmentHandler 
 {

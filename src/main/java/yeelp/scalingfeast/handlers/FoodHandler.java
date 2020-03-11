@@ -18,11 +18,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
-import yeelp.scalingfeast.ExtendedFoodStats;
-import yeelp.scalingfeast.FoodStatsMap;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.util.ExtendedFoodStats;
+import yeelp.scalingfeast.util.FoodStatsMap;
 
 public class FoodHandler {
 	

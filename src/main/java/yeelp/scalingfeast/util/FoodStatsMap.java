@@ -1,4 +1,4 @@
-package yeelp.scalingfeast;
+package yeelp.scalingfeast.util;
 
 import java.util.Collections;
 import java.util.Map;
@@ -92,6 +92,15 @@ public class FoodStatsMap
 	public static short getMaxFoodLevel(UUID player)
 	{
 		return map.get(player).getMaxFoodLevel();
+	}
+	/**
+	 * Get the ExtendedFoodStats container for this player
+	 * @param player the UUID of the player
+	 * @return An ExtendedFoodStats container for this player
+	 */
+	public static ExtendedFoodStats getExtendedFoodStats(UUID player)
+	{
+		return map.get(player);
 	}
 	/**
 	 * Get the maximum extra food level any player can ever have. This method returns -1 if there is no such cap.

@@ -15,6 +15,7 @@ import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.util.FoodStatsMap;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;

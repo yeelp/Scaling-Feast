@@ -8,9 +8,9 @@
   "url": "",
   "updateUrl": "",
   "authorList": ["Yeelp"],
-  "credits": "",
-  "logoFile": "",
+  "credits": "SilentChaos512 for inspiration, and the wonderful team behind AppleCore",
+  "logoFile": "assets/scalingfeast/images/banner.png",
   "screenshots": [],
-  "dependencies": ["AppleCore"]
+  "dependencies": []
 }
 ]

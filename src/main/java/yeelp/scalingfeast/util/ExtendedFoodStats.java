@@ -1,4 +1,4 @@
-package yeelp.scalingfeast;
+package yeelp.scalingfeast.util;
 
 /**
  * A container to hold extended food values. This is mainly a sanity check to ensure that FoodStatsMap syncs entries, so to speak
