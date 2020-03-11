@@ -8,11 +8,14 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
+import yeelp.scalingfeast.FoodStatsMap;
+import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
 
 public class EnchantmentHandler 
@@ -60,6 +63,32 @@ public class EnchantmentHandler
 					entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, hduration, 50));
 				}
 				entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 15*20,  wlevel));
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onEvent(LivingDeathEvent evt)
+	{
+		if(evt.getSource().getTrueSource() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) evt.getSource().getTrueSource();
+			int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.eternalfeast, player);
+			if(level!=0)
+			{
+				if(FoodStatsMap.hasPlayer(player.getUniqueID()) && FoodStatsMap.getMaxFoodLevel(player.getUniqueID()) > 0)
+				{
+					int vanillaFoodNeeded = ModConsts.VANILLA_MAX_HUNGER - player.getFoodStats().getFoodLevel();
+					int remainder = 2*level;
+					if(vanillaFoodNeeded <= 2*level)
+					{
+						player.getFoodStats().addStats(vanillaFoodNeeded, 0);
+						remainder -= vanillaFoodNeeded;
+						FoodStatsMap.addFoodStats(player.getUniqueID(), remainder, 0);
+						return;
+					}
+				}
+				player.getFoodStats().addStats(2*level, 0);
 			}
 		}
 	}

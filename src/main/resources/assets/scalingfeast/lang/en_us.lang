@@ -1,0 +1,11 @@
+enchantment.scalingfeast.fasting=Fasting
+enchantment.scalingfeast.gluttony=Gluttony
+enchantment.scalingfeast.famine=Famine
+enchantment.scalingfeast.eternalfeast=Eternal Feast
+
+enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10% per level.
+enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level.
+enchantment.scalingfeast.famine.desc=Severely drains hunger from a target struck with this enchantment. Also applies a weakness debuff. The strength of these effects depend on the enchantment level.
+enchantment.scalingfeast.eternalfeast.desc=Killing an entity replenishes your food level, depending on the level of the enchantment.
+
+item.scalingfeast.heartyshank.name=Hearty Shank

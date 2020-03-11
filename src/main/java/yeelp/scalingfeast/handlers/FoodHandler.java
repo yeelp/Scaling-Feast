@@ -20,12 +20,12 @@ import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import yeelp.scalingfeast.ExtendedFoodStats;
 import yeelp.scalingfeast.FoodStatsMap;
+import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.init.SFFood;
 
 public class FoodHandler {
 	
-	private static final int VANILLA_MAX_HUNGER = 20;
-	private static final float VANILLA_MAX_SAT = 20.0f;
 	
 	//This list should help prevent a double eat from happening.
 	private static final Set<UUID> playersEating = new HashSet<UUID>();
@@ -42,10 +42,10 @@ public class FoodHandler {
 			float satLevelAdded = evt.foodValuesToBeAdded.getUnboundedSaturationIncrement();
 			
 			//Get the amount of excess hunger this food heals
-			int hungerOverflow = VANILLA_MAX_HUNGER - (foodLevelBefore + foodLevelAdded);
+			int hungerOverflow = ModConsts.VANILLA_MAX_HUNGER - (foodLevelBefore + foodLevelAdded);
 			
 			//Get the amount of excess saturation this food heals
-			float satOverflow = VANILLA_MAX_SAT - (satLevelBefore + satLevelAdded);
+			float satOverflow = ModConsts.VANILLA_MAX_SAT - (satLevelBefore + satLevelAdded);
 			
 			hungerOverflow = (hungerOverflow < 0 ? Math.abs(hungerOverflow) : 0);
 			satOverflow = (satOverflow < 0 ? Math.abs(satOverflow) : 0);
@@ -86,13 +86,13 @@ public class FoodHandler {
 				int foodGiven = 0;
 				float satGiven = 0;
 				//Find out how much saturation we need. We won't give it to the player yet, we want to make sure this is done in the right order.
-				float satNeeded = VANILLA_MAX_SAT - satLevel;
+				float satNeeded = ModConsts.VANILLA_MAX_SAT - satLevel;
 				if(satNeeded > 0)
 				{
 					satGiven = FoodStatsMap.consumeSat(evt.player.getUniqueID(), satNeeded);
 				}
 				//Find out how much food we need. We won't give it to the player yet, much like with saturation.
-				int foodNeeded = VANILLA_MAX_HUNGER - foodLevel;
+				int foodNeeded = ModConsts.VANILLA_MAX_HUNGER - foodLevel;
 				if(foodNeeded > 0)
 				{
 					foodGiven = FoodStatsMap.consumeFood(evt.player.getUniqueID(), foodNeeded);
@@ -124,7 +124,7 @@ public class FoodHandler {
 				boolean a = ScalingFeast.alwaysEdibleFoods.contains(food);
 				boolean b = FoodStatsMap.hasPlayer(player.getUniqueID());
 				boolean c = (b ? FoodStatsMap.getExtraFoodLevel(player.getUniqueID()) < FoodStatsMap.getMaxFoodLevel(player.getUniqueID()) : false);
-				boolean d = player.getFoodStats().getFoodLevel() < VANILLA_MAX_HUNGER;
+				boolean d = player.getFoodStats().getFoodLevel() < ModConsts.VANILLA_MAX_HUNGER;
 					
 				//Allow eating on A | D | (B & C)
 				if(a || d || (b && c))
@@ -182,7 +182,7 @@ public class FoodHandler {
 	{
 		if(FMLCommonHandler.instance().getSide() == Side.SERVER || (FMLCommonHandler.instance().getSide() == Side.CLIENT && !evt.player.world.isRemote))
 		{
-			if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(Items.APPLE) && playersEating.contains(evt.player.getUniqueID()))
+			if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.shank) && playersEating.contains(evt.player.getUniqueID()))
 			{
 				ScalingFeast.info(String.format("Player %s (UUID: %s) ate an Apple! increasing foodstat cap...", evt.player.getName(), evt.player.getUniqueID()));
 				FoodStatsMap.increaseMax(evt.player.getUniqueID());

@@ -7,7 +7,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import yeelp.scalingfeast.ModConsts;
 /**
  * The Famine Enchantment. Entities struck with this enchantment suffer a hunger and weakness effect, depending on the level.
- * @author Andrew
+ * @author Yeelp
  *
  */
 public class EnchantmentFamine extends Enchantment {

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindFieldExcep
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.init.SFFood;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -33,9 +34,12 @@ public class ScalingFeast
     {
         logger = event.getModLog();
         alwaysEdibleFoods = new HashSet<ItemFood>();
-        info("Registering Enchantments...");
+        info("Registering enchantments...");
         MinecraftForge.EVENT_BUS.register(new SFEnchantments());
         info("Enchantments have been successfully registered.");
+        info("registering food item...");
+        MinecraftForge.EVENT_BUS.register(new SFFood());
+        info("Food item registered!");
     }
 
     @EventHandler
