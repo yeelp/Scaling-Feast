@@ -24,7 +24,8 @@ import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.util.ExtendedFoodStats;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
-public class FoodHandler {
+public class FoodHandler extends Handler 
+{
 	
 	
 	//This list should help prevent a double eat from happening.

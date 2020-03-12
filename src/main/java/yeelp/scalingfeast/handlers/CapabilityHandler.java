@@ -15,7 +15,7 @@ import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 import yeelp.scalingfeast.util.ICappedFoodStats;
 
-public class CapabilityHandler
+public class CapabilityHandler extends Handler
 {
 	
 	@SubscribeEvent

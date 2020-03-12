@@ -18,7 +18,7 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
-public class EnchantmentHandler 
+public class EnchantmentHandler extends Handler
 {
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onExhaustionAddition(ExhaustionEvent.ExhaustionAddition evt)

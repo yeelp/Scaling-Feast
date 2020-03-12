@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindFieldException;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
@@ -45,7 +44,7 @@ public class ScalingFeast
         info("Food item registered!");
         info("Registering capability");
         ExtendedFoodStatsProvider.register();
-        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+        new CapabilityHandler().register();
         info("Registered capaility");
     }
 
@@ -56,8 +55,8 @@ public class ScalingFeast
     	FoodStatsMap.init((short) -1, (short) 2);
     	info("Map intialization complete!");
     	info("Registering handlers...");
-    	MinecraftForge.EVENT_BUS.register(new FoodHandler());
-        MinecraftForge.EVENT_BUS.register(new EnchantmentHandler());
+    	new FoodHandler().register();
+        new EnchantmentHandler().register();
         info("Handlers registered");
     }
     
@@ -70,22 +69,7 @@ public class ScalingFeast
     	//Fall back to reflection to find out if a food item is always edible.
     	//Would rather not do this, but it seems there is no way to check this field, only set it.
     	Field edibility = null;
-    	try
-    	{
-    		edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "field_77852_bZ");
-    	}
-    	catch(UnableToFindFieldException e)
-    	{
-    		//Perhaps the field is deobfuscated?
-    		try
-    		{
-    			edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "alwaysEdible");
-    		}
-    		catch(UnableToFindFieldException f)
-    		{
-    			err("Unable to use reflection to get alwaysEdible field!");
-    		}
-    	}
+    	edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "field_77852_bZ");
     	if(edibility != null)
     	{
     		for(Item i : Item.REGISTRY)
