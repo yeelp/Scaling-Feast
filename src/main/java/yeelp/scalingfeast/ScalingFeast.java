@@ -11,10 +11,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindFieldException;
+import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
 import java.lang.reflect.Field;
@@ -41,6 +43,10 @@ public class ScalingFeast
         info("registering food item...");
         MinecraftForge.EVENT_BUS.register(new SFFood());
         info("Food item registered!");
+        info("Registering capability");
+        ExtendedFoodStatsProvider.register();
+        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+        info("Registered capaility");
     }
 
     @EventHandler

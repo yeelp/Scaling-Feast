@@ -1,12 +1,23 @@
 package yeelp.scalingfeast.util;
 
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+
 /**
  * A container to hold extended food values. This is mainly a sanity check to ensure that FoodStatsMap syncs entries, so to speak
  * @author Yeelp
  *
  */
-public class ExtendedFoodStats
+public class ExtendedFoodStats implements ICappedFoodStats
 {
+	
+	
 	private short foodLevel;
 	private float satLevel;
 	private short max;
@@ -135,6 +146,7 @@ public class ExtendedFoodStats
 		}
 		this.enforceCaps();
 	}
+	
 	private void enforceCaps()
 	{
 		if(this.foodLevel > this.max)

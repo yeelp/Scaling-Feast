@@ -58,6 +58,14 @@ public class FoodStatsMap
 		map.put(player, fs);
 	}
 	/**
+	 * Remove a player from the map
+	 * @param player The UUID of the player to remove
+	 */
+	public static void removePlayer(UUID player)
+	{
+		map.remove(player);
+	}
+	/**
 	 * Does the map contain a specified player?
 	 * @param player The UUID of the player to check for
 	 * @return true if the player is tracked in the map, false otherwise.
