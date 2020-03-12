@@ -24,7 +24,6 @@ public class CapabilityHandler
 		if(evt.getObject() instanceof EntityPlayer)
 		{
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "ExtendedFoodStats"), new ExtendedFoodStatsProvider());
-			ScalingFeast.info("Adding capability");
 		}
 	}
 	
@@ -34,8 +33,7 @@ public class CapabilityHandler
 		ICappedFoodStats fs = evt.player.getCapability(ExtendedFoodStatsProvider.capFoodStat, null);
 		if(!FoodStatsMap.hasPlayer(evt.player.getUniqueID()) && fs != null)
 		{
-			FoodStatsMap.addPlayer(evt.player.getUniqueID(), fs.getFoodLevel(), fs.getSatLevel(), fs.getMaxFoodLevel());
-			ScalingFeast.info(String.format("%s logged in with %d extra food, %f saturation, and %d max food", evt.player.getName(), fs.getFoodLevel(), fs.getSatLevel(), fs.getMaxFoodLevel()));
+			FoodStatsMap.addPlayer(evt.player.getUniqueID(), fs.getFoodLevel(), fs.getSatLevel(), fs.getMaxFoodLevel());			ScalingFeast.info(String.format("%s logged in with %d extra food, %f saturation, and %d max food", evt.player.getName(), fs.getFoodLevel(), fs.getSatLevel(), fs.getMaxFoodLevel()));
 		}
 	}
 	

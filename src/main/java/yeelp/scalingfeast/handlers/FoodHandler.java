@@ -132,7 +132,6 @@ public class FoodHandler {
 					if(!playersEating.contains(player.getUniqueID()))
 					{
 						playersEating.add(player.getUniqueID());
-						ScalingFeast.info(String.format("Player %s is eating...", player.getName()));
 					}
 				}
 				else
@@ -154,7 +153,6 @@ public class FoodHandler {
 				if(playersEating.contains(player.getUniqueID()))
 				{
 					playersEating.remove(player.getUniqueID());
-					ScalingFeast.info(String.format("Player %s stopped eating...", player.getName()));
 				}
 			}
 		}
@@ -171,7 +169,6 @@ public class FoodHandler {
 				if(playersEating.contains(player.getUniqueID()))
 				{
 					playersEating.remove(player.getUniqueID());
-					ScalingFeast.info(String.format("Player %s finished eating.", player.getName()));
 				}
 			}
 		}
@@ -184,7 +181,6 @@ public class FoodHandler {
 		{
 			if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.shank) && playersEating.contains(evt.player.getUniqueID()))
 			{
-				ScalingFeast.info(String.format("Player %s (UUID: %s) ate an Apple! increasing foodstat cap...", evt.player.getName(), evt.player.getUniqueID()));
 				FoodStatsMap.increaseMax(evt.player.getUniqueID());
 			}
 		}
