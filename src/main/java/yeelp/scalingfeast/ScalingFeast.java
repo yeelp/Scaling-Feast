@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -15,6 +16,7 @@ import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
@@ -30,6 +32,9 @@ public class ScalingFeast
 
     public static Logger logger;
     public static Set<ItemFood> alwaysEdibleFoods;
+    
+    @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
+    public static Proxy proxy;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -51,6 +56,7 @@ public class ScalingFeast
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+    	proxy.init();
     	info("Initializing the ExtendedFoodStats map...");
     	FoodStatsMap.init((short) -1, (short) 2);
     	info("Map intialization complete!");

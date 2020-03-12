@@ -6,9 +6,11 @@ import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -180,9 +182,10 @@ public class FoodHandler extends Handler
 	{
 		if(FMLCommonHandler.instance().getSide() == Side.SERVER || (FMLCommonHandler.instance().getSide() == Side.CLIENT && !evt.player.world.isRemote))
 		{
-			if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.shank) && playersEating.contains(evt.player.getUniqueID()))
+			if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.heartyshank) && playersEating.contains(evt.player.getUniqueID()))
 			{
 				FoodStatsMap.increaseMax(evt.player.getUniqueID());
+				evt.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER, 1.25f, 1.0f);
 			}
 		}
 	}
