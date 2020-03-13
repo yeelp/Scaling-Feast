@@ -16,6 +16,7 @@ import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
@@ -51,6 +52,8 @@ public class ScalingFeast
         ExtendedFoodStatsProvider.register();
         new CapabilityHandler().register();
         info("Registered capaility");
+        info("registering potion");
+        MinecraftForge.EVENT_BUS.register(new SFPotion());
     }
 
     @EventHandler

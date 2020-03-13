@@ -10,6 +10,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem;
@@ -23,6 +24,7 @@ import squeek.applecore.api.hunger.HungerEvent;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.ExtendedFoodStats;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
@@ -186,6 +188,11 @@ public class FoodHandler extends Handler
 			{
 				FoodStatsMap.increaseMax(evt.player.getUniqueID());
 				evt.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER, 1.25f, 1.0f);
+			}
+			else if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.ironapple) && playersEating.contains(evt.player.getUniqueID()))
+			{
+				evt.player.heal(4.0f);
+				evt.player.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 1));
 			}
 		}
 	}

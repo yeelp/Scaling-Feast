@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "CB ",
+        "FGR",
+        " PS"
+    ],
+    "key": {
+        "C": {
+            "item": "minecraft:cake"
+        },
+        "B": {
+            "item": "minecraft:beetroot_soup"
+        },
+        "F": {
+            "item": "minecraft:fish",
+            "data": 2
+        },
+        "G": {
+            "item": "scalingfeast:ironapple",
+            "data": 0
+        },
+        "R": {
+            "item": "minecraft:rabbit_stew"
+        },
+        "P": {
+            "item": "minecraft:cooked_porkchop"
+        },
+        "S": {
+            "item": "minecraft:bone"
+        }
+    },
+    "result": {
+        "item": "scalingfeast:heartyshank"
+    }
+}

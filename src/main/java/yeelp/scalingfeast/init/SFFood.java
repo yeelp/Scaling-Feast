@@ -12,34 +12,29 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.items.HeartyShankItem;
+import yeelp.scalingfeast.items.IronAppleItem;
 
 public class SFFood 
 {
 	public static ItemFood heartyshank;
+	public static ItemFood ironapple;
 	@SubscribeEvent
 	public void registerItem(RegistryEvent.Register<Item> evt)
 	{
 		heartyshank = new HeartyShankItem(4, 0.8f);
+		ironapple = new IronAppleItem();
 		evt.getRegistry().register(heartyshank);
+		evt.getRegistry().register(ironapple);
 	}
 	
 	public static void registerRenders()
 	{
 		registerRender((Item) heartyshank);
+		registerRender((Item) ironapple);
 	}
 	
 	private static void registerRender(Item i)
 	{
-		ScalingFeast.info(i.getRegistryName().toString());
-		Minecraft m = Minecraft.getMinecraft();
-		ScalingFeast.info(m.toString());
-		RenderItem r = m.getRenderItem();
-		ScalingFeast.info(r.toString());
-		ItemModelMesher mesh = r.getItemModelMesher();
-		ScalingFeast.info(mesh.toString());
-		ModelResourceLocation res = new ModelResourceLocation(i.getRegistryName(), "inventory");
-		ScalingFeast.info(res.toString());
-		mesh.register((Item) i, 0, new ModelResourceLocation(i.getRegistryName(), "inventory"));
-		
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register((Item) i, 0, new ModelResourceLocation(i.getRegistryName(), "inventory"));
 	}
 }
