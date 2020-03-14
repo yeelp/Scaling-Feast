@@ -14,6 +14,7 @@
         }
     },
     "result": {
-        "item": "scalingfeast:ironapple"
+        "item": "scalingfeast:ironapple",
+        "data": 0
     }
 }

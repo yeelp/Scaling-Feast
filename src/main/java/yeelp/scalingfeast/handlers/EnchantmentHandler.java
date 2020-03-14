@@ -27,7 +27,7 @@ public class EnchantmentHandler extends Handler
 		if(level != 0)
 		{
 			float mod = (1-0.1f*level);
-			evt.deltaExhaustion*=mod;
+			evt.deltaExhaustion*=(mod > 0 ? mod : 0);
 		}
 	}
 	

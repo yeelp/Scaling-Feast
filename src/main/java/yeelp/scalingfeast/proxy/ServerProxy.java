@@ -1,13 +1,17 @@
 package yeelp.scalingfeast.proxy;
 
-public class ServerProxy implements Proxy 
+public class ServerProxy extends Proxy 
 {
-
-	@Override
+	public void preInit()
+	{
+		super.preInit();
+	}
 	public void init()
 	{
-		// TODO Auto-generated method stub
-
+		super.init();
 	}
-
+	public void postInit()
+	{
+		super.postInit();
+	}
 }

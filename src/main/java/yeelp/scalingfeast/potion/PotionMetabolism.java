@@ -13,9 +13,9 @@ import yeelp.scalingfeast.util.FoodStatsMap;
  */
 public class PotionMetabolism extends Potion 
 {
-	public PotionMetabolism(boolean isBadEffectIn, int liquidColorIn) 
+	public PotionMetabolism() 
 	{
-		super(isBadEffectIn, liquidColorIn);
+		super(false, 0xF0B78C);
 		this.setRegistryName("metabolism");
 		this.setPotionName("effect.metabolism");
 		this.setBeneficial();

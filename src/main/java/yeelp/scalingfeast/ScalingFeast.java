@@ -11,12 +11,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import yeelp.scalingfeast.handlers.CapabilityHandler;
-import yeelp.scalingfeast.handlers.EnchantmentHandler;
-import yeelp.scalingfeast.handlers.FoodHandler;
-import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.init.SFFood;
-import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
@@ -42,18 +36,7 @@ public class ScalingFeast
     {
         logger = event.getModLog();
         alwaysEdibleFoods = new HashSet<ItemFood>();
-        info("Registering enchantments...");
-        MinecraftForge.EVENT_BUS.register(new SFEnchantments());
-        info("Enchantments have been successfully registered.");
-        info("registering food item...");
-        MinecraftForge.EVENT_BUS.register(new SFFood());
-        info("Food item registered!");
-        info("Registering capability");
-        ExtendedFoodStatsProvider.register();
-        new CapabilityHandler().register();
-        info("Registered capaility");
-        info("registering potion");
-        MinecraftForge.EVENT_BUS.register(new SFPotion());
+        proxy.preInit();
     }
 
     @EventHandler
@@ -63,10 +46,6 @@ public class ScalingFeast
     	info("Initializing the ExtendedFoodStats map...");
     	FoodStatsMap.init((short) -1, (short) 2);
     	info("Map intialization complete!");
-    	info("Registering handlers...");
-    	new FoodHandler().register();
-        new EnchantmentHandler().register();
-        info("Handlers registered");
     }
     
     @EventHandler 

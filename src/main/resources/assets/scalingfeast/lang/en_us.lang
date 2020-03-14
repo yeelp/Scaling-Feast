@@ -9,7 +9,8 @@ enchantment.scalingfeast.famine.desc=Severely drains hunger from a target struck
 enchantment.scalingfeast.eternalfeast.desc=Killing an entity replenishes your food level, depending on the level of the enchantment.
 
 item.scalingfeast.heartyshank.name=Hearty Shank
-item.scalingfeast.ironapple.name=�bIron Apple�r
+item.scalingfeast.ironapple.name=§bIron Apple§f
+item.scalingfeast.enchantedironapple.name=§dIron Apple§f
 
 effect.metabolism=Metabolism
 
@@ -17,3 +18,5 @@ potion.effect.metabolism=Metabolic Potion
 splash_potion.effect.metabolism=Metabolic Splash Potion
 lingering_potion.effect.metabolism=Metabolic Lingering Potion
 tipped_arrow.effect.metabolism=Metabolic Arrow
+
+effect.ironstomach=Iron Stomach

@@ -194,6 +194,12 @@ public class FoodHandler extends Handler
 				evt.player.heal(4.0f);
 				evt.player.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 1));
 			}
+			else if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.enchantedironapple) && playersEating.contains(evt.player.getUniqueID()))
+			{
+				evt.player.heal(4.0f);
+				evt.player.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 3));
+				evt.player.addPotionEffect(new PotionEffect(SFPotion.ironstomach, 6*60*20, 1));
+			}
 		}
 	}
 }
