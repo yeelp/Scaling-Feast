@@ -1,5 +1,6 @@
 package yeelp.scalingfeast.potion;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -11,11 +12,11 @@ import yeelp.scalingfeast.util.FoodStatsMap;
  * @author Yeelp
  *
  */
-public class PotionMetabolism extends Potion 
+public class PotionMetabolism extends PotionBase 
 {
 	public PotionMetabolism() 
 	{
-		super(false, 0xF0B78C);
+		super(false, 0xF0B78C, 1, 0);
 		this.setRegistryName("metabolism");
 		this.setPotionName("effect.metabolism");
 		this.setBeneficial();
