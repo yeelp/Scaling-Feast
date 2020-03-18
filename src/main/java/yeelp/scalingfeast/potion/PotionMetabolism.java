@@ -37,7 +37,7 @@ public class PotionMetabolism extends PotionBase
 			}
 			else if(player.getFoodStats().getSaturationLevel() < ModConsts.VANILLA_MAX_SAT)
 			{
-				player.getFoodStats().addStats(1, 1.0f);
+				player.getFoodStats().addStats(1, 0.5f);
 			}
 			else if(FoodStatsMap.hasPlayer(player.getUniqueID()) && FoodStatsMap.getExtraSatLevels(player.getUniqueID()) < FoodStatsMap.getExtraFoodLevel(player.getUniqueID()))
 			{
