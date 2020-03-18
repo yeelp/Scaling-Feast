@@ -129,7 +129,7 @@ public class HUDOverlayHandler extends Handler
 					drawExtendedSat(sat, mc, left, top);
 				if(hunger >= max - max%20)
 					drawMax(max%20, mc, left, top, (jitterAmount != null ? jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1] : 0));
-				drawNumericalInfo(hunger / 20 + 2, mc, left, top);
+				drawNumericalInfo(hunger / 20 + 2, mc, left, top - 2);
 			}
 		}
 	}
@@ -138,7 +138,7 @@ public class HUDOverlayHandler extends Handler
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
-		mc.fontRenderer.drawStringWithShadow("x"+i, left + 10, top, 0x00FF00);
+		mc.fontRenderer.drawStringWithShadow("x"+i, left/0.75f + 4/0.75f, top/0.75f, 0x00FF00);
 		GlStateManager.popMatrix();
 	}
 
