@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -27,6 +28,7 @@ public class ScalingFeast
 
     public static Logger logger;
     public static Set<ItemFood> alwaysEdibleFoods;
+    public static boolean hasAppleSkin;
     
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
@@ -35,6 +37,7 @@ public class ScalingFeast
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+        hasAppleSkin = Loader.isModLoaded("appleskin");
         alwaysEdibleFoods = new HashSet<ItemFood>();
         proxy.preInit();
     }
@@ -74,7 +77,6 @@ public class ScalingFeast
     					}
     					food.setAlwaysEdible();
     					foodItem++;
-    					logger.info(food.getUnlocalizedName());
     				}
     				catch(IllegalAccessException e)
     				{
