@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
+@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, guiFactory = ModConsts.GUI_FACTORY)
 public class ScalingFeast
 {
 
