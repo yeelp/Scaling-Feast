@@ -37,6 +37,7 @@ public class ScalingFeast
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+        ModConfig.init(event.getSuggestedConfigurationFile());
         hasAppleSkin = Loader.isModLoaded("appleskin");
         alwaysEdibleFoods = new HashSet<ItemFood>();
         proxy.preInit();
