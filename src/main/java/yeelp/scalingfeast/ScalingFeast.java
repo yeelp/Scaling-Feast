@@ -77,7 +77,6 @@ public class ScalingFeast
     					}
     					food.setAlwaysEdible();
     					foodItem++;
-    					logger.info(food.getUnlocalizedName());
     				}
     				catch(IllegalAccessException e)
     				{

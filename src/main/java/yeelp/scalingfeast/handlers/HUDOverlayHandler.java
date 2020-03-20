@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.Colour;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
@@ -76,14 +77,7 @@ public class HUDOverlayHandler extends Handler
 				drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top);
 			}
 			//Calculate the random jitter amount beforehand and pass it to the draw methods
-			int[] jitterAmount = new int[10];
-			if(Minecraft.getMinecraft().ingameGUI.getUpdateCounter() % (player.getFoodStats().getFoodLevel() * 3 + 1) == 0)
-			{
-				for(int i = 0; i < 10; i++)
-				{
-					jitterAmount[i] = rand.nextInt(3) - 1;
-				}
-			}
+			int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
 			drawVanillaStats(jitterAmount, mc, player, left, top);
 			drawExtendedStats(jitterAmount, mc, player, left, top);
 			//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
@@ -111,7 +105,7 @@ public class HUDOverlayHandler extends Handler
 		ScaledResolution res = evt.getResolution();
 		int left = res.getScaledWidth()/2 + 91;
 		int top = res.getScaledHeight() - offset;
-		drawExtendedStats(null, mc, player, left, top + 10);
+		drawExtendedStats(getJitterAmount(mc.ingameGUI.getUpdateCounter(), player), mc, player, left, top + 10);
 	}
 	
 	private void drawExtendedStats(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
@@ -126,19 +120,25 @@ public class HUDOverlayHandler extends Handler
 			{
 				drawExtendedFood(hunger, mc, left, top, jitterAmount);
 				if(sat > 0)
-					drawExtendedSat(sat, mc, left, top);
+					drawExtendedSat(sat, mc, left, top, jitterAmount);
 				if(hunger >= max - max%20)
-					drawMax(max%20, mc, left, top, (jitterAmount != null ? jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1] : 0));
-				drawNumericalInfo(hunger / 20 + 2, mc, left, top - 2);
+				{
+					if(max % 20 != 0)
+						drawMax(max%20, mc, left, top, jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1]);
+					else
+						drawMax(19, mc, left, top, jitterAmount[9]);
+				}
+				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2);
 			}
 		}
+		drawNumericalInfo(1, mc, left, top + 2);
 	}
 
 	private void drawNumericalInfo(int i, Minecraft mc, int left, int top)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.75f, 0.75f, 0.75f);
-		mc.fontRenderer.drawStringWithShadow("x"+i, left/0.75f + 4/0.75f, top/0.75f, 0x00FF00);
+		mc.fontRenderer.drawStringWithShadow("x"+i, left/0.75f + 1/0.75f, top/0.75f, 0x00FF00);
 		GlStateManager.popMatrix();
 	}
 
@@ -178,7 +178,7 @@ public class HUDOverlayHandler extends Handler
 		for(i = 0; i < (int)shanksNeeded; i++)
 		{
 			x = left - i * 8 - 9;
-			y = top + (jitterAmount != null ? jitterAmount[i] : 0);
+			y = top + jitterAmount[i];
 			GL11.glColor3f(red, green, blue);
 			mc.ingameGUI.drawTexturedModalRect((float)x, y, 0, 0, 9, 9);
 			GL11.glColor3f(1.0f,  1.0f, 1.0f);
@@ -191,7 +191,7 @@ public class HUDOverlayHandler extends Handler
 		if((int)shanksNeeded < shanksNeeded)
 		{
 			x = left - i * 8 - 9;
-			y = top + (jitterAmount != null ? jitterAmount[i] : 0);
+			y = top + jitterAmount[i];
 			GL11.glColor3f(red, green, blue);
 			mc.ingameGUI.drawTexturedModalRect((float)x, y, 9, 0, 9, 9);
 			GL11.glColor3f(1.0f,  1.0f, 1.0f);
@@ -201,7 +201,7 @@ public class HUDOverlayHandler extends Handler
 			}
 		}
 	}
-	private void drawExtendedSat(float sat, Minecraft mc, int left, int top) 
+	private void drawExtendedSat(float sat, Minecraft mc, int left, int top, int[] jitterAmount) 
 	{
 		mc.getTextureManager().bindTexture(icons);
 		mc.mcProfiler.startSection("extendedSaturation");
@@ -331,5 +331,20 @@ public class HUDOverlayHandler extends Handler
 		GlStateManager.disableBlend();
 		mc.mcProfiler.endSection();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
+	}
+	
+	private int[] getJitterAmount(int updateCounter, EntityPlayer player)
+	{
+		int foodLevel = player.getFoodStats().getFoodLevel();
+		float satLevel = player.getFoodStats().getSaturationLevel();
+		int[] jitterAmount = new int[10];
+		if(updateCounter % (foodLevel * 3 + 1) == 0 && satLevel == 0)
+		{
+			for(int i = 0; i < 10; i++)
+			{
+				jitterAmount[i] += rand.nextInt(3) - 1;
+			}
+		}
+		return jitterAmount;
 	}
 }
