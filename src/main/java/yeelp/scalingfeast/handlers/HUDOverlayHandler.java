@@ -131,7 +131,10 @@ public class HUDOverlayHandler extends Handler
 				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2);
 			}
 		}
-		drawNumericalInfo(1, mc, left, top + 2);
+		else
+		{
+			drawNumericalInfo(1, mc, left, top + 2);
+		}
 	}
 
 	private void drawNumericalInfo(int i, Minecraft mc, int left, int top)
