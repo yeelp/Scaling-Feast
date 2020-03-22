@@ -26,7 +26,9 @@ import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.ExtendedFoodStats;
+import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
+import yeelp.scalingfeast.util.ICappedFoodStats;
 
 public class FoodHandler extends Handler 
 {
@@ -40,6 +42,7 @@ public class FoodHandler extends Handler
 	{
 		if(FMLCommonHandler.instance().getSide() == Side.SERVER || (FMLCommonHandler.instance().getSide() == Side.CLIENT && !evt.player.world.isRemote))
 		{
+			ICappedFoodStats fs = evt.player.getCapability(ExtendedFoodStatsProvider.capFoodStat, null);
 			int foodLevelBefore = evt.player.getFoodStats().getFoodLevel();
 			float satLevelBefore = evt.player.getFoodStats().getSaturationLevel();
 			
@@ -65,6 +68,8 @@ public class FoodHandler extends Handler
 				}
 				ScalingFeast.logger.info(String.format("Player %s (UUID: %s), with foodstats (%d, %f) gained %d food and %f saturation. They get %d bonus food and %f bonus saturation.", evt.player.getName(), evt.player.getUniqueID(), evt.player.getFoodStats().getFoodLevel(), evt.player.getFoodStats().getSaturationLevel(), evt.foodValuesToBeAdded.hunger, evt.foodValuesToBeAdded.getUnboundedSaturationIncrement(), hungerOverflow, satOverflow));
 				FoodStatsMap.addFoodStats(evt.player.getUniqueID(), hungerOverflow, satOverflow);
+				fs.setFoodLevel(FoodStatsMap.getExtraFoodLevel(evt.player.getUniqueID()));
+				fs.setSatLevel(FoodStatsMap.getExtraSatLevels(evt.player.getUniqueID()));
 			}
 		}
 	}
@@ -186,8 +191,10 @@ public class FoodHandler extends Handler
 		{
 			if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.heartyshank) && playersEating.contains(evt.player.getUniqueID()))
 			{
+				ICappedFoodStats fs = evt.player.getCapability(ExtendedFoodStatsProvider.capFoodStat, null);
 				FoodStatsMap.increaseMax(evt.player.getUniqueID());
-				evt.player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER, 1.25f, 1.0f);
+				fs.setMax(FoodStatsMap.getMaxFoodLevel(evt.player.getUniqueID()));			
+				evt.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1.0f);
 			}
 			else if(Item.getIdFromItem(evt.food.getItem()) == Item.getIdFromItem(SFFood.ironapple) && playersEating.contains(evt.player.getUniqueID()))
 			{

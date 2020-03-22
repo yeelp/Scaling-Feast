@@ -131,7 +131,9 @@ public class HUDOverlayHandler extends Handler
 		{
 			if(ModConfig.hud.drawSaturation || (ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawVanillaSatOverlay))
 			{
+				mc.getTextureManager().bindTexture(icons);
 				drawExtendedSatBar(player.getFoodStats().getSaturationLevel(), mc, left, top+10, satColours.get(0));
+				mc.getTextureManager().bindTexture(Gui.ICONS);
 			}
 			drawExtendedStats(getJitterAmount(mc.ingameGUI.getUpdateCounter(), player), mc, player, left, top + 10);
 		}
@@ -149,7 +151,7 @@ public class HUDOverlayHandler extends Handler
 			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) + (ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawVanillaSatOverlay ? player.getFoodStats().getSaturationLevel() : 0);
 			int max = FoodStatsMap.getMaxFoodLevel(player.getUniqueID());
 			String hungerInfo = String.format("+(%d/%d", hunger, max);
-			String satInfo = String.format(", %.1f", sat);
+			String satInfo = String.format(", %.1f)", sat);
 			String info = hungerInfo + (ModConfig.hud.drawSaturation ? satInfo : ")");
 			GL11.glPushMatrix();
 			GL11.glScalef(0.75f, 0.75f, 0.75f);

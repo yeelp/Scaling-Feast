@@ -17,7 +17,6 @@ import yeelp.scalingfeast.util.ICappedFoodStats;
 
 public class CapabilityHandler extends Handler
 {
-	
 	@SubscribeEvent
 	public void onAddCapabilities(AttachCapabilitiesEvent<Entity> evt)
 	{
