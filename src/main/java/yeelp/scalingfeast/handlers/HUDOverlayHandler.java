@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.handlers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
@@ -20,6 +21,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
+import static yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
+
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
@@ -39,8 +42,8 @@ public class HUDOverlayHandler extends Handler
 	
 	public HUDOverlayHandler()
 	{
-		//if(ModConfig.hungerColours.isEmpty())
-		//{
+		if(isEmpty(ModConfig.hud.Hcolours))
+		{
 			colours.add(new Colour("ff9d00"));
 			colours.add(new Colour("ffee00"));
 			colours.add(new Colour("00ff00"));
@@ -48,14 +51,14 @@ public class HUDOverlayHandler extends Handler
 			colours.add(new Colour("00ffff"));
 			colours.add(new Colour("e100ff"));
 			colours.add(new Colour("ffffff"));
-		//}
-		//else
-		//{
-			//colours = ModConfig.hungerColours;
-		//}
+		}
+		else
+		{
+			colours = colourize(ModConfig.hud.Hcolours);
+		}
 		
-		//if(ModConfig.satColours.isEmpty())
-		//{
+		if(isEmpty(ModConfig.hud.Scolours))
+		{
 			satColours.add(new Colour("d70000"));
 			satColours.add(new Colour("d700d7"));
 			satColours.add(new Colour("6400d7"));
@@ -63,19 +66,19 @@ public class HUDOverlayHandler extends Handler
 			satColours.add(new Colour("64d700"));
 			satColours.add(new Colour("d7d700"));
 			satColours.add(new Colour("d7d7d7"));
-		//}
-		//else
-		//{
-			//satColours = ModConfig.satColours;
-		//}
+		}
+		else
+		{
+			satColours = colourize(ModConfig.hud.Scolours);
+		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPreRender(RenderGameOverlayEvent.Pre evt)
 	{
 		if(evt.getType() == RenderGameOverlayEvent.ElementType.FOOD)
 		{
-			if(/*ModConfig.style.equals("OVERLAY") &&*/ Minecraft.getMinecraft().player.getFoodStats().getSaturationLevel() == 0)
+			if(ModConfig.hud.style == DisplayStyle.OVERLAY && Minecraft.getMinecraft().player.getFoodStats().getSaturationLevel() == 0)
 			{
 				//In order to make the HUD look nice when the player has no saturation, we need to completely remove
 				//The hunger bar and re draw it so we have control over the 'jittering'.
@@ -90,7 +93,7 @@ public class HUDOverlayHandler extends Handler
 				int left = res.getScaledWidth()/2 + 91;
 				int top = res.getScaledHeight() - offset;
 				//If we have AppleSkin, we need to redraw the whole exhaustion bar.
-				if(ScalingFeast.hasAppleSkin /*&& ModConfig.shouldDrawExhaustion*/)
+				if(ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawExhaustion)
 				{	
 					drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top);
 				}
@@ -124,14 +127,18 @@ public class HUDOverlayHandler extends Handler
 		ScaledResolution res = evt.getResolution();
 		int left = res.getScaledWidth()/2 + 91;
 		int top = res.getScaledHeight() - offset;
-		//if(ModConfig.style.equals("OVERLAY"))
-		//{
+		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
+		{
+			if(ModConfig.hud.drawSaturation || (ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawVanillaSatOverlay))
+			{
+				drawExtendedSatBar(player.getFoodStats().getSaturationLevel(), mc, left, top+10, satColours.get(0));
+			}
 			drawExtendedStats(getJitterAmount(mc.ingameGUI.getUpdateCounter(), player), mc, player, left, top + 10);
-		//}
-		//else
-		//{
-		//	drawNumericalOverlay(mc, player, res, left, top);
-		//}
+		}
+		else
+		{
+			drawNumericalOverlay(mc, player, res, left, top + 10);
+		}
 	}
 	
 	private void drawNumericalOverlay(Minecraft mc, EntityPlayer player, ScaledResolution res, int left, int top)
@@ -139,11 +146,14 @@ public class HUDOverlayHandler extends Handler
 		if(FoodStatsMap.hasStats(player.getUniqueID()))
 		{
 			int hunger = FoodStatsMap.getExtraFoodLevel(player.getUniqueID());
-			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) /*+ (ModConfig.shouldDrawVanillaSat ? player.getFoodStats().getSaturationLevel() : 0)*/;
+			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) + (ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawVanillaSatOverlay ? player.getFoodStats().getSaturationLevel() : 0);
 			int max = FoodStatsMap.getMaxFoodLevel(player.getUniqueID());
+			String hungerInfo = String.format("+(%d/%d", hunger, max);
+			String satInfo = String.format(", %.1f", sat);
+			String info = hungerInfo + (ModConfig.hud.drawSaturation ? satInfo : ")");
 			GL11.glPushMatrix();
 			GL11.glScalef(0.75f, 0.75f, 0.75f);
-			mc.fontRenderer.drawStringWithShadow(String.format("+(%d/%d, %f)", hunger, max, sat), left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+			mc.fontRenderer.drawStringWithShadow(info, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 			GL11.glPopMatrix();
 			mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -161,8 +171,10 @@ public class HUDOverlayHandler extends Handler
 			if(hunger > 0)
 			{
 				drawExtendedFood(hunger, mc, left, top, jitterAmount);
-				if(sat > 0)
+				if(sat > 0 && ModConfig.hud.drawSaturation)
+				{
 					drawExtendedSat(sat, mc, left, top, jitterAmount);
+				}
 				if(hunger >= max - max%20)
 				{
 					if(max % 20 != 0)
@@ -253,7 +265,7 @@ public class HUDOverlayHandler extends Handler
 		mc.getTextureManager().bindTexture(icons);
 		mc.mcProfiler.startSection("extendedSaturation");
 		GlStateManager.enableBlend();
-		int colourIndex = 0;
+		int colourIndex = (ModConfig.compat.appleskin.drawVanillaSatOverlay ? 1 : 0);
 		do
 		{
 			sat -= 20;
@@ -417,5 +429,27 @@ public class HUDOverlayHandler extends Handler
 		{
 			return 0xaa0000;
 		}
+	}
+	
+	private ArrayList<Colour> colourize(String[] arr) 
+	{
+		ArrayList<Colour> lst = new ArrayList<Colour>();
+		for(String hex : arr)
+		{
+			lst.add(new Colour(hex));
+		}
+		return lst;
+	}
+	
+	private boolean isEmpty(String[] arr)
+	{
+		for(String str : arr)
+		{
+			if(str != null)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
