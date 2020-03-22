@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
@@ -34,54 +35,72 @@ public class HUDOverlayHandler extends Handler
 	ArrayList<Colour> colours = new ArrayList<Colour>();
 	ArrayList<Colour> satColours = new ArrayList<Colour>();
 	Random rand = new Random();
+	private String style;
 	
 	public HUDOverlayHandler()
 	{
-		colours.add(new Colour("ff9d00"));
-		colours.add(new Colour("ffee00"));
-		colours.add(new Colour("00ff00"));
-		colours.add(new Colour("0000ff"));
-		colours.add(new Colour("00ffff"));
-		colours.add(new Colour("e100ff"));
-		colours.add(new Colour("ffffff"));
+		//if(ModConfig.hungerColours.isEmpty())
+		//{
+			colours.add(new Colour("ff9d00"));
+			colours.add(new Colour("ffee00"));
+			colours.add(new Colour("00ff00"));
+			colours.add(new Colour("0000ff"));
+			colours.add(new Colour("00ffff"));
+			colours.add(new Colour("e100ff"));
+			colours.add(new Colour("ffffff"));
+		//}
+		//else
+		//{
+			//colours = ModConfig.hungerColours;
+		//}
 		
-		satColours.add(new Colour("d70000"));
-		satColours.add(new Colour("d700d7"));
-		satColours.add(new Colour("6400d7"));
-		satColours.add(new Colour("00d3d7"));
-		satColours.add(new Colour("64d700"));
-		satColours.add(new Colour("d7d700"));
-		satColours.add(new Colour("d7d7d7"));
+		//if(ModConfig.satColours.isEmpty())
+		//{
+			satColours.add(new Colour("d70000"));
+			satColours.add(new Colour("d700d7"));
+			satColours.add(new Colour("6400d7"));
+			satColours.add(new Colour("00d3d7"));
+			satColours.add(new Colour("64d700"));
+			satColours.add(new Colour("d7d700"));
+			satColours.add(new Colour("d7d7d7"));
+		//}
+		//else
+		//{
+			//satColours = ModConfig.satColours;
+		//}
 	}
 	
 	@SubscribeEvent
 	public void onPreRender(RenderGameOverlayEvent.Pre evt)
 	{
-		if(evt.getType() == RenderGameOverlayEvent.ElementType.FOOD && Minecraft.getMinecraft().player.getFoodStats().getSaturationLevel() == 0)
+		if(evt.getType() == RenderGameOverlayEvent.ElementType.FOOD)
 		{
-			//In order to make the HUD look nice when the player has no saturation, we need to completely remove
-			//The hunger bar and re draw it so we have control over the 'jittering'.
-			evt.setCanceled(true);
-			Minecraft mc = Minecraft.getMinecraft();
-			EntityPlayer player = mc.player;
-			
-			ScaledResolution res = evt.getResolution();
-			
-			offset = GuiIngameForge.right_height;
-			
-			int left = res.getScaledWidth()/2 + 91;
-			int top = res.getScaledHeight() - offset;
-			//If we have AppleSkin, we need to redraw the whole exhaustion bar.
-			if(ScalingFeast.hasAppleSkin)
-			{	
-				drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top);
+			if(/*ModConfig.style.equals("OVERLAY") &&*/ Minecraft.getMinecraft().player.getFoodStats().getSaturationLevel() == 0)
+			{
+				//In order to make the HUD look nice when the player has no saturation, we need to completely remove
+				//The hunger bar and re draw it so we have control over the 'jittering'.
+				evt.setCanceled(true);
+				Minecraft mc = Minecraft.getMinecraft();
+				EntityPlayer player = mc.player;
+				
+				ScaledResolution res = evt.getResolution();
+				
+				offset = GuiIngameForge.right_height;
+				
+				int left = res.getScaledWidth()/2 + 91;
+				int top = res.getScaledHeight() - offset;
+				//If we have AppleSkin, we need to redraw the whole exhaustion bar.
+				if(ScalingFeast.hasAppleSkin /*&& ModConfig.shouldDrawExhaustion*/)
+				{	
+					drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top);
+				}
+				//Calculate the random jitter amount beforehand and pass it to the draw methods
+				int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
+				drawVanillaStats(jitterAmount, mc, player, left, top);
+				drawExtendedStats(jitterAmount, mc, player, left, top);
+				//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
+				GuiIngameForge.right_height += 10;
 			}
-			//Calculate the random jitter amount beforehand and pass it to the draw methods
-			int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
-			drawVanillaStats(jitterAmount, mc, player, left, top);
-			drawExtendedStats(jitterAmount, mc, player, left, top);
-			//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
-			GuiIngameForge.right_height += 10;
 		}
 	}
 
@@ -98,14 +117,37 @@ public class HUDOverlayHandler extends Handler
 		}
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.player;
-		
-		
+	
+	
 		offset = GuiIngameForge.right_height;
-		
+	
 		ScaledResolution res = evt.getResolution();
 		int left = res.getScaledWidth()/2 + 91;
 		int top = res.getScaledHeight() - offset;
-		drawExtendedStats(getJitterAmount(mc.ingameGUI.getUpdateCounter(), player), mc, player, left, top + 10);
+		//if(ModConfig.style.equals("OVERLAY"))
+		//{
+			drawExtendedStats(getJitterAmount(mc.ingameGUI.getUpdateCounter(), player), mc, player, left, top + 10);
+		//}
+		//else
+		//{
+		//	drawNumericalOverlay(mc, player, res, left, top);
+		//}
+	}
+	
+	private void drawNumericalOverlay(Minecraft mc, EntityPlayer player, ScaledResolution res, int left, int top)
+	{
+		if(FoodStatsMap.hasStats(player.getUniqueID()))
+		{
+			int hunger = FoodStatsMap.getExtraFoodLevel(player.getUniqueID());
+			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) /*+ (ModConfig.shouldDrawVanillaSat ? player.getFoodStats().getSaturationLevel() : 0)*/;
+			int max = FoodStatsMap.getMaxFoodLevel(player.getUniqueID());
+			GL11.glPushMatrix();
+			GL11.glScalef(0.75f, 0.75f, 0.75f);
+			mc.fontRenderer.drawStringWithShadow(String.format("+(%d/%d, %f)", hunger, max, sat), left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			GL11.glPopMatrix();
+			mc.getTextureManager().bindTexture(Gui.ICONS);
+		}
 	}
 	
 	private void drawExtendedStats(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
@@ -128,21 +170,23 @@ public class HUDOverlayHandler extends Handler
 					else
 						drawMax(19, mc, left, top, jitterAmount[9]);
 				}
-				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2);
+				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2, hunger, max);
 			}
 		}
 		else
 		{
-			drawNumericalInfo(1, mc, left, top + 2);
+			drawNumericalInfo(1, mc, left, top + 2, player.getFoodStats().getFoodLevel(), 20);
 		}
 	}
 
-	private void drawNumericalInfo(int i, Minecraft mc, int left, int top)
+	private void drawNumericalInfo(int i, Minecraft mc, int left, int top, int hunger, int max)
 	{
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(0.75f, 0.75f, 0.75f);
-		mc.fontRenderer.drawStringWithShadow("x"+i, left/0.75f + 1/0.75f, top/0.75f, 0x00FF00);
-		GlStateManager.popMatrix();
+		GL11.glPushMatrix();
+		GL11.glScalef(0.75f, 0.75f, 0.75f);
+		mc.fontRenderer.drawStringWithShadow("x"+i, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		GL11.glPopMatrix();
+		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
 	private void drawExtendedFood(int hunger, Minecraft mc, int left, int top, int[] jitterAmount) 
@@ -349,5 +393,29 @@ public class HUDOverlayHandler extends Handler
 			}
 		}
 		return jitterAmount;
+	}
+	
+	private int getColour(int hunger, int max)
+	{
+		if(hunger == max)
+		{
+			return 0x00aa00;
+		}
+		else if (hunger > 0.75 * max)
+		{
+			return 0x55ff55;
+		}
+		else if (hunger > 0.5 * max)
+		{
+			return 0xffff55;
+		}
+		else if (hunger > 0.25 * max)
+		{
+			return 0xff5555;
+		}
+		else
+		{
+			return 0xaa0000;
+		}
 	}
 }

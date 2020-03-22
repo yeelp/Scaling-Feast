@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.config;
+/*package yeelp.scalingfeast.config;
 
 import java.util.Set;
 
@@ -35,4 +35,4 @@ public class SFConfigGuiFactory implements IModGuiFactory
 		return null;
 	}
 
-}
+}*/

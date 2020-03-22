@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.config;
+/*package yeelp.scalingfeast.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +37,14 @@ public class SFConfigGui extends GuiConfig
 		{
 			ConfigCategory fs = config.getCategory(ModConfig.CATEGORY_EXTENDED_FOOD_STATS);
 			ConfigCategory items = config.getCategory(ModConfig.CATEGORY_ITEMS);
-			ConfigCategory compat = config.getCategory(ModConfig.CATEGORY_COMPAT);
+			ConfigCategory ascompat = config.getCategory(ModConfig.CATEGORY_COMPAT_APPLESKIN);
 			ConfigCategory hud = config.getCategory(ModConfig.CATEGORY_HUD);
-			lst.addAll(new ConfigElement(fs).getChildElements());
-			lst.addAll(new ConfigElement(items).getChildElements());
-			lst.addAll(new ConfigElement(hud).getChildElements());
-			lst.addAll(new ConfigElement(compat).getChildElements());
+			lst.add(new ConfigElement(fs));
+			lst.add(new ConfigElement(items));
+			lst.add(new ConfigElement(hud));
+			lst.add(new ConfigElement(ascompat));
 		}
 		return lst;
 	}
 
-}
+}*/

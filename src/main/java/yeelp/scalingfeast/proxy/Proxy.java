@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.proxy;
 
 import net.minecraftforge.common.MinecraftForge;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
@@ -15,6 +16,7 @@ public class Proxy
 {
 	public void preInit()
 	{
+		//MinecraftForge.EVENT_BUS.register(new ModConfig());
 		ScalingFeast.info("Registering enchantments...");
         MinecraftForge.EVENT_BUS.register(new SFEnchantments());
         ScalingFeast.info("Enchantments have been successfully registered.");
