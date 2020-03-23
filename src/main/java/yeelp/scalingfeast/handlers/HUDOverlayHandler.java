@@ -129,7 +129,7 @@ public class HUDOverlayHandler extends Handler
 		int top = res.getScaledHeight() - offset;
 		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
 		{
-			if(ModConfig.hud.drawSaturation || (ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawVanillaSatOverlay))
+			if(ModConfig.hud.drawSaturation && (!ScalingFeast.hasAppleSkin || ModConfig.compat.appleskin.drawVanillaSatOverlay))
 			{
 				mc.getTextureManager().bindTexture(icons);
 				drawExtendedSatBar(player.getFoodStats().getSaturationLevel(), mc, left, top+10, satColours.get(0));
@@ -267,7 +267,7 @@ public class HUDOverlayHandler extends Handler
 		mc.getTextureManager().bindTexture(icons);
 		mc.mcProfiler.startSection("extendedSaturation");
 		GlStateManager.enableBlend();
-		int colourIndex = (ModConfig.compat.appleskin.drawVanillaSatOverlay ? 1 : 0);
+		int colourIndex = (ModConfig.compat.appleskin.drawVanillaSatOverlay ? 0 : 1);
 		do
 		{
 			sat -= 20;

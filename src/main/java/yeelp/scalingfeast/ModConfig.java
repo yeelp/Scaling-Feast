@@ -61,9 +61,8 @@ public class ModConfig
 			public boolean drawExhaustion = true;
 			
 			@Name("Should Draw Vanilla Saturation Overlay?")
-			@Comment({"If true, Scaling Feast won't draw coloured hunger shank outlines for vanilla saturation, only extended saturation.",
-				      "Set this to false if AppleSkin is drawing the saturation overlay already.",
-				      "If set to false, Scaling Feast will draw saturation outlines for all forms of saturation (vanilla and extended).",
+			@Comment({"If true, Scaling Feast will draw coloured hunger shank outlines for vanilla saturation and extended saturation.",
+				      "Set this to false if AppleSkin is drawing the vanilla saturation overlay already.",
 				      "This only works if Display is set to OVERLAY and if Draw Saturation is set to true"})
 			public boolean drawVanillaSatOverlay = false;
 		}
