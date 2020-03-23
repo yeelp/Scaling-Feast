@@ -148,7 +148,7 @@ public class HUDOverlayHandler extends Handler
 		if(FoodStatsMap.hasStats(player.getUniqueID()))
 		{
 			int hunger = FoodStatsMap.getExtraFoodLevel(player.getUniqueID());
-			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) + (ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawVanillaSatOverlay ? player.getFoodStats().getSaturationLevel() : 0);
+			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) + (!ScalingFeast.hasAppleSkin || ModConfig.compat.appleskin.drawVanillaSatOverlay ? player.getFoodStats().getSaturationLevel() : 0);
 			int max = FoodStatsMap.getMaxFoodLevel(player.getUniqueID());
 			String hungerInfo = String.format("+(%d/%d", hunger, max);
 			String satInfo = String.format(", %.1f)", sat);
