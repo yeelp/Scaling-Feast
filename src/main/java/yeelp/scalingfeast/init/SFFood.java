@@ -7,6 +7,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.items.EnchantedIronAppleItem;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.items.IronAppleItem;
@@ -18,7 +19,7 @@ public class SFFood
 	public static ItemFood enchantedironapple;
 	public static void init()
 	{
-		heartyshank = new HeartyShankItem(4, 0.8f);
+		heartyshank = new HeartyShankItem(ModConfig.items.heartyShankFoodLevel, (float)ModConfig.items.heartyShankSatLevel);
 		ironapple = new IronAppleItem();
 		enchantedironapple = new EnchantedIronAppleItem();
 		ForgeRegistries.ITEMS.register(heartyshank);

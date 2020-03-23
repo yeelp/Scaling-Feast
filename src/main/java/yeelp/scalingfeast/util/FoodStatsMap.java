@@ -204,11 +204,23 @@ public class FoodStatsMap
 	}
 	/**
 	 * Increase a player's max food level by the amount specified by {@code FoodStatsMap.getIncreaseInterval()}
+	 * Will not exceed the amount specified by {@code FoodStatsMap.getCap()}
 	 * @param player The player to target
 	 */
 	public static void increaseMax(UUID player)
 	{
-		map.get(player).setMax((short) (map.get(player).getMaxFoodLevel() + incInterval));
+		if(map.get(player).getMaxFoodLevel() == cap)
+		{
+			return;
+		}
+		else if(map.get(player).getMaxFoodLevel() + incInterval > cap)
+		{
+			map.get(player).setMax(cap);
+		}
+		else
+		{
+			map.get(player).setMax((short) (map.get(player).getMaxFoodLevel() + incInterval));
+		}
 	}
 	/**
 	 * Consume a point of saturation. This method will never set extra saturation to a negative number.

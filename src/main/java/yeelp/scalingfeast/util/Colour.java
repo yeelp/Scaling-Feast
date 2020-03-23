@@ -17,12 +17,20 @@ public class Colour
 	 * i.e., a String like "0xffffff", while a valid hex string for Java, will
 	 * NOT work for this. Instead, pass the String "ffffff" (that is, omit the "0x" part of the String)
 	 * @param hex
+	 * @throws IllegalArgumentException if the String doesn't match the format.
 	 */
-	public Colour(String hex)
+	public Colour(String hex) throws IllegalArgumentException
 	{
-		this.r = new Integer(Integer.parseInt(hex.substring(0, 2), 16)).byteValue();
-		this.g = new Integer(Integer.parseInt(hex.substring(2, 4), 16)).byteValue();
-		this.b = new Integer(Integer.parseInt(hex.substring(4, 6), 16)).byteValue();
+		try
+		{
+			this.r = new Integer(Integer.parseInt(hex.substring(0, 2), 16)).byteValue();
+			this.g = new Integer(Integer.parseInt(hex.substring(2, 4), 16)).byteValue();
+			this.b = new Integer(Integer.parseInt(hex.substring(4, 6), 16)).byteValue();
+		}
+		catch(NumberFormatException e)
+		{
+			throw new IllegalArgumentException(e.toString() + " isn't a valid hex String for Colour!");
+		}
 	}
 	/**
 	 * Get the red component of this Colour
