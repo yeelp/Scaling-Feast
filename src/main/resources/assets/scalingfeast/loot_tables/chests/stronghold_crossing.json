@@ -1,0 +1,20 @@
+{
+    "pools": [
+        {
+            "name": "hearty_shank_injector",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "scalingfeast:heartyshank",
+                    "weight": 1
+                },
+                {
+                    "type": "empty",
+                    "name": "minecraft:air",
+                    "weight": 9
+                }
+            ]
+        }
+    ]
+}
