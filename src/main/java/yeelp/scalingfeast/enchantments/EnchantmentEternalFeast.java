@@ -21,6 +21,21 @@ public class EnchantmentEternalFeast extends Enchantment
 		this.setName(ModConsts.MOD_ID+".eternalfeast");
 	}
 
+	public int getMinEnchantability(int level)
+	{
+		return 3*level + 13;
+	}
+	
+	public int getMaxEnchantability(int level)
+	{
+		return 3*level + 24;
+	}
+	
+	public boolean isTreasureEnchantment()
+	{
+		return true;
+	}
+	
 	public int getMaxLevel()
 	{
 		return 3;

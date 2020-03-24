@@ -21,6 +21,16 @@ public class EnchantmentFamine extends Enchantment {
 		this.setName(ModConsts.MOD_ID+".famine");
 	}
 	
+	public int getMinEnchantability(int level)
+	{
+		return 7*level + 11;
+	}
+	
+	public int getMaxEnchantability(int level)
+	{
+		return 3*level + 40;
+	}
+	
 	public int getMaxLevel()
 	{
 		return 5;
