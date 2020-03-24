@@ -1,0 +1,20 @@
+{
+    "pools": [
+        {
+            "name": "iron_apples",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "scalingfeast:enchantedironapple",
+                    "weight": 1
+                },
+                {
+                    "type": "empty",
+                    "name": "minecraft:air",
+                    "weight": 9
+                }   
+            ]
+        }
+    ]
+}
