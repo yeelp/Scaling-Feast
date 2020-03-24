@@ -17,19 +17,19 @@ public class Proxy
 {
 	public void preInit()
 	{
-		//MinecraftForge.EVENT_BUS.register(new ModConfig());
 		ScalingFeast.info("Registering enchantments...");
         MinecraftForge.EVENT_BUS.register(new SFEnchantments());
         ScalingFeast.info("Enchantments have been successfully registered.");
         ScalingFeast.info("registering food item...");
         SFFood.init();
+        ScalingFeast.info("registering potion");
+        MinecraftForge.EVENT_BUS.register(new SFPotion());
         ScalingFeast.info("Food item registered!");
         ScalingFeast.info("Registering capability");
         ExtendedFoodStatsProvider.register();
         new CapabilityHandler().register();
         ScalingFeast.info("Registered capaility");
-        ScalingFeast.info("registering potion");
-        MinecraftForge.EVENT_BUS.register(new SFPotion());
+        SFPotion.addBrewingRecipes();
 	}
 	public void init()
 	{
