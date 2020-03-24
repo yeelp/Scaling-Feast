@@ -15,8 +15,16 @@ item.scalingfeast.enchantedironapple.name=§dIron Apple§f
 effect.metabolism=Metabolism
 
 potion.effect.metabolism=Metabolic Potion
+potion.effect.metabolism_strong=Metabolic Potion
+potion.effect.metabolism_extended=Metabolic Potion
 splash_potion.effect.metabolism=Metabolic Splash Potion
+splash_potion.effect.metabolism_strong=Metabolic Splash Potion
+splash_potion.effect.metabolism_extended=Metabolic Splash Potion
 lingering_potion.effect.metabolism=Metabolic Lingering Potion
+lingering_potion.effect.metabolism_strong=Metabolic Lingering Potion
+lingering_potion.effect.metabolism_extnended=Metabolic Lingering Potion
 tipped_arrow.effect.metabolism=Metabolic Arrow
+tipped_arrow.effect.metabolism_strong=Metabolic Arrow
+tipped_arrow.effect.metabolism_extended=Metabolic Arrow
 
 effect.ironstomach=Iron Stomach
