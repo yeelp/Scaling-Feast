@@ -6,6 +6,7 @@ import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
+import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.PotionHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
@@ -36,6 +37,7 @@ public class Proxy
     	new FoodHandler().register();
         new EnchantmentHandler().register();
         new PotionHandler().register();
+        new LootTableInjector().register();
         ScalingFeast.info("Handlers registered");
 	}
 	public void postInit()
