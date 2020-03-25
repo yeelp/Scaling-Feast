@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -46,6 +47,19 @@ public class CapabilityHandler extends Handler
 			fs.setSatLevel(FoodStatsMap.getExtraSatLevels(evt.player.getUniqueID()));
 			fs.setMax(FoodStatsMap.getMaxFoodLevel(evt.player.getUniqueID()));
 			FoodStatsMap.removePlayer(evt.player.getUniqueID());
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerDied(LivingDeathEvent evt)
+	{
+		if(evt.getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) evt.getEntity();
+			if(FoodStatsMap.hasPlayer(player.getUniqueID()))
+			{
+				FoodStatsMap.setFoodLevel(player.getUniqueID(), (short)(0.5*FoodStatsMap.getExtraFoodLevel(player.getUniqueID())));
+			}
 		}
 	}
 }

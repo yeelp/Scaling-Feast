@@ -265,10 +265,10 @@ public class FoodStatsMap
 	 * Does this player have non-zero food stats? This method only needs to check that this player's extra food level is
 	 * greater than zero. It follows immediately that saturation must be zero if the food level is zero from the cap on saturation
 	 * @param player The player to target
-	 * @return true if this player's extra food level is greater than zero, false otherwise
+	 * @return true if this player is in the map, and this player's extra food level is greater than zero, false otherwise
 	 */
 	public static boolean hasStats(UUID player)
 	{
-		return map.get(player).getFoodLevel() > 0;
+		return hasPlayer(player) && map.get(player).getFoodLevel() > 0;
 	}
 }

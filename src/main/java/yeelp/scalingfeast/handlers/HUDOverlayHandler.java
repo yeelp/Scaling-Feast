@@ -189,7 +189,7 @@ public class HUDOverlayHandler extends Handler
 		}
 		else
 		{
-			drawNumericalInfo(1, mc, left, top + 2, player.getFoodStats().getFoodLevel(), 20);
+			drawNumericalInfo(1, mc, left, top + 2, player.getFoodStats().getFoodLevel(), (FoodStatsMap.hasPlayer(player.getUniqueID()) ? FoodStatsMap.getMaxFoodLevel(player.getUniqueID()) : ModConsts.VANILLA_MAX_HUNGER));
 		}
 	}
 
@@ -267,7 +267,7 @@ public class HUDOverlayHandler extends Handler
 		mc.getTextureManager().bindTexture(icons);
 		mc.mcProfiler.startSection("extendedSaturation");
 		GlStateManager.enableBlend();
-		int colourIndex = (ModConfig.compat.appleskin.drawVanillaSatOverlay ? 0 : 1);
+		int colourIndex = (ModConfig.compat.appleskin.drawVanillaSatOverlay ? 1 : 0);
 		do
 		{
 			sat -= 20;
