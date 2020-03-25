@@ -184,7 +184,7 @@ public class HUDOverlayHandler extends Handler
 					else
 						drawMax(19, mc, left, top, jitterAmount[9]);
 				}
-				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2, hunger, max);
+				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2, 20 + hunger, 20 + max);
 			}
 		}
 		else
