@@ -45,7 +45,31 @@ public class ModConfig
 		@Comment("The increase in your total max hunger, in half shanks (i.e. 2 = one full hunger shank) per Hearty Shank eaten.")
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
 		public int inc = 2;
+		
+		@Name("Death Penalty")
+		@Comment("Configure what happens to player's extended food stats on death")
+		public DeathCategory death = new DeathCategory();
+		public static class DeathCategory
+		{
+			@Name("Percent Loss")
+			@Comment("Players will lose this percent of the current extended hunger on death. Set to 0.0 to disable")
+			@RangeDouble(min = 0.0, max = 1.0)
+			public double percentLoss = 0.5;
+			
+			@Name("Respawn Threshold")
+			@Comment({"If a player dies with an extended hunger value greater than this, their extended hunger will be set to this.",
+					  "Triggers BEFORE players induce a percentage loss. Set to -1 to disable"})
+			@RangeInt(min = -1, max = Short.MAX_VALUE)
+			public int respawnMax = -1;
+			
+			@Name("Keep Saturation?")
+			@Comment({"If true, players will retain their extended saturation on death.", 
+					  "Thier saturation still can't go above their current extended hunger,", 
+					  "so if their extened hunger is reduced below their extended saturation, thier extended saturation will be decreased appropriately"})
+			public boolean keepSat = true;	
+		}
 	}
+	
 	public static class CompatCategory
 	{
 		@Name("AppleSkin")
