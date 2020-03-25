@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
@@ -115,6 +117,13 @@ public class ScalingFeast
     		info(String.format("Success! Scaling Feast tweaked %d food items, %d of which are always edible.", foodItem, alwaysEdible));
     	}
     } 
+    
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+    	event.registerServerCommand(new SFCommand());
+    }
+    
     public static void info(String msg)
     {
     	logger.info("[SCALING FEAST] "+msg);
