@@ -12,6 +12,14 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import yeelp.scalingfeast.handlers.CapabilityHandler;
+import yeelp.scalingfeast.handlers.EnchantmentHandler;
+import yeelp.scalingfeast.handlers.FoodHandler;
+import yeelp.scalingfeast.handlers.LootTableInjector;
+import yeelp.scalingfeast.handlers.PotionHandler;
+import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
@@ -22,7 +30,7 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION/*, guiFactory = ModConsts.GUI_FACTORY*/)
+@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
 public class ScalingFeast
 {
 
@@ -41,14 +49,32 @@ public class ScalingFeast
         hasAppleSkin = Loader.isModLoaded("appleskin");
         alwaysEdibleFoods = new HashSet<ItemFood>();
         proxy.preInit();
+        info("Registering enchantments...");
+        MinecraftForge.EVENT_BUS.register(new SFEnchantments());
+        info("Enchantments have been successfully registered.");
+        info("registering food item...");
+        
+        info("registering potions...");
+        SFPotion.init();
+        info("Registering capability");
+        ExtendedFoodStatsProvider.register();
+        new CapabilityHandler().register();
+        info("Registered capability");
+        SFPotion.addBrewingRecipes();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
     	proxy.init();
+    	info("Registering handlers...");
+    	new FoodHandler().register();
+        new EnchantmentHandler().register();
+        new PotionHandler().register();
+        new LootTableInjector().register();
+        info("Handlers registered");
     	info("Initializing the ExtendedFoodStats map...");
-    	FoodStatsMap.init((short) -1, (short) 2);
+    	FoodStatsMap.init((short) ModConfig.extendedFoodStats.globalCap, (short) ModConfig.extendedFoodStats.inc);
     	info("Map intialization complete!");
     }
     

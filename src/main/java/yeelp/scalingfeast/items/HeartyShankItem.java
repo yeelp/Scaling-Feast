@@ -33,7 +33,8 @@ public class HeartyShankItem extends ItemFood
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		tooltip.add("Eat this to gain " + ModConfig.extendedFoodStats.inc/2.0f + " hunger shanks added to your overall max hunger!");
+		tooltip.add("Eat this to gain " + ModConfig.extendedFoodStats.inc/2.0f + " hunger shanks");
+		tooltip.add("added to your overall max hunger!");
 	}
 	
 	public int getMaxItemUseDuration(ItemStack stack)
