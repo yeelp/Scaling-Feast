@@ -10,6 +10,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
@@ -58,7 +59,15 @@ public class CapabilityHandler extends Handler
 			EntityPlayer player = (EntityPlayer) evt.getEntity();
 			if(FoodStatsMap.hasPlayer(player.getUniqueID()))
 			{
-				FoodStatsMap.setFoodLevel(player.getUniqueID(), (short)(0.5*FoodStatsMap.getExtraFoodLevel(player.getUniqueID())));
+				if(ModConfig.extendedFoodStats.death.respawnMax != -1 && FoodStatsMap.getExtraFoodLevel(player.getUniqueID()) > ModConfig.extendedFoodStats.death.respawnMax)
+				{
+					FoodStatsMap.setFoodLevel(player.getUniqueID(), (short) ModConfig.extendedFoodStats.death.respawnMax);
+				}
+				FoodStatsMap.setFoodLevel(player.getUniqueID(), (short)((1-ModConfig.extendedFoodStats.death.percentLoss)*FoodStatsMap.getExtraFoodLevel(player.getUniqueID())));
+				if(!ModConfig.extendedFoodStats.death.keepSat)
+				{
+					FoodStatsMap.setSaturationLevel(player.getUniqueID(), 0);
+				}
 			}
 		}
 	}

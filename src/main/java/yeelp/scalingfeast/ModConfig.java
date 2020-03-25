@@ -57,8 +57,8 @@ public class ModConfig
 			public double percentLoss = 0.5;
 			
 			@Name("Respawn Threshold")
-			@Comment({"If a player dies with an extended hunger value greater than this, their extended hunger will be set to this.",
-					  "Triggers BEFORE players induce a percentage loss. Set to -1 to disable"})
+			@Comment({"If a player dies with an extended hunger value greater than this value in half shanks, their extended hunger will be set to this.",
+					  "Triggers BEFORE players induce a percentage loss. Keep in mind that one shank = two half shanks. Set to -1 to disable"})
 			@RangeInt(min = -1, max = Short.MAX_VALUE)
 			public int respawnMax = -1;
 			
