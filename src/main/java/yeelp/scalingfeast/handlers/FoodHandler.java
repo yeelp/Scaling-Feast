@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.handlers;
 
 import java.util.HashSet;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,6 +37,8 @@ public class FoodHandler extends Handler
 	
 	//This list should help prevent a double eat from happening.
 	private static final Set<UUID> playersEating = new HashSet<UUID>();
+	
+	//This list should help differentiate item eat events from block eat events, so to speak
 	
 	@SubscribeEvent(priority = EventPriority.LOW, receiveCanceled=false)
 	public void onFoodStatsAddition(FoodEvent.FoodStatsAddition evt)

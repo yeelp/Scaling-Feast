@@ -1,5 +1,7 @@
 package yeelp.scalingfeast;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCake;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import squeek.applecore.api.food.IEdibleBlock;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
@@ -38,6 +41,7 @@ public class ScalingFeast
 
     public static Logger logger;
     public static Set<ItemFood> alwaysEdibleFoods;
+    public static Set<Block> alwaysEdibleBlocks;
     public static boolean hasAppleSkin;
     
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
@@ -115,6 +119,32 @@ public class ScalingFeast
     			}
     		}
     		info(String.format("Success! Scaling Feast tweaked %d food items, %d of which are always edible.", foodItem, alwaysEdible));
+    	}
+    	for(Block b : Block.REGISTRY)
+    	{
+    		if(b instanceof IEdibleBlock)
+    		{
+    			try
+    			{
+    				Field f = ObfuscationReflectionHelper.findField(b.getClass(), "AppleCore_isEdibleAtMaxHunger");
+    				if(f.getBoolean(b))
+    				{
+    					alwaysEdibleBlocks.add(b);
+    				}
+    			}
+    			catch(IllegalAccessException e)
+    			{
+    				warn("Unable to get edibility status of IEdibleBlock " + b.toString() + ", setting edibility anyway");
+    			}
+    			finally
+    			{
+    				((IEdibleBlock) b).setEdibleAtMaxHunger(true);
+    			}
+    		}
+    		else if(b instanceof BlockCake)
+    		{
+    			
+    		}
     	}
     } 
     
