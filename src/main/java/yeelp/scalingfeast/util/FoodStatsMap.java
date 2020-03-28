@@ -11,6 +11,7 @@ import java.util.UUID;
  * @author Yeelp
  * @see ExtendedFoodStats
  * @see <a href="https://minecraft.gamepedia.com/Hunger#Mechanics">Minecraft's basic hunger mechanics</a>
+ * @deprecated No longer needed
  */
 public class FoodStatsMap 
 {
