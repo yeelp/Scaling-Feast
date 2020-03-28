@@ -212,4 +212,10 @@ public class FoodHandler extends Handler
 			}
 		}
 	}
+	
+	@SubscribeEvent
+	public void onGetMaxHunger(HungerEvent.GetMaxHunger evt)
+	{
+		evt.maxHunger = evt.player.getCapability(ExtendedFoodStatsProvider.capFoodStat, null).getMaxFoodLevel();
+	}
 }
