@@ -133,9 +133,13 @@ public class HUDOverlayHandler extends Handler
 	private void drawNumericalOverlay(Minecraft mc, EntityPlayer player, ScaledResolution res, int left, int top)
 	{
 		int hunger = player.getFoodStats().getFoodLevel();
+		if(hunger <= 20)
+		{
+			return;
+		}
 		float sat = player.getFoodStats().getSaturationLevel();
 		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
-		String hungerInfo = String.format("+(%d/%d", hunger, max);
+		String hungerInfo = String.format("+(%d/%d", hunger-20, max-20);
 		String satInfo = String.format(", %.1f)", sat);
 		String info = hungerInfo + (ModConfig.hud.drawSaturation ? satInfo : ")");
 		GL11.glPushMatrix();
@@ -318,6 +322,10 @@ public class HUDOverlayHandler extends Handler
 			{
 				jitterAmount[i] += rand.nextInt(3) - 1;
 			}
+		}
+		if(player.isPotionActive(SFPotion.metabolism))
+		{
+			jitterAmount[updateCounter % 25] += 2;
 		}
 		return jitterAmount;
 	}

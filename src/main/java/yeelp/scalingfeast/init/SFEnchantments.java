@@ -1,10 +1,10 @@
 package yeelp.scalingfeast.init;
 
 import net.minecraft.enchantment.Enchantment;
-
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.enchantments.*;
 
@@ -20,16 +20,13 @@ public class SFEnchantments
 	public static Enchantment famine;
 	public static Enchantment eternalfeast;
 	
-	@SubscribeEvent
-	public void registerEnchantments(RegistryEvent.Register<Enchantment> event)
+	public static void init()
 	{
 		fasting = new EnchantmentFasting();
 		gluttony = new EnchantmentGluttony();
 		famine = new EnchantmentFamine();
 		eternalfeast = new EnchantmentEternalFeast();
-		event.getRegistry().register(fasting);
-		event.getRegistry().register(gluttony);
-		event.getRegistry().register(famine);
-		event.getRegistry().register(eternalfeast);
+		
+		ForgeRegistries.ENCHANTMENTS.registerAll(fasting, gluttony, famine, eternalfeast);
 	}
 }

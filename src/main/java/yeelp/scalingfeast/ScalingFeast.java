@@ -51,16 +51,10 @@ public class ScalingFeast
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
-        //ModConfig.init(event.getSuggestedConfigurationFile());
         hasAppleSkin = Loader.isModLoaded("appleskin");
         alwaysEdibleFoods = new HashSet<ItemFood>();
         proxy.preInit();
-        info("Registering enchantments...");
-        MinecraftForge.EVENT_BUS.register(new SFEnchantments());
-        info("Enchantments have been successfully registered.");
-        info("registering food item...");
-        
-        info("registering potions...");
+        SFEnchantments.init();
         SFPotion.init();
         info("Registering capability");
         FoodCapProvider.register();
@@ -79,73 +73,12 @@ public class ScalingFeast
         new PotionHandler().register();
         new LootTableInjector().register();
         info("Handlers registered");
-    	info("Initializing the ExtendedFoodStats map...");
-    	FoodStatsMap.init((short) ModConfig.extendedFoodStats.globalCap, (short) ModConfig.extendedFoodStats.inc);
-    	info("Map intialization complete!");
     }
     
     @EventHandler 
     public void postInit(FMLPostInitializationEvent event)
     {
-    	/*int alwaysEdible = 0;
-    	int foodItem = 0;
-    	info("Tweaking food items...");
-    	//Fall back to reflection to find out if a food item is always edible.
-    	//Would rather not do this, but it seems there is no way to check this field, only set it.
-    	Field edibility = null;
-    	edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "field_77852_bZ");
-    	if(edibility != null)
-    	{
-    		for(Item i : Item.REGISTRY)
-    		{
-    			if(i instanceof ItemFood)
-    			{
-    				ItemFood food = (ItemFood) i;
-    				try
-    				{
-    					if((boolean) edibility.get(food))
-    					{
-    						alwaysEdibleFoods.add(food);
-    						alwaysEdible++;
-    					}
-    					food.setAlwaysEdible();
-    					foodItem++;
-    				}
-    				catch(IllegalAccessException e)
-    				{
-    					warn("Unable to get the edibility status of: "+food+", Will still set alwaysEdible anyway.");
-    					food.setAlwaysEdible();
-    				}
-    			}
-    		}
-    		info(String.format("Success! Scaling Feast tweaked %d food items, %d of which are always edible.", foodItem, alwaysEdible));
-    	}
-    	for(Block b : Block.REGISTRY)
-    	{
-    		if(b instanceof IEdibleBlock)
-    		{
-    			try
-    			{
-    				Field f = ObfuscationReflectionHelper.findField(b.getClass(), "AppleCore_isEdibleAtMaxHunger");
-    				if(f.getBoolean(b))
-    				{
-    					alwaysEdibleBlocks.add(b);
-    				}
-    			}
-    			catch(IllegalAccessException e)
-    			{
-    				warn("Unable to get edibility status of IEdibleBlock " + b.toString() + ", setting edibility anyway");
-    			}
-    			finally
-    			{
-    				((IEdibleBlock) b).setEdibleAtMaxHunger(true);
-    			}
-    		}
-    		else if(b instanceof BlockCake)
-    		{
-    			
-    		}
-    	}*/
+    	
     } 
     
     @EventHandler
