@@ -11,7 +11,7 @@ import yeelp.scalingfeast.handlers.PotionHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.init.SFPotion;
-import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
+import yeelp.scalingfeast.util.FoodCapProvider;
 
 public class Proxy 
 {

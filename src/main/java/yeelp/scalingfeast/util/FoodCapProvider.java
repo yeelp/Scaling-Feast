@@ -11,50 +11,44 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 
-public class ExtendedFoodStatsProvider implements ICapabilitySerializable<NBTTagCompound>
+public class FoodCapProvider implements ICapabilitySerializable<NBTTagCompound>
 {
-	@CapabilityInject(ICappedFoodStats.class)
-	public static Capability<ICappedFoodStats> capFoodStat = null;
+	@CapabilityInject(IFoodCap.class)
+	public static Capability<IFoodCap> capFoodStat = null;
 	
-	private ICappedFoodStats instance = capFoodStat.getDefaultInstance();
-	private static final String EFOOD = "Extended Food Level";
-	private static final String ESAT = "Extended Saturation Level";
+	private IFoodCap instance = capFoodStat.getDefaultInstance();
 	private static final String EMAX = "Max Extended Food Level";
-	private static class FoodFactory implements Callable<ICappedFoodStats>
+	private static class FoodFactory implements Callable<IFoodCap>
 	{
 
 		@Override
-		public ICappedFoodStats call() throws Exception 
+		public IFoodCap call() throws Exception 
 		{
-			return new ExtendedFoodStats();
+			return new FoodCap();
 		}
 		
 	}
-	private static class FoodStorage implements IStorage<ICappedFoodStats>
+	private static class FoodStorage implements IStorage<IFoodCap>
 	{
 
 		@Override
-		public NBTBase writeNBT(Capability<ICappedFoodStats> capability, ICappedFoodStats instance, EnumFacing side)
+		public NBTBase writeNBT(Capability<IFoodCap> capability, IFoodCap instance, EnumFacing side)
 		{
 			NBTTagCompound nbt = new NBTTagCompound();
-			if(instance instanceof ExtendedFoodStats)
+			if(instance instanceof FoodCap)
 			{
-				nbt.setShort(EFOOD, instance.getFoodLevel());
-				nbt.setFloat(ESAT, instance.getSatLevel());
 				nbt.setShort(EMAX, instance.getMaxFoodLevel());
 			}
 			return nbt;
 		}
 
 		@Override
-		public void readNBT(Capability<ICappedFoodStats> capability, ICappedFoodStats instance, EnumFacing side, NBTBase nbt)
+		public void readNBT(Capability<IFoodCap> capability, IFoodCap instance, EnumFacing side, NBTBase nbt)
 		{
-			if(instance instanceof ExtendedFoodStats)
+			if(instance instanceof FoodCap)
 			{
 				NBTTagCompound data = (NBTTagCompound) nbt;
 				instance.setMax(data.getShort(EMAX));
-				instance.setFoodLevel(data.getShort(EFOOD));
-				instance.setSatLevel(data.getFloat(ESAT));
 			}
 		}
 		
@@ -62,7 +56,7 @@ public class ExtendedFoodStatsProvider implements ICapabilitySerializable<NBTTag
 	
 	public static void register()
 	{
-		CapabilityManager.INSTANCE.register(ICappedFoodStats.class, new FoodStorage(), new FoodFactory());
+		CapabilityManager.INSTANCE.register(IFoodCap.class, new FoodStorage(), new FoodFactory());
 	}
 	
 	@Override

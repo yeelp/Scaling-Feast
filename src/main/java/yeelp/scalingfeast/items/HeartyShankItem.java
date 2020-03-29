@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.util.FoodCapProvider;
 
 /**
  * Hearty Shank food item. Eating it increases max hunger
@@ -40,5 +43,14 @@ public class HeartyShankItem extends ItemFood
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
 		return 64;
+	}
+	
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
+	{
+		if(entityLiving instanceof EntityPlayer)
+		{
+			((EntityPlayer)entityLiving).getCapability(FoodCapProvider.capFoodStat, null).increaseMax((short)ModConfig.extendedFoodStats.inc);
+		}
+		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}
 }

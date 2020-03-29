@@ -28,6 +28,7 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.Colour;
+import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
 @SideOnly(Side.CLIENT)
@@ -78,9 +79,9 @@ public class HUDOverlayHandler extends Handler
 	{
 		if(evt.getType() == RenderGameOverlayEvent.ElementType.FOOD)
 		{
-			if(ModConfig.hud.style == DisplayStyle.OVERLAY && Minecraft.getMinecraft().player.getFoodStats().getSaturationLevel() == 0)
+			if(ModConfig.hud.style == DisplayStyle.OVERLAY)
 			{
-				//In order to make the HUD look nice when the player has no saturation, we need to completely remove
+				//In order to make the HUD look nice, we need to completely remove
 				//The hunger bar and re draw it so we have control over the 'jittering'.
 				evt.setCanceled(true);
 				Minecraft mc = Minecraft.getMinecraft();
@@ -99,8 +100,7 @@ public class HUDOverlayHandler extends Handler
 				}
 				//Calculate the random jitter amount beforehand and pass it to the draw methods
 				int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
-				drawVanillaStats(jitterAmount, mc, player, left, top);
-				drawExtendedStats(jitterAmount, mc, player, left, top);
+				drawStatsOverlay(jitterAmount, mc, player, left, top);
 				//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
 				GuiIngameForge.right_height += 10;
 			}
@@ -127,70 +127,95 @@ public class HUDOverlayHandler extends Handler
 		ScaledResolution res = evt.getResolution();
 		int left = res.getScaledWidth()/2 + 91;
 		int top = res.getScaledHeight() - offset;
-		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
-		{
-			if(ModConfig.hud.drawSaturation && (!ScalingFeast.hasAppleSkin || ModConfig.compat.appleskin.drawVanillaSatOverlay))
-			{
-				mc.getTextureManager().bindTexture(icons);
-				drawExtendedSatBar(player.getFoodStats().getSaturationLevel(), mc, left, top+10, satColours.get(0));
-				mc.getTextureManager().bindTexture(Gui.ICONS);
-			}
-			drawExtendedStats(getJitterAmount(mc.ingameGUI.getUpdateCounter(), player), mc, player, left, top + 10);
-		}
-		else
-		{
-			drawNumericalOverlay(mc, player, res, left, top + 10);
-		}
+		drawNumericalOverlay(mc, player, res, left, top + 10);
 	}
 	
 	private void drawNumericalOverlay(Minecraft mc, EntityPlayer player, ScaledResolution res, int left, int top)
 	{
-		if(FoodStatsMap.hasStats(player.getUniqueID()))
-		{
-			int hunger = FoodStatsMap.getExtraFoodLevel(player.getUniqueID());
-			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID()) + (!ScalingFeast.hasAppleSkin || ModConfig.compat.appleskin.drawVanillaSatOverlay ? player.getFoodStats().getSaturationLevel() : 0);
-			int max = FoodStatsMap.getMaxFoodLevel(player.getUniqueID());
-			String hungerInfo = String.format("+(%d/%d", hunger, max);
-			String satInfo = String.format(", %.1f)", sat);
-			String info = hungerInfo + (ModConfig.hud.drawSaturation ? satInfo : ")");
-			GL11.glPushMatrix();
-			GL11.glScalef(0.75f, 0.75f, 0.75f);
-			mc.fontRenderer.drawStringWithShadow(info, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
-			GL11.glColor3f(1.0f, 1.0f, 1.0f);
-			GL11.glPopMatrix();
-			mc.getTextureManager().bindTexture(Gui.ICONS);
-		}
+		int hunger = player.getFoodStats().getFoodLevel();
+		float sat = player.getFoodStats().getSaturationLevel();
+		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
+		String hungerInfo = String.format("+(%d/%d", hunger, max);
+		String satInfo = String.format(", %.1f)", sat);
+		String info = hungerInfo + (ModConfig.hud.drawSaturation ? satInfo : ")");
+		GL11.glPushMatrix();
+		GL11.glScalef(0.75f, 0.75f, 0.75f);
+		mc.fontRenderer.drawStringWithShadow(info, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		GL11.glPopMatrix();
+		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 	
-	private void drawExtendedStats(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
+	private void drawStatsOverlay(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
 	{
-		
-		if(FoodStatsMap.hasStats(player.getUniqueID()))
+		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
+		int hunger = player.getFoodStats().getFoodLevel();
+		float sat = player.getFoodStats().getSaturationLevel();
+		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
+		//Get the number of full bars to draw
+		int numBars = hunger/ModConsts.VANILLA_MAX_HUNGER;
+		int remainingShanks = hunger % ModConsts.VANILLA_MAX_HUNGER;
+		//First, draw the empty bar.
+		mc.getTextureManager().bindTexture(Gui.ICONS);
+		drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0), 27, true, false, isHungerEffectActive, null);
+		int i = 0;
+		int colourIndex = 0;
+		for(i = 0; i < numBars; i++)
 		{
-			int hunger = FoodStatsMap.getExtraFoodLevel(player.getUniqueID());
-			float sat = FoodStatsMap.getExtraSatLevels(player.getUniqueID());
-			int max = FoodStatsMap.getMaxFoodLevel(player.getUniqueID());
-			if(hunger > 0)
+			mc.mcProfiler.startSection("Food Bar: "+(i+1));
+			if(i == 0)
 			{
-				drawExtendedFood(hunger, mc, left, top, jitterAmount);
-				if(sat > 0 && ModConfig.hud.drawSaturation)
-				{
-					drawExtendedSat(sat, mc, left, top, jitterAmount);
-				}
-				if(hunger >= max - max%20)
-				{
-					if(max % 20 != 0)
-						drawMax(max%20, mc, left, top, jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1]);
-					else
-						drawMax(19, mc, left, top, jitterAmount[9]);
-				}
-				drawNumericalInfo(hunger / 20 + 2, mc, left, top + 2, 20 + hunger, 20 + max);
+				mc.getTextureManager().bindTexture(Gui.ICONS);
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0), 27, true, false, isHungerEffectActive, null); 
+			}
+			else
+			{
+				mc.getTextureManager().bindTexture(icons);
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 0, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
+			}
+			mc.mcProfiler.endSection();
+		}
+		if(remainingShanks > 0)
+		{
+			mc.mcProfiler.startSection("Food Bar: "+(i+1));
+			mc.getTextureManager().bindTexture((hunger < ModConsts.VANILLA_MAX_HUNGER ? Gui.ICONS : icons));
+			int u = (hunger < ModConsts.VANILLA_MAX_HUNGER ? 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0) : 0);
+			int v = (hunger < ModConsts.VANILLA_MAX_HUNGER ? 27 : 0);
+			drawStatBar(jitterAmount, mc, left, top, remainingShanks, u, v, hunger < ModConsts.VANILLA_MAX_HUNGER, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size())); 
+			mc.mcProfiler.endSection();
+		}
+		if(ModConfig.hud.drawSaturation)
+		{
+			colourIndex = 0;
+			numBars = (int)(sat/ModConsts.VANILLA_MAX_SAT);
+			float remainingSat = sat%ModConsts.VANILLA_MAX_SAT;
+			mc.getTextureManager().bindTexture(icons);
+			for(i = 0; i < numBars; i++)
+			{
+				mc.mcProfiler.startSection("Sat: "+(i+1));
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_SAT, 0, 9, false, true, false, satColours.get((colourIndex++) % satColours.size()));
+				mc.mcProfiler.endSection();
+			}
+			if(remainingSat > 0)
+			{
+				mc.mcProfiler.startSection("Sat: " + (i+1));
+				drawStatBar(jitterAmount, mc, left, top, remainingSat, 0, 9, false, true, false, satColours.get((colourIndex++) % satColours.size()));
+				mc.mcProfiler.endSection();
 			}
 		}
-		else
+		if(max - max%20 <= hunger)
 		{
-			drawNumericalInfo(1, mc, left, top + 2, player.getFoodStats().getFoodLevel(), (FoodStatsMap.hasPlayer(player.getUniqueID()) ? FoodStatsMap.getMaxFoodLevel(player.getUniqueID()) : ModConsts.VANILLA_MAX_HUNGER));
+			if(max % 20 != 0)
+			{
+				drawMax(max%20, mc, left, top, jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1]);
+			}
+			else
+			{
+				drawMax(19, mc, left, top, jitterAmount[9]);
+			}
 		}
+		mc.getTextureManager().bindTexture(Gui.ICONS);
+		drawNumericalInfo(numBars + (hunger > 0 ? 1 : 0), mc, left, top, hunger, max);
 	}
 
 	private void drawNumericalInfo(int i, Minecraft mc, int left, int top, int hunger, int max)
@@ -202,126 +227,49 @@ public class HUDOverlayHandler extends Handler
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
-
-	private void drawExtendedFood(int hunger, Minecraft mc, int left, int top, int[] jitterAmount) 
+	
+	private void drawStatBar(int[] jitterAmount, Minecraft mc, int left, int top, float amount, int u, int v, boolean vanilla, boolean sat, boolean hungerEffectActive, Colour colour)
 	{
-		mc.getTextureManager().bindTexture(icons);
-		mc.mcProfiler.startSection("extendedFood");
-		GlStateManager.enableBlend();
-		int colourIndex = 0;
-		do
-		{
-			hunger -= 20;
-			Colour c = colours.get((colourIndex++) % colours.size());
-			if(hunger >= 0)
-			{
-				drawExtendedFoodBar(20, mc, left, top, jitterAmount, c);
-			}
-			else
-			{
-				drawExtendedFoodBar(hunger + 20, mc, left, top, jitterAmount, c);
-			}
-		}while(hunger > -20);
-		GlStateManager.disableBlend();
-		mc.mcProfiler.endSection();
-		mc.getTextureManager().bindTexture(Gui.ICONS);
-	}
-	private void drawExtendedFoodBar(int amount, Minecraft mc, int left, int top, int[] jitterAmount, Colour colour)
-	{
+		//this is a one indexed value, the variable currShank will be a zero indexed value
 		float shanksNeeded = amount/2.0f;
-		int x;
-		int y = top;
-		int i;
-		boolean hungerEffect = mc.player.isPotionActive(MobEffects.HUNGER);
-		float red = 1f/255 * colour.getR();
-		float green = 1f/255 * colour.getG();
-		float blue = 1f/255 * colour.getB();
-		for(i = 0; i < (int)shanksNeeded; i++)
-		{
-			x = left - i * 8 - 9;
-			y = top + jitterAmount[i];
-			GL11.glColor3f(red, green, blue);
-			mc.ingameGUI.drawTexturedModalRect((float)x, y, 0, 0, 9, 9);
-			GL11.glColor3f(1.0f,  1.0f, 1.0f);
-			if(hungerEffect)
-			{
-				mc.ingameGUI.drawTexturedModalRect((float)x, y, 18, 0, 9, 9);
-			}
-		}
-		//only true if we need a half shank
-		if((int)shanksNeeded < shanksNeeded)
-		{
-			x = left - i * 8 - 9;
-			y = top + jitterAmount[i];
-			GL11.glColor3f(red, green, blue);
-			mc.ingameGUI.drawTexturedModalRect((float)x, y, 9, 0, 9, 9);
-			GL11.glColor3f(1.0f,  1.0f, 1.0f);
-			if(hungerEffect)
-			{
-				mc.ingameGUI.drawTexturedModalRect((float)x, y, 27, 0, 9, 9);
-			}
-		}
-	}
-	private void drawExtendedSat(float sat, Minecraft mc, int left, int top, int[] jitterAmount) 
-	{
-		mc.getTextureManager().bindTexture(icons);
-		mc.mcProfiler.startSection("extendedSaturation");
-		GlStateManager.enableBlend();
-		int colourIndex = (ModConfig.compat.appleskin.drawVanillaSatOverlay ? 1 : 0);
-		do
-		{
-			sat -= 20;
-			Colour c = satColours.get((colourIndex++) % satColours.size());
-			if(sat >= 0)
-			{
-				drawExtendedSatBar(20, mc, left, top, c);
-			}
-			else
-			{
-				drawExtendedSatBar(sat + 20, mc, left, top, c);
-			}
-		}while(sat > -20);
-		GlStateManager.disableBlend();
-		mc.mcProfiler.endSection();
-		mc.getTextureManager().bindTexture(Gui.ICONS);
-	}
-	private void drawExtendedSatBar(float amount, Minecraft mc, int left, int top, Colour colour)
-	{
-		float barsNeeded = amount/2;
 		int x, y = top, i;
-		float red = 1f/255 * colour.getR();
-		float green = 1f/255 * colour.getG();
-		float blue = 1f/255 * colour.getB();
-		for(i = 0; i < (int)barsNeeded; i++)
+		for(i = 0; i < shanksNeeded; i++)
 		{
 			x = left - i * 8 - 9;
-			y = top;
-			GL11.glColor3f(red, green, blue);
-			mc.ingameGUI.drawTexturedModalRect((float)x, y, 0, 9, 9, 9);
-			GL11.glColor3f(1.0f,  1.0f, 1.0f);
+			y = top + jitterAmount[i];
+			drawIcon(mc, x, y, u, v, i, shanksNeeded, vanilla, sat, hungerEffectActive, colour);
 		}
-		x = left - i * 8 - 9;
-		float leftover = barsNeeded - (int)barsNeeded;
-		int u = 0;
-		if(leftover > 0.5)
+	}
+
+	private void drawIcon(Minecraft mc, int x, int y, int u, int v, int currShank, float shanksNeeded, boolean vanilla, boolean sat, boolean hungerEffectActive, Colour colour)
+	{
+		float leftover = shanksNeeded - currShank;
+		if(colour != null && !vanilla)
 		{
-			u = 9;
+			GL11.glColor3f(1f/255*colour.getR(), 1f/255*colour.getG(), 1f/255*colour.getB());
 		}
-		else if(leftover > 0.25)
+		if(leftover < 1)
 		{
-			u = 18;
+			
+			if(!sat || leftover > 0.5)
+			{
+				u += 9;
+			}
+			else if(leftover > 0.25)
+			{
+				u += 18;
+			}
+			else if(leftover > 0)
+			{
+				u += 27;
+			}
 		}
-		else if(leftover > 0)
+		mc.ingameGUI.drawTexturedModalRect(x, y, u, v, 9, 9);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		if(hungerEffectActive && !vanilla && !sat)
 		{
-			u = 27;
+			mc.ingameGUI.drawTexturedModalRect(x, y, u + 18, v, 9, 9);
 		}
-		else
-		{
-			return;
-		}
-		GL11.glColor3f(red, green, blue);
-		mc.ingameGUI.drawTexturedModalRect((float)x, y, u, 9, 9, 9);
-		GL11.glColor3f(1.0f,  1.0f, 1.0f);
 	}
 	
 	private void drawMax(int max, Minecraft mc, int left, int top, int jitter) 
@@ -341,41 +289,6 @@ public class HUDOverlayHandler extends Handler
 		GlStateManager.disableBlend();
 		mc.mcProfiler.endSection();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
-	}
-	
-	private void drawVanillaStats(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
-	{
-		//Draw empty hunger bar
-		mc.getTextureManager().bindTexture(Gui.ICONS);
-		mc.mcProfiler.startSection("overriddenVanillaHunger");
-		GlStateManager.enableBlend();
-		float shanks = player.getFoodStats().getFoodLevel()/2.0f;
-		int u = 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0);
-		int v = 27;
-		for(int i = 0; i < 10; i++)
-		{
-			int x = left - i * 8 - 9;
-			int y = top + (jitterAmount != null ? jitterAmount[i] : 0);
-			mc.ingameGUI.drawTexturedModalRect((float)x, y, u, v, 9, 9);
-		}
-		//draw food stats
-		u = 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0);
-		int x;
-		int i;
-		for(i = 0; i < (int)shanks; i++)
-		{
-			x = left - i * 8 - 9;
-			int y = top + (jitterAmount != null ? jitterAmount[i] : 0);
-			mc.ingameGUI.drawTexturedModalRect((float)x, y, u, v, 9, 9);
-		}
-		if((int)shanks < shanks)
-		{
-			x = left - i * 8 - 9;
-			int y = top + (jitterAmount != null ? jitterAmount[i] : 0);
-			mc.ingameGUI.drawTexturedModalRect((float)x, y, u + 9, v, 9, 9);
-		}
-		GlStateManager.disableBlend();
-		mc.mcProfiler.endSection();
 	}
 	
 	private void drawExhaustion(float exhaustion, Minecraft mc, int left, int top) 

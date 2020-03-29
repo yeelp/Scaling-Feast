@@ -26,7 +26,7 @@ import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
-import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
+import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
 import java.lang.reflect.Field;
@@ -63,7 +63,7 @@ public class ScalingFeast
         info("registering potions...");
         SFPotion.init();
         info("Registering capability");
-        ExtendedFoodStatsProvider.register();
+        FoodCapProvider.register();
         new CapabilityHandler().register();
         info("Registered capability");
         SFPotion.addBrewingRecipes();
@@ -87,7 +87,7 @@ public class ScalingFeast
     @EventHandler 
     public void postInit(FMLPostInitializationEvent event)
     {
-    	int alwaysEdible = 0;
+    	/*int alwaysEdible = 0;
     	int foodItem = 0;
     	info("Tweaking food items...");
     	//Fall back to reflection to find out if a food item is always edible.
@@ -145,7 +145,7 @@ public class ScalingFeast
     		{
     			
     		}
-    	}
+    	}*/
     } 
     
     @EventHandler

@@ -16,6 +16,7 @@ import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
 public class EnchantmentHandler extends Handler
@@ -76,18 +77,6 @@ public class EnchantmentHandler extends Handler
 			int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.eternalfeast, player);
 			if(level!=0)
 			{
-				if(FoodStatsMap.hasPlayer(player.getUniqueID()) && FoodStatsMap.getMaxFoodLevel(player.getUniqueID()) > 0)
-				{
-					int vanillaFoodNeeded = ModConsts.VANILLA_MAX_HUNGER - player.getFoodStats().getFoodLevel();
-					int remainder = 2*level;
-					if(vanillaFoodNeeded <= 2*level)
-					{
-						player.getFoodStats().addStats(vanillaFoodNeeded, 0);
-						remainder -= vanillaFoodNeeded;
-						FoodStatsMap.addFoodStats(player.getUniqueID(), remainder, 0);
-						return;
-					}
-				}
 				player.getFoodStats().addStats(2*level, 0);
 			}
 		}

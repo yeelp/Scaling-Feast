@@ -9,13 +9,13 @@ import java.util.UUID;
  * A FoodStat map for storing the individual ExtendedFoodStats for different players.
  * All modifications to this map respect the caps specified by each individual player's ExtendedFoodStats and Minecraft's basic hunger mechanics
  * @author Yeelp
- * @see ExtendedFoodStats
+ * @see FoodCap
  * @see <a href="https://minecraft.gamepedia.com/Hunger#Mechanics">Minecraft's basic hunger mechanics</a>
  * @deprecated No longer needed
  */
 public class FoodStatsMap 
 {
-	private static final Map<UUID, ExtendedFoodStats> map = Collections.synchronizedMap(new HashMap<UUID, ExtendedFoodStats>());
+	private static final Map<UUID, FoodCap> map = Collections.synchronizedMap(new HashMap<UUID, FoodCap>());
 	private static short cap;
 	private static boolean noCap = false;
 	private static short incInterval;
@@ -43,7 +43,7 @@ public class FoodStatsMap
 	 */
 	public static void addPlayer(UUID player)
 	{
-		ExtendedFoodStats fs = new ExtendedFoodStats();
+		FoodCap fs = new FoodCap();
 		map.put(player, fs);
 	}
 	/**
@@ -53,9 +53,9 @@ public class FoodStatsMap
 	 * @param satLevel the saturation level this player starts with
 	 * @param max the maximum food level this player can have.
 	 */
-	public static void addPlayer(UUID player, short foodLevel, float satLevel, short max)
+	public static void addPlayer(UUID player, short max)
 	{
-		ExtendedFoodStats fs = new ExtendedFoodStats(foodLevel, satLevel, max);
+		FoodCap fs = new FoodCap(max);
 		map.put(player, fs);
 	}
 	/**
@@ -75,24 +75,7 @@ public class FoodStatsMap
 	{
 		return map.containsKey(player);
 	}
-	/**
-	 * Get the extra food levels the stat map provides a player
-	 * @param player The UUID of the player
-	 * @return The extra food level the stat map gives this player
-	 */
-	public static short getExtraFoodLevel(UUID player)
-	{
-		return map.get(player).getFoodLevel();
-	}
-	/**
-	 * Get the extra saturation levels the stat map provides a player
-	 * @param player The UUID of the player
-	 * @return The extra saturation levels the stat map gives this player
-	 */
-	public static float getExtraSatLevels(UUID player)
-	{
-		return map.get(player).getSatLevel();
-	}
+
 	/**
 	 * Gets the maximum food level this player has
 	 * @param player The UUID of the player
@@ -107,7 +90,7 @@ public class FoodStatsMap
 	 * @param player the UUID of the player
 	 * @return An ExtendedFoodStats container for this player
 	 */
-	public static ExtendedFoodStats getExtendedFoodStats(UUID player)
+	public static FoodCap getExtendedFoodStats(UUID player)
 	{
 		return map.get(player);
 	}
@@ -166,24 +149,7 @@ public class FoodStatsMap
 	{
 		incInterval = increaseAmount;
 	}
-	/**
-	 * Set the food level for a player
-	 * @param player the player to target
-	 * @param foodLevel the food level to set
-	 */
-	public static void setFoodLevel(UUID player, short foodLevel)
-	{
-		map.get(player).setFoodLevel(foodLevel);
-	}
-	/**
-	 * Set the saturation level for a player
-	 * @param player The player to target
-	 * @param satLevel The saturation level to set
-	 */
-	public static void setSaturationLevel(UUID player, float satLevel)
-	{
-		map.get(player).setSatLevel(satLevel);
-	}
+
 	/**
 	 * Set the maximum food level a specific player can have
 	 * @param player the player to target
@@ -192,16 +158,6 @@ public class FoodStatsMap
 	public static void setMaxFoodLevel(UUID player, short max)
 	{
 		map.get(player).setMax(max);
-	}
-	/**
-	 * Add food stats to a player in the map
-	 * @param player the player to target
-	 * @param foodLevel the food level to add
-	 * @param satLevel the saturation level to add
-	 */
-	public static void addFoodStats(UUID player, int foodLevel, float satLevel)
-	{
-		map.get(player).addFoodStats((short)foodLevel, satLevel);
 	}
 	/**
 	 * Increase a player's max food level by the amount specified by {@code FoodStatsMap.getIncreaseInterval()}
@@ -222,54 +178,5 @@ public class FoodStatsMap
 		{
 			map.get(player).setMax((short) (map.get(player).getMaxFoodLevel() + incInterval));
 		}
-	}
-	/**
-	 * Consume a point of saturation. This method will never set extra saturation to a negative number.
-	 * @param player the player to target
-	 * @param amount The amount of saturation to consume
-	 * @return The amount of saturation consumed
-	 */
-	public static float consumeSat(UUID player, float amount)
-	{
-		float sat = map.get(player).getSatLevel();
-		if(sat < amount)
-		{
-			map.get(player).setSatLevel(0);
-			return sat;
-		}
-		else
-		{
-			map.get(player).setSatLevel(sat - amount);
-			return amount;
-		}
-	}
-	/**
-	 * Consume a point of hunger. This method checks if a player's extra foodLevel is non-zero before deducting.
-	 * @param player the player to target
-	 * @return The amount of food consumed
-	 */
-	public static int consumeFood(UUID player, int amount)
-	{
-		short food = map.get(player).getFoodLevel();
-		if(food < amount)
-		{
-			map.get(player).setFoodLevel((short) 0);
-			return food;
-		}
-		else
-		{
-			map.get(player).setFoodLevel((short) (food - amount));
-			return amount;
-		}
-	}
-	/**
-	 * Does this player have non-zero food stats? This method only needs to check that this player's extra food level is
-	 * greater than zero. It follows immediately that saturation must be zero if the food level is zero from the cap on saturation
-	 * @param player The player to target
-	 * @return true if this player is in the map, and this player's extra food level is greater than zero, false otherwise
-	 */
-	public static boolean hasStats(UUID player)
-	{
-		return hasPlayer(player) && map.get(player).getFoodLevel() > 0;
 	}
 }
