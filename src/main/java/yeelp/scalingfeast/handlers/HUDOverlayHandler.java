@@ -316,16 +316,21 @@ public class HUDOverlayHandler extends Handler
 		int foodLevel = player.getFoodStats().getFoodLevel();
 		float satLevel = player.getFoodStats().getSaturationLevel();
 		int[] jitterAmount = new int[10];
+		int regen = -1;
+		if(player.isPotionActive(SFPotion.metabolism))
+		{
+			regen = updateCounter % 25;
+		}
 		if(updateCounter % (foodLevel * 3 + 1) == 0 && satLevel == 0)
 		{
 			for(int i = 0; i < 10; i++)
 			{
 				jitterAmount[i] += rand.nextInt(3) - 1;
+				if(i == regen)
+				{
+					jitterAmount[i] += 2;
+				}
 			}
-		}
-		if(player.isPotionActive(SFPotion.metabolism))
-		{
-			jitterAmount[updateCounter % 25] += 2;
 		}
 		return jitterAmount;
 	}

@@ -36,6 +36,7 @@ public class SFFood
 		registerRender((Item) heartyshank);
 		registerRender((Item) ironapple);
 		registerRender((Item) enchantedironapple);
+		registerRender((Item) heartyfeastitem);
 	}
 	
 	private static void registerRender(Item i)

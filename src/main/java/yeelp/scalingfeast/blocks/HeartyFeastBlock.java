@@ -1,12 +1,18 @@
 package yeelp.scalingfeast.blocks;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockCake;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -18,6 +24,8 @@ import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.food.IEdibleBlock;
 import squeek.applecore.api.food.ItemFoodProxy;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.util.FoodCapProvider;
 
 /**
@@ -28,23 +36,37 @@ import yeelp.scalingfeast.util.FoodCapProvider;
 public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 {
 	public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
-	protected static final AxisAlignedBB[] CAKE_AABB =
-			new AxisAlignedBB[] {new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D),
-					new AxisAlignedBB(0.1875D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D),
-					new AxisAlignedBB(0.3125D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D),
-					new AxisAlignedBB(0.4375D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D),
-					new AxisAlignedBB(0.5625D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D),
-					new AxisAlignedBB(0.6875D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D),
-					new AxisAlignedBB(0.8125D, 0.0D, 0.0625D, 0.9375D, 0.5D, 0.9375D)};
 	private boolean alwaysEdible = false;
 	private int food = 0;
 	private float sat = 0;
 	public HeartyFeastBlock()
 	{
 		super();
+		this.blockSoundType = SoundType.CLOTH;
 		this.setRegistryName("heartyfeast");
 		this.setUnlocalizedName(ModConsts.MOD_ID+".heartyfeast");
+		this.setHardness(0.5f);
 	}
+	
+	public int quantityDropped()
+	{
+		return 1;
+	}
+	
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	{
+		ItemStack stack = new ItemStack(SFFood.heartyfeastitem);
+		stack.setItemDamage(state.getValue(BITES));
+		return stack;
+	}
+	
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+		Item item = SFFood.heartyfeastitem;
+		item.setDamage(new ItemStack(item), (state.getValue(BITES)));
+		return item;
+    }
+	
 	@Override
 	public FoodValues getFoodValues(ItemStack itemStack) 
 	{
@@ -63,6 +85,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	{
 		this.food = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel()/7;
 		this.sat = this.food/4 + 0.5f;
+		ScalingFeast.info("HEAL: "+this.food+", "+this.sat);
 		return this.eat(world, pos, state, player);
 	}
 	
