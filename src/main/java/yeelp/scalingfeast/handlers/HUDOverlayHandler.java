@@ -16,6 +16,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +40,6 @@ public class HUDOverlayHandler extends Handler
 	ArrayList<Colour> colours = new ArrayList<Colour>();
 	ArrayList<Colour> satColours = new ArrayList<Colour>();
 	Random rand = new Random();
-	private String style;
 	
 	public HUDOverlayHandler()
 	{
@@ -79,7 +79,7 @@ public class HUDOverlayHandler extends Handler
 	{
 		if(evt.getType() == RenderGameOverlayEvent.ElementType.FOOD)
 		{
-			if(ModConfig.hud.style == DisplayStyle.OVERLAY)
+			if(ModConfig.hud.style != DisplayStyle.DEFAULT)
 			{
 				//In order to make the HUD look nice, we need to completely remove
 				//The hunger bar and re draw it so we have control over the 'jittering'.
@@ -101,33 +101,14 @@ public class HUDOverlayHandler extends Handler
 				//Calculate the random jitter amount beforehand and pass it to the draw methods
 				int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
 				drawStatsOverlay(jitterAmount, mc, player, left, top);
+				if(ModConfig.hud.style == DisplayStyle.NUMERICAL)
+				{
+					drawNumericalOverlay(mc, player, res, left, top );
+				}
 				//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
 				GuiIngameForge.right_height += 10;
 			}
 		}
-	}
-
-	@SubscribeEvent(priority=EventPriority.LOW)
-	public void onRender(RenderGameOverlayEvent.Post evt)
-	{
-		if(evt.getType() != RenderGameOverlayEvent.ElementType.FOOD)
-		{
-			return;
-		}
-		else if(evt.isCanceled())
-		{
-			return;
-		}
-		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.player;
-	
-	
-		offset = GuiIngameForge.right_height;
-	
-		ScaledResolution res = evt.getResolution();
-		int left = res.getScaledWidth()/2 + 91;
-		int top = res.getScaledHeight() - offset;
-		drawNumericalOverlay(mc, player, res, left, top + 10);
 	}
 	
 	private void drawNumericalOverlay(Minecraft mc, EntityPlayer player, ScaledResolution res, int left, int top)
@@ -171,6 +152,10 @@ public class HUDOverlayHandler extends Handler
 			{
 				mc.getTextureManager().bindTexture(Gui.ICONS);
 				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0), 27, true, false, isHungerEffectActive, null); 
+				if(ModConfig.hud.style == DisplayStyle.NUMERICAL)
+				{
+					break;
+				}
 			}
 			else
 			{
@@ -179,7 +164,12 @@ public class HUDOverlayHandler extends Handler
 			}
 			mc.mcProfiler.endSection();
 		}
-		if(remainingShanks > 0)
+		/* 
+		 * only draw remaining shanks if
+		 * style set to NUMERICAL and total hunger < 20
+		 * style set to OVERLAY and there are leftover shanks to draw 
+		 */
+		if(remainingShanks > 0 && (hunger < ModConsts.VANILLA_MAX_HUNGER || !(ModConfig.hud.style == DisplayStyle.NUMERICAL)))
 		{
 			mc.mcProfiler.startSection("Food Bar: "+(i+1));
 			mc.getTextureManager().bindTexture((hunger < ModConsts.VANILLA_MAX_HUNGER ? Gui.ICONS : icons));
@@ -219,7 +209,10 @@ public class HUDOverlayHandler extends Handler
 			}
 		}
 		mc.getTextureManager().bindTexture(Gui.ICONS);
-		drawNumericalInfo(numBars + (hunger > 0 ? 1 : 0), mc, left, top, hunger, max);
+		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
+		{
+			drawNumericalInfo(numBars + (hunger > 0 ? 1 : 0), mc, left, top, hunger, max);
+		}
 	}
 
 	private void drawNumericalInfo(int i, Minecraft mc, int left, int top, int hunger, int max)
@@ -313,6 +306,7 @@ public class HUDOverlayHandler extends Handler
 	
 	private int[] getJitterAmount(int updateCounter, EntityPlayer player)
 	{
+		rand.setSeed(updateCounter * 70643);
 		int foodLevel = player.getFoodStats().getFoodLevel();
 		float satLevel = player.getFoodStats().getSaturationLevel();
 		int[] jitterAmount = new int[10];

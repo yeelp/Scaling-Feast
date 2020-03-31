@@ -1,11 +1,14 @@
 package yeelp.scalingfeast.util;
 
+import net.minecraft.nbt.NBTTagShort;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+
 /**
  * An interface for implementing extended food stats
  * @author Yeelp
  *
  */
-public interface IFoodCap 
+public interface IFoodCap extends ICapabilitySerializable<NBTTagShort>
 {
 	/**
 	 * Get the max food level

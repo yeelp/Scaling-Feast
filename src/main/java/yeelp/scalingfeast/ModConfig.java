@@ -17,7 +17,7 @@ public class ModConfig
 {	
 	@Name("Extended Food Stats")
 	@Comment("These settings modify the bas behaviour of Scaling Feast")
-	public static final ExtendedFoodStatsCategory extendedFoodStats = new ExtendedFoodStatsCategory();
+	public static final FoodCapCategory foodCap = new FoodCapCategory();
 	
 	@Name("Compatibility")
 	@Comment("These settings are for ensuring compatibility between other mods")
@@ -31,7 +31,7 @@ public class ModConfig
 	@Comment("These settings are for tweaking the heads-up display")
 	public static final HUDCategory hud = new HUDCategory();
 
-	public static class ExtendedFoodStatsCategory
+	public static class FoodCapCategory
 	{
 		@Name("Global Cap")
 		@Comment({"The highest extended hunger the player can have.",
@@ -110,12 +110,14 @@ public class ModConfig
 		public enum DisplayStyle
 		{
 			OVERLAY,
-			NUMERICAL;
+			NUMERICAL,
+			DEFAULT;
 		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
-			      "if set to NUMERICAL, Scaling Feast will display a \'(x/X, Y)\' next to your hunger bar, where x is your current extended food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true).",
-			      "If set to OVERLAY, Scaling Feast will overlay coloured shanks over your hunger bar to display your extended food stats."})
+			      "If set to NUMERICAL, Scaling Feast will display a \'+(x/X, Y)\' next to your hunger bar, when over the default vanilla max hunger, where x is your current extra food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true).",
+			      "If set to OVERLAY, Scaling Feast will overlay coloured shanks over your hunger bar to display your extended food stats.",
+			      "If set to DEFAULT, Scaling Feast will do nothing. Your default vanilla hunger bar will represent your entire hunger bar."})
 		public DisplayStyle style = DisplayStyle.OVERLAY;
 		
 		@Name("Draw Saturation?")
@@ -154,8 +156,6 @@ public class ModConfig
 			if (event.getModID().equals(ModConsts.MOD_ID)) 
 			{
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
-				FoodStatsMap.setCap((short) extendedFoodStats.globalCap);
-				FoodStatsMap.setIncreaseAmount((short) extendedFoodStats.inc);
 			}
 		}
 	}

@@ -21,11 +21,13 @@ import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.handlers.LootTableInjector;
+import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.handlers.PotionHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
+import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.FoodStatsMap;
 
@@ -57,10 +59,11 @@ public class ScalingFeast
         SFEnchantments.init();
         SFPotion.init();
         info("Registering capability");
-        FoodCapProvider.register();
+        FoodCap.register();
         new CapabilityHandler().register();
         info("Registered capability");
         SFPotion.addBrewingRecipes();
+        PacketHandler.init();
     }
 
     @EventHandler

@@ -47,7 +47,7 @@ public class EnchantmentHandler extends Handler
 	}
 	
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
-	public void onEvent(LivingAttackEvent evt)
+	public void onAttackEvent(LivingAttackEvent evt)
 	{
 		EntityLivingBase entity = evt.getEntityLiving();
 		if(evt.getSource().getTrueSource() instanceof EntityLivingBase)
@@ -69,7 +69,7 @@ public class EnchantmentHandler extends Handler
 	}
 	
 	@SubscribeEvent
-	public void onEvent(LivingDeathEvent evt)
+	public void onKillEvent(LivingDeathEvent evt)
 	{
 		if(evt.getSource().getTrueSource() instanceof EntityPlayer)
 		{

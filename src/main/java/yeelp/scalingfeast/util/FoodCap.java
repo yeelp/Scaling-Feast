@@ -1,13 +1,13 @@
 package yeelp.scalingfeast.util;
 
+import java.util.concurrent.Callable;
+
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import yeelp.scalingfeast.ModConsts;
 
 /**
@@ -15,7 +15,7 @@ import yeelp.scalingfeast.ModConsts;
  * @author Yeelp
  *
  */
-public class FoodCap implements IFoodCap
+public final class FoodCap implements IFoodCap
 {
 	private short max;
 	
@@ -65,5 +65,57 @@ public class FoodCap implements IFoodCap
 		{
 			this.max += amount;
 		}
+	}
+	
+	public static void register()
+	{
+		CapabilityManager.INSTANCE.register(IFoodCap.class, new FoodStorage(), new FoodFactory());
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
+	{
+		return capability == FoodCapProvider.capFoodStat;
+	}
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
+	{
+		return capability == FoodCapProvider.capFoodStat ? FoodCapProvider.capFoodStat.<T> cast(this) : null;
+	}
+	@Override
+	public NBTTagShort serializeNBT() 
+	{
+		return new NBTTagShort(this.max);
+	}
+	@Override
+	public void deserializeNBT(NBTTagShort nbt) 
+	{
+		this.max = ((NBTTagShort) nbt).getShort();
+	}
+	private static class FoodFactory implements Callable<IFoodCap>
+	{
+
+		@Override
+		public IFoodCap call() throws Exception 
+		{
+			return new FoodCap();
+		}
+		
+	}
+	private static class FoodStorage implements IStorage<IFoodCap>
+	{
+
+		@Override
+		public NBTBase writeNBT(Capability<IFoodCap> capability, IFoodCap instance, EnumFacing side)
+		{
+			return new NBTTagShort(instance.getMaxFoodLevel());
+		}
+
+		@Override
+		public void readNBT(Capability<IFoodCap> capability, IFoodCap instance, EnumFacing side, NBTBase nbt)
+		{
+			instance.setMax(((NBTTagShort) nbt).getShort());
+		}
+		
 	}
 }
