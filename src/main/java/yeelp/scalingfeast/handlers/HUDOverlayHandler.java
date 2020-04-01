@@ -178,7 +178,7 @@ public class HUDOverlayHandler extends Handler
 			drawStatBar(jitterAmount, mc, left, top, remainingShanks, u, v, hunger < ModConsts.VANILLA_MAX_HUNGER, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size())); 
 			mc.mcProfiler.endSection();
 		}
-		if(ModConfig.hud.drawSaturation)
+		if(ModConfig.hud.drawSaturation && ModConfig.hud.style == DisplayStyle.OVERLAY)
 		{
 			colourIndex = 0;
 			numBars = (int)(sat/ModConsts.VANILLA_MAX_SAT);

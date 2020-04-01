@@ -15,8 +15,8 @@ import yeelp.scalingfeast.util.FoodStatsMap;
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig 
 {	
-	@Name("Extended Food Stats")
-	@Comment("These settings modify the bas behaviour of Scaling Feast")
+	@Name("Food Cap")
+	@Comment("These settings modify the base behaviour of Scaling Feast")
 	public static final FoodCapCategory foodCap = new FoodCapCategory();
 	
 	@Name("Compatibility")
@@ -50,23 +50,10 @@ public class ModConfig
 		@Comment("Configure what happens to player's extended food stats on death")
 		public DeathCategory death = new DeathCategory();
 		public static class DeathCategory
-		{
-			@Name("Percent Loss")
-			@Comment("Players will lose this percent of the current extended hunger on death. Set to 0.0 to disable")
-			@RangeDouble(min = 0.0, max = 1.0)
-			public double percentLoss = 0.5;
-			
-			@Name("Respawn Threshold")
-			@Comment({"If a player dies with an extended hunger value greater than this value in half shanks, their extended hunger will be set to this.",
-					  "Triggers BEFORE players induce a percentage loss. Keep in mind that one shank = two half shanks. Set to -1 to disable"})
-			@RangeInt(min = -1, max = Short.MAX_VALUE)
-			public int respawnMax = -1;
-			
-			@Name("Keep Saturation?")
-			@Comment({"If true, players will retain their extended saturation on death.", 
-					  "Thier saturation still can't go above their current extended hunger,", 
-					  "so if their extened hunger is reduced below their extended saturation, thier extended saturation will be decreased appropriately"})
-			public boolean keepSat = true;	
+		{	
+			@Name("Lose Max?")
+			@Comment("If true, players will lose their food cap on death, resetting them to vanilla's cap")
+			public boolean loseCap = false;
 		}
 	}
 	
@@ -83,12 +70,6 @@ public class ModConfig
 				      "Set to false if AppleSkin isn't drawing the exhaustion underlay.",
 				      "This only works if Display is set to OVERLAY"})
 			public boolean drawExhaustion = true;
-			
-			@Name("Should Draw Vanilla Saturation Overlay?")
-			@Comment({"If true, Scaling Feast will draw coloured hunger shank outlines for vanilla saturation and extended saturation.",
-				      "Set this to false if AppleSkin is drawing the vanilla saturation overlay already.",
-				      "This only works if Display is set to OVERLAY and if Draw Saturation is set to true"})
-			public boolean drawVanillaSatOverlay = false;
 		}
 	}
 	public static class ItemCategory
