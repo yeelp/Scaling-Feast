@@ -3,9 +3,12 @@ package yeelp.scalingfeast.potion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.util.FoodStatsMap;
+import yeelp.scalingfeast.util.FoodCapProvider;
 
 /**
  * The Metabolism effect. This regens hunger over time.
@@ -27,21 +30,15 @@ public class PotionMetabolism extends PotionBase
 		if(entity instanceof EntityPlayer && !entity.world.isRemote)
 		{
 			EntityPlayer player = (EntityPlayer)entity;
-			if(player.getFoodStats().getFoodLevel() < ModConsts.VANILLA_MAX_HUNGER)
+			if(player.getFoodStats().getFoodLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
 			{
-				player.getFoodStats().addStats(1, 0);
+				ItemFood dummy = new ItemFood(1, 0, false);
+				player.getFoodStats().addStats(dummy, new ItemStack(dummy));
 			}
-			else if(FoodStatsMap.hasPlayer(player.getUniqueID()) && FoodStatsMap.getExtraFoodLevel(player.getUniqueID()) < FoodStatsMap.getMaxFoodLevel(player.getUniqueID()))
+			else if(player.getFoodStats().getSaturationLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
 			{
-				FoodStatsMap.addFoodStats(player.getUniqueID(), 1, 0);
-			}
-			else if(player.getFoodStats().getSaturationLevel() < ModConsts.VANILLA_MAX_SAT)
-			{
-				player.getFoodStats().addStats(1, 0.5f);
-			}
-			else if(FoodStatsMap.hasPlayer(player.getUniqueID()) && FoodStatsMap.getExtraSatLevels(player.getUniqueID()) < FoodStatsMap.getExtraFoodLevel(player.getUniqueID()))
-			{
-				FoodStatsMap.addFoodStats(player.getUniqueID(), 1, 1.0f);
+				ItemFood dummy = new ItemFood(1, 0.5f, false);
+				player.getFoodStats().addStats(dummy, new ItemStack(dummy));
 			}
 		}
 	}

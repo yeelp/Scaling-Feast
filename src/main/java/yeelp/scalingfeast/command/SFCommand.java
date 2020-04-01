@@ -1,10 +1,9 @@
 package yeelp.scalingfeast.command;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.command.CommandBase;
@@ -16,13 +15,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import yeelp.scalingfeast.ScalingFeast;
-import yeelp.scalingfeast.util.ExtendedFoodStatsProvider;
-import yeelp.scalingfeast.util.FoodStatsMap;
-import yeelp.scalingfeast.util.ICappedFoodStats;
+import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.IFoodCap;
 
 public class SFCommand extends CommandBase {
 
-	private static String[] commandList = new String[] {"setExtendedFood", "setExtendedMax", "setExtendedSat"};
+	private static String[] commandList = new String[] {"setExtendedFood"};
 	private static HashSet<String> commands = new HashSet<String>(Arrays.asList(commandList));
 	@Override
 	public String getName() 
@@ -68,23 +66,19 @@ public class SFCommand extends CommandBase {
 					return;
 				}
 			}
-			editExtendedFoodStats(server, sender, args);
+			editFoodCap(server, sender, args);
 		}
 
 	}
 	
-	private void editExtendedFoodStats(MinecraftServer server, ICommandSender sender, String[] args)
+	private void editFoodCap(MinecraftServer server, ICommandSender sender, String[] args)
 	{
 		List<EntityPlayerMP> players = server.getPlayerList().getPlayers();
 		for(EntityPlayerMP player : players)
 		{
 			if(player.getName().equals(args[1]))
 			{
-				ICappedFoodStats fs = player.getCapability(ExtendedFoodStatsProvider.capFoodStat, null);
-				if(!FoodStatsMap.hasPlayer(player.getUniqueID()))
-				{
-					FoodStatsMap.addPlayer(player.getUniqueID(), fs.getFoodLevel(), fs.getSatLevel(), fs.getMaxFoodLevel());
-				}
+				IFoodCap fs = player.getCapability(FoodCapProvider.capFoodStat, null);
 				try
 				{
 					if(0 <= Float.parseFloat(args[2]) && Float.parseFloat(args[2]) < Short.MAX_VALUE)
@@ -95,15 +89,6 @@ public class SFCommand extends CommandBase {
 						{
 							case "setExtendedMax":
 								fs.setMax(val);
-								FoodStatsMap.setMaxFoodLevel(player.getUniqueID(), val);
-								break;
-							case "setExtendedFood":
-								fs.setFoodLevel(val);
-								FoodStatsMap.setFoodLevel(player.getUniqueID(), val);
-								break;
-							case "setExtendedSat":
-								fs.setSatLevel(satVal);
-								FoodStatsMap.setSaturationLevel(player.getUniqueID(), satVal);
 								break;
 							default:
 								break; //This will never occur because of the predicates we've checked before hand
