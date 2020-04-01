@@ -4,7 +4,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.network.FoodCapMessage;
-import yeelp.scalingfeast.network.NBTMessage;
 
 public class PacketHandler 
 {
