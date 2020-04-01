@@ -1,14 +1,12 @@
 package yeelp.scalingfeast.handlers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,21 +14,17 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
-import static yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
-
 import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.Colour;
 import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.FoodStatsMap;
 
 @SideOnly(Side.CLIENT)
 public class HUDOverlayHandler extends Handler

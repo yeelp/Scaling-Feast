@@ -4,8 +4,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -14,10 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.FoodStatsMap;
 
 public class EnchantmentHandler extends Handler
 {

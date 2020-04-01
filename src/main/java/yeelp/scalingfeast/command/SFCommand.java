@@ -1,10 +1,9 @@
 package yeelp.scalingfeast.command;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.command.CommandBase;
@@ -17,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.FoodStatsMap;
 import yeelp.scalingfeast.util.IFoodCap;
 
 public class SFCommand extends CommandBase {

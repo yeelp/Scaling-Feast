@@ -10,7 +10,6 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.util.FoodStatsMap;
 
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig 

@@ -9,7 +9,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.FoodStatsMap;
 
 /**
  * The Metabolism effect. This regens hunger over time.

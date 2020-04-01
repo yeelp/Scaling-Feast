@@ -1,21 +1,20 @@
 package yeelp.scalingfeast;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockCake;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import squeek.applecore.api.food.IEdibleBlock;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
@@ -24,18 +23,9 @@ import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.handlers.PotionHandler;
 import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.FoodCap;
-import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.FoodStatsMap;
-
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.logging.log4j.Logger;
 
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
 public class ScalingFeast
