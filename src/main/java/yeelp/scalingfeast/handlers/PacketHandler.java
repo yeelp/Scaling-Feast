@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.network.FoodCapMessage;
+import yeelp.scalingfeast.network.StarvationTrackerMessage;
 
 public class PacketHandler 
 {
@@ -12,5 +13,6 @@ public class PacketHandler
 	public static void init()
 	{
 		INSTANCE.registerMessage(FoodCapMessage.Handler.class, FoodCapMessage.class, id++, Side.CLIENT);
+		INSTANCE.registerMessage(StarvationTrackerMessage.Handler.class, StarvationTrackerMessage.class, id++, Side.CLIENT);
 	}
 }

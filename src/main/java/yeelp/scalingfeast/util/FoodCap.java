@@ -11,7 +11,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import yeelp.scalingfeast.ModConsts;
 
 /**
- * A container to hold extended food values. This is mainly a sanity check to ensure that FoodStatsMap syncs entries, so to speak
+ * A class that implements the IFoodCap
  * @author Yeelp
  *
  */
@@ -67,6 +67,22 @@ public final class FoodCap implements IFoodCap
 		}
 	}
 	
+	public void decreaseMax(short amount)
+	{
+		if(amount < 0)
+		{
+			return;
+		}
+		else if(amount - this.max < 20)
+		{
+			this.max = 20;
+		}
+		else
+		{
+			this.max -= amount;
+		}
+	}
+	
 	public static void register()
 	{
 		CapabilityManager.INSTANCE.register(IFoodCap.class, new FoodStorage(), new FoodFactory());
@@ -90,7 +106,7 @@ public final class FoodCap implements IFoodCap
 	@Override
 	public void deserializeNBT(NBTTagShort nbt) 
 	{
-		this.max = ((NBTTagShort) nbt).getShort();
+		this.max = nbt.getShort();
 	}
 	private static class FoodFactory implements Callable<IFoodCap>
 	{

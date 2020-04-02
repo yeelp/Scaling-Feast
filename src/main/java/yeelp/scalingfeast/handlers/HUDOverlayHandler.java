@@ -259,7 +259,7 @@ public class HUDOverlayHandler extends Handler
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		if(hungerEffectActive && !vanilla && !sat)
 		{
-			mc.ingameGUI.drawTexturedModalRect(x, y, u + 18, v, 9, 9);
+			mc.ingameGUI.drawTexturedModalRect(x, y, u + 27, v, 9, 9);
 		}
 	}
 	

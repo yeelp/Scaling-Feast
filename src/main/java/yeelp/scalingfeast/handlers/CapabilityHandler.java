@@ -9,12 +9,17 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.network.FoodCapMessage;
+import yeelp.scalingfeast.network.StarvationTrackerMessage;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
+import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.StarvationTracker;
+import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 public class CapabilityHandler extends Handler
 {
@@ -25,6 +30,7 @@ public class CapabilityHandler extends Handler
 		if(evt.getObject() instanceof EntityPlayer)
 		{
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "FoodCap"), new FoodCap());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
 		}
 	}
 	
@@ -47,15 +53,40 @@ public class CapabilityHandler extends Handler
 	{
 		IFoodCap oldFoodCap = evt.getOriginal().getCapability(FoodCapProvider.capFoodStat, null);
 		IFoodCap newFoodCap = evt.getEntityPlayer().getCapability(FoodCapProvider.capFoodStat, null);
+		IStarvationTracker oldTracker = evt.getOriginal().getCapability(StarvationTrackerProvider.starvationTracker, null);
+		IStarvationTracker newTracker = evt.getEntityPlayer().getCapability(StarvationTrackerProvider.starvationTracker, null);
 		newFoodCap.deserializeNBT(oldFoodCap.serializeNBT());
-		ScalingFeast.info(String.format("%d -> %d", newFoodCap.getMaxFoodLevel(), oldFoodCap.getMaxFoodLevel()));
-		sync(evt.getEntityPlayer());
+		newTracker.deserializeNBT(oldTracker.serializeNBT());
+		ScalingFeast.info(String.format("%d -> %d, %d -> %d", newFoodCap.getMaxFoodLevel(), oldFoodCap.getMaxFoodLevel(), newTracker.getCount(), oldTracker.getCount()));
+		if(evt.isWasDeath())
+		{
+			if(ModConfig.foodCap.death.maxLossAmount != 0)
+			{
+				newFoodCap.decreaseMax((short) ModConfig.foodCap.death.maxLossAmount);
+			}
+		}
+		if(!evt.isWasDeath() || !ModConfig.foodCap.doesFreqReset)
+		{
+			syncTracker(evt.getEntityPlayer());
+		}
+		syncCap(evt.getEntityPlayer());
 	}
 	
 	public static void sync(EntityPlayer player)
 	{
+		syncCap(player);
+		syncTracker(player);
+	}
+	
+	public static void syncCap(EntityPlayer player)
+	{
 		IFoodCap cap = player.getCapability(FoodCapProvider.capFoodStat, null);
-		ScalingFeast.info(String.format("Sending %d", cap.getMaxFoodLevel()));
 		PacketHandler.INSTANCE.sendTo(new FoodCapMessage(cap), (EntityPlayerMP) player);
+	}
+	
+	public static void syncTracker(EntityPlayer player)
+	{
+		IStarvationTracker tracker = player.getCapability(StarvationTrackerProvider.starvationTracker, null);
+		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(tracker), (EntityPlayerMP)player);
 	}
 }

@@ -55,7 +55,7 @@ public class HeartyShankItem extends ItemFood
 			if(ModConfig.foodCap.globalCap != -1 && ModConfig.foodCap.globalCap > currCap.getMaxFoodLevel())
 			{
 				currCap.increaseMax((short)ModConfig.foodCap.inc);
-				CapabilityHandler.sync((EntityPlayer)entityLiving);
+				CapabilityHandler.syncCap((EntityPlayer)entityLiving);
 			}
 		}
 		return super.onItemUseFinish(stack, worldIn, entityLiving);

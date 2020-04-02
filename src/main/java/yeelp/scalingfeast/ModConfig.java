@@ -45,14 +45,37 @@ public class ModConfig
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
 		public int inc = 2;
 		
+		@Name("Decrease Amount on Starvation")
+		@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, hunger will never drop when starving")
+		@RangeInt(min = 0, max = Short.MAX_VALUE)
+		public int starveLoss = 0;
+		
+		@Name("Starvation Loss Frequency")
+		@Comment("After getting damaged by starvation this many times, a player's max hunger will drop")
+		@RangeInt(min = 1, max = Short.MAX_VALUE)
+		public int lossFreq = 3;
+		
+		@Name("Frequency Reset")
+		@Comment({"Should the frequency counter reset upon gaining hunger?",
+				  "If true, the frequency counter resets, and if false, it will not.",
+				  "For example, if the frequency count is set to 3 and this field is set to true,", 
+				  "then whenever a player takes starvation damage 3 times, no matter how infrequent or spread apart, they lose max hunger"})
+		public boolean doesFreqReset = false;
+		
 		@Name("Death Penalty")
 		@Comment("Configure what happens to player's extended food stats on death")
 		public DeathCategory death = new DeathCategory();
 		public static class DeathCategory
 		{	
-			@Name("Lose Max?")
-			@Comment("If true, players will lose their food cap on death, resetting them to vanilla's cap")
-			public boolean loseCap = false;
+			@Name("Max Lost on Death")
+			@Comment("If not set to zero, this field indicates how much of your maximum hunger you lose upon death. Can not go below the default vanilla maximum.")
+			@RangeInt(min = 0, max = Short.MAX_VALUE)
+			public int maxLossAmount = 0;
+			
+			@Name("Hunger Lost on Death")
+			@Comment("If not set to zero, this field indicates how much hunger you lose on death. Will not bring your respawning hunger value below vanilla's default maximum")
+			@RangeInt(min = 0, max = Short.MAX_VALUE)
+			public int hungerLossOnDeath = 0;
 		}
 	}
 	
@@ -103,6 +126,10 @@ public class ModConfig
 		@Name("Draw Saturation?")
 		@Comment("If set to false, Scaling Feast will make no attempt to provide any information to the player about thier vanilla or extended saturation.")
 		public boolean drawSaturation = true;
+		
+		@Name("Replace Vanilla Hunger")
+		@Comment("If true, Scaling Feast will replace the vanilla hunger shanks with coloured shanks if the display style is set to OVERLAY")
+		public boolean replaceVanilla = false;
 		
 		@Name("Hunger Overlay Colours")
 		@Comment({"A List of hex colours for the coloured shanks. Each entry is of the form XXXXXX, where X is a hexadecimal digit",

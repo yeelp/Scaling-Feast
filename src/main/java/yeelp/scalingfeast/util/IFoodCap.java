@@ -16,7 +16,7 @@ public interface IFoodCap extends ICapabilitySerializable<NBTTagShort>
 	 */
 	default short getMaxFoodLevel()
 	{
-		return 0;
+		return 20;
 	}
 	/**
 	 * Set the max food cap
@@ -28,4 +28,9 @@ public interface IFoodCap extends ICapabilitySerializable<NBTTagShort>
 	 * @param amount the amount to increase by
 	 */
 	void increaseMax(short amount);
+	/**
+	 * Decrease the max food count
+	 * @param amount the amount to decrease by
+	 */
+	void decreaseMax(short amount);	
 }

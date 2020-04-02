@@ -68,7 +68,6 @@ public class FoodCapMessage implements IMessage
 		{
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			player.getCapability(FoodCapProvider.capFoodStat, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
-			ScalingFeast.info("HANDLED");
 		}
 	}
 	@Override
