@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.handlers;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
@@ -21,15 +22,30 @@ public class FoodHandler extends Handler
 	public void onStarve(StarvationEvent.Starve evt)
 	{
 		IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
-		tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
-		if(tracker.getCount() == ModConfig.foodCap.lossFreq)
+		//only do any of this if there is max hunger to lose, otherwise this is a waste of processing.
+		if(ModConfig.foodCap.starveLoss != 0)
 		{
-			tracker.reset();
-			evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starveLoss);
-			CapabilityHandler.sync(evt.player);
+			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
+			if(tracker.getCount() == ModConfig.foodCap.lossFreq)
+			{
+				tracker.reset();
+				evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starveLoss);
+				CapabilityHandler.sync(evt.player);
+			}
+			else
+			{
+				CapabilityHandler.syncTracker(evt.player);
+			}
 		}
-		else
+	}
+	
+	@SubscribeEvent
+	public void onFoodStatsAddition(FoodEvent.FoodStatsAddition evt)
+	{
+		//Only sync if the food level is zero, as that is the only time the tracker should be resetting. The tracker should always be zero if the frequency resets and the food level > 0.
+		if(ModConfig.foodCap.doesFreqReset && evt.player.getFoodStats().getFoodLevel() == 0)
 		{
+			evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
 			CapabilityHandler.syncTracker(evt.player);
 		}
 	}

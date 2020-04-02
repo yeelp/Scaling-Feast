@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
@@ -70,7 +71,7 @@ public class StarvationTrackerMessage implements IMessage
 		{
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			player.getCapability(StarvationTrackerProvider.starvationTracker, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
+			ScalingFeast.info(String.format("Tick: %d", player.getCapability(StarvationTrackerProvider.starvationTracker, null).getCount()));
 		}
-		
 	}
 }

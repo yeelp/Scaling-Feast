@@ -81,12 +81,14 @@ public class CapabilityHandler extends Handler
 	public static void syncCap(EntityPlayer player)
 	{
 		IFoodCap cap = player.getCapability(FoodCapProvider.capFoodStat, null);
+		ScalingFeast.info(String.format("Sending FoodCap %d", cap.getMaxFoodLevel()));
 		PacketHandler.INSTANCE.sendTo(new FoodCapMessage(cap), (EntityPlayerMP) player);
 	}
 	
 	public static void syncTracker(EntityPlayer player)
 	{
 		IStarvationTracker tracker = player.getCapability(StarvationTrackerProvider.starvationTracker, null);
+		ScalingFeast.info(String.format("Sending Tracker %d", tracker.getCount()));
 		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(tracker), (EntityPlayerMP)player);
 	}
 }

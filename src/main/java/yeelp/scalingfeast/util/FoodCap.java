@@ -73,7 +73,7 @@ public final class FoodCap implements IFoodCap
 		{
 			return;
 		}
-		else if(amount - this.max < 20)
+		else if(this.max - amount < 20)
 		{
 			this.max = 20;
 		}

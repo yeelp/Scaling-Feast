@@ -15,9 +15,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
+import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 /**
  * Hearty Shank food item. Eating it increases max hunger
@@ -52,10 +54,19 @@ public class HeartyShankItem extends ItemFood
 		if(entityLiving instanceof EntityPlayer)
 		{
 			IFoodCap currCap = ((EntityPlayer)entityLiving).getCapability(FoodCapProvider.capFoodStat, null);
-			if(ModConfig.foodCap.globalCap != -1 && ModConfig.foodCap.globalCap > currCap.getMaxFoodLevel())
+			if(ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getMaxFoodLevel())
 			{
+				ScalingFeast.info("Increasing Cap");
 				currCap.increaseMax((short)ModConfig.foodCap.inc);
-				CapabilityHandler.syncCap((EntityPlayer)entityLiving);
+				if(ModConfig.foodCap.shankResetsCounter)
+				{
+					((EntityPlayer)entityLiving).getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
+					CapabilityHandler.sync((EntityPlayer)entityLiving);
+				}
+				else
+				{
+					CapabilityHandler.syncCap((EntityPlayer)entityLiving);
+				}
 			}
 		}
 		return super.onItemUseFinish(stack, worldIn, entityLiving);

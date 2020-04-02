@@ -86,7 +86,7 @@ public final class StarvationTracker implements IStarvationTracker
 		this.counter = amount;
 	}
 	
-	public void register() 
+	public static void register() 
 	{
 		CapabilityManager.INSTANCE.register(IStarvationTracker.class, new StarvationStorage(), new StarvationFactory());
 	}

@@ -15,12 +15,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
 
 public class SFCommand extends CommandBase {
 
-	private static String[] commandList = new String[] {"setExtendedFood"};
+	private static String[] commandList = new String[] {"setExtendedMax"};
 	private static HashSet<String> commands = new HashSet<String>(Arrays.asList(commandList));
 	@Override
 	public String getName() 
@@ -50,7 +51,6 @@ public class SFCommand extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException 
 	{
-		ScalingFeast.info(Arrays.toString(args));
 		if(!(args.length >= 1 && commands.contains(args[0])))
 		{
 			throw new WrongUsageException(getUsage(sender));
@@ -89,6 +89,7 @@ public class SFCommand extends CommandBase {
 						{
 							case "setExtendedMax":
 								fs.setMax(val);
+								CapabilityHandler.syncCap(player);
 								break;
 							default:
 								break; //This will never occur because of the predicates we've checked before hand

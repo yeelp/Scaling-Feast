@@ -26,14 +26,13 @@ import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.FoodCap;
+import yeelp.scalingfeast.util.StarvationTracker;
 
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
 public class ScalingFeast
 {
 
     public static Logger logger;
-    public static Set<ItemFood> alwaysEdibleFoods;
-    public static Set<Block> alwaysEdibleBlocks;
     public static boolean hasAppleSkin;
     
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
@@ -44,12 +43,12 @@ public class ScalingFeast
     {
         logger = event.getModLog();
         hasAppleSkin = Loader.isModLoaded("appleskin");
-        alwaysEdibleFoods = new HashSet<ItemFood>();
         proxy.preInit();
         SFEnchantments.init();
         SFPotion.init();
         info("Registering capability");
         FoodCap.register();
+        StarvationTracker.register();
         new CapabilityHandler().register();
         info("Registered capability");
         SFPotion.addBrewingRecipes();

@@ -46,7 +46,7 @@ public class ModConfig
 		public int inc = 2;
 		
 		@Name("Decrease Amount on Starvation")
-		@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, hunger will never drop when starving")
+		@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, max hunger will never drop when starving")
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
 		public int starveLoss = 0;
 		
@@ -59,8 +59,12 @@ public class ModConfig
 		@Comment({"Should the frequency counter reset upon gaining hunger?",
 				  "If true, the frequency counter resets, and if false, it will not.",
 				  "For example, if the frequency count is set to 3 and this field is set to true,", 
-				  "then whenever a player takes starvation damage 3 times, no matter how infrequent or spread apart, they lose max hunger"})
+				  "then whenever a player takes starvation damage 3 times, no matter how infrequent or spread apart, or if they've eaten any food in between, they still lose max hunger"})
 		public boolean doesFreqReset = false;
+		
+		@Name("Reset Counter For Hearty Shank?")
+		@Comment("If true, the frequency counter will reset whenever a player eats a Hearty Shank. If Frequency Reset is true, this does nothing, as eating any food already resets the counter.")
+		public boolean shankResetsCounter = true;
 		
 		@Name("Death Penalty")
 		@Comment("Configure what happens to player's extended food stats on death")
@@ -84,6 +88,11 @@ public class ModConfig
 		@Name("AppleSkin")
 		@Comment("Tweak compatibility with AppleSkin. These settings will only have an effect if AppleSkin is installed")
 		public AppleSkinCategory appleskin = new AppleSkinCategory();
+		
+		@Name("Enable Compatibility Settings")
+		@Comment({"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.", 
+				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY or NUMERICAL"})
+		public boolean shouldFirePost = false;
 		
 		public static class AppleSkinCategory
 		{
