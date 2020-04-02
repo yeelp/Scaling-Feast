@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
+import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
@@ -92,12 +93,16 @@ public class HUDOverlayHandler extends Handler
 				int left = res.getScaledWidth()/2 + 91;
 				int top = res.getScaledHeight() - offset;
 				//If we have AppleSkin, we need to redraw the whole exhaustion bar.
-				if(ScalingFeast.hasAppleSkin && ModConfig.compat.appleskin.drawExhaustion && !err)
+				if(ScalingFeast.hasAppleSkin && !err)
 				{
 					try
 					{
-						Class appleskin = Class.forName("squeek.appleskin.client.HUDOverlayHandler");
-						appleskin.getDeclaredMethod("drawExhaustionOverlay", float.class, Minecraft.class, int.class, int.class, float.class).invoke(null, AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 1f); 
+						Class appleskinOverlay = Class.forName("squeek.appleskin.client.HUDOverlayHandler");
+						Class appleskinConfig = Class.forName("squeek.appleskin.ModConfig");
+						if(appleskinConfig.getDeclaredField("SHOW_FOOD_EXHAUSTION_UNDERLAY").getBoolean(null))
+						{
+							appleskinOverlay.getDeclaredMethod("drawExhaustionOverlay", float.class, Minecraft.class, int.class, int.class, float.class).invoke(null, AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 1f); 
+						}
 					}
 					catch (NoSuchMethodException e) 
 					{
@@ -130,15 +135,17 @@ public class HUDOverlayHandler extends Handler
 						e.printStackTrace();
 						err = true;
 					}
+					catch (NoSuchFieldException e) 
+					{
+						err = true;
+						e.printStackTrace();
+					}
 					//drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top);
+ 
 				}
 				//Calculate the random jitter amount beforehand and pass it to the draw methods
 				int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
 				drawStatsOverlay(jitterAmount, mc, player, left, top);
-				if(ModConfig.hud.style == DisplayStyle.NUMERICAL)
-				{
-					drawNumericalOverlay(mc, player, res, left, top );
-				}
 				//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
 				GuiIngameForge.right_height += 10;
 				if(ModConfig.compat.shouldFirePost)
@@ -177,7 +184,7 @@ public class HUDOverlayHandler extends Handler
 		int remainingShanks = hunger % ModConsts.VANILLA_MAX_HUNGER;
 		//First, draw the empty bar.
 		mc.getTextureManager().bindTexture(Gui.ICONS);
-		drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0), 27, true, false, isHungerEffectActive, null);
+		drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0), 27, true, false, false, isHungerEffectActive, null);
 		int i = 0;
 		int colourIndex = 0;
 		for(i = 0; i < numBars; i++)
@@ -186,16 +193,18 @@ public class HUDOverlayHandler extends Handler
 			if(i == 0)
 			{
 				mc.getTextureManager().bindTexture(Gui.ICONS);
-				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0), 27, true, false, isHungerEffectActive, null); 
-				if(ModConfig.hud.style == DisplayStyle.NUMERICAL)
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0), 27, true, false, false, isHungerEffectActive, null);
+				if(ModConfig.hud.replaceVanilla)
 				{
-					break;
+					mc.mcProfiler.endStartSection("Vanilla Override");
+					mc.getTextureManager().bindTexture(icons);
+					drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 0, false, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
 				}
 			}
 			else
 			{
 				mc.getTextureManager().bindTexture(icons);
-				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 0, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 0, false, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
 			}
 			mc.mcProfiler.endSection();
 		}
@@ -210,7 +219,13 @@ public class HUDOverlayHandler extends Handler
 			mc.getTextureManager().bindTexture((hunger < ModConsts.VANILLA_MAX_HUNGER ? Gui.ICONS : icons));
 			int u = (hunger < ModConsts.VANILLA_MAX_HUNGER ? 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0) : 0);
 			int v = (hunger < ModConsts.VANILLA_MAX_HUNGER ? 27 : 0);
-			drawStatBar(jitterAmount, mc, left, top, remainingShanks, u, v, hunger < ModConsts.VANILLA_MAX_HUNGER, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size())); 
+			drawStatBar(jitterAmount, mc, left, top, remainingShanks, u, v, hunger < ModConsts.VANILLA_MAX_HUNGER, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
+			if(ModConfig.hud.replaceVanilla && hunger < ModConsts.VANILLA_MAX_HUNGER)
+			{
+				mc.mcProfiler.endStartSection("Vanilla Leftovers Override");
+				mc.getTextureManager().bindTexture(icons);
+				drawStatBar(jitterAmount, mc, left, top, remainingShanks, 0, 0, false, true, false, isHungerEffectActive, colours.get(0));
+			}
 			mc.mcProfiler.endSection();
 		}
 		if(ModConfig.hud.drawSaturation && ModConfig.hud.style == DisplayStyle.OVERLAY)
@@ -222,13 +237,13 @@ public class HUDOverlayHandler extends Handler
 			for(i = 0; i < numBars; i++)
 			{
 				mc.mcProfiler.startSection("Sat: "+(i+1));
-				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_SAT, 0, 9, false, true, false, satColours.get((colourIndex++) % satColours.size()));
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_SAT, 0, 9, false, false, true, false, satColours.get((colourIndex++) % satColours.size()));
 				mc.mcProfiler.endSection();
 			}
 			if(remainingSat > 0)
 			{
 				mc.mcProfiler.startSection("Sat: " + (i+1));
-				drawStatBar(jitterAmount, mc, left, top, remainingSat, 0, 9, false, true, false, satColours.get((colourIndex++) % satColours.size()));
+				drawStatBar(jitterAmount, mc, left, top, remainingSat, 0, 9, false, false, true, false, satColours.get((colourIndex++) % satColours.size()));
 				mc.mcProfiler.endSection();
 			}
 		}
@@ -251,13 +266,13 @@ public class HUDOverlayHandler extends Handler
 	{
 		GL11.glPushMatrix();
 		GL11.glScalef(0.75f, 0.75f, 0.75f);
-		mc.fontRenderer.drawStringWithShadow("x"+i, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+		mc.fontRenderer.drawStringWithShadow("x"+i+"/"+max/ModConsts.VANILLA_MAX_HUNGER, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 	
-	private void drawStatBar(int[] jitterAmount, Minecraft mc, int left, int top, float amount, int u, int v, boolean vanilla, boolean sat, boolean hungerEffectActive, Colour colour)
+	private void drawStatBar(int[] jitterAmount, Minecraft mc, int left, int top, float amount, int u, int v, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour)
 	{
 		//this is a one indexed value, the variable currShank will be a zero indexed value
 		float shanksNeeded = amount/2.0f;
@@ -266,11 +281,11 @@ public class HUDOverlayHandler extends Handler
 		{
 			x = left - i * 8 - 9;
 			y = top + jitterAmount[i];
-			drawIcon(mc, x, y, u, v, i, shanksNeeded, vanilla, sat, hungerEffectActive, colour);
+			drawIcon(mc, x, y, u, v, i, shanksNeeded, vanilla, vanillaOverride, sat, hungerEffectActive, colour);
 		}
 	}
 
-	private void drawIcon(Minecraft mc, int x, int y, int u, int v, int currShank, float shanksNeeded, boolean vanilla, boolean sat, boolean hungerEffectActive, Colour colour)
+	private void drawIcon(Minecraft mc, int x, int y, int u, int v, int currShank, float shanksNeeded, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour)
 	{
 		float leftover = shanksNeeded - currShank;
 		if(colour != null && !vanilla)
@@ -282,7 +297,7 @@ public class HUDOverlayHandler extends Handler
 			
 			if(!sat || leftover > 0.5)
 			{
-				u += 9;
+				u += (vanillaOverride ? 18 : 9);
 			}
 			else if(leftover > 0.25)
 			{
@@ -348,11 +363,14 @@ public class HUDOverlayHandler extends Handler
 		{
 			regen = updateCounter % 25;
 		}
-		if(updateCounter % (foodLevel * 3 + 1) == 0 && satLevel == 0)
+		if(satLevel == 0 || regen != -1)
 		{
 			for(int i = 0; i < 10; i++)
 			{
-				jitterAmount[i] += rand.nextInt(3) - 1;
+				if(updateCounter % (foodLevel * 3 + 1) == 0 && satLevel == 0)
+				{
+					jitterAmount[i] += rand.nextInt(3) - 1;
+				}
 				if(i == regen)
 				{
 					jitterAmount[i] += 2;

@@ -48,7 +48,7 @@ public class ModConfig
 		@Name("Decrease Amount on Starvation")
 		@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, max hunger will never drop when starving")
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
-		public int starveLoss = 0;
+		public int starveLoss = 2;
 		
 		@Name("Starvation Loss Frequency")
 		@Comment("After getting damaged by starvation this many times, a player's max hunger will drop")
@@ -60,7 +60,7 @@ public class ModConfig
 				  "If true, the frequency counter resets, and if false, it will not.",
 				  "For example, if the frequency count is set to 3 and this field is set to true,", 
 				  "then whenever a player takes starvation damage 3 times, no matter how infrequent or spread apart, or if they've eaten any food in between, they still lose max hunger"})
-		public boolean doesFreqReset = false;
+		public boolean doesFreqReset = true;
 		
 		@Name("Reset Counter For Hearty Shank?")
 		@Comment("If true, the frequency counter will reset whenever a player eats a Hearty Shank. If Frequency Reset is true, this does nothing, as eating any food already resets the counter.")
@@ -84,24 +84,11 @@ public class ModConfig
 	}
 	
 	public static class CompatCategory
-	{
-		@Name("AppleSkin")
-		@Comment("Tweak compatibility with AppleSkin. These settings will only have an effect if AppleSkin is installed")
-		public AppleSkinCategory appleskin = new AppleSkinCategory();
-		
+	{	
 		@Name("Enable Compatibility Settings")
 		@Comment({"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.", 
 				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY or NUMERICAL"})
-		public boolean shouldFirePost = false;
-		
-		public static class AppleSkinCategory
-		{
-			@Name("Should Draw Exhaustion Underlay?")
-			@Comment({"If true, Scaling Feast will make sure that AppleSkin's exhaustion underlay is drawn.",
-				      "Set to false if AppleSkin isn't drawing the exhaustion underlay.",
-				      "This only works if Display is set to OVERLAY"})
-			public boolean drawExhaustion = true;
-		}
+		public boolean shouldFirePost = true;
 	}
 	public static class ItemCategory
 	{
@@ -125,12 +112,23 @@ public class ModConfig
 			NUMERICAL,
 			DEFAULT;
 		}
+		public enum InfoStyle
+		{
+			SIMPLE,
+			ADVANCED;
+		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
 			      "If set to NUMERICAL, Scaling Feast will display a \'+(x/X, Y)\' next to your hunger bar, when over the default vanilla max hunger, where x is your current extra food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true).",
 			      "If set to OVERLAY, Scaling Feast will overlay coloured shanks over your hunger bar to display your extended food stats.",
 			      "If set to DEFAULT, Scaling Feast will do nothing. Your default vanilla hunger bar will represent your entire hunger bar."})
 		public DisplayStyle style = DisplayStyle.OVERLAY;
+		
+		@Name("Info Style")
+		@Comment({"The text to display to the right of the hunger bar",
+				  "If set to SIMPLE, the text \'xb/B\' will be shown, where b is the number of hunger bars you currently have and B is the number of hunger bars you will have when at your max",
+				  "If set to ADVANCED the text \'+(x/X, Y)\' will be shown, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
+		public InfoStyle infoStyle = InfoStyle.SIMPLE;
 		
 		@Name("Draw Saturation?")
 		@Comment("If set to false, Scaling Feast will make no attempt to provide any information to the player about thier vanilla or extended saturation.")
