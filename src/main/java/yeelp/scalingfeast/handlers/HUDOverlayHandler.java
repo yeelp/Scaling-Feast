@@ -358,23 +358,6 @@ public class HUDOverlayHandler extends Handler
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 	
-	@Deprecated
-	private void drawExhaustion(float exhaustion, Minecraft mc, int left, int top) 
-	{
-		mc.getTextureManager().bindTexture(icons);
-		mc.mcProfiler.startSection("overriddenExhaustion");
-		GlStateManager.enableBlend();
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 0.75f);
-		float max = AppleCoreAPI.accessor.getMaxExhaustion(mc.player);
-		float ratio = exhaustion/max;
-		int width = (int)(ratio * 81);
-		mc.ingameGUI.drawTexturedModalRect(left - (int)(ratio*81), top, 81 - width, 18, width, 9);
-		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		GlStateManager.disableBlend();
-		mc.mcProfiler.endSection();
-		mc.getTextureManager().bindTexture(Gui.ICONS);
-	}
-	
 	private int[] getJitterAmount(int updateCounter, EntityPlayer player)
 	{
 		rand.setSeed(updateCounter * 70643);
@@ -433,7 +416,11 @@ public class HUDOverlayHandler extends Handler
 	
 	private Colour getMaxColour(int ticks, int maxTicks)
 	{
-		if(ticks + 1 == maxTicks)
+		if(maxTicks == 1 || ModConfig.foodCap.starveLoss == 0)
+		{
+			return new Colour("FFFFFF");
+		}
+		else if(ticks + 1 == maxTicks)
 		{
 			return new Colour("AA0000");
 		}
