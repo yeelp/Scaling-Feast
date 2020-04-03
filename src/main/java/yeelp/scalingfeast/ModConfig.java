@@ -10,6 +10,7 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig 
@@ -109,13 +110,17 @@ public class ModConfig
 		public enum DisplayStyle
 		{
 			OVERLAY,
-			NUMERICAL,
 			DEFAULT;
 		}
 		public enum InfoStyle
 		{
 			SIMPLE,
 			ADVANCED;
+		}
+		public enum OverlayStyle
+		{
+			DEFAULT,
+			REVERSED;
 		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
@@ -127,8 +132,12 @@ public class ModConfig
 		@Name("Info Style")
 		@Comment({"The text to display to the right of the hunger bar",
 				  "If set to SIMPLE, the text \'xb/B\' will be shown, where b is the number of hunger bars you currently have and B is the number of hunger bars you will have when at your max",
-				  "If set to ADVANCED the text \'+(x/X, Y)\' will be shown, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
+				  "If set to ADVANCED the text \'(x/X, Y)\' will be shown, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
 		public InfoStyle infoStyle = InfoStyle.SIMPLE;
+		
+		@Name("Overlay Style")
+		@Comment("If set to REVERSED, the icon styles used for saturation and max hunger will be swapped.")
+		public OverlayStyle overlayStyle = OverlayStyle.DEFAULT;
 		
 		@Name("Draw Saturation?")
 		@Comment("If set to false, Scaling Feast will make no attempt to provide any information to the player about thier vanilla or extended saturation.")
@@ -143,7 +152,6 @@ public class ModConfig
 				  "This only has an effect if Display Style is set to OVERLAY.",
 				  "If the number of \'rows\' of hunger bars exceed the length of this list, it will wrap around to the beginning.",
 				  "If any invalid hex string is entered, it will be ignored."})
-		@RequiresMcRestart
 		public String[] Hcolours = {"ff9d00", "ffee00", "00ff00", "0000ff", "00ffff", "e100ff", "ffffff"}; 
 		
 		@Name("Saturation Overlay Colours")
@@ -151,7 +159,6 @@ public class ModConfig
 				  "This only has an effect if Display Style is set to OVERLAY.",
 				  "If the number of \'rows\' of saturation exceed the length of this list, it will wrap around to the beginning.",
 				  "If any invalid hex string is entered, it will be ignored."})
-		@RequiresMcRestart
 		public String[] Scolours = {"d70000", "d700d7", "6400d7", "00d3d7", "64d700", "d7d700", "d7d7d7"}; 
 	}
 	
@@ -170,6 +177,8 @@ public class ModConfig
 			if (event.getModID().equals(ModConsts.MOD_ID)) 
 			{
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
+				HUDOverlayHandler.loadColours();
+				HUDOverlayHandler.setIcons();
 			}
 		}
 	}

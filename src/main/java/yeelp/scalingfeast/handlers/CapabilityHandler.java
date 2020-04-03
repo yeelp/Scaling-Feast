@@ -4,6 +4,7 @@ package yeelp.scalingfeast.handlers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -63,6 +64,15 @@ public class CapabilityHandler extends Handler
 			if(ModConfig.foodCap.death.maxLossAmount != 0)
 			{
 				newFoodCap.decreaseMax((short) ModConfig.foodCap.death.maxLossAmount);
+			}
+			if(ModConfig.foodCap.death.hungerLossOnDeath != 0)
+			{
+				FoodStats newFs = evt.getEntityPlayer().getFoodStats();
+				FoodStats oldFs = evt.getOriginal().getFoodStats();
+				if(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath >= 20)
+				{
+					newFs.setFoodLevel(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath);
+				}
 			}
 		}
 		if(!evt.isWasDeath() || !ModConfig.foodCap.doesFreqReset)
