@@ -89,6 +89,14 @@ public class SFCommand extends CommandBase {
 						{
 							case "setExtendedMax":
 								fs.setMax(val);
+								if(player.getFoodStats().getFoodLevel() > val)
+								{
+									player.getFoodStats().setFoodLevel(val);
+									if(player.getFoodStats().getSaturationLevel() > val)
+									{
+										player.getFoodStats().setFoodSaturationLevel(val);
+									}
+								}
 								CapabilityHandler.syncCap(player);
 								break;
 							default:

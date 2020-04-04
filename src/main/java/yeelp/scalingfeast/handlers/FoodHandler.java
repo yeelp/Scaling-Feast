@@ -26,7 +26,7 @@ public class FoodHandler extends Handler
 		if(ModConfig.foodCap.starveLoss != 0)
 		{
 			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
-			if(tracker.getCount() == ModConfig.foodCap.lossFreq)
+			if(tracker.getCount() >= ModConfig.foodCap.lossFreq)
 			{
 				tracker.reset();
 				evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starveLoss);

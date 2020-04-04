@@ -69,11 +69,11 @@ public final class FoodCap implements IFoodCap
 	
 	public void decreaseMax(short amount)
 	{
-		if(amount < 0)
+		if(amount < 0 || this.max == 1)
 		{
 			return;
 		}
-		else if(this.max - amount < 20)
+		else if(this.max - amount < 1)
 		{
 			this.max = 20;
 		}
