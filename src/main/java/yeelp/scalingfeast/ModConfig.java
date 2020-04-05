@@ -46,26 +46,10 @@ public class ModConfig
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
 		public int inc = 2;
 		
-		@Name("Decrease Amount on Starvation")
-		@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, max hunger will never drop when starving")
-		@RangeInt(min = 0, max = Short.MAX_VALUE)
-		public int starveLoss = 2;
-		
-		@Name("Starvation Loss Frequency")
-		@Comment("After getting damaged by starvation this many times, a player's max hunger will drop")
+		@Name("Starting Hunger")
+		@Comment("Players joining worlds for the first time will have thier max hunger cap set to this value in half shanks. Vanilla default is 20")
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
-		public int lossFreq = 3;
-		
-		@Name("Frequency Reset")
-		@Comment({"Should the frequency counter reset upon gaining hunger?",
-				  "If true, the frequency counter resets, and if false, it will not.",
-				  "For example, if the frequency count is set to 3 and this field is set to true,", 
-				  "then whenever a player takes starvation damage 3 times, no matter how infrequent or spread apart, or if they've eaten any food in between, they still lose max hunger"})
-		public boolean doesFreqReset = true;
-		
-		@Name("Reset Counter For Hearty Shank?")
-		@Comment("If true, the frequency counter will reset whenever a player eats a Hearty Shank. If Frequency Reset is true, this does nothing, as eating any food already resets the counter.")
-		public boolean shankResetsCounter = true;
+		public int startingHunger = 20;
 		
 		@Name("Death Penalty")
 		@Comment("Configure what happens to player's extended food stats on death")
@@ -81,6 +65,42 @@ public class ModConfig
 			@Comment("If not set to zero, this field indicates how much hunger you lose on death. Will not bring your respawning hunger value below vanilla's default maximum")
 			@RangeInt(min = 0, max = Short.MAX_VALUE)
 			public int hungerLossOnDeath = 0;
+		}
+		
+		@Name("Starvation Penalty")
+		@Comment("Configure penalties for starving")
+		public StarvationCategory starve = new StarvationCategory();
+		public static class StarvationCategory
+		{
+			@Name("Decrease Amount on Starvation")
+			@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, max hunger will never drop when starving")
+			@RangeInt(min = 0, max = Short.MAX_VALUE)
+			public int starveLoss = 2;
+			
+			@Name("Starvation Loss Lower Bound")
+			@Comment("When losing hunger due to starvation, a player's max hunger will never get set below this value. If a player's max hunger is already below this value, starving will not punish the player")
+			@RangeInt(min = 1, max = Short.MAX_VALUE)
+			public int starveLowerCap = 1;
+			
+			@Name("Starvation Loss Frequency")
+			@Comment("After getting damaged by starvation this many times, a player's max hunger will drop")
+			@RangeInt(min = 1, max = Short.MAX_VALUE)
+			public int lossFreq = 3;
+			
+			@Name("Frequency Reset")
+			@Comment({"Should the frequency counter reset upon gaining hunger?",
+					  "If true, the frequency counter resets, and if false, it will not.",
+					  "For example, if the frequency count is set to 3 and this field is set to true,", 
+					  "then whenever a player takes starvation damage 3 times, no matter how infrequent or spread apart, or if they've eaten any food in between, they still lose max hunger"})
+			public boolean doesFreqReset = true;
+			
+			@Name("Reset Counter For Hearty Shank?")
+			@Comment("If true, the frequency counter will reset whenever a player eats a Hearty Shank. If Frequency Reset is true, this does nothing, as eating any food already resets the counter.")
+			public boolean shankResetsCounter = true;
+			
+			@Name("Frequency Reset on Penalty")
+			@Comment("Should the frequency counter for a player be reset when they lose max hunger?")
+			public boolean doesFreqResetOnStarve = true;
 		}
 	}
 	
@@ -122,6 +142,11 @@ public class ModConfig
 			DEFAULT,
 			REVERSED;
 		}
+		public enum MaxColourStyle
+		{
+			DEFAULT,
+			CUSTOM;
+		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
 			      "If set to NUMERICAL, Scaling Feast will display a \'+(x/X, Y)\' next to your hunger bar, when over the default vanilla max hunger, where x is your current extra food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true).",
@@ -138,6 +163,33 @@ public class ModConfig
 		@Name("Overlay Style")
 		@Comment("If set to REVERSED, the icon styles used for saturation and max hunger will be swapped.")
 		public OverlayStyle overlayStyle = OverlayStyle.DEFAULT;
+		
+		@Name("Max Outline Colour Style")
+		@Comment({"The Colour style to use when drawing the max outline.",
+			      "If set to DEFAULT, the default colour style will be used.",
+			      "If set to CUSTOM, Scaling Feast will take the colour value specified in Max Custom Colour Start and transition to Max Custom Colour End when taking starvation damage."})
+		public MaxColourStyle maxColourStyle = MaxColourStyle.DEFAULT;
+		
+		@Name("Max Outline Transparency")
+		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving?. 0.0 if completely solid, 1.0 if completely transparent")
+		@RangeDouble(min = 0.0, max = 1.0)
+		public double maxOutlineTransparency = 0.5;
+		
+		@Name("Saturation Text Colour")
+		@Comment("The colour of the text used when drawing saturation info. Only affects the ADVANCED info style. Must be a valid hexadecimal number.")
+		public String satTextColour = "ffff55";
+		
+		@Name("Saturation Text Colour Empty")
+		@Comment("The colour of the saturation text when a player has no saturation. Only affects the ADVANCED info style. Must be a valid hexadecimal number")
+		public String satTextColourEmpty = "555555";
+		
+		@Name("ADVANCED info text x offset")
+		@Comment("Shift the ADVANCED info text in the x direction. Can be positive or negative.")
+		public int infoXOffset = 0;
+		
+		@Name("ADVANCED info text y offset")
+		@Comment("Shift the ADVANCED info text in the y direction. Can be positive of negative.")
+		public int infoYOffset = 0;
 		
 		@Name("Draw Saturation?")
 		@Comment("If set to false, Scaling Feast will make no attempt to provide any information to the player about thier vanilla or extended saturation.")

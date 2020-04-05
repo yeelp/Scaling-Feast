@@ -187,7 +187,7 @@ public class HUDOverlayHandler extends Handler
 		int remainingShanks = hunger % ModConsts.VANILLA_MAX_HUNGER;
 		//First, draw the empty bar.
 		mc.getTextureManager().bindTexture(Gui.ICONS);
-		drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0), 27, true, false, false, isHungerEffectActive, null);
+		drawStatBar(jitterAmount, mc, left, top, (max < ModConsts.VANILLA_MAX_HUNGER ? (int)(2*Math.ceil(max/2.0f)) : ModConsts.VANILLA_MAX_HUNGER), 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0), 27, true, false, false, isHungerEffectActive, null);
 		int i = 0;
 		int colourIndex = 0;
 		for(i = 0; i < numBars; i++)
@@ -349,7 +349,7 @@ public class HUDOverlayHandler extends Handler
 		{
 			x = left - i * 8 - 9;
 		}
-		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.lossFreq);
+		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
 		GL11.glColor3f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB());
 		mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -416,7 +416,7 @@ public class HUDOverlayHandler extends Handler
 	
 	private Colour getMaxColour(int ticks, int maxTicks)
 	{
-		if(maxTicks == 1 || ModConfig.foodCap.starveLoss == 0)
+		if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
 		{
 			return new Colour("FFFFFF");
 		}
