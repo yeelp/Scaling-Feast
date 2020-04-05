@@ -10,6 +10,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
@@ -30,13 +32,29 @@ public class CapabilityHandler extends Handler
 	{
 		if(evt.getObject() instanceof EntityPlayer)
 		{
-			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "FoodCap"), new FoodCap());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "FoodCap"), new FoodCap((short)ModConfig.foodCap.startingHunger));
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
 		}
 	}
 	
 	@SubscribeEvent
-	public void onPlayerLogin(EntityJoinWorldEvent evt)
+	public void onPlayerLogin(PlayerLoggedInEvent evt)
+	{
+		EntityPlayer player = evt.player;
+		short foodCap = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
+		FoodStats fs = player.getFoodStats();
+		if(fs.getFoodLevel() > foodCap)
+		{
+			fs.setFoodLevel(foodCap);
+			if(fs.getSaturationLevel() > fs.getFoodLevel())
+			{
+				fs.setFoodSaturationLevel(fs.getFoodLevel());
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerJoin(EntityJoinWorldEvent evt)
 	{
 		if(evt.getWorld().isRemote)
 		{
@@ -61,21 +79,24 @@ public class CapabilityHandler extends Handler
 		ScalingFeast.info(String.format("%d -> %d, %d -> %d", newFoodCap.getMaxFoodLevel(), oldFoodCap.getMaxFoodLevel(), newTracker.getCount(), oldTracker.getCount()));
 		if(evt.isWasDeath())
 		{
+			FoodStats newFs = evt.getEntityPlayer().getFoodStats();
+			FoodStats oldFs = evt.getOriginal().getFoodStats();
+			
+			newFs.setFoodLevel(newFoodCap.getMaxFoodLevel());
+			newFs.setFoodSaturationLevel(newFoodCap.getMaxFoodLevel() < 5 ? newFoodCap.getMaxFoodLevel() : 5);
 			if(ModConfig.foodCap.death.maxLossAmount != 0)
 			{
 				newFoodCap.decreaseMax((short) ModConfig.foodCap.death.maxLossAmount);
 			}
 			if(ModConfig.foodCap.death.hungerLossOnDeath != 0)
 			{
-				FoodStats newFs = evt.getEntityPlayer().getFoodStats();
-				FoodStats oldFs = evt.getOriginal().getFoodStats();
 				if(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath >= 20)
 				{
 					newFs.setFoodLevel(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath);
 				}
 			}
 		}
-		if(!evt.isWasDeath() || !ModConfig.foodCap.doesFreqReset)
+		if(!evt.isWasDeath() || !ModConfig.foodCap.starve.doesFreqReset)
 		{
 			syncTracker(evt.getEntityPlayer());
 		}

@@ -23,13 +23,13 @@ public class FoodHandler extends Handler
 	{
 		IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
 		//only do any of this if there is max hunger to lose, otherwise this is a waste of processing.
-		if(ModConfig.foodCap.starveLoss != 0)
+		if(ModConfig.foodCap.starve.starveLoss != 0)
 		{
 			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
-			if(tracker.getCount() >= ModConfig.foodCap.lossFreq)
+			if(tracker.getCount() >= ModConfig.foodCap.starve.lossFreq)
 			{
 				tracker.reset();
-				evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starveLoss);
+				evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starve.starveLoss);
 				CapabilityHandler.sync(evt.player);
 			}
 			else
@@ -43,7 +43,7 @@ public class FoodHandler extends Handler
 	public void onFoodStatsAddition(FoodEvent.FoodStatsAddition evt)
 	{
 		//Only sync if the food level is zero, as that is the only time the tracker should be resetting. The tracker should always be zero if the frequency resets and the food level > 0.
-		if(ModConfig.foodCap.doesFreqReset && evt.player.getFoodStats().getFoodLevel() == 0)
+		if(ModConfig.foodCap.starve.doesFreqReset && evt.player.getFoodStats().getFoodLevel() == 0)
 		{
 			evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
 			CapabilityHandler.syncTracker(evt.player);
