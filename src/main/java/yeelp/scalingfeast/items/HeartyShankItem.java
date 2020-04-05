@@ -56,16 +56,25 @@ public class HeartyShankItem extends ItemFood
 			IFoodCap currCap = ((EntityPlayer)entityLiving).getCapability(FoodCapProvider.capFoodStat, null);
 			if(ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getMaxFoodLevel())
 			{
-				ScalingFeast.info("Increasing Cap");
-				currCap.increaseMax((short)ModConfig.foodCap.inc);
-				if(ModConfig.foodCap.shankResetsCounter)
+				if(currCap.getMaxFoodLevel() + ModConfig.foodCap.inc > ModConfig.foodCap.globalCap && ModConfig.foodCap.globalCap != -1)
 				{
-					((EntityPlayer)entityLiving).getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
-					CapabilityHandler.sync((EntityPlayer)entityLiving);
+					currCap.setMax((short) ModConfig.foodCap.globalCap);
 				}
 				else
 				{
-					CapabilityHandler.syncCap((EntityPlayer)entityLiving);
+					currCap.increaseMax((short)ModConfig.foodCap.inc);
+				}
+				if(ModConfig.foodCap.shankResetsCounter)
+				{
+					((EntityPlayer)entityLiving).getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
+				}
+				//A quick guarantee that things should work as intended.
+				//We may not need to do this, but I'm not sure yet.
+				//At the very least, syncing on multiplayer still works.
+				//So, if it's multiplayer, sync it. Otherwise, it shouldn't matter?
+				if(!worldIn.isRemote)
+				{
+					CapabilityHandler.sync((EntityPlayer)entityLiving);
 				}
 			}
 		}
