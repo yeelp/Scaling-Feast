@@ -46,7 +46,10 @@ public class FoodHandler extends Handler
 		if(ModConfig.foodCap.starve.doesFreqReset && evt.player.getFoodStats().getFoodLevel() == 0)
 		{
 			evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
-			CapabilityHandler.syncTracker(evt.player);
+			if(!evt.player.world.isRemote)
+			{
+				CapabilityHandler.syncTracker(evt.player);
+			}
 		}
 	}
 }

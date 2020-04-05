@@ -12,6 +12,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemFood;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -20,12 +21,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
+import squeek.applecore.api.food.FoodValues;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
+import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.util.Colour;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
@@ -271,8 +274,8 @@ public class HUDOverlayHandler extends Handler
 	private void drawSimpleInfo(int i, Minecraft mc, int left, int top, int hunger, int max)
 	{
 		GL11.glPushMatrix();
-		GL11.glScalef(0.75f, 0.75f, 0.75f);
-		mc.fontRenderer.drawStringWithShadow("x"+i+"/"+(int)Math.ceil((float)max/ModConsts.VANILLA_MAX_HUNGER), left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+		GL11.glScalef(0.75f, 0.75f, 1.0f);
+		mc.fontRenderer.drawStringWithShadow("x"+i+"/"+(int)Math.ceil((float)max/ModConsts.VANILLA_MAX_HUNGER), left/0.75f + 1/0.75f, top/0.75f + 4.5f/0.75f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -283,12 +286,26 @@ public class HUDOverlayHandler extends Handler
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
 		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
-		String hungerInfo = String.format("(%d/%d", hunger, max);
-		String satInfo = String.format(", %.1f)", sat);
-		String info = hungerInfo + (ModConfig.hud.drawSaturation ? satInfo : ")");
+		String foodAddition = "";
+		String maxAddition = "";
+		String satAddition = "";
+		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)
+		{
+			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(player.getHeldItemMainhand(), player);
+			foodAddition = "+"+Integer.toString(foodValues.hunger);
+			satAddition = "+"+Float.toString(foodValues.getSaturationIncrement(player));
+			if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem)
+			{
+				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
+			}
+		}
+		String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
+		String satInfo = String.format("%.1f%s", sat, satAddition);
+		float satOffset = mc.fontRenderer.getStringWidth(hungerInfo)/8.0f;
 		GL11.glPushMatrix();
-		GL11.glScalef(0.75f, 0.75f, 0.75f);
-		mc.fontRenderer.drawStringWithShadow(info, left/0.75f + 1/0.75f, top/0.75f, getColour(hunger, max));
+		GL11.glScalef(0.5f, 0.5f, 1.0f);
+		mc.fontRenderer.drawStringWithShadow(satInfo, left/0.5f + satOffset/0.5f, top/0.5f, (sat > 0 ? 0xffff55 : 0xaaaaaa));
+		mc.fontRenderer.drawStringWithShadow(hungerInfo, left/0.5f + 1/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
