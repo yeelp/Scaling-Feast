@@ -108,7 +108,7 @@ public class ModConfig
 	{	
 		@Name("Enable Compatibility Settings")
 		@Comment({"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.", 
-				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY or NUMERICAL"})
+				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY"})
 		public boolean shouldFirePost = true;
 	}
 	public static class ItemCategory
@@ -120,7 +120,7 @@ public class ModConfig
 		public int heartyShankFoodLevel = 4;
 		
 		@Name("Hearty Shank Saturation Modifier")
-		@Comment("The saturation modifier for the Hearty Shank. This isn't the exact saturation, but a value used to calculate saturation.")
+		@Comment("The saturation modifier for the Hearty Shank. This item's actual saturation level will be 2*this*<Hearty Shank Hunger Value>")
 		@RangeDouble(min = 0)
 		@RequiresMcRestart
 		public double heartyShankSatLevel = 0.8;

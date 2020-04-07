@@ -6,6 +6,7 @@ import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
@@ -28,8 +29,20 @@ public class FoodHandler extends Handler
 			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
 			if(tracker.getCount() >= ModConfig.foodCap.starve.lossFreq)
 			{
-				tracker.reset();
-				evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starve.starveLoss);
+				if(ModConfig.foodCap.starve.doesFreqResetOnStarve)
+				{
+					tracker.reset();
+				}
+				IFoodCap foodCap = evt.player.getCapability(FoodCapProvider.capFoodStat, null);
+				//if foodcap <= our lower bound, do nothing.
+				if(foodCap.getMaxFoodLevel() <= ModConfig.foodCap.starve.starveLowerCap)
+				{
+					return;
+				}
+				else
+				{
+					foodCap.decreaseMax((short) ModConfig.foodCap.starve.starveLoss);
+				}
 				CapabilityHandler.sync(evt.player);
 			}
 			else
