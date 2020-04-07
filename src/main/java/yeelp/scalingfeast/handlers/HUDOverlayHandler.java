@@ -25,6 +25,7 @@ import squeek.applecore.api.food.FoodValues;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
+import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
@@ -366,10 +367,27 @@ public class HUDOverlayHandler extends Handler
 		{
 			x = left - i * 8 - 9;
 		}
+		int hunger = mc.player.getFoodStats().getFoodLevel();
+		float alpha = (hunger < 20*Math.ceil(max/20.0f) && hunger > 0? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
 		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
-		GL11.glColor3f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB());
-		mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		GL11.glColor4f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB(), alpha);
+		
+		if(ModConfig.hud.maxColourStyle == MaxColourStyle.CUSTOM)
+		{
+			//blend the start and end colours only if tick > 0, other wise, just draw start colour
+			if(ticks > 0)
+			{
+				mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
+			}
+			Colour overlayColour = new Colour(ModConfig.hud.maxColourStart);
+			GL11.glColor4f(1.0f/255*overlayColour.getR(), 1.0f/255*overlayColour.getG(), 1.0f/255*overlayColour.getB(), (ticks + 1 < ModConfig.foodCap.starve.lossFreq ? (ModConfig.foodCap.starve.lossFreq - ticks)/ModConfig.foodCap.starve.lossFreq : 0)*alpha);
+			mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
+		}
+		else
+		{
+			mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
+		}
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GlStateManager.disableBlend();
 		mc.mcProfiler.endSection();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -433,33 +451,42 @@ public class HUDOverlayHandler extends Handler
 	
 	private Colour getMaxColour(int ticks, int maxTicks)
 	{
-		if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
+		switch(ModConfig.hud.maxColourStyle)
 		{
-			return new Colour("FFFFFF");
-		}
-		else if(ticks + 1 == maxTicks)
-		{
-			return new Colour("AA0000");
-		}
-		else if(ticks > 0.9 * maxTicks)
-		{
-			return new Colour("FF5555");
-		}
-		else if(ticks > 0.75 * maxTicks)
-		{
-			return new Colour("FFAA00");
-		}
-		else if(ticks > 0.5 * maxTicks)
-		{
-			return new Colour("FFFF55");
-		}
-		else if (ticks > 0)
-		{
-			return new Colour("FFFFFF");
-		}
-		else
-		{
-			return new Colour("55FF555");
+			case DEFAULT:
+				if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
+				{
+					return new Colour("FFFFFF");
+				}
+				else if(ticks + 1 == maxTicks)
+				{
+					return new Colour("AA0000");
+				}
+				else if(ticks > 0.9 * maxTicks)
+				{
+					return new Colour("FF5555");
+				}
+				else if(ticks > 0.75 * maxTicks)
+				{
+					return new Colour("FFAA00");
+				}
+				else if(ticks > 0.5 * maxTicks)
+				{
+					return new Colour("FFFF55");
+				}
+				else if (ticks > 0)
+				{
+					return new Colour("FFFFFF");
+				}
+				else
+				{
+					return new Colour("55FF555");
+				}
+			case CUSTOM:
+				return new Colour(ModConfig.hud.maxColourEnd);
+			//unreachable, but needed for JVM
+			default:
+				return null;
 		}
 	}
 	

@@ -171,7 +171,7 @@ public class ModConfig
 		public MaxColourStyle maxColourStyle = MaxColourStyle.DEFAULT;
 		
 		@Name("Max Outline Transparency")
-		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving?. 0.0 if completely solid, 1.0 if completely transparent")
+		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving?. 1.0 if completely solid, 0.0 if completely transparent")
 		@RangeDouble(min = 0.0, max = 1.0)
 		public double maxOutlineTransparency = 0.5;
 		
@@ -182,6 +182,14 @@ public class ModConfig
 		@Name("Saturation Text Colour Empty")
 		@Comment("The colour of the saturation text when a player has no saturation. Only affects the ADVANCED info style. Must be a valid hexadecimal number")
 		public String satTextColourEmpty = "555555";
+		
+		@Name("Max Custom Colour Start")
+		@Comment("When Max Outline Colour Style is CUSTOM and when the player hasn't taken starvation damage, this is the hex colour of the starvation tracker.")
+		public String maxColourStart = "ffffff";
+		
+		@Name("MaxColourEnd")
+		@Comment("When Max Outline Colour Style is CUSTOM and when the player is about to lose max hunger, this is the hex colour of the starvation tracker.")
+		public String maxColourEnd = "aa0000";
 		
 		@Name("ADVANCED info text x offset")
 		@Comment("Shift the ADVANCED info text in the x direction. Can be positive or negative.")
