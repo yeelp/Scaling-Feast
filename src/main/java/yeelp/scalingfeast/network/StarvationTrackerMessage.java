@@ -71,7 +71,6 @@ public class StarvationTrackerMessage implements IMessage
 		{
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			player.getCapability(StarvationTrackerProvider.starvationTracker, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
-			ScalingFeast.info(String.format("Tick: %d", player.getCapability(StarvationTrackerProvider.starvationTracker, null).getCount()));
 		}
 	}
 }
