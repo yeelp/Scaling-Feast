@@ -41,6 +41,7 @@ public final class SOLCarrotHelper
 			enabled = false;
 		}
 	}
+	
 	/**
 	 * Has the module loaded successfully?
 	 * @return true if Scaling Feast found Spice of Life: Carrot Edition, and found the SOLCarrotAPI class.

@@ -35,6 +35,15 @@ public class SpiceOfLifeHelper
 	}
 	
 	/**
+	 * Is this module enabled?
+	 * @return true if enabled, false otherwise
+	 */
+	public static boolean isEnabled()
+	{
+		return enabled;
+	}
+	
+	/**
 	 * Get a list of foods eaten by a player
 	 * @param player the player to target
 	 * @return a List of FoodEaten objects containing foods eaten by the specified player.

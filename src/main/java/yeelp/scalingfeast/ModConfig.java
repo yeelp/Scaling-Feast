@@ -30,6 +30,10 @@ public class ModConfig
 	@Name("HUD")
 	@Comment("These settings are for tweaking the heads-up display")
 	public static final HUDCategory hud = new HUDCategory();
+	
+	@Name("Modules")
+	@Comment("Enable and tweak Scaling Feast's behaviour with other mods")
+	public static final ModuleCategory modules = new ModuleCategory();
 
 	public static class FoodCapCategory
 	{
@@ -220,6 +224,58 @@ public class ModConfig
 				  "If the number of \'rows\' of saturation exceed the length of this list, it will wrap around to the beginning.",
 				  "If any invalid hex string is entered, it will be ignored."})
 		public String[] Scolours = {"d70000", "d700d7", "6400d7", "00d3d7", "64d700", "d7d700", "d7d7d7"}; 
+	}
+	
+	public static class ModuleCategory
+	{
+		@Name("Disable Hearty Shank Effects")
+		@Comment("If true, the Hearty Shank will no longer increase max hunger")
+		public boolean isShankDisabled = false;
+		
+		@Name("Spice Of Life Module")
+		@Comment("Tweak Spice Of Life integration")
+		public SpiceOfLifeCategory spiceoflife = new SpiceOfLifeCategory();
+		
+		@Name("Spice Of Life Carrot Edition Module")
+		@Comment("Tweak Spice Of Life: Carrot Edition integration")
+		public SOLCarrotCategory sol = new SOLCarrotCategory();
+		
+		public static class SpiceOfLifeCategory
+		{
+			@Name("Enabled")
+			@Comment("Set to true to enable the Spice Of Life module")
+			@RequiresMcRestart
+			public boolean enabled = false;
+			
+			@Name("Use Food Groups")
+			@Comment("Should Scaling Feast check food groups in a player's food history instead of individual food items? Must have food groups defined in Spice Of Life")
+			public boolean useFoodGroups = false;
+			
+			@Name("Required Amount")
+			@Comment("How many unique entries must be found in a player's food history to prevent punishing them.")
+			@RangeInt(min = 1)
+			public int uniqueRequired = 5;
+			
+			@Name("Penalty")
+			@Comment({"If the number of unique entires in a player's food history is less than Required Amount, that player will lose this much max hunger for every unique entry missing.",
+					  "For example, if a player has 3 unique entires and the required amount is 5, they will lose (5-3)*(penalty) max hunger"})
+			@RangeInt(min = 1, max = Short.MAX_VALUE)
+			public int penalty = 1;
+		}
+		
+		public static class SOLCarrotCategory
+		{
+			@Name("Enabled")
+			@Comment("Set to true to enable the Spice Of Life: Carrot Edition module")
+			@RequiresMcRestart
+			public boolean enabled = false;
+			
+			@Name("Milestones")
+			@Comment({"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
+					  "When a player eats m unique food items, they will gain r max hunger, in half shanks. m must be a positive integer and r must be a positive integer less than 32767.",
+					  "Values for r > 32767 will be brought inside these bounds modulo 32767. list entires that aren't of this form, or pairs containing negative values for either m or r will be silently ignored."})
+			public String[] milestones = {"5:2", "10:2", "15:2", "20:2", "25:2", "30:2", "35:2", "40:2", "45:2", "50:2"};
+		}
 	}
 	
 	@Mod.EventBusSubscriber(modid = ModConsts.MOD_ID)
