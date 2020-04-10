@@ -8,6 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 
 /**
@@ -75,7 +76,11 @@ public final class FoodCap implements IFoodCap
 		}
 		else if(this.max - amount < 1)
 		{
-			this.max = 20;
+			this.max = 1;
+		}
+		else if(this.max - amount < ModConfig.foodCap.starve.starveLowerCap)
+		{
+			this.max = (short)ModConfig.foodCap.starve.starveLowerCap;
 		}
 		else
 		{

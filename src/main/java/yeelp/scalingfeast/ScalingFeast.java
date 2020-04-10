@@ -43,28 +43,30 @@ public class ScalingFeast
     {
         logger = event.getModLog();
         hasAppleSkin = Loader.isModLoaded("appleskin");
+        if(hasAppleSkin)
+        {
+        	info("Scaling Feast found AppleSkin!");
+        }
         proxy.preInit();
         SFEnchantments.init();
         SFPotion.init();
-        info("Registering capability");
         FoodCap.register();
         StarvationTracker.register();
         new CapabilityHandler().register();
-        info("Registered capability");
         SFPotion.addBrewingRecipes();
         PacketHandler.init();
+        info("Scaling Feast pre-initialization complete!");
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
     	proxy.init();
-    	info("Registering handlers...");
     	new FoodHandler().register();
         new EnchantmentHandler().register();
         new PotionHandler().register();
         new LootTableInjector().register();
-        info("Handlers registered");
+        info("Scaling Feast initialization complete!");
     }
     
     @EventHandler 

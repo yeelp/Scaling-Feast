@@ -108,7 +108,7 @@ public class ModConfig
 	{	
 		@Name("Enable Compatibility Settings")
 		@Comment({"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.", 
-				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY or NUMERICAL"})
+				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY"})
 		public boolean shouldFirePost = true;
 	}
 	public static class ItemCategory
@@ -120,7 +120,7 @@ public class ModConfig
 		public int heartyShankFoodLevel = 4;
 		
 		@Name("Hearty Shank Saturation Modifier")
-		@Comment("The saturation modifier for the Hearty Shank. This isn't the exact saturation, but a value used to calculate saturation.")
+		@Comment("The saturation modifier for the Hearty Shank. This item's actual saturation level will be 2*this*<Hearty Shank Hunger Value>")
 		@RangeDouble(min = 0)
 		@RequiresMcRestart
 		public double heartyShankSatLevel = 0.8;
@@ -171,7 +171,7 @@ public class ModConfig
 		public MaxColourStyle maxColourStyle = MaxColourStyle.DEFAULT;
 		
 		@Name("Max Outline Transparency")
-		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving?. 0.0 if completely solid, 1.0 if completely transparent")
+		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
 		@RangeDouble(min = 0.0, max = 1.0)
 		public double maxOutlineTransparency = 0.5;
 		
@@ -182,6 +182,14 @@ public class ModConfig
 		@Name("Saturation Text Colour Empty")
 		@Comment("The colour of the saturation text when a player has no saturation. Only affects the ADVANCED info style. Must be a valid hexadecimal number")
 		public String satTextColourEmpty = "555555";
+		
+		@Name("Max Custom Colour Start")
+		@Comment("When Max Outline Colour Style is CUSTOM and when the player hasn't taken starvation damage, this is the hex colour of the starvation tracker.")
+		public String maxColourStart = "ffffff";
+		
+		@Name("Max Custom Colour End")
+		@Comment("When Max Outline Colour Style is CUSTOM and when the player is about to lose max hunger, this is the hex colour of the starvation tracker.")
+		public String maxColourEnd = "aa0000";
 		
 		@Name("ADVANCED info text x offset")
 		@Comment("Shift the ADVANCED info text in the x direction. Can be positive or negative.")
@@ -231,6 +239,7 @@ public class ModConfig
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
+				HUDOverlayHandler.loadTextColours();
 			}
 		}
 	}

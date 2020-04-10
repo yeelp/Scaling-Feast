@@ -64,7 +64,7 @@ public class HeartyShankItem extends ItemFood
 				{
 					currCap.increaseMax((short)ModConfig.foodCap.inc);
 				}
-				if(ModConfig.foodCap.shankResetsCounter)
+				if(ModConfig.foodCap.starve.shankResetsCounter)
 				{
 					((EntityPlayer)entityLiving).getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
 				}

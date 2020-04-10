@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.util.FoodCapProvider;
@@ -30,15 +31,14 @@ public class PotionMetabolism extends PotionBase
 		if(entity instanceof EntityPlayer && !entity.world.isRemote)
 		{
 			EntityPlayer player = (EntityPlayer)entity;
-			if(player.getFoodStats().getFoodLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
+			FoodStats fs = player.getFoodStats();
+			if(fs.getFoodLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
 			{
-				ItemFood dummy = new ItemFood(1, 0, false);
-				player.getFoodStats().addStats(dummy, new ItemStack(dummy));
+				fs.setFoodLevel(fs.getFoodLevel() + 1);
 			}
-			else if(player.getFoodStats().getSaturationLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
+			else if(fs.getSaturationLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
 			{
-				ItemFood dummy = new ItemFood(1, 0.5f, false);
-				player.getFoodStats().addStats(dummy, new ItemStack(dummy));
+				fs.setFoodSaturationLevel(fs.getSaturationLevel() + 1);
 			}
 		}
 	}

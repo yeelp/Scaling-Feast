@@ -29,7 +29,8 @@ public class Colour
 		}
 		catch(NumberFormatException e)
 		{
-			throw new IllegalArgumentException(e.toString() + " isn't a valid hex String for Colour!");
+			e.printStackTrace();
+			throw new IllegalArgumentException(hex + " isn't a valid hex String for Colour!");
 		}
 	}
 	/**

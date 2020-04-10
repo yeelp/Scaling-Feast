@@ -6,6 +6,7 @@ import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
@@ -21,15 +22,31 @@ public class FoodHandler extends Handler
 	@SubscribeEvent(receiveCanceled=true)
 	public void onStarve(StarvationEvent.Starve evt)
 	{
-		IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
 		//only do any of this if there is max hunger to lose, otherwise this is a waste of processing.
 		if(ModConfig.foodCap.starve.starveLoss != 0)
 		{
+			IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
 			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
 			if(tracker.getCount() >= ModConfig.foodCap.starve.lossFreq)
 			{
-				tracker.reset();
-				evt.player.getCapability(FoodCapProvider.capFoodStat, null).decreaseMax((short) ModConfig.foodCap.starve.starveLoss);
+				if(ModConfig.foodCap.starve.doesFreqResetOnStarve)
+				{
+					tracker.reset();
+				}
+				else
+				{
+					tracker.setCount((short)(ModConfig.foodCap.starve.lossFreq - 1));
+				}
+				IFoodCap foodCap = evt.player.getCapability(FoodCapProvider.capFoodStat, null);
+				//if foodcap <= our lower bound, do nothing.
+				if(foodCap.getMaxFoodLevel() <= ModConfig.foodCap.starve.starveLowerCap)
+				{
+					return;
+				}
+				else
+				{
+					foodCap.decreaseMax((short) ModConfig.foodCap.starve.starveLoss);
+				}
 				CapabilityHandler.sync(evt.player);
 			}
 			else
@@ -46,7 +63,10 @@ public class FoodHandler extends Handler
 		if(ModConfig.foodCap.starve.doesFreqReset && evt.player.getFoodStats().getFoodLevel() == 0)
 		{
 			evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
-			CapabilityHandler.syncTracker(evt.player);
+			if(!evt.player.world.isRemote)
+			{
+				CapabilityHandler.syncTracker(evt.player);
+			}
 		}
 	}
 }

@@ -11,7 +11,7 @@ import yeelp.scalingfeast.init.SFPotion;
 
 /**
  * The Enchanted Iron Apple which gives the Iron Stomach effect and a Metabolism effect when eaten.
- * @author Andrew
+ * @author Yeelp
  *
  */
 public class EnchantedIronAppleItem extends ItemFood 
