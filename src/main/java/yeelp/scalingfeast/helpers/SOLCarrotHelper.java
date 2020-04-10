@@ -1,9 +1,14 @@
 package yeelp.scalingfeast.helpers;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import net.minecraft.entity.player.EntityPlayer;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.util.SOLCarrotMilestone;
 
 /**
  * Helper class for Spice of Life: Carrot Edition integration.
@@ -14,7 +19,9 @@ import yeelp.scalingfeast.ScalingFeast;
 public final class SOLCarrotHelper 
 {
 	private static Class sol;
+	private static Class prog;
 	private static boolean enabled;
+	private static Queue<SOLCarrotMilestone> milestones;
 	
 	/**
 	 * Initialize this module
@@ -26,6 +33,7 @@ public final class SOLCarrotHelper
 			try 
 			{
 				sol = Class.forName("com.cazsius.solcarrot.tracking.FoodList");
+				prog = Class.forName("com.cazsius.solcarrot.tracking.ProgressInfo");
 				enabled = true;
 			} 
 			catch (ClassNotFoundException e) 
@@ -44,26 +52,27 @@ public final class SOLCarrotHelper
 	
 	/**
 	 * Has the module loaded successfully?
-	 * @return true if Scaling Feast found Spice of Life: Carrot Edition, and found the SOLCarrotAPI class.
+	 * @return true if Scaling Feast found Spice of Life: Carrot Edition.
 	 */
 	public static boolean isEnabled()
 	{
 		return enabled;
 	}
 	/**
-	 * Get the FoodList length for this player.
+	 * Get the length of the FoodList for this player, only counting food items that should count towards milestones.
 	 * @param player the player to get the FoodList of.
 	 * @return The length of the FoodList for this player.
 	 * @throws ModuleNotLoadedException If this module is not loaded.
 	 */
-	public static int getFoodListLength(EntityPlayer player) throws ModuleNotLoadedException
+	public static int getCountableFoodListLength(EntityPlayer player) throws ModuleNotLoadedException
 	{
 		if(enabled)
 		{
 			try 
 			{
 				Object foodList = sol.cast(sol.getMethod("get", EntityPlayer.class).invoke(null, player));
-				return ((Integer)(sol.getMethod("getEatenFoodCount").invoke(foodList))).intValue();
+				Object progList = prog.cast(sol.getMethod("getProgressInfo").invoke(foodList));
+				return ((Integer)(prog.getDeclaredField("foodsEaten").get(progList))).intValue();
 			} 
 			catch (NoSuchMethodException e) 
 			{
@@ -84,12 +93,47 @@ public final class SOLCarrotHelper
 			catch (InvocationTargetException e)
 			{
 				e.printStackTrace();
+			} catch (NoSuchFieldException e) 
+			{
+				e.printStackTrace();
 			}
 			return -1;
 		}
 		else
 		{
 			throw new ModuleNotLoadedException("Spice of Life: Carrot Edition Module not loaded!");
+		}
+	}
+	
+	public static short getReward(EntityPlayer player)
+	{
+		short reward = 0;
+		try
+		{
+			int foodsEaten = getCountableFoodListLength(player);
+			for(SOLCarrotMilestone milestone : milestones)
+			{
+				if(foodsEaten >= milestone.getAmountNeeded())
+				{
+					reward += milestone.getReward();
+				}
+			}
+			return reward;
+		} 
+		catch (ModuleNotLoadedException e) 
+		{
+			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+			return 0;
+		}
+	}
+	
+	public static void parseMilestones()
+	{
+		milestones = new LinkedList<SOLCarrotMilestone>();
+		for(String str : ModConfig.modules.sol.milestones)
+		{
+			milestones.add(new SOLCarrotMilestone(str));
 		}
 	}
 }

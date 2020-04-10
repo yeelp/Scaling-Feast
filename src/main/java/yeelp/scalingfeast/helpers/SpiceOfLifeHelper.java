@@ -1,5 +1,6 @@
 package yeelp.scalingfeast.helpers;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import squeek.spiceoflife.foodtracker.FoodEaten;
 import squeek.spiceoflife.foodtracker.FoodHistory;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
 
 /**
@@ -82,6 +84,42 @@ public class SpiceOfLifeHelper
 		else
 		{
 			throw new ModuleNotLoadedException("Spice of Life Module not enabled!");
+		}
+	}
+	
+	/**
+	 * Get the max hunger penalty for a player
+	 * @param player the player to get the max hunger penalty for
+	 * @return the max hunger penalty for the specified player, or 0 if the player has no penalty
+	 */
+	public static short getPenalty(EntityPlayer player)
+	{
+		Set<?> entries = new HashSet<Object>();
+		if(ModConfig.modules.spiceoflife.useFoodGroups)
+		{
+			entries = FoodHistory.get(player).getDistinctFoodGroups();
+		}
+		else
+		{
+			try 
+			{
+				entries = SpiceOfLifeHelper.getUniqueFoodsFor(player);
+			} 
+			catch (ModuleNotLoadedException e) 
+			{
+				ScalingFeast.err("Scaling Feast expected Spice of Life to be loaded, but it wasn't! This doesn't make any sense!");
+				ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+				return 0;
+			}
+		}
+		int diff = ModConfig.modules.spiceoflife.uniqueRequired - entries.size();
+		if(diff <= 0 || entries.size() < ModConfig.modules.spiceoflife.uniqueRequired)
+		{
+			return 0;
+		}
+		else
+		{
+			return (short) (-1*(diff)*ModConfig.modules.spiceoflife.penalty);
 		}
 	}
 }

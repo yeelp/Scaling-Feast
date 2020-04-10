@@ -56,6 +56,7 @@ public class CapabilityHandler extends Handler
 				fs.setFoodSaturationLevel(fs.getFoodLevel());
 			}
 		}
+		ModuleHandler.updatePlayer(player);
 	}
 	
 	@SubscribeEvent
@@ -108,12 +109,14 @@ public class CapabilityHandler extends Handler
 			syncTracker(evt.getEntityPlayer());
 		}
 		syncCap(evt.getEntityPlayer());
+		syncMod(evt.getEntityPlayer());
 	}
 	
 	public static void sync(EntityPlayer player)
 	{
 		syncCap(player);
 		syncTracker(player);
+		syncMod(player);
 	}
 	
 	public static void syncCap(EntityPlayer player)

@@ -11,6 +11,8 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
+import yeelp.scalingfeast.handlers.ModuleHandler;
+import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig 
@@ -252,7 +254,7 @@ public class ModConfig
 			public boolean useFoodGroups = false;
 			
 			@Name("Required Amount")
-			@Comment("How many unique entries must be found in a player's food history to prevent punishing them.")
+			@Comment("How many unique entries must be found in a player's food history to prevent punishing them. Must be less than or equal to Spice of Life's food history length, or else this module will do nothing")
 			@RangeInt(min = 1)
 			public int uniqueRequired = 5;
 			
@@ -274,6 +276,7 @@ public class ModConfig
 			@Comment({"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
 					  "When a player eats m unique food items, they will gain r max hunger, in half shanks. m must be a positive integer and r must be a positive integer less than 32767.",
 					  "Values for r > 32767 will be brought inside these bounds modulo 32767. list entires that aren't of this form, or pairs containing negative values for either m or r will be silently ignored."})
+			@RequiresMcRestart
 			public String[] milestones = {"5:2", "10:2", "15:2", "20:2", "25:2", "30:2", "35:2", "40:2", "45:2", "50:2"};
 		}
 	}
@@ -296,6 +299,7 @@ public class ModConfig
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
+				SOLCarrotHelper.parseMilestones();
 			}
 		}
 	}
