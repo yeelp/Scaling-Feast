@@ -34,6 +34,8 @@ public class ScalingFeast
 
     public static Logger logger;
     public static boolean hasAppleSkin;
+    public static boolean hasSolCarrot;
+    public static boolean hasSpiceOfLife;
     
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
@@ -43,6 +45,8 @@ public class ScalingFeast
     {
         logger = event.getModLog();
         hasAppleSkin = Loader.isModLoaded("appleskin");
+        hasSolCarrot = Loader.isModLoaded("solcarrot");
+        hasSpiceOfLife = Loader.isModLoaded("spiceoflife");
         if(hasAppleSkin)
         {
         	info("Scaling Feast found AppleSkin!");

@@ -1,0 +1,3 @@
+[submodule "SpiceOfLife"]
+	path = SpiceOfLife
+	url = https://github.com/squeek502/SpiceOfLife

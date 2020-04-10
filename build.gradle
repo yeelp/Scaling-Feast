@@ -16,6 +16,9 @@ version = "1.2.0-beta"
 group = "yeelp.scalingfeast" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "scalingfeast"
 
+sourceSets.main.java.srcDirs += 'java'
+sourceSets.main.java.srcDirs += 'SpiceOfLife/src'
+
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
