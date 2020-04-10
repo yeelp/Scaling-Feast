@@ -5,6 +5,7 @@ import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IStarvationTracker;
@@ -15,7 +16,7 @@ public class FoodHandler extends Handler
 	@SubscribeEvent
 	public void onGetMaxHunger(HungerEvent.GetMaxHunger evt)
 	{
-		evt.maxHunger = evt.player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
+		evt.maxHunger = evt.player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(evt.player.getCapability(FoodCapModifierProvider.foodCapMod, null));
 	}
 	
 	//Even if this event is canceled, we probably want to tick the starvation tracker. This is fine, as it will only succeed if the food level is zero.
@@ -39,7 +40,7 @@ public class FoodHandler extends Handler
 				}
 				IFoodCap foodCap = evt.player.getCapability(FoodCapProvider.capFoodStat, null);
 				//if foodcap <= our lower bound, do nothing.
-				if(foodCap.getMaxFoodLevel() <= ModConfig.foodCap.starve.starveLowerCap)
+				if(foodCap.getUnmodifiedMaxFoodLevel() <= ModConfig.foodCap.starve.starveLowerCap)
 				{
 					return;
 				}

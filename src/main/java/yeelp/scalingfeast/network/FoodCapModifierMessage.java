@@ -11,28 +11,23 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import yeelp.scalingfeast.ScalingFeast;
-import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.IFoodCap;
+import yeelp.scalingfeast.util.FoodCapModifierProvider;
+import yeelp.scalingfeast.util.IFoodCapModifier;
 
 /**
- * Scaling Feast's message for a player's food cap
+ * Scaling Feast's message for FoodCap modifiers
  * @author Yeelp
  *
  */
-public class FoodCapMessage implements IMessage
+public class FoodCapModifierMessage implements IMessage
 {
 	private NBTTagShort tag;
-	/**
-	 * Construct a new message.
-	 * @param cap The food cap for this message.
-	 */
-	public FoodCapMessage(IFoodCap cap)
+	public FoodCapModifierMessage(IFoodCapModifier mod)
 	{
-		this.tag = new NBTTagShort(cap.getUnmodifiedMaxFoodLevel());
+		this.tag = new NBTTagShort(mod.getModifier());
 	}
 	
-	public FoodCapMessage()
+	public FoodCapModifierMessage()
 	{
 		
 	}
@@ -48,28 +43,30 @@ public class FoodCapMessage implements IMessage
 	}
 	
 	/**
-	 * The Handler for the FoodCapMessage
+	 * The FoodCapModifierMessage handler
 	 * @author Yeelp
 	 *
 	 */
-	public static final class Handler implements IMessageHandler<FoodCapMessage, IMessage>
-	{	
-		
+	public static final class Handler implements IMessageHandler<FoodCapModifierMessage, IMessage>
+	{
+
 		@Override
 		@SideOnly(Side.CLIENT)
-		public IMessage onMessage(FoodCapMessage message, MessageContext ctx) 
+		public IMessage onMessage(FoodCapModifierMessage message, MessageContext ctx) 
 		{
 			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
 			return null;
 		}
 		
 		@SideOnly(Side.CLIENT)
-		public void handle(FoodCapMessage msg, MessageContext ctx)
+		public void handle(FoodCapModifierMessage msg, MessageContext ctx)
 		{
 			EntityPlayer player = Minecraft.getMinecraft().player;
-			player.getCapability(FoodCapProvider.capFoodStat, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
+			player.getCapability(FoodCapModifierProvider.foodCapMod, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
 		}
+		
 	}
+	
 	@Override
 	public void fromBytes(ByteBuf buf) 
 	{
@@ -80,4 +77,5 @@ public class FoodCapMessage implements IMessage
 	{
 		new PacketBuffer(buf).writeShort(((NBTTagShort) serializeNBT()).getShort());
 	}
+
 }

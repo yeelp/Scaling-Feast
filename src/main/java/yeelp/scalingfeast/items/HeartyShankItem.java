@@ -51,12 +51,12 @@ public class HeartyShankItem extends ItemFood
 	
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
 	{
-		if(entityLiving instanceof EntityPlayer)
+		if(entityLiving instanceof EntityPlayer && !ModConfig.modules.isShankDisabled)
 		{
 			IFoodCap currCap = ((EntityPlayer)entityLiving).getCapability(FoodCapProvider.capFoodStat, null);
-			if(ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getMaxFoodLevel())
+			if(ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getUnmodifiedMaxFoodLevel())
 			{
-				if(currCap.getMaxFoodLevel() + ModConfig.foodCap.inc > ModConfig.foodCap.globalCap && ModConfig.foodCap.globalCap != -1)
+				if(currCap.getUnmodifiedMaxFoodLevel() + ModConfig.foodCap.inc > ModConfig.foodCap.globalCap && ModConfig.foodCap.globalCap != -1)
 				{
 					currCap.setMax((short) ModConfig.foodCap.globalCap);
 				}

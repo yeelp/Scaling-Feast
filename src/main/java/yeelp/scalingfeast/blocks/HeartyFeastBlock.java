@@ -26,6 +26,7 @@ import squeek.applecore.api.food.ItemFoodProxy;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 
 /**
@@ -83,7 +84,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	@Override
 	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		this.food = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel()/7;
+		this.food = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null))/7;
 		this.sat = this.food/4 + 0.5f;
 		ScalingFeast.info("HEAL: "+this.food+", "+this.sat);
 		return this.eat(world, pos, state, player);
