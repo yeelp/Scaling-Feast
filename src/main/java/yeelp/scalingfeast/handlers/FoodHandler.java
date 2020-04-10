@@ -22,16 +22,20 @@ public class FoodHandler extends Handler
 	@SubscribeEvent(receiveCanceled=true)
 	public void onStarve(StarvationEvent.Starve evt)
 	{
-		IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
 		//only do any of this if there is max hunger to lose, otherwise this is a waste of processing.
 		if(ModConfig.foodCap.starve.starveLoss != 0)
 		{
+			IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
 			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
 			if(tracker.getCount() >= ModConfig.foodCap.starve.lossFreq)
 			{
 				if(ModConfig.foodCap.starve.doesFreqResetOnStarve)
 				{
 					tracker.reset();
+				}
+				else
+				{
+					tracker.setCount((short)(ModConfig.foodCap.starve.lossFreq - 1));
 				}
 				IFoodCap foodCap = evt.player.getCapability(FoodCapProvider.capFoodStat, null);
 				//if foodcap <= our lower bound, do nothing.

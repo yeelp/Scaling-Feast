@@ -45,11 +45,14 @@ public class HUDOverlayHandler extends Handler
 	private static ArrayList<Colour> satColours = new ArrayList<Colour>();
 	private Random rand = new Random();
 	private boolean appleSkinErr = false;
+	private static int satColour = 0xffff55;
+	private static int satColourEmpty = 0x555555;
 	
 	public HUDOverlayHandler()
 	{
 		setIcons();
 		loadColours();
+		loadTextColours();
 	}
 
 	public static void setIcons()
@@ -95,6 +98,28 @@ public class HUDOverlayHandler extends Handler
 		else
 		{
 			satColours = colourize(ModConfig.hud.Scolours);
+		}
+	}
+	
+	public static void loadTextColours()
+	{
+		try
+		{
+			satColour = Integer.decode("0x"+ModConfig.hud.satTextColour);
+		}
+		catch(NumberFormatException e)
+		{
+			ScalingFeast.err("Error setting saturation text colour! " + "0x"+ModConfig.hud.satTextColour + " isn't a valid colour!");
+			e.printStackTrace();
+		}
+		try
+		{
+			satColourEmpty = Integer.decode("0x"+ModConfig.hud.satTextColourEmpty);
+		}
+		catch(NumberFormatException e)
+		{
+			ScalingFeast.err("Error setting empty saturation text colour! " + "0x"+ModConfig.hud.satTextColourEmpty + " isn't a valid colour!");
+			e.printStackTrace();
 		}
 	}
 	
@@ -275,8 +300,8 @@ public class HUDOverlayHandler extends Handler
 	private void drawSimpleInfo(int i, Minecraft mc, int left, int top, int hunger, int max)
 	{
 		GL11.glPushMatrix();
-		GL11.glScalef(0.75f, 0.75f, 1.0f);
-		mc.fontRenderer.drawStringWithShadow("x"+i+"/"+(int)Math.ceil((float)max/ModConsts.VANILLA_MAX_HUNGER), left/0.75f + 1/0.75f, top/0.75f + 4.5f/0.75f, getColour(hunger, max));
+		GL11.glScalef(0.6f, 0.6f, 1.0f);
+		mc.fontRenderer.drawStringWithShadow("x"+i+"/"+(int)Math.ceil((float)max/ModConsts.VANILLA_MAX_HUNGER), left/0.6f + 1/0.6f, top/0.6f + 4.5f/0.6f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -290,22 +315,29 @@ public class HUDOverlayHandler extends Handler
 		String foodAddition = "";
 		String maxAddition = "";
 		String satAddition = "";
-		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)
+		if(player.getHeldItemMainhand().getItem() instanceof ItemFood && player.getFoodStats().needFood())
 		{
 			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(player.getHeldItemMainhand(), player);
-			foodAddition = "+"+Integer.toString(foodValues.hunger);
-			satAddition = "+"+Float.toString(foodValues.getSaturationIncrement(player));
-			if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem)
+			if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem || foodValues.hunger > 0)
 			{
-				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
+				foodAddition = "+"+Integer.toString(Math.min(foodValues.hunger, max - player.getFoodStats().getFoodLevel()));
+				satAddition = "+"+Float.toString(foodValues.getSaturationIncrement(player));
+				if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem)
+				{
+					maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
+				}
 			}
 		}
 		String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
 		String satInfo = String.format("%.1f%s", sat, satAddition);
 		float satOffset = mc.fontRenderer.getStringWidth(hungerInfo)/8.0f;
 		GL11.glPushMatrix();
+		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
-		mc.fontRenderer.drawStringWithShadow(satInfo, left/0.5f + satOffset/0.5f, top/0.5f, (sat > 0 ? 0xffff55 : 0xaaaaaa));
+		if(ModConfig.hud.drawSaturation)
+		{	
+			mc.fontRenderer.drawStringWithShadow(satInfo, left/0.5f + satOffset/0.5f, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
+		}
 		mc.fontRenderer.drawStringWithShadow(hungerInfo, left/0.5f + 1/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
@@ -380,7 +412,7 @@ public class HUDOverlayHandler extends Handler
 				mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
 			}
 			Colour overlayColour = new Colour(ModConfig.hud.maxColourStart);
-			GL11.glColor4f(1.0f/255*overlayColour.getR(), 1.0f/255*overlayColour.getG(), 1.0f/255*overlayColour.getB(), (ticks + 1 < ModConfig.foodCap.starve.lossFreq ? (ModConfig.foodCap.starve.lossFreq - ticks)/ModConfig.foodCap.starve.lossFreq : 0)*alpha);
+			GL11.glColor4f(1.0f/255*overlayColour.getR(), 1.0f/255*overlayColour.getG(), 1.0f/255*overlayColour.getB(), (ticks + 1 < ModConfig.foodCap.starve.lossFreq ? ((float)ModConfig.foodCap.starve.lossFreq - ticks)/ModConfig.foodCap.starve.lossFreq : 0)*alpha);
 			mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
 		}
 		else

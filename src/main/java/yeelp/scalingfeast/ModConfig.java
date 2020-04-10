@@ -171,7 +171,7 @@ public class ModConfig
 		public MaxColourStyle maxColourStyle = MaxColourStyle.DEFAULT;
 		
 		@Name("Max Outline Transparency")
-		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving?. 1.0 if completely solid, 0.0 if completely transparent")
+		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
 		@RangeDouble(min = 0.0, max = 1.0)
 		public double maxOutlineTransparency = 0.5;
 		
@@ -187,7 +187,7 @@ public class ModConfig
 		@Comment("When Max Outline Colour Style is CUSTOM and when the player hasn't taken starvation damage, this is the hex colour of the starvation tracker.")
 		public String maxColourStart = "ffffff";
 		
-		@Name("MaxColourEnd")
+		@Name("Max Custom Colour End")
 		@Comment("When Max Outline Colour Style is CUSTOM and when the player is about to lose max hunger, this is the hex colour of the starvation tracker.")
 		public String maxColourEnd = "aa0000";
 		
@@ -239,6 +239,7 @@ public class ModConfig
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
+				HUDOverlayHandler.loadTextColours();
 			}
 		}
 	}
