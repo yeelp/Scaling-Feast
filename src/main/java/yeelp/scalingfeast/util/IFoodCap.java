@@ -18,6 +18,15 @@ public interface IFoodCap extends ICapabilitySerializable<NBTTagShort>
 	{
 		return 20;
 	}
+	
+	/**
+	 * Get the max food level before modifications
+	 * @return the max food level, before any modifications
+	 */
+	default short getUnmodifiedMaxFoodLevel(FoodCapModifier mod)
+	{
+		return 20;
+	}
 	/**
 	 * Set the max food cap
 	 * @param maxLevel the level to set
