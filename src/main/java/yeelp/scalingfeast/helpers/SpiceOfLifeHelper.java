@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import squeek.spiceoflife.foodtracker.FoodEaten;
 import squeek.spiceoflife.foodtracker.FoodHistory;
 import yeelp.scalingfeast.ModConfig;
@@ -20,6 +22,9 @@ public class SpiceOfLifeHelper
 {	
 	
 	private static boolean enabled;
+	private static short penalty;
+	private static int requiredAmount;
+	private static boolean useFoodGroups;
 	/**
 	 * Initialize this module
 	 */
@@ -28,6 +33,9 @@ public class SpiceOfLifeHelper
 		if(ScalingFeast.hasSpiceOfLife)
 		{
 			enabled = true;
+			penalty = (short)ModConfig.modules.spiceoflife.penalty;
+			requiredAmount = ModConfig.modules.spiceoflife.uniqueRequired;
+			useFoodGroups = ModConfig.modules.spiceoflife.useFoodGroups;
 		}
 		else
 		{
@@ -67,17 +75,18 @@ public class SpiceOfLifeHelper
 	/**
 	 * Gets a Set of unique foods eaten by this player in their FoodHistory
 	 * @param player the player to get unique foods for
-	 * @return A Set of FoodEaten objects, containing unique foods eaten by the specified player
+	 * @return A Set of Item objects, containing unique foods eaten by the specified player
 	 * @throws ModuleNotLoadedException If this module hasn't been loaded
 	 */
-	public static Set<FoodEaten> getUniqueFoodsFor(EntityPlayer player) throws ModuleNotLoadedException
+	public static Set<Item> getUniqueFoodsFor(EntityPlayer player) throws ModuleNotLoadedException
 	{
 		if(enabled)
 		{
-			HashSet<FoodEaten> foods = new HashSet<FoodEaten>();
+			HashSet<Item> foods = new HashSet<Item>();
 			for(FoodEaten f : getEatenFoodsFor(player))
 			{
-				foods.add(f);
+				foods.add(f.itemStack.getItem());
+				ScalingFeast.info(f.itemStack.getItem().getUnlocalizedName());
 			}
 			return foods;
 		}
@@ -95,7 +104,8 @@ public class SpiceOfLifeHelper
 	public static short getPenalty(EntityPlayer player)
 	{
 		Set<?> entries = new HashSet<Object>();
-		if(ModConfig.modules.spiceoflife.useFoodGroups)
+		int historyLength = 0;
+		if(useFoodGroups)
 		{
 			entries = FoodHistory.get(player).getDistinctFoodGroups();
 		}
@@ -112,14 +122,60 @@ public class SpiceOfLifeHelper
 				return 0;
 			}
 		}
-		int diff = ModConfig.modules.spiceoflife.uniqueRequired - entries.size();
-		if(diff <= 0 || entries.size() < ModConfig.modules.spiceoflife.uniqueRequired)
+		try
+		{
+			historyLength = getEatenFoodsFor(player).size();
+		}
+		catch(ModuleNotLoadedException e)
+		{
+			ScalingFeast.err("Scaling Feast expected Spice of Life to be loaded, but it wasn't! This doesn't make any sense!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+			return 0;
+		}
+		int diff = requiredAmount - entries.size();
+		ScalingFeast.info(String.format("MIN: %d, HAVE: %d", requiredAmount, entries.size()));
+		if(diff <= 0 || historyLength < requiredAmount)
 		{
 			return 0;
 		}
 		else
 		{
-			return (short) (-1*(diff)*ModConfig.modules.spiceoflife.penalty);
+			return (short) (-1*(diff)*penalty);
+		}
+	}
+	
+	/**
+	 * Should a warning tooltip be added to a ItemStack?
+	 * @param stack the stack to query
+	 * @param player the player receiving the tooltip
+	 * @return true if eating the food item would reduce max hunger.
+	 */
+	public static boolean shouldAddToolTip(ItemStack stack, EntityPlayer player)
+	{
+		short currPenalty = getPenalty(player);
+		FoodHistory history = FoodHistory.get(player).clone();
+		
+		history.addFood(new FoodEaten(stack, player));
+		Set<?> entries = new HashSet<Object>();
+		if(useFoodGroups)
+		{
+			entries = history.getDistinctFoodGroups();
+		}
+		else
+		{
+			for(FoodEaten f : history.getHistory())
+			{
+				entries.add(f.itemStack.getItem());
+			}
+		}
+		int diff = requiredAmount - entries.size();
+		if(diff <= 0 || history.getHistory().size() < requiredAmount)
+		{
+			return false;
+		}
+		else
+		{
+			return (-1*diff*penalty) < currPenalty;
 		}
 	}
 }

@@ -234,11 +234,11 @@ public class ModConfig
 		@Comment("If true, the Hearty Shank will no longer increase max hunger")
 		public boolean isShankDisabled = false;
 		
-		@Name("Spice Of Life Module")
+		@Name("Spice Of Life")
 		@Comment("Tweak Spice Of Life integration")
 		public SpiceOfLifeCategory spiceoflife = new SpiceOfLifeCategory();
 		
-		@Name("Spice Of Life Carrot Edition Module")
+		@Name("Spice Of Life: Carrot Edition")
 		@Comment("Tweak Spice Of Life: Carrot Edition integration")
 		public SOLCarrotCategory sol = new SOLCarrotCategory();
 		
@@ -251,18 +251,21 @@ public class ModConfig
 			
 			@Name("Use Food Groups")
 			@Comment("Should Scaling Feast check food groups in a player's food history instead of individual food items? Must have food groups defined in Spice Of Life")
+			@RequiresMcRestart
 			public boolean useFoodGroups = false;
 			
 			@Name("Required Amount")
-			@Comment("How many unique entries must be found in a player's food history to prevent punishing them. Must be less than or equal to Spice of Life's food history length, or else this module will do nothing")
+			@Comment("How many unique entries must be found in a player's food history to prevent punishing them. Should be less than or equal to Spice of Life's food history length")
 			@RangeInt(min = 1)
+			@RequiresMcRestart
 			public int uniqueRequired = 5;
 			
 			@Name("Penalty")
 			@Comment({"If the number of unique entires in a player's food history is less than Required Amount, that player will lose this much max hunger for every unique entry missing.",
 					  "For example, if a player has 3 unique entires and the required amount is 5, they will lose (5-3)*(penalty) max hunger"})
 			@RangeInt(min = 1, max = Short.MAX_VALUE)
-			public int penalty = 1;
+			@RequiresMcRestart
+			public int penalty = 2;
 		}
 		
 		public static class SOLCarrotCategory
