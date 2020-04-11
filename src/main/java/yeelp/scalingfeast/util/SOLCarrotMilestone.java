@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.util;
 
-import squeek.applecore.api.AppleCoreAPI;
-
 /**
  * A simple container for storing Spice of Life: Carrot Edition Milestones
  * @author Yeelp
