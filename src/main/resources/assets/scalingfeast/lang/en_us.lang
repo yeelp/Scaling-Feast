@@ -4,6 +4,18 @@ commands.scalingfeast.command.existence=Player %s doesn't exist!
 commands.scalingfeast.command.numerr=Amount must be in range [0, %s)
 commands.scalingfeast.command.success=Success!
 
+modules.scalingfeast.sol.reward=You've gained %s max hunger!
+
+modules.scalingfeast.sol.splash0=Scrumptious!
+modules.scalingfeast.sol.splash1=What unique flavour!
+modules.scalingfeast.sol.splash2=Deeee-lish!
+modules.scalingfeast.sol.splash3=Delectable!
+modules.scalingfeast.sol.splash4=Yummy!
+modules.scalingfeast.sol.splash5=How savoury!
+modules.scalingfeast.sol.splash6=Succulent!
+modules.scalingfeast.sol.splash7=Tasty!
+
+
 
 enchantment.scalingfeast.fasting=Fasting
 enchantment.scalingfeast.gluttony=Gluttony

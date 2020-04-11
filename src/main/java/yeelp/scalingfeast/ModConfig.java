@@ -281,6 +281,10 @@ public class ModConfig
 					  "Values for r > 32767 will be brought inside these bounds modulo 32767. list entires that aren't of this form, or pairs containing negative values for either m or r will be silently ignored."})
 			@RequiresMcRestart
 			public String[] milestones = {"5:2", "10:2", "15:2", "20:2", "25:2", "30:2", "35:2", "40:2", "45:2", "50:2"};
+		
+			@Name("Reward Messages Above Hotbar?")
+			@Comment("If true, Scaling Feast will display its reward messages above a player's hotbar. Else, it will display it in chat.")
+			public boolean rewardMsgAboveHotbar = false;
 		}
 	}
 	

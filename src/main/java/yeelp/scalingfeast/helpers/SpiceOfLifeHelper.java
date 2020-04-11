@@ -133,7 +133,6 @@ public class SpiceOfLifeHelper
 			return 0;
 		}
 		int diff = requiredAmount - entries.size();
-		ScalingFeast.info(String.format("MIN: %d, HAVE: %d", requiredAmount, entries.size()));
 		if(diff <= 0 || historyLength < requiredAmount)
 		{
 			return 0;
@@ -145,37 +144,65 @@ public class SpiceOfLifeHelper
 	}
 	
 	/**
-	 * Should a warning tooltip be added to a ItemStack?
+	 * What tooltip should be added to a ItemStack?
 	 * @param stack the stack to query
 	 * @param player the player receiving the tooltip
-	 * @return true if eating the food item would reduce max hunger.
+	 * @return ToolTipType.GOOD if eating this food item will increase max hunger, ToolTipeType.BAD if it will reduce max hunger, or null, if no change will occur.
 	 */
-	public static boolean shouldAddToolTip(ItemStack stack, EntityPlayer player)
+	public static ToolTipType getToolTipType(ItemStack stack, EntityPlayer player)
 	{
 		short currPenalty = getPenalty(player);
-		FoodHistory history = FoodHistory.get(player).clone();
+		FoodHistory history = FoodHistory.get(player);
+		FoodHistory dummy = new FoodHistory();
+		for(FoodEaten f : history.getHistory())
+		{
+			dummy.addFood(f);
+		}
 		
-		history.addFood(new FoodEaten(stack, player));
-		Set<?> entries = new HashSet<Object>();
+		dummy.addFood(new FoodEaten(stack, player));
+		int amount = 0;
 		if(useFoodGroups)
 		{
-			entries = history.getDistinctFoodGroups();
+			amount = dummy.getDistinctFoodGroups().size();
 		}
 		else
 		{
-			for(FoodEaten f : history.getHistory())
+			HashSet<Item> entries = new HashSet<Item>();
+			for(FoodEaten f : dummy.getHistory())
 			{
 				entries.add(f.itemStack.getItem());
 			}
+			amount = entries.size();
 		}
-		int diff = requiredAmount - entries.size();
-		if(diff <= 0 || history.getHistory().size() < requiredAmount)
+		int diff = requiredAmount - amount;
+		if(diff <= 0 || dummy.getHistory().size() < requiredAmount)
 		{
-			return false;
+			return null;
 		}
 		else
 		{
-			return (-1*diff*penalty) < currPenalty;
+			if((-1*diff*penalty) < currPenalty)
+			{
+				return ToolTipType.BAD;
+			}
+			else if((-1*diff*penalty) > currPenalty)
+			{
+				return ToolTipType.GOOD;
+			}
+			else
+			{
+				return null;
+			}
 		}
+	}
+	/**
+	 * Tooltip types for SpiceOfLife module.
+	 * @author Yeelp.
+	 *
+	 */
+	public enum ToolTipType
+	{
+		GOOD,
+		BAD;
 	}
 }
