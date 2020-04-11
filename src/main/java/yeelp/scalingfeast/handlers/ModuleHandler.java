@@ -148,13 +148,11 @@ public class ModuleHandler extends Handler
 		if(SpiceOfLifeHelper.isEnabled() && ModConfig.modules.spiceoflife.enabled)
 		{
 			mod += SpiceOfLifeHelper.getPenalty(player);
-			ScalingFeast.info("Penalty: "+mod);
 		}
 		if(SOLCarrotHelper.isEnabled() && ModConfig.modules.sol.enabled)
 		{
 			mod += SOLCarrotHelper.getReward(player);
 		}
-		ScalingFeast.info("mod: "+mod);
 		if(curr.getModifier() == mod)
 		{
 			return;
@@ -164,8 +162,8 @@ public class ModuleHandler extends Handler
 			curr.setModifier(mod);
 			int currMax = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(curr);
 			FoodStats fs = player.getFoodStats();
-			ScalingFeast.info(Integer.toString(currMax));
-			ScalingFeast.info(Integer.toString(fs.getFoodLevel()));
+			//ScalingFeast.info(Integer.toString(currMax));
+			//ScalingFeast.info(Integer.toString(fs.getFoodLevel()));
 			if(fs.getFoodLevel() > currMax)
 			{
 				fs.setFoodLevel(currMax);
