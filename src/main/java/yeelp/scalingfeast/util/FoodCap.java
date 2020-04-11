@@ -35,15 +35,18 @@ public final class FoodCap implements IFoodCap
 	{
 		this.max = max;
 	}
-	/**
-	 * Get this container's maximum food level
-	 * @return this container's maximum food level
-	 */
-	public short getMaxFoodLevel()
+
+	
+	public short getMaxFoodLevel(IFoodCapModifier mod)
+	{
+		return (short) (Math.max(1, this.max + mod.getModifier()));
+	}
+
+	public short getUnmodifierMaxFoodLevel()
 	{
 		return this.max;
 	}
-
+	
 	public void setMax(short max)
 	{
 		if(max < 0)
@@ -129,7 +132,7 @@ public final class FoodCap implements IFoodCap
 		@Override
 		public NBTBase writeNBT(Capability<IFoodCap> capability, IFoodCap instance, EnumFacing side)
 		{
-			return new NBTTagShort(instance.getMaxFoodLevel());
+			return new NBTTagShort(instance.getUnmodifiedMaxFoodLevel());
 		}
 
 		@Override

@@ -9,6 +9,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 
 /**
@@ -32,11 +33,11 @@ public class PotionMetabolism extends PotionBase
 		{
 			EntityPlayer player = (EntityPlayer)entity;
 			FoodStats fs = player.getFoodStats();
-			if(fs.getFoodLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
+			if(fs.getFoodLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null)))
 			{
 				fs.setFoodLevel(fs.getFoodLevel() + 1);
 			}
-			else if(fs.getSaturationLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel())
+			else if(fs.getSaturationLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null)))
 			{
 				fs.setFoodSaturationLevel(fs.getSaturationLevel() + 1);
 			}

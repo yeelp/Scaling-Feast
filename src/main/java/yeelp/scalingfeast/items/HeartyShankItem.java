@@ -8,8 +8,10 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,8 +42,11 @@ public class HeartyShankItem extends ItemFood
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		tooltip.add("Eat this to gain " + ModConfig.foodCap.inc/2.0f + " hunger shanks");
-		tooltip.add("added to your overall max hunger!");
+		if(!ModConfig.modules.isShankDisabled)
+		{
+			tooltip.add("Eat this to gain " + ModConfig.foodCap.inc/2.0f + " hunger shanks");
+			tooltip.add("added to your overall max hunger!");
+		}
 	}
 	
 	public int getMaxItemUseDuration(ItemStack stack)
@@ -51,18 +56,19 @@ public class HeartyShankItem extends ItemFood
 	
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
 	{
-		if(entityLiving instanceof EntityPlayer)
+		if(entityLiving instanceof EntityPlayer && !ModConfig.modules.isShankDisabled)
 		{
 			IFoodCap currCap = ((EntityPlayer)entityLiving).getCapability(FoodCapProvider.capFoodStat, null);
-			if(ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getMaxFoodLevel())
+			if(ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getUnmodifiedMaxFoodLevel())
 			{
-				if(currCap.getMaxFoodLevel() + ModConfig.foodCap.inc > ModConfig.foodCap.globalCap && ModConfig.foodCap.globalCap != -1)
+				if(currCap.getUnmodifiedMaxFoodLevel() + ModConfig.foodCap.inc > ModConfig.foodCap.globalCap && ModConfig.foodCap.globalCap != -1)
 				{
 					currCap.setMax((short) ModConfig.foodCap.globalCap);
 				}
 				else
 				{
 					currCap.increaseMax((short)ModConfig.foodCap.inc);
+					worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 1.0f, 1.0f);
 				}
 				if(ModConfig.foodCap.starve.shankResetsCounter)
 				{

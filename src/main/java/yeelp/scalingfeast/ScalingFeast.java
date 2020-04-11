@@ -20,12 +20,16 @@ import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.handlers.LootTableInjector;
+import yeelp.scalingfeast.handlers.ModuleHandler;
 import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.handlers.PotionHandler;
+import yeelp.scalingfeast.helpers.SOLCarrotHelper;
+import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.FoodCap;
+import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.StarvationTracker;
 
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
@@ -34,6 +38,8 @@ public class ScalingFeast
 
     public static Logger logger;
     public static boolean hasAppleSkin;
+    public static boolean hasSolCarrot;
+    public static boolean hasSpiceOfLife;
     
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
@@ -43,15 +49,26 @@ public class ScalingFeast
     {
         logger = event.getModLog();
         hasAppleSkin = Loader.isModLoaded("appleskin");
+        hasSolCarrot = Loader.isModLoaded("solcarrot");
+        hasSpiceOfLife = Loader.isModLoaded("spiceoflife");
         if(hasAppleSkin)
         {
         	info("Scaling Feast found AppleSkin!");
+        }
+        if(hasSolCarrot)
+        {
+        	info("Scaling Feast found Spice of Life: Carrot Edition!");
+        }
+        if(hasSpiceOfLife)
+        {
+        	info("Scaling Feast found Spice of Life!");
         }
         proxy.preInit();
         SFEnchantments.init();
         SFPotion.init();
         FoodCap.register();
         StarvationTracker.register();
+        FoodCapModifier.register();
         new CapabilityHandler().register();
         SFPotion.addBrewingRecipes();
         PacketHandler.init();
@@ -66,13 +83,22 @@ public class ScalingFeast
         new EnchantmentHandler().register();
         new PotionHandler().register();
         new LootTableInjector().register();
+        new ModuleHandler().register();
         info("Scaling Feast initialization complete!");
     }
     
     @EventHandler 
     public void postInit(FMLPostInitializationEvent event)
     {
-    	
+    	if(hasSolCarrot)
+    	{
+    		SOLCarrotHelper.init();
+    	}
+    	if(hasSpiceOfLife)
+    	{
+    		SpiceOfLifeHelper.init();
+    	}
+    	info("Scaling Feast post-initialization complete!");
     } 
     
     @EventHandler

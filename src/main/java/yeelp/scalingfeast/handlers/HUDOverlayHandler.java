@@ -31,6 +31,7 @@ import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.util.Colour;
+import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
@@ -209,7 +210,7 @@ public class HUDOverlayHandler extends Handler
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
-		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
+		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null));
 		int ticks = player.getCapability(StarvationTrackerProvider.starvationTracker, null).getCount();
 		//Get the number of full bars to draw
 		int numBars = hunger/ModConsts.VANILLA_MAX_HUNGER;
@@ -311,7 +312,7 @@ public class HUDOverlayHandler extends Handler
 	{
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
-		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel();
+		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null));
 		String foodAddition = "";
 		String maxAddition = "";
 		String satAddition = "";
@@ -321,7 +322,7 @@ public class HUDOverlayHandler extends Handler
 			if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem || foodValues.hunger > 0)
 			{
 				foodAddition = "+"+Integer.toString(Math.min(foodValues.hunger, max - player.getFoodStats().getFoodLevel()));
-				satAddition = "+"+Float.toString(foodValues.getSaturationIncrement(player));
+				satAddition = String.format("+%.1f",Float.toString(foodValues.getSaturationIncrement(player)));
 				if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem)
 				{
 					maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
