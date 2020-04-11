@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
@@ -94,11 +95,13 @@ public class ModuleHandler extends Handler
 				{
 					ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
 					ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastMilestoneReached(evt.player).getReward());
-					ITextComponent fullMsg = new TextComponentString(splash.getFormattedText() + msg.getFormattedText());
 					if(!ModConfig.modules.sol.rewardMsgAboveHotbar)
 					{
-						fullMsg.setStyle(new Style().setColor(TextFormatting.GREEN));
+						msg.setStyle(new Style().setColor(TextFormatting.GREEN));
+						splash.setStyle(new Style().setColor(TextFormatting.GREEN));
 					}
+					ITextComponent fullMsg = new TextComponentString(splash.getFormattedText() +" "+ msg.getFormattedText());
+					
 					evt.player.sendStatusMessage(fullMsg, ModConfig.modules.sol.rewardMsgAboveHotbar);
 					evt.player.world.playSound(null, evt.player.posX, evt.player.posY, evt.player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
 				}
@@ -118,7 +121,7 @@ public class ModuleHandler extends Handler
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent evt)
 	{
-		if(SpiceOfLifeHelper.isEnabled() && evt.getEntityPlayer() != null && evt.getItemStack() != null && evt.getItemStack().getItem() instanceof ItemFood)
+		if(SpiceOfLifeHelper.isEnabled() && evt.getEntityPlayer() != null && evt.getItemStack() != null && AppleCoreAPI.accessor.isFood(evt.getItemStack()))
 		{
 			SpiceOfLifeHelper.ToolTipType type = SpiceOfLifeHelper.getToolTipType(evt.getItemStack(), evt.getEntityPlayer());
 			if(type != null)

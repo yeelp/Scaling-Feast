@@ -322,7 +322,7 @@ public class HUDOverlayHandler extends Handler
 			if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem || foodValues.hunger > 0)
 			{
 				foodAddition = "+"+Integer.toString(Math.min(foodValues.hunger, max - player.getFoodStats().getFoodLevel()));
-				satAddition = "+"+Float.toString(foodValues.getSaturationIncrement(player));
+				satAddition = String.format("+%.1f",Float.toString(foodValues.getSaturationIncrement(player)));
 				if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem)
 				{
 					maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);

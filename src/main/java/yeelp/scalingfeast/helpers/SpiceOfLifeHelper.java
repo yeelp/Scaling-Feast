@@ -86,7 +86,6 @@ public class SpiceOfLifeHelper
 			for(FoodEaten f : getEatenFoodsFor(player))
 			{
 				foods.add(f.itemStack.getItem());
-				ScalingFeast.info(f.itemStack.getItem().getUnlocalizedName());
 			}
 			return foods;
 		}
