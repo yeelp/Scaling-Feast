@@ -132,7 +132,7 @@ public class ModConfig
 		public double heartyShankSatLevel = 0.8;
 		
 		@Name("Enable Metabolic Potions")
-		@Comment("If false, Scaling Feast will not register Meatbolic Potions and its variants. This does not remove the Metabolism Potion Effect from the game, just the potions.")
+		@Comment("If false, Scaling Feast will not register Metabolic Potions and its variants. This does not remove the Metabolism Potion Effect from the game, just the potions.")
 		@RequiresMcRestart
 		public boolean enableMetabolicPotion = true;
 		
