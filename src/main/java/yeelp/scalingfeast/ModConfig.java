@@ -130,6 +130,16 @@ public class ModConfig
 		@RangeDouble(min = 0)
 		@RequiresMcRestart
 		public double heartyShankSatLevel = 0.8;
+		
+		@Name("Enable Metabolic Potions")
+		@Comment("If false, Scaling Feast will not register Meatbolic Potions and its variants. This does not remove the Metabolism Potion Effect from the game, just the potions.")
+		@RequiresMcRestart
+		public boolean enableMetabolicPotion = true;
+		
+		@Name("Remove Brewing Recipes")
+		@Comment("If false, Scaling Feast will not create brewing recipes for Metabolic Potions. The potions will still be registered. However, if Metabolic Potions are disabled, recipes will of course not be added, and this config option will do nothing.")
+		@RequiresMcRestart
+		public boolean enableMetabolicRecipes = true;
 	}
 	public static class HUDCategory
 	{

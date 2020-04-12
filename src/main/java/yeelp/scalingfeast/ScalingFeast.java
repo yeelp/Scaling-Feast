@@ -70,7 +70,10 @@ public class ScalingFeast
         StarvationTracker.register();
         FoodCapModifier.register();
         new CapabilityHandler().register();
-        SFPotion.addBrewingRecipes();
+        if(ModConfig.items.enableMetabolicPotion && ModConfig.items.enableMetabolicRecipes)
+        {
+        	SFPotion.addBrewingRecipes();
+        }
         PacketHandler.init();
         info("Scaling Feast pre-initialization complete!");
     }

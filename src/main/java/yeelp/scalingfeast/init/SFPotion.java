@@ -14,6 +14,7 @@ import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.potion.PotionIronStomach;
 import yeelp.scalingfeast.potion.PotionMetabolism;
@@ -30,16 +31,18 @@ public class SFPotion
 	{
 		metabolism = new PotionMetabolism();
 		ironstomach = new PotionIronStomach();
-		
-		metabolic = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 120*20)});
-		metabolicStrong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)});
-		metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});
-		metabolic.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism"));
-		metabolicStrong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_strong"));
-		metabolicLong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_extended"));
-	
 		ForgeRegistries.POTIONS.registerAll(metabolism, ironstomach);
-		ForgeRegistries.POTION_TYPES.registerAll(metabolic, metabolicStrong, metabolicLong);
+		
+		if(ModConfig.items.enableMetabolicPotion)
+		{
+			metabolic = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 120*20)});
+			metabolicStrong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)});
+			metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});
+			metabolic.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism"));
+			metabolicStrong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_strong"));
+			metabolicLong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_extended"));
+			ForgeRegistries.POTION_TYPES.registerAll(metabolic, metabolicStrong, metabolicLong);
+		}
 	}
 	
 	public static void addBrewingRecipes()
