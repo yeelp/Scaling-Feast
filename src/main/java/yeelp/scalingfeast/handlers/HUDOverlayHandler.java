@@ -401,7 +401,7 @@ public class HUDOverlayHandler extends Handler
 			x = left - i * 8 - 9;
 		}
 		int hunger = mc.player.getFoodStats().getFoodLevel();
-		float alpha = (hunger < 20*Math.ceil(max/20.0f) && hunger > 0 && max != 20? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
+		float alpha = (hunger < 20*Math.ceil(max/20.0f) && hunger > 0 && max > 20? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
 		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
 		GL11.glColor4f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB(), alpha);
 		
