@@ -42,7 +42,7 @@ public final class FoodCap implements IFoodCap
 		return (short) (Math.max(1, this.max + mod.getModifier()));
 	}
 
-	public short getUnmodifierMaxFoodLevel()
+	public short getUnmodifiedMaxFoodLevel()
 	{
 		return this.max;
 	}
