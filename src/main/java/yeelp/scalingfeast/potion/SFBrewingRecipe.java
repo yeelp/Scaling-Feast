@@ -213,17 +213,17 @@ public final class SFBrewingRecipe implements IBrewingRecipe
 	 */
 	public void registerPotionTypes()
 	{
-		ForgeRegistries.POTION_TYPES.register(this.outputNormalPotion);
 		this.outputNormalPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, this.rootName));
+		ForgeRegistries.POTION_TYPES.register(this.outputNormalPotion);
 		if(this.outputExtendedPotion != null)
 		{
-			ForgeRegistries.POTION_TYPES.register(this.outputExtendedPotion);
 			this.outputExtendedPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, this.rootName + "_extended"));
+			ForgeRegistries.POTION_TYPES.register(this.outputExtendedPotion);
 		}
 		if(this.outputStrongPotion != null)
 		{
-			ForgeRegistries.POTION_TYPES.register(this.outputStrongPotion);
 			this.outputStrongPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, this.rootName + "_strong"));
+			ForgeRegistries.POTION_TYPES.register(this.outputStrongPotion);
 		}
 	}
 }
