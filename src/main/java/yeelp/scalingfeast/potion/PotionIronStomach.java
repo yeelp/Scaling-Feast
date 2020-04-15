@@ -13,7 +13,7 @@ public class PotionIronStomach extends PotionBase
 {
 	public PotionIronStomach() 
 	{
-		super(false, 0xCCCCCC, 0, 0);
+		super(false, 0xCCCCCC, 0, 0, false);
 		this.setRegistryName("ironstomach");
 		this.setPotionName("effect.ironstomach");
 		this.setBeneficial();

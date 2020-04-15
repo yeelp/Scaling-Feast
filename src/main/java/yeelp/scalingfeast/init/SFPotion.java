@@ -18,6 +18,7 @@ import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.potion.PotionIronStomach;
 import yeelp.scalingfeast.potion.PotionMetabolism;
+import yeelp.scalingfeast.potion.PotionBase;
 
 public class SFPotion 
 {
@@ -35,46 +36,13 @@ public class SFPotion
 		
 		if(ModConfig.items.enableMetabolicPotion)
 		{
-			metabolic = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 120*20)});
-			metabolicStrong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)});
-			metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});
-			metabolic.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism"));
-			metabolicStrong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_strong"));
-			metabolicLong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_extended"));
-			ForgeRegistries.POTION_TYPES.registerAll(metabolic, metabolicStrong, metabolicLong);
+			((PotionBase) metabolism).setupRecipe(PotionTypes.THICK, SFFood.heartyshank, new PotionEffect[] {new PotionEffect(metabolism, 120*20)}, new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)}, new PotionEffect[] {new PotionEffect(metabolism, 240*20)}, "metabolism");
+			((PotionBase) metabolism).registerPotionType();
 		}
 	}
 	
 	public static void addBrewingRecipes()
 	{
-		addBrewingRecipe(PotionTypes.THICK, new ItemStack(SFFood.heartyshank), metabolic);
-		addBrewingRecipe(metabolic, new ItemStack(Items.REDSTONE), metabolicLong);
-		addBrewingRecipe(metabolic, new ItemStack(Items.GLOWSTONE_DUST), metabolicStrong);
-		addBrewingRecipe(metabolicLong, new ItemStack(Items.GLOWSTONE_DUST), metabolicStrong);
-		addBrewingRecipe(metabolicStrong, new ItemStack(Items.REDSTONE), metabolicLong);
-		
-		addBrewingTransformations(metabolic);
-	}
-	
-	private static void addBrewingRecipe(PotionType input, ItemStack ingredient, PotionType output)
-	{
-		addBrewingRecipe(new ItemStack(Items.POTIONITEM), input, ingredient, new ItemStack(Items.POTIONITEM), output);
-		addBrewingRecipe(new ItemStack(Items.SPLASH_POTION), input, ingredient, new ItemStack(Items.SPLASH_POTION), output);
-		addBrewingRecipe(new ItemStack(Items.LINGERING_POTION), input, ingredient, new ItemStack(Items.LINGERING_POTION), output);
-	}
-	
-	private static void addBrewingTransformations(PotionType potion)
-	{
-		addBrewingRecipe(new ItemStack(Items.POTIONITEM), potion, new ItemStack(Items.GUNPOWDER), new ItemStack(Items.SPLASH_POTION), potion);
-		addBrewingRecipe(new ItemStack(Items.LINGERING_POTION), potion, new ItemStack(Items.GUNPOWDER), new ItemStack(Items.SPLASH_POTION), potion);
-		
-		addBrewingRecipe(new ItemStack(Items.POTIONITEM), potion, new ItemStack(Items.DRAGON_BREATH), new ItemStack(Items.LINGERING_POTION), potion);
-		addBrewingRecipe(new ItemStack(Items.SPLASH_POTION), potion, new ItemStack(Items.DRAGON_BREATH), new ItemStack(Items.LINGERING_POTION), potion);
-	}
-
-	
-	private static void addBrewingRecipe(ItemStack inputBottle, PotionType input, ItemStack ingredient, ItemStack outputBottle, PotionType output)
-	{
-		BrewingRecipeRegistry.addRecipe(new BrewingRecipe(PotionUtils.addPotionToItemStack(inputBottle, input), ingredient, PotionUtils.addPotionToItemStack(outputBottle, output)));
+		((PotionBase) metabolism).registerRecipe();
 	}
 }

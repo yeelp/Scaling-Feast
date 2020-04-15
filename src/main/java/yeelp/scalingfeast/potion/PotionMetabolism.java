@@ -21,7 +21,7 @@ public class PotionMetabolism extends PotionBase
 {
 	public PotionMetabolism() 
 	{
-		super(false, 0xF0B78C, 1, 0);
+		super(false, 0xF0B78C, 1, 0, false);
 		this.setRegistryName("metabolism");
 		this.setPotionName("effect.metabolism");
 		this.setBeneficial();
