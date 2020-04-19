@@ -27,7 +27,7 @@ You should always create a new branch on your local repository using
 ```
 git branch <branchName>
 ```
-where <branchName> is the name of your branch. Then, switch to it with
+where branchName is the name of your branch. Then, switch to it with
 ```
 git checkout <branchName>
 ```
