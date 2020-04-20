@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
@@ -90,8 +91,9 @@ public class CapabilityHandler extends Handler
 			FoodStats newFs = evt.getEntityPlayer().getFoodStats();
 			FoodStats oldFs = evt.getOriginal().getFoodStats();
 			
-			newFs.setFoodLevel(newFoodCap.getMaxFoodLevel(newMod));
-			newFs.setFoodSaturationLevel(newFoodCap.getMaxFoodLevel(newMod) < 5 ? newFoodCap.getMaxFoodLevel(newMod) : 5);
+			AppleCoreAPI.mutator.setHunger(evt.getEntityPlayer(), newFoodCap.getMaxFoodLevel(newMod));
+			AppleCoreAPI.mutator.setSaturation(evt.getEntityPlayer(), newFoodCap.getMaxFoodLevel(newMod) < 5 ? newFoodCap.getMaxFoodLevel(newMod) : 5);
+			
 			if(ModConfig.foodCap.death.maxLossAmount != 0)
 			{
 				newFoodCap.decreaseMax((short) ModConfig.foodCap.death.maxLossAmount);
@@ -100,7 +102,7 @@ public class CapabilityHandler extends Handler
 			{
 				if(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath >= 20)
 				{
-					newFs.setFoodLevel(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath);
+					AppleCoreAPI.mutator.setHunger(evt.getEntityPlayer(), oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath);
 				}
 			}
 		}
