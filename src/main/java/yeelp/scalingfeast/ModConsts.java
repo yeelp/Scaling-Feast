@@ -12,4 +12,8 @@ public class ModConsts
 	
 	public static final String CLIENT_PROXY = "yeelp.scalingfeast.proxy.ClientProxy";
 	public static final String SERVER_PROXY = "yeelp.scalingfeast.proxy.ServerProxy";
+	
+	public static final String APPLESKIN_ID = "appleskin";
+	public static final String SPICEOFLIFE_ID = "spiceoflife";
+	public static final String SOLCARROT_ID = "solcarrot";
 }

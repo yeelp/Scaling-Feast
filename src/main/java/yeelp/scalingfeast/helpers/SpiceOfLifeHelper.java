@@ -46,11 +46,11 @@ public class SpiceOfLifeHelper
 	
 	/**
 	 * Is this module enabled?
-	 * @return true if enabled, false otherwise
+	 * @return true if initialized and enabled, false otherwise
 	 */
 	public static boolean isEnabled()
 	{
-		return enabled;
+		return enabled && ModConfig.modules.spiceoflife.enabled;
 	}
 	
 	/**

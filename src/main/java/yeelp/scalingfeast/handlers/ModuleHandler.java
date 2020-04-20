@@ -20,6 +20,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
 import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.helpers.ModuleNotLoadedException;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
@@ -85,6 +87,7 @@ public class ModuleHandler extends Handler
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@Optional.Method(modid = ModConsts.SOLCARROT_ID)
 	public void onFoodEaten(FoodEvent.FoodEaten evt)
 	{
 		if(eatingPlayers.containsKey(evt.player.getUniqueID()))
@@ -121,6 +124,7 @@ public class ModuleHandler extends Handler
 	
 	@SubscribeEvent
 	@SideOnly(value = Side.CLIENT)
+	@Optional.Method(modid = ModConsts.SPICEOFLIFE_ID)
 	public void onTooltip(ItemTooltipEvent evt)
 	{
 		if(SpiceOfLifeHelper.isEnabled() && evt.getEntityPlayer() != null && evt.getItemStack() != null && AppleCoreAPI.accessor.isFood(evt.getItemStack()))

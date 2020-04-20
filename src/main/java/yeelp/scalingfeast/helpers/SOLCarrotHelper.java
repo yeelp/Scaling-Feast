@@ -61,7 +61,7 @@ public final class SOLCarrotHelper
 	 */
 	public static boolean isEnabled()
 	{
-		return enabled;
+		return enabled && ModConfig.modules.sol.enabled;
 	}
 	/**
 	 * Get the length of the FoodList for this player, only counting food items that should count towards milestones.

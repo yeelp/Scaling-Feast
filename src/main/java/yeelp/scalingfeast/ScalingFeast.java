@@ -48,9 +48,9 @@ public class ScalingFeast
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
-        hasAppleSkin = Loader.isModLoaded("appleskin");
-        hasSolCarrot = Loader.isModLoaded("solcarrot");
-        hasSpiceOfLife = Loader.isModLoaded("spiceoflife");
+        hasAppleSkin = Loader.isModLoaded(ModConsts.APPLESKIN_ID);
+        hasSolCarrot = Loader.isModLoaded(ModConsts.SOLCARROT_ID);
+        hasSpiceOfLife = Loader.isModLoaded(ModConsts.SPICEOFLIFE_ID);
         if(hasAppleSkin)
         {
         	info("Scaling Feast found AppleSkin!");
