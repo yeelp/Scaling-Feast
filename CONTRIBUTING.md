@@ -4,8 +4,8 @@
 
 Scaling Feast openly welcomes contributors! However, you should make yourself aware of the following. Keep in mind that the following contributing guidelines can change at any time, without warning.
 
-- If you wish to contribute, please follow the same code style already present in the repository. In particular, follow good documentation practices using JavaDoc, use egyptian style braces and use encapsulation with proper getters and setters.
-    - By good documentation practices, I mean you sould add JavaDoc to any of your own classes or methods that are not overriding other methods from other classes (like event listeners). If you notice code in the repository that doesn't follow these conventions, you should open an issue with the 'documentation' label.
+- If you wish to contribute, please follow the same code style already present in the repository. In particular, follow good documentation practices using JavaDoc, use egyptian style braces and use encapsulation with proper getters and setters, when applicable.
+    - By good documentation practices, I mean you should add JavaDoc to any of your own classes or methods that are not overriding other methods from other classes (like event listeners). If you notice code in the repository that doesn't follow these conventions, you should open an issue with the 'documentation' label.
     - Egyptian style braces, along with other code formatting conventions in the repository look like the following:
     ```
        public static void method(Object a, Object b)
