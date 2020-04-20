@@ -98,4 +98,9 @@ public abstract class PotionBase extends Potion
 	{
 		this.recipe.registerBrewingRecipes();
 	}
+
+	public void createJEIRecipes() 
+	{
+		this.recipe.createJEIRecipes();
+	}
 }

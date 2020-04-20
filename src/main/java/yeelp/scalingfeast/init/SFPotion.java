@@ -36,7 +36,7 @@ public class SFPotion
 		
 		if(ModConfig.items.enableMetabolicPotion)
 		{
-			((PotionBase) metabolism).setupRecipe(PotionTypes.THICK, SFFood.heartyshank, new PotionEffect[] {new PotionEffect(metabolism, 120*20)}, new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)}, new PotionEffect[] {new PotionEffect(metabolism, 240*20)}, "metabolism");
+			((PotionBase) metabolism).setupRecipe(PotionTypes.THICK, SFFood.heartyshank, new PotionEffect[] {new PotionEffect(metabolism, 120*20)}, new PotionEffect[] {new PotionEffect(metabolism, 240*20)}, new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)}, "metabolism");
 			((PotionBase) metabolism).registerPotionType();
 		}
 	}
@@ -44,5 +44,10 @@ public class SFPotion
 	public static void addBrewingRecipes()
 	{
 		((PotionBase) metabolism).registerRecipe();
+	}
+
+	public static void createJEIRecipes() 
+	{
+		((PotionBase) metabolism).createJEIRecipes();
 	}
 }

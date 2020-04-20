@@ -136,7 +136,7 @@ public class ModConfig
 		@RequiresMcRestart
 		public boolean enableMetabolicPotion = true;
 		
-		@Name("Remove Brewing Recipes")
+		@Name("Enable Brewing Recipes")
 		@Comment("If false, Scaling Feast will not create brewing recipes for Metabolic Potions. The potions will still be registered. However, if Metabolic Potions are disabled, recipes will of course not be added, and this config option will do nothing.")
 		@RequiresMcRestart
 		public boolean enableMetabolicRecipes = true;
