@@ -405,7 +405,6 @@ public class HUDOverlayHandler extends Handler
 		int hunger = mc.player.getFoodStats().getFoodLevel();
 		int foodMax = mc.player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(mc.player.getCapability(FoodCapModifierProvider.foodCapMod, null));
 		float alpha = (hunger < 20*Math.floor(foodMax/20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
-		ScalingFeast.info(String.format("Hunger: %d, Threshold: %f, Max: %d Alpha: %f", hunger, 20*Math.floor(max/20.0f), max, alpha));
 		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
 		GL11.glColor4f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB(), alpha);
 		
