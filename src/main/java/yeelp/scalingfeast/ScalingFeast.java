@@ -40,7 +40,6 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
-    public static boolean hasJEI;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -51,7 +50,6 @@ public class ScalingFeast
         hasAppleSkin = Loader.isModLoaded(ModConsts.APPLESKIN_ID);
         hasSolCarrot = Loader.isModLoaded(ModConsts.SOLCARROT_ID);
         hasSpiceOfLife = Loader.isModLoaded(ModConsts.SPICEOFLIFE_ID);
-        hasJEI = Loader.isModLoaded(ModConsts.JEI_ID);
         if(hasAppleSkin)
         {
         	info("Scaling Feast found AppleSkin!");
@@ -64,10 +62,6 @@ public class ScalingFeast
         {
         	info("Scaling Feast found Spice of Life!");
         }
-        if(hasJEI)
-        {
-        	info("Scaling Feast found JEI!");
-        }
         proxy.preInit();
         SFEnchantments.init();
         SFPotion.init();
@@ -75,10 +69,6 @@ public class ScalingFeast
         StarvationTracker.register();
         FoodCapModifier.register();
         new CapabilityHandler().register();
-        if(ModConfig.items.enableMetabolicPotion && ModConfig.items.enableMetabolicRecipes)
-        {
-        	SFPotion.addBrewingRecipes();
-        }
         PacketHandler.init();
         info("Scaling Feast pre-initialization complete!");
     }
@@ -105,10 +95,6 @@ public class ScalingFeast
     	if(hasSpiceOfLife)
     	{
     		SpiceOfLifeHelper.init();
-    	}
-    	if(hasJEI)
-    	{
-    		SFPotion.createJEIRecipes();
     	}
     	info("Scaling Feast post-initialization complete!");
     } 

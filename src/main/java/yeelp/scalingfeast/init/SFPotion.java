@@ -5,6 +5,7 @@ import net.minecraft.init.PotionTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionHelper;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
@@ -36,18 +37,19 @@ public class SFPotion
 		
 		if(ModConfig.items.enableMetabolicPotion)
 		{
-			((PotionBase) metabolism).setupRecipe(PotionTypes.THICK, SFFood.heartyshank, new PotionEffect[] {new PotionEffect(metabolism, 120*20)}, new PotionEffect[] {new PotionEffect(metabolism, 240*20)}, new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)}, "metabolism");
-			((PotionBase) metabolism).registerPotionType();
+			PotionType metabolic = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 120*20)});
+			PotionType metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});
+			PotionType metabolicStrong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)});
+			metabolic.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism"));
+			metabolicLong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_extended"));
+			metabolicStrong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_strong"));
+			ForgeRegistries.POTION_TYPES.registerAll(metabolic, metabolicLong, metabolicStrong);
+			if(ModConfig.items.enableMetabolicRecipes)
+			{
+				PotionHelper.addMix(PotionTypes.THICK, SFFood.heartyshank, metabolic);
+				PotionHelper.addMix(metabolic, Items.REDSTONE, metabolicLong);
+				PotionHelper.addMix(metabolic, Items.GLOWSTONE_DUST, metabolicStrong);
+			}
 		}
-	}
-	
-	public static void addBrewingRecipes()
-	{
-		((PotionBase) metabolism).registerRecipe();
-	}
-
-	public static void createJEIRecipes() 
-	{
-		((PotionBase) metabolism).createJEIRecipes();
 	}
 }
