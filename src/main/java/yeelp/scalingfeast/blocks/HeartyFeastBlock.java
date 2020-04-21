@@ -51,7 +51,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	
 	public int quantityDropped()
 	{
-		return 1;
+		return 0;
 	}
 	
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
