@@ -20,7 +20,6 @@ import yeelp.scalingfeast.ModConsts;
 public abstract class PotionBase extends Potion 
 {
 	private static final ResourceLocation POTIONS = new ResourceLocation(ModConsts.MOD_ID, "textures/gui/potioneffects/potionicons.png");
-	private SFBrewingRecipe recipe;
 	private boolean isInstant;
 	/**
 	 * Build a new Potion
@@ -67,40 +66,5 @@ public abstract class PotionBase extends Potion
 		int iconIndex = this.getStatusIconIndex();
 		mc.ingameGUI.drawTexturedModalRect((float)x + 3, y + 3, iconIndex * 18, 0, 18, 18);
 		mc.getTextureManager().bindTexture(Gui.ICONS);
-	}
-	
-	/**
-	 * Setup brewing recipes for this potion
-	 * @param input input base potion
-	 * @param ingredient ingredient to brew basic potion
-	 * @param basicPotion effects on basic potion
-	 * @param extPotion effects on extended potion
-	 * @param strongPotion effects on strong potion
-	 * @param rootName root name for localization.
-	 */
-	public void setupRecipe(PotionType input, Item ingredient, PotionEffect[] basicPotion, PotionEffect[] extPotion, PotionEffect[] strongPotion, String rootName)
-	{
-		this.recipe = new SFBrewingRecipe(input, ingredient, this.isInstant(), basicPotion, extPotion, strongPotion, rootName);
-	}
-	
-	/**
-	 * Register the potion types
-	 */
-	public void registerPotionType()
-	{
-		this.recipe.registerPotionTypes();
-	}
-	
-	/**
-	 * Register the potion recipe
-	 */
-	public void registerRecipe()
-	{
-		this.recipe.registerBrewingRecipes();
-	}
-
-	public void createJEIRecipes() 
-	{
-		this.recipe.createJEIRecipes();
 	}
 }

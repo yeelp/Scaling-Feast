@@ -24,7 +24,7 @@ public class FoodHandler extends Handler
 	public void onStarve(StarvationEvent.Starve evt)
 	{
 		//only do any of this if there is max hunger to lose, otherwise this is a waste of processing.
-		if(ModConfig.foodCap.starve.starveLoss != 0)
+		if(ModConfig.foodCap.starve.starveLoss != 0 && !evt.player.isDead)
 		{
 			IStarvationTracker tracker = evt.player.getCapability(StarvationTrackerProvider.starvationTracker, null);
 			tracker.tickStarvation(evt.player.getFoodStats().getFoodLevel());
