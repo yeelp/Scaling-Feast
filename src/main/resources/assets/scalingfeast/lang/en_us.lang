@@ -31,6 +31,8 @@ item.scalingfeast.heartyshank.name=Hearty Shank
 item.scalingfeast.ironapple.name=§bIron Apple§f
 item.scalingfeast.enchantedironapple.name=§dIron Apple§f
 
+tile.scalingfeast.heartyfeast.name=Hearty Feast
+
 effect.metabolism=Metabolism
 
 potion.effect.metabolism=Metabolic Potion
