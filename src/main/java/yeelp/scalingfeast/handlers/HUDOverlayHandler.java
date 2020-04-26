@@ -394,6 +394,8 @@ public class HUDOverlayHandler extends Handler
 		mc.getTextureManager().bindTexture(icons);
 		mc.mcProfiler.startSection("extendedMax");
 		GlStateManager.enableBlend();
+		GlStateManager.enableAlpha();
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		int x = 0;
 		int y = top + jitter;
 		for(int i = 0; i < (int)max/2.0f; i++)
@@ -401,7 +403,8 @@ public class HUDOverlayHandler extends Handler
 			x = left - i * 8 - 9;
 		}
 		int hunger = mc.player.getFoodStats().getFoodLevel();
-		float alpha = (hunger < 20*Math.ceil(max/20.0f) && hunger > 0 && max > 20? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
+		int foodMax = mc.player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(mc.player.getCapability(FoodCapModifierProvider.foodCapMod, null));
+		float alpha = (hunger < 20*Math.floor(foodMax/20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
 		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
 		GL11.glColor4f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB(), alpha);
 		
@@ -421,6 +424,7 @@ public class HUDOverlayHandler extends Handler
 			mc.ingameGUI.drawTexturedModalRect((float)x, y, 36, 9, 9, 9);
 		}
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		GlStateManager.disableAlpha();
 		GlStateManager.disableBlend();
 		mc.mcProfiler.endSection();
 		mc.getTextureManager().bindTexture(Gui.ICONS);

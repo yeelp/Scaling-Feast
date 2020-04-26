@@ -1,6 +1,8 @@
 package yeelp.scalingfeast.blocks;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -37,6 +39,7 @@ import yeelp.scalingfeast.util.FoodCapProvider;
 public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 {
 	public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
+	private static HashSet<UUID> users = new HashSet<UUID>();
 	private boolean alwaysEdible = false;
 	private int food = 0;
 	private float sat = 0;
@@ -49,11 +52,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 		this.setHardness(0.5f);
 	}
 	
-	public int quantityDropped()
-	{
-		return 0;
-	}
-	
+	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
 		ItemStack stack = new ItemStack(SFFood.heartyfeastitem);
@@ -61,6 +60,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 		return stack;
 	}
 	
+	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
 		Item item = SFFood.heartyfeastitem;
@@ -86,7 +86,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	{
 		this.food = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null))/7;
 		this.sat = this.food/4 + 0.5f;
-		ScalingFeast.info("HEAL: "+this.food+", "+this.sat);
+		users.add(player.getUniqueID());
 		return this.eat(world, pos, state, player);
 	}
 	
@@ -108,12 +108,12 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 			{
 				world.setBlockToAir(pos);
 			}
-
 			return true;
 		}
 	}
 	private void onEatenCompatibility(ItemStack itemStack, EntityPlayer player)
 	{
 		player.getFoodStats().addStats(new ItemFoodProxy(this), itemStack);
+		users.remove(player.getUniqueID());
 	}
 }
