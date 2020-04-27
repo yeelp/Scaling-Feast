@@ -47,6 +47,7 @@ Scaling Feast openly welcomes contributors! However, you should make yourself aw
 - When contributing localization for another language, the localization strings should be complete. That is, every key in [en_us.lang](https://github.com/yeelp/Scaling-Feast/blob/master/src/main/resources/assets/scalingfeast/lang/en_us.lang) should be translated.
 - Do your best to make sure translations are correct.
 - Do not just use Google Translate to translate localization strings. Google Translate serves as a direct translation - word for word - from one language to another. Such translations miss the semantic conventions that make translations so difficult in the first place.
+- If there are missing localization keys or if you notice errors in current translations, file an issue with the localization tag.
 
 ### Contributing to the Wiki
 - If errors or content is missing from the wiki, open an issue with the wiki label.
