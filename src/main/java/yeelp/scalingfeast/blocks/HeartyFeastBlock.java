@@ -56,22 +56,12 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
 		ItemStack stack = new ItemStack(SFFood.heartyfeastitem);
-		stack.setItemDamage(state.getValue(BITES));
 		return stack;
 	}
 	
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-		Item item = SFFood.heartyfeastitem;
-		item.setDamage(new ItemStack(item), (state.getValue(BITES)));
-		return item;
-    }
-	
-	@Override
 	public FoodValues getFoodValues(ItemStack itemStack) 
 	{
-		// TODO Auto-generated method stub
 		return new FoodValues(food, sat);
 	}
 
@@ -79,7 +69,6 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	public void setEdibleAtMaxHunger(boolean value) 
 	{
 		this.alwaysEdible = value;
-
 	}
 	@Override
 	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)

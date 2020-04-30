@@ -35,7 +35,6 @@ import yeelp.scalingfeast.util.StarvationTracker;
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
 public class ScalingFeast
 {
-
     public static Logger logger;
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;

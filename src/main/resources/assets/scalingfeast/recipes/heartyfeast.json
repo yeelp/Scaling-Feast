@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "WWW",
+        "ESE",
+        "WWW"
+    ],
+    "key": {
+        "W": {
+            "item": "minecraft:wheat"
+        },
+        "E": {
+            "item": "minecraft:egg"
+        },
+        "S": {
+            "item": "scalingfeast:heartyshank"
+        }
+    },
+    "result": {
+        "item": "scalingfeast:heartyfeast"
+    }
+}

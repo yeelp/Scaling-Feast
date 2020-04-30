@@ -27,8 +27,6 @@ public class HeartyFeastItem extends ItemBlock
 		this.setRegistryName("heartyfeastitem");
 		this.setUnlocalizedName(ModConsts.MOD_ID+".heartyfeast");
 		this.setCreativeTab(CreativeTabs.FOOD);
-		this.setMaxDamage(6);
-		this.setNoRepair();
 		this.setMaxStackSize(1);
 	}
 }
