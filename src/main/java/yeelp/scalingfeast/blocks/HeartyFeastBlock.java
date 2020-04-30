@@ -74,7 +74,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		this.food = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null))/7;
-		this.sat = this.food/4 + 0.5f;
+		this.sat = 0.5f;
 		users.add(player.getUniqueID());
 		return this.eat(world, pos, state, player);
 	}
