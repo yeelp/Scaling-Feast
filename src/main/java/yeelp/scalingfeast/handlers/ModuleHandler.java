@@ -90,7 +90,7 @@ public class ModuleHandler extends Handler
 	@Optional.Method(modid = ModConsts.SOLCARROT_ID)
 	public void onFoodEaten(FoodEvent.FoodEaten evt)
 	{
-		if(eatingPlayers.containsKey(evt.player.getUniqueID()))
+		if(eatingPlayers.containsKey(evt.player.getUniqueID()) && SOLCarrotHelper.isEnabled())
 		{
 			updatePlayer(evt.player);
 			try 
@@ -168,8 +168,6 @@ public class ModuleHandler extends Handler
 			curr.setModifier(mod);
 			int currMax = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(curr);
 			FoodStats fs = player.getFoodStats();
-			//ScalingFeast.info(Integer.toString(currMax));
-			//ScalingFeast.info(Integer.toString(fs.getFoodLevel()));
 			if(fs.getFoodLevel() > currMax)
 			{
 				fs.setFoodLevel(currMax);
