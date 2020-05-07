@@ -1,5 +1,6 @@
 package yeelp.scalingfeast;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
+    public static File config;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -49,6 +51,7 @@ public class ScalingFeast
         hasAppleSkin = Loader.isModLoaded(ModConsts.APPLESKIN_ID);
         hasSolCarrot = Loader.isModLoaded(ModConsts.SOLCARROT_ID);
         hasSpiceOfLife = Loader.isModLoaded(ModConsts.SPICEOFLIFE_ID);
+        config = new File(event.getModConfigurationDirectory(), "scalingfeast.cfg");
         if(hasAppleSkin)
         {
         	info("Scaling Feast found AppleSkin!");

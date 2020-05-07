@@ -1,5 +1,14 @@
 package yeelp.scalingfeast;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
@@ -7,15 +16,17 @@ import net.minecraftforge.common.config.Config.RangeDouble;
 import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
-import yeelp.scalingfeast.handlers.ModuleHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
+import yeelp.scalingfeast.util.ConfigVersion;
+import yeelp.scalingfeast.util.ConfigVersionChecker;
 
 @Config(modid = ModConsts.MOD_ID)
-public class ModConfig 
+public class ModConfig extends Configuration
 {	
 	@Name("Food Cap")
 	@Comment("These settings modify the base behaviour of Scaling Feast")
@@ -312,7 +323,73 @@ public class ModConfig
 		{
 			if (event.getModID().equals(ModConsts.MOD_ID)) 
 			{
+				boolean addConfigVersion;
+				ConfigVersion ver = null;
+				try
+				{
+					ver = ConfigVersionChecker.getConfigVersion(ScalingFeast.config);
+					if(ver.compareTo(ConfigVersionChecker.getCurrentConfigVersion()) < 0)
+					{
+						//config version outdated - update.
+						addConfigVersion = true;
+					}
+					else
+					{
+						//config version matches, ignore.
+						addConfigVersion = false;
+					}
+				} 
+				catch (IOException e)
+				{
+					ScalingFeast.err("Something went wrong parsing the config version.");
+					addConfigVersion = false;
+					e.printStackTrace();
+				}
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
+				if(addConfigVersion)
+				{
+					Queue<String> lines = new LinkedList<String>();;
+					try(BufferedReader br = new BufferedReader(new FileReader(ScalingFeast.config)))
+					{
+						Iterator<String> it = br.lines().iterator(); 
+						lines.add(it.next());
+						if(ver != null && !ver.isUnversioned())
+						{
+							//pass over config version we don't care about, then add the right config version
+							it.next();
+							lines.add("~CONFIG VERSION: "+ModConsts.CONFIG_VERSION);
+						}
+						while(it.hasNext())
+						{
+							lines.add(it.next());
+						}
+					} 
+					catch (FileNotFoundException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+					catch (IOException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if(!lines.isEmpty())
+					{
+						try(PrintWriter writer = new PrintWriter(ScalingFeast.config))
+						{
+							for(String line : lines)
+							{
+								writer.println(line);
+							}
+						} 
+						catch (FileNotFoundException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
