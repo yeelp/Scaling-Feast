@@ -346,48 +346,42 @@ public class ModConfig extends Configuration
 					e.printStackTrace();
 				}
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
-				if(addConfigVersion)
+				Queue<String> lines = new LinkedList<String>();;
+				try(BufferedReader br = new BufferedReader(new FileReader(ScalingFeast.config)))
 				{
-					Queue<String> lines = new LinkedList<String>();;
-					try(BufferedReader br = new BufferedReader(new FileReader(ScalingFeast.config)))
+					Iterator<String> it = br.lines().iterator(); 
+					lines.add(it.next());
+					if(ver != null && !ver.isUnversioned())
 					{
-						Iterator<String> it = br.lines().iterator(); 
+						//pass over config version we don't care about, then add the right config version
+						it.next();
+					}
+					lines.add("~CONFIG VERSION: "+ModConsts.CONFIG_VERSION);
+					while(it.hasNext())
+					{
 						lines.add(it.next());
-						if(ver != null && !ver.isUnversioned())
+					}
+				} 
+				catch (FileNotFoundException e)
+				{
+					e.printStackTrace();
+				} 
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+				if(!lines.isEmpty())
+				{
+					try(PrintWriter writer = new PrintWriter(ScalingFeast.config))
+					{
+						for(String line : lines)
 						{
-							//pass over config version we don't care about, then add the right config version
-							it.next();
-							lines.add("~CONFIG VERSION: "+ModConsts.CONFIG_VERSION);
-						}
-						while(it.hasNext())
-						{
-							lines.add(it.next());
+							writer.println(line);
 						}
 					} 
 					catch (FileNotFoundException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} 
-					catch (IOException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					if(!lines.isEmpty())
-					{
-						try(PrintWriter writer = new PrintWriter(ScalingFeast.config))
-						{
-							for(String line : lines)
-							{
-								writer.println(line);
-							}
-						} 
-						catch (FileNotFoundException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					}
 				}
 				HUDOverlayHandler.loadColours();

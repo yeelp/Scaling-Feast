@@ -29,6 +29,7 @@ import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
+import yeelp.scalingfeast.util.ConfigVersionChecker;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.StarvationTracker;
@@ -52,6 +53,11 @@ public class ScalingFeast
         hasSolCarrot = Loader.isModLoaded(ModConsts.SOLCARROT_ID);
         hasSpiceOfLife = Loader.isModLoaded(ModConsts.SPICEOFLIFE_ID);
         config = new File(event.getModConfigurationDirectory(), "scalingfeast.cfg");
+        ConfigVersionChecker checker = new ConfigVersionChecker(ModConfig.class, config);
+        if(checker.isConfigOutdated())
+        {
+        	ScalingFeast.warn("This config file is outdated! ScalingFeast will try to transfer your changes to the newer config version!");
+        }
         if(hasAppleSkin)
         {
         	info("Scaling Feast found AppleSkin!");

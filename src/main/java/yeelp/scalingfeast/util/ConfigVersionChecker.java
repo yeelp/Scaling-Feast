@@ -49,6 +49,7 @@ public final class ConfigVersionChecker
 	 */
 	public boolean isConfigOutdated() throws RuntimeException
 	{
+		ScalingFeast.info(ConfigVersionChecker.currentVersion.toString()+", " + this.encounteredVersion.toString());
 		int comp = this.encounteredVersion.compareTo(ConfigVersionChecker.currentVersion);
 		if(comp > 0)
 		{
@@ -75,8 +76,9 @@ public final class ConfigVersionChecker
 			String ver = it.next(); //~CONFIG VERSION:...
 			if(ver.startsWith("~CONFIG VERSION:"))
 			{
-				String verNum = ver.substring(ver.indexOf(":"));
-				return new ConfigVersion(verNum);
+				String verNum = ver.substring(ver.indexOf(":")+1);
+				ScalingFeast.info(verNum);
+				return new ConfigVersion(verNum.trim());
 			}
 			else
 			{

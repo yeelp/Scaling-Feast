@@ -30,8 +30,8 @@ public final class ConfigVersion implements Comparable<ConfigVersion>
 		this.major = -1;
 		this.minor = -1;
 		this.patch = -1;
-		this.prerelease = null;
-		this.buildMeta = null;
+		this.prerelease = "";
+		this.buildMeta = "";
 	}
 	/**
 	 * Construct a new Config Version. This constructor does strictly enforce Semantic Versioning. 
@@ -46,8 +46,8 @@ public final class ConfigVersion implements Comparable<ConfigVersion>
 			major = Short.parseShort(m.group("major"));
 			minor = Short.parseShort(m.group("minor"));
 			patch = Short.parseShort(m.group("patch"));
-			prerelease = m.group("prerelease");
-			buildMeta = m.group("buildmetadata");
+			prerelease = (m.group("prerelease") == null ? "" : m.group("prerelease"));
+			buildMeta = (m.group("buildmetadata") == null ? "" : m.group("buildmetadata"));
 		}
 		else
 		{
@@ -55,31 +55,51 @@ public final class ConfigVersion implements Comparable<ConfigVersion>
 		}
 	}
 	
+	/**
+	 * Get the major version number
+	 * @return the major version number
+	 */
 	@Nonnull
 	public final short getMajorVersion()
 	{
 		return this.major;
 	}
 	
+	/**
+	 * Get the minor version number
+	 * @return the minor version number
+	 */
 	@Nonnull
 	public final short getMinorVersion()
 	{
 		return this.minor;
 	}
 	
+	/**
+	 * Get the patch version number
+	 * @return the patch version number
+	 */
 	@Nonnull
 	public final short getPatchVersion()
 	{
 		return this.patch;
 	}
 	
-	@Nullable
+	/**
+	 * Get the prerelease version
+	 * @return the prerelease version, or an empty string if there is no such version
+	 */
+	@Nonnull
 	public final String getPrereleaseVersion()
 	{
 		return this.prerelease;
 	}
 	
-	@Nullable
+	/**
+	 * Get build metadata
+	 * @return the build metadata, or the empty string if it doesn't exist.
+	 */
+	@Nonnull
 	public final String getBuildMetadata()
 	{
 		return this.buildMeta;
@@ -127,5 +147,20 @@ public final class ConfigVersion implements Comparable<ConfigVersion>
 	public boolean isUnversioned()
 	{
 		return this.equals(UNVERSIONED);
+	}
+	
+	@Override
+	public String toString()
+	{
+		String a = String.format("%d.%d.%d", this.major, this.minor, this.patch);
+		if(this.prerelease != null || !this.prerelease.isEmpty())
+		{
+			a += "-" + this.prerelease;
+		}
+		if(this.buildMeta != null || !this.buildMeta.isEmpty())
+		{
+			a += "+" + this.buildMeta;
+		}
+		return a;
 	}
 }
