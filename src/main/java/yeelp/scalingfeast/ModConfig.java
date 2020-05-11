@@ -47,7 +47,11 @@ public class ModConfig extends Configuration
 	@Name("Modules")
 	@Comment("Enable and tweak Scaling Feast's behaviour with other mods")
 	public static final ModuleCategory modules = new ModuleCategory();
-
+	
+	@Name("Config Version")
+	@Comment("DO NOT ALTER THIS CONFIG. This is used internally by Scaling Feast to help preserve your config options. Changing could result in undefined behaviour! Only change if you know what you're doing!")
+	public static String configVersion = ModConsts.CONFIG_VERSION;
+	
 	public static class FoodCapCategory
 	{
 		@Name("Global Cap")
@@ -127,6 +131,16 @@ public class ModConfig extends Configuration
 		@Comment({"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.", 
 				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY"})
 		public boolean shouldFirePost = true;
+		
+		@Name("Test")
+		@Comment("Test")
+		public Test test = new Test();
+		public static class Test
+		{
+			@Name("Test")
+			@Comment("Testing")
+			public int test = 0;
+		}
 	}
 	public static class ItemCategory
 	{
@@ -176,7 +190,6 @@ public class ModConfig extends Configuration
 		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
-			      "If set to NUMERICAL, Scaling Feast will display a \'+(x/X, Y)\' next to your hunger bar, when over the default vanilla max hunger, where x is your current extra food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true).",
 			      "If set to OVERLAY, Scaling Feast will overlay coloured shanks over your hunger bar to display your extended food stats.",
 			      "If set to DEFAULT, Scaling Feast will do nothing. Your default vanilla hunger bar will represent your entire hunger bar."})
 		public DisplayStyle style = DisplayStyle.OVERLAY;
@@ -184,7 +197,7 @@ public class ModConfig extends Configuration
 		@Name("Info Style")
 		@Comment({"The text to display to the right of the hunger bar",
 				  "If set to SIMPLE, the text \'xb/B\' will be shown, where b is the number of hunger bars you currently have and B is the number of hunger bars you will have when at your max",
-				  "If set to ADVANCED the text \'(x/X, Y)\' will be shown, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
+				  "If set to ADVANCED the texts \'x/X\' and \'Y\' will be shown, stacked on top of on another, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
 		public InfoStyle infoStyle = InfoStyle.SIMPLE;
 		
 		@Name("Overlay Style")
@@ -308,7 +321,100 @@ public class ModConfig extends Configuration
 			public boolean rewardMsgAboveHotbar = false;
 		}
 	}
-	
+		
+	/**
+	 * Scrub the config file, removing any old or obsolete config options.
+	 */
+	public static void scrubConfig()
+	{
+		//old or moved config options have no comments
+		//old or moved config categories have no block comment before it.
+		//iterate through config file with these rules in mind to find dirty config options, then write back to it, ignoring the dirty options.
+		try(BufferedReader reader = new BufferedReader(new FileReader(ScalingFeast.config)))
+		{
+			Iterator<String> it = reader.lines().iterator();
+			Queue<String> contents = new LinkedList<String>();
+			contents.add(it.next()); //#Configuration file
+			contents.add(it.next()); //
+			contents.add(it.next()); // general {
+			boolean validCategory = false;
+			boolean validConfigOption = false;
+			while(it.hasNext())
+			{
+				String s = it.next();
+				//block comment
+				if(s.trim().equals("##########################################################################################################"))
+				{
+					contents.add(s);         //############...
+					contents.add(it.next()); //# cat
+					contents.add(it.next()); //#-----------...
+					contents.add(it.next()); //# comment
+					contents.add(it.next()); //############...
+					contents.add(it.next()); //
+					validCategory = true;
+					continue;
+				}
+				else if(s.trim().startsWith("# "))
+				{
+					contents.add(s);
+					validConfigOption = true;
+					continue;
+				}
+				
+				if(s.contains("{"))
+				{
+					if(validCategory)
+					{
+						contents.add(s);
+						continue;
+					}
+					else
+					{
+						//invalid category. skip it
+						do
+						{
+							s = it.next();
+						}while(!s.contains("}"));
+						continue;
+					}
+				}
+				else if(s.trim().matches("(B:|D:|I:|S:).*"))
+				{
+					if(validConfigOption)
+					{
+						contents.add(s);
+					}
+					else if(s.contains(" <"))
+					{
+						do
+						{
+							s = it.next();
+						}while(!s.contains(">"));
+					}
+					continue;
+				}
+				contents.add(s);
+			}
+			try(PrintWriter writer = new PrintWriter(ScalingFeast.config))
+			{
+				for(String s : contents)
+				{
+					writer.println(s);
+				}
+			}
+		} 
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	@Mod.EventBusSubscriber(modid = ModConsts.MOD_ID)
 	private static class EventHandler 
 	{
@@ -323,67 +429,7 @@ public class ModConfig extends Configuration
 		{
 			if (event.getModID().equals(ModConsts.MOD_ID)) 
 			{
-				boolean addConfigVersion;
-				ConfigVersion ver = null;
-				try
-				{
-					ver = ConfigVersionChecker.getConfigVersion(ScalingFeast.config);
-					if(ver.compareTo(ConfigVersionChecker.getCurrentConfigVersion()) < 0)
-					{
-						//config version outdated - update.
-						addConfigVersion = true;
-					}
-					else
-					{
-						//config version matches, ignore.
-						addConfigVersion = false;
-					}
-				} 
-				catch (IOException e)
-				{
-					ScalingFeast.err("Something went wrong parsing the config version.");
-					addConfigVersion = false;
-					e.printStackTrace();
-				}
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
-				Queue<String> lines = new LinkedList<String>();;
-				try(BufferedReader br = new BufferedReader(new FileReader(ScalingFeast.config)))
-				{
-					Iterator<String> it = br.lines().iterator(); 
-					lines.add(it.next());
-					if(ver != null && !ver.isUnversioned())
-					{
-						//pass over config version we don't care about, then add the right config version
-						it.next();
-					}
-					lines.add("~CONFIG VERSION: "+ModConsts.CONFIG_VERSION);
-					while(it.hasNext())
-					{
-						lines.add(it.next());
-					}
-				} 
-				catch (FileNotFoundException e)
-				{
-					e.printStackTrace();
-				} 
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-				if(!lines.isEmpty())
-				{
-					try(PrintWriter writer = new PrintWriter(ScalingFeast.config))
-					{
-						for(String line : lines)
-						{
-							writer.println(line);
-						}
-					} 
-					catch (FileNotFoundException e)
-					{
-						e.printStackTrace();
-					}
-				}
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();

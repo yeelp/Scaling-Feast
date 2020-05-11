@@ -153,11 +153,11 @@ public final class ConfigVersion implements Comparable<ConfigVersion>
 	public String toString()
 	{
 		String a = String.format("%d.%d.%d", this.major, this.minor, this.patch);
-		if(this.prerelease != null || !this.prerelease.isEmpty())
+		if(!this.prerelease.isEmpty())
 		{
 			a += "-" + this.prerelease;
 		}
-		if(this.buildMeta != null || !this.buildMeta.isEmpty())
+		if(!this.buildMeta.isEmpty())
 		{
 			a += "+" + this.buildMeta;
 		}

@@ -57,6 +57,7 @@ public class ScalingFeast
         if(checker.isConfigOutdated())
         {
         	ScalingFeast.warn("This config file is outdated! ScalingFeast will try to transfer your changes to the newer config version!");
+        	checker.updateConfig();
         }
         if(hasAppleSkin)
         {
