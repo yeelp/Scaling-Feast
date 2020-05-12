@@ -35,6 +35,7 @@ Scaling Feast openly welcomes contributors! However, you should make yourself aw
                doSomethingElse();
            }
     ```
+    - If you're using Eclipse, you're in luck. You can download yeelpPreferences.epf from this repository and import these preferences into your Eclipse workspace. This *should* bring your formatting in line with this repository's code formatting. Problems with this preferences file should be highlighted in issues marked with the housekeeping label.
     - Any pull requests that don't follow these conventions will have these changes requested, and will not be accepted until these changes are made.
     - If you notice any code in the repository that doesn't follow these conventions, you should open an issue with the 'housekeeping' label.
 - Make sure you have verified that the changes/features you're making actually work as intended. Open pull requests with too many issues, conflicts or crashes will be closed. You can reopen it when your branch is stable.
