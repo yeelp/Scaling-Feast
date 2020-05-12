@@ -5,9 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
@@ -22,11 +28,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
-import yeelp.scalingfeast.util.ConfigVersion;
-import yeelp.scalingfeast.util.ConfigVersionChecker;
-
 @Config(modid = ModConsts.MOD_ID)
-public class ModConfig extends Configuration
+public class ModConfig
 {	
 	@Name("Food Cap")
 	@Comment("These settings modify the base behaviour of Scaling Feast")
@@ -48,9 +51,6 @@ public class ModConfig extends Configuration
 	@Comment("Enable and tweak Scaling Feast's behaviour with other mods")
 	public static final ModuleCategory modules = new ModuleCategory();
 	
-	@Name("Config Version")
-	@Comment("DO NOT ALTER THIS CONFIG. This is used internally by Scaling Feast to help preserve your config options. Changing could result in undefined behaviour! Only change if you know what you're doing!")
-	public static String configVersion = ModConsts.CONFIG_VERSION;
 	
 	public static class FoodCapCategory
 	{
@@ -131,16 +131,6 @@ public class ModConfig extends Configuration
 		@Comment({"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.", 
 				  "Try this if other mods have their HUD components disappear when display style is set to OVERLAY"})
 		public boolean shouldFirePost = true;
-		
-		@Name("Test")
-		@Comment("Test")
-		public Test test = new Test();
-		public static class Test
-		{
-			@Name("Test")
-			@Comment("Testing")
-			public int test = 0;
-		}
 	}
 	public static class ItemCategory
 	{
@@ -321,100 +311,7 @@ public class ModConfig extends Configuration
 			public boolean rewardMsgAboveHotbar = false;
 		}
 	}
-		
-	/**
-	 * Scrub the config file, removing any old or obsolete config options.
-	 */
-	public static void scrubConfig()
-	{
-		//old or moved config options have no comments
-		//old or moved config categories have no block comment before it.
-		//iterate through config file with these rules in mind to find dirty config options, then write back to it, ignoring the dirty options.
-		try(BufferedReader reader = new BufferedReader(new FileReader(ScalingFeast.config)))
-		{
-			Iterator<String> it = reader.lines().iterator();
-			Queue<String> contents = new LinkedList<String>();
-			contents.add(it.next()); //#Configuration file
-			contents.add(it.next()); //
-			contents.add(it.next()); // general {
-			boolean validCategory = false;
-			boolean validConfigOption = false;
-			while(it.hasNext())
-			{
-				String s = it.next();
-				//block comment
-				if(s.trim().equals("##########################################################################################################"))
-				{
-					contents.add(s);         //############...
-					contents.add(it.next()); //# cat
-					contents.add(it.next()); //#-----------...
-					contents.add(it.next()); //# comment
-					contents.add(it.next()); //############...
-					contents.add(it.next()); //
-					validCategory = true;
-					continue;
-				}
-				else if(s.trim().startsWith("# "))
-				{
-					contents.add(s);
-					validConfigOption = true;
-					continue;
-				}
-				
-				if(s.contains("{"))
-				{
-					if(validCategory)
-					{
-						contents.add(s);
-						continue;
-					}
-					else
-					{
-						//invalid category. skip it
-						do
-						{
-							s = it.next();
-						}while(!s.contains("}"));
-						continue;
-					}
-				}
-				else if(s.trim().matches("(B:|D:|I:|S:).*"))
-				{
-					if(validConfigOption)
-					{
-						contents.add(s);
-					}
-					else if(s.contains(" <"))
-					{
-						do
-						{
-							s = it.next();
-						}while(!s.contains(">"));
-					}
-					continue;
-				}
-				contents.add(s);
-			}
-			try(PrintWriter writer = new PrintWriter(ScalingFeast.config))
-			{
-				for(String s : contents)
-				{
-					writer.println(s);
-				}
-			}
-		} 
-		catch (FileNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+
 	@Mod.EventBusSubscriber(modid = ModConsts.MOD_ID)
 	private static class EventHandler 
 	{
