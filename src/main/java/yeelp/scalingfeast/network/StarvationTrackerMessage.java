@@ -69,7 +69,7 @@ public class StarvationTrackerMessage implements IMessage
 		@SideOnly(Side.CLIENT)
 		public void handle(StarvationTrackerMessage msg, MessageContext ctx) 
 		{
-			EntityPlayer player = Minecraft.getMinecraft().player;
+			EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
 			player.getCapability(StarvationTrackerProvider.starvationTracker, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
 		}
 	}

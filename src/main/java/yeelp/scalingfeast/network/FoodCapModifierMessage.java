@@ -61,7 +61,7 @@ public class FoodCapModifierMessage implements IMessage
 		@SideOnly(Side.CLIENT)
 		public void handle(FoodCapModifierMessage msg, MessageContext ctx)
 		{
-			EntityPlayer player = Minecraft.getMinecraft().player;
+			EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
 			player.getCapability(FoodCapModifierProvider.foodCapMod, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
 		}
 		
