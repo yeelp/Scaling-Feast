@@ -1,10 +1,20 @@
 package yeelp.scalingfeast.handlers;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.helpers.AppleSkinHelper;
+import yeelp.scalingfeast.network.SatSyncMessage;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
@@ -13,6 +23,8 @@ import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 public class FoodHandler extends Handler 
 {	
+	private static final Map<UUID, Float> satLevels = new HashMap<UUID, Float>();
+	
 	@SubscribeEvent
 	public void onGetMaxHunger(HungerEvent.GetMaxHunger evt)
 	{
@@ -68,6 +80,42 @@ public class FoodHandler extends Handler
 			{
 				CapabilityHandler.syncTracker(evt.player);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingUpdate(LivingUpdateEvent evt)
+	{
+		//AppleSkin will do this for us, no point in duplicating behaviour if it's loaded.
+		if(AppleSkinHelper.isLoaded() || !(evt.getEntity() instanceof EntityPlayerMP))
+		{
+			return;
+		}
+		else
+		{
+			EntityPlayerMP player = (EntityPlayerMP) evt.getEntity();
+			float currSatLevel = player.getFoodStats().getSaturationLevel();
+			//we use the wrapper class to simplify the case where satLevels.get returns null
+			//However, we should use Float.floatValue() when comparing to the primitive float currSatLevel.
+			Float lastSatLevel = satLevels.get(player.getUniqueID());
+			if(lastSatLevel == null || lastSatLevel.floatValue() != currSatLevel)
+			{
+				PacketHandler.INSTANCE.sendTo(new SatSyncMessage(currSatLevel), player);
+				satLevels.put(player.getUniqueID(), currSatLevel);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent evt)
+	{
+		if(!(evt.player instanceof EntityPlayerMP))
+		{
+			return;
+		}
+		else
+		{
+			satLevels.remove(evt.player.getUniqueID());
 		}
 	}
 }

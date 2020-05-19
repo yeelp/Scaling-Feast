@@ -9,12 +9,17 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Message to sync saturation to the client for the HUD
+ * @author Yeelp
+ *
+ */
 public class SatSyncMessage implements IMessage
 {
 	private float saturationLevel;
 	
 	/**
-	 * Construct a nee SatSyncMessage
+	 * Construct a new SatSyncMessage
 	 * @param saturationLevel the saturation level for this message
 	 */
 	public SatSyncMessage(float saturationLevel)
@@ -63,7 +68,7 @@ public class SatSyncMessage implements IMessage
 		@SideOnly(Side.CLIENT)
 		private void handle(SatSyncMessage msg, MessageContext ctx)
 		{
-			EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
+			NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodSaturationLevel(msg.saturationLevel);;	
 		}
 	}
 }

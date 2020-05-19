@@ -1,6 +1,7 @@
 package yeelp.scalingfeast;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.ModuleHandler;
 import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.handlers.PotionHandler;
+import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
 import yeelp.scalingfeast.init.SFEnchantments;
@@ -97,6 +99,18 @@ public class ScalingFeast
     	{
     		SpiceOfLifeHelper.init();
     	}
+    	if(hasAppleSkin)
+    	{
+    		try
+			{
+				AppleSkinHelper.init();
+			}
+			catch (ClassNotFoundException e)
+			{
+				err("Couldn't load AppleSkin compatibility! Encountered a ClassNotFoundException.");
+				err(Arrays.toString(e.getStackTrace()));
+			}
+    	}
     	info("Scaling Feast post-initialization complete!");
     } 
     
@@ -106,18 +120,39 @@ public class ScalingFeast
     	event.registerServerCommand(new SFCommand());
     }
     
+    /**
+     * Log a message at the info level
+     * @param msg message to log
+     */
     public static void info(String msg)
     {
     	logger.info("[SCALING FEAST] "+msg);
     }
     
+    /**
+     * Log a message at the warning level
+     * @param msg message to log
+     */
     public static void warn(String msg)
     {
     	logger.warn("[SCALING FEAST] "+msg);
     }
     
+    /**
+     * Log a message at the error level
+     * @param msg message to log
+     */
     public static void err(String msg)
     {
     	logger.error("[SCALING FEAST] "+msg);
+    }
+    
+    /**
+     * Log a message at the fatal level
+     * @param msg message to log
+     */
+    public static void fatal(String msg)
+    {
+    	logger.fatal("[SCALING FEAST "+msg);
     }
 }

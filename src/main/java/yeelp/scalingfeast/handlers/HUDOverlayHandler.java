@@ -28,6 +28,7 @@ import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.util.Colour;
@@ -144,7 +145,7 @@ public class HUDOverlayHandler extends Handler
 				int left = res.getScaledWidth()/2 + 91;
 				int top = res.getScaledHeight() - offset;
 				//If we have AppleSkin, we need to redraw the whole exhaustion bar.
-				if(ScalingFeast.hasAppleSkin && !appleSkinErr)
+				if(AppleSkinHelper.isLoaded() && !appleSkinErr)
 				{
 					try
 					{
