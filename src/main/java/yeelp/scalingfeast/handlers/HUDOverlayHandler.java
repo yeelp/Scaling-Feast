@@ -328,8 +328,8 @@ public class HUDOverlayHandler extends Handler
 		{
 			ItemStack heldStack = player.getHeldItem(hand);
 			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(heldStack, player);
-			int deltaHunger = Math.min(foodValues.hunger, max - player.getFoodStats().getFoodLevel());
-			float deltaSat = foodValues.getSaturationIncrement(player);
+			int deltaHunger = Math.min(foodValues.hunger, max - hunger);
+			float deltaSat = Math.min(foodValues.getSaturationIncrement(player), hunger + deltaHunger - sat);
 			if(deltaHunger > 0)
 			{
 				foodAddition = "+"+Integer.toString(deltaHunger);
