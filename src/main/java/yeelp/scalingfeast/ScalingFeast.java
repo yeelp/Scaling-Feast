@@ -84,7 +84,10 @@ public class ScalingFeast
         new EnchantmentHandler().register();
         new PotionHandler().register();
         new LootTableInjector().register();
-        new ModuleHandler().register();
+        if(ModConfig.modules.sol.enabled || ModConfig.modules.spiceoflife.enabled)
+        {	
+        	new ModuleHandler().register();
+        }
         info("Scaling Feast initialization complete!");
     }
     

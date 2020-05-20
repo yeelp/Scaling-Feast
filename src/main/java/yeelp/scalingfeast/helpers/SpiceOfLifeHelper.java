@@ -146,7 +146,7 @@ public class SpiceOfLifeHelper
 	 * What tooltip should be added to a ItemStack?
 	 * @param stack the stack to query
 	 * @param player the player receiving the tooltip
-	 * @return ToolTipType.GOOD if eating this food item will increase max hunger, ToolTipeType.BAD if it will reduce max hunger, or null, if no change will occur.
+	 * @return ToolTipType.GOOD if eating this food item will increase max hunger, ToolTipType.BAD if it will reduce max hunger, or null, if no change will occur.
 	 */
 	public static ToolTipType getToolTipType(ItemStack stack, EntityPlayer player)
 	{

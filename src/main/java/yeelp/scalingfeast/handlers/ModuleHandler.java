@@ -40,11 +40,14 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
 public class ModuleHandler extends Handler 
 {	
 	private HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
+	private ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
+	private ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
+	
 	
 	@SubscribeEvent 
 	public void start(LivingEntityUseItemEvent.Start evt)
 	{
-		if(!(evt.getEntityLiving() instanceof EntityPlayer) || evt.isCanceled() || !SOLCarrotHelper.isEnabled())
+		if(!(evt.getEntityLiving() instanceof EntityPlayer) || evt.isCanceled())
 		{
 			return;
 		}
@@ -87,38 +90,37 @@ public class ModuleHandler extends Handler
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	@Optional.Method(modid = ModConsts.SOLCARROT_ID)
 	public void onFoodEaten(FoodEvent.FoodEaten evt)
 	{
-		if(eatingPlayers.containsKey(evt.player.getUniqueID()) && SOLCarrotHelper.isEnabled())
+		if(eatingPlayers.containsKey(evt.player.getUniqueID()))
 		{
 			updatePlayer(evt.player);
-			try 
+			if(SOLCarrotHelper.isEnabled())
 			{
-				if(SOLCarrotHelper.reachedMilestone(evt.player) && eatingPlayers.get(evt.player.getUniqueID()) != SOLCarrotHelper.getCountableFoodListLength(evt.player))
+				try 
 				{
-					ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
-					ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastMilestoneReached(evt.player).getReward());
-					if(!ModConfig.modules.sol.rewardMsgAboveHotbar)
+					if(SOLCarrotHelper.reachedMilestone(evt.player) && eatingPlayers.get(evt.player.getUniqueID()) != SOLCarrotHelper.getCountableFoodListLength(evt.player))
 					{
-						msg.setStyle(new Style().setColor(TextFormatting.GREEN));
-						splash.setStyle(new Style().setColor(TextFormatting.GREEN));
-					}
-					ITextComponent fullMsg = new TextComponentString(splash.getFormattedText() +" "+ msg.getFormattedText());
+						ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
+						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastMilestoneReached(evt.player).getReward());
+						if(!ModConfig.modules.sol.rewardMsgAboveHotbar)
+						{
+							msg.setStyle(new Style().setColor(TextFormatting.GREEN));
+							splash.setStyle(new Style().setColor(TextFormatting.GREEN));
+						}
+						ITextComponent fullMsg = new TextComponentString(splash.getFormattedText() +" "+ msg.getFormattedText());
 					
-					evt.player.sendStatusMessage(fullMsg, ModConfig.modules.sol.rewardMsgAboveHotbar);
-					evt.player.world.playSound(null, evt.player.posX, evt.player.posY, evt.player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+						evt.player.sendStatusMessage(fullMsg, ModConfig.modules.sol.rewardMsgAboveHotbar);
+						evt.player.world.playSound(null, evt.player.posX, evt.player.posY, evt.player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+					}
+				}	 
+				catch (ModuleNotLoadedException e) 
+				{
+					ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
+					ScalingFeast.err(Arrays.toString(e.getStackTrace()));
 				}
-			} 
-			catch (ModuleNotLoadedException e) 
-			{
-				ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
-				ScalingFeast.err(Arrays.toString(e.getStackTrace()));
 			}
-			finally
-			{
-				eatingPlayers.remove(evt.player.getUniqueID());
-			}
+			eatingPlayers.remove(evt.player.getUniqueID());
 		}
 	}
 	
@@ -135,10 +137,10 @@ public class ModuleHandler extends Handler
 				switch(type)
 				{
 					case GOOD:
-						evt.getToolTip().add(TextFormatting.GREEN.toString() + "Eating this food item will restore some of your max hunger!");
+						evt.getToolTip().add(restoreFoodTooltip.getFormattedText());
 						break;
 					case BAD:
-						evt.getToolTip().add(TextFormatting.RED.toString() + "Eating this food item will temporarily decrease your max hunger!");
+						evt.getToolTip().add(punishFoodTooltip.getFormattedText());
 						break;
 					default:
 						break;
@@ -154,6 +156,7 @@ public class ModuleHandler extends Handler
 		if(SpiceOfLifeHelper.isEnabled() && ModConfig.modules.spiceoflife.enabled)
 		{
 			mod += SpiceOfLifeHelper.getPenalty(player);
+			ScalingFeast.info(""+mod);
 		}
 		if(SOLCarrotHelper.isEnabled() && ModConfig.modules.sol.enabled)
 		{

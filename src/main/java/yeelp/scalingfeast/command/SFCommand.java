@@ -10,10 +10,16 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.command.SelectorHandlerManager;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.util.FoodCapProvider;
@@ -21,7 +27,7 @@ import yeelp.scalingfeast.util.IFoodCap;
 
 public class SFCommand extends CommandBase {
 
-	private static String[] commandList = new String[] {"setExtendedMax"};
+	private static String[] commandList = new String[] {"setMax", "setSaturation"};
 	private static HashSet<String> commands = new HashSet<String>(Arrays.asList(commandList));
 	@Override
 	public String getName() 
@@ -62,63 +68,87 @@ public class SFCommand extends CommandBase {
 			{
 				if(command.equals(args[0]) && args.length != 3)
 				{
-					sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.usage", command));
+					sendErrorMessage(sender, "commands.scalingfeast.command.usage", command);
 					return;
 				}
 			}
-			editFoodCap(server, sender, args);
+			if(args[1].startsWith("@"))
+			{
+				List<EntityPlayerMP> targets = SelectorHandlerManager.matchEntities(sender, args[1], EntityPlayerMP.class);
+				if(targets.size() == 0)
+				{
+					sendErrorMessage(sender, "commands.scalingfeast.command.emptytarget", args[1]);
+				}
+				for(EntityPlayerMP player : targets)
+				{
+					editStats(server, sender, args, player);
+				}
+			}
+			else
+			{
+				for(EntityPlayerMP player : server.getPlayerList().getPlayers())
+				{
+					if(player.getName().equals(args[1]))
+					{
+						editStats(server, sender, args, player);
+						return;
+					}
+				}
+				sendErrorMessage(sender, "commands.scalingfeast.command.existence", args[1]);
+			}
 		}
 
 	}
 	
-	private void editFoodCap(MinecraftServer server, ICommandSender sender, String[] args)
+	private boolean editStats(MinecraftServer server, ICommandSender sender, String[] args, EntityPlayerMP player)
 	{
-		List<EntityPlayerMP> players = server.getPlayerList().getPlayers();
-		for(EntityPlayerMP player : players)
+		try
 		{
-			if(player.getName().equals(args[1]))
+			if(0 <= Float.parseFloat(args[2]) && Float.parseFloat(args[2]) < Short.MAX_VALUE)
 			{
-				IFoodCap fs = player.getCapability(FoodCapProvider.capFoodStat, null);
-				try
+				float satVal = Float.parseFloat(args[2]);
+				short val = (short) satVal;
+				String type = "";
+				String result = "";
+				switch(args[0])
 				{
-					if(0 <= Float.parseFloat(args[2]) && Float.parseFloat(args[2]) < Short.MAX_VALUE)
-					{
-						float satVal = Float.parseFloat(args[2]);
-						short val = (short) satVal;
-						switch(args[0])
+					case "setMax":
+						type = "max";
+						result = String.valueOf(val);
+						IFoodCap cap = player.getCapability(FoodCapProvider.capFoodStat, null);
+						cap.setMax(val);
+						if(player.getFoodStats().getFoodLevel() > val)
 						{
-							case "setExtendedMax":
-								fs.setMax(val);
-								if(player.getFoodStats().getFoodLevel() > val)
-								{
-									player.getFoodStats().setFoodLevel(val);
-									if(player.getFoodStats().getSaturationLevel() > val)
-									{
-										player.getFoodStats().setFoodSaturationLevel(val);
-									}
-								}
-								CapabilityHandler.syncCap(player);
-								break;
-							default:
-								break; //This will never occur because of the predicates we've checked before hand
+							player.getFoodStats().setFoodLevel(val);
+							if(player.getFoodStats().getSaturationLevel() > val)
+							{
+								player.getFoodStats().setFoodSaturationLevel(val);
+							}
 						}
-						sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.success"));
-					}
-					else
-					{
-						sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.numerr", String.valueOf(Short.MAX_VALUE)));
-					}
-					return;
+						CapabilityHandler.syncCap(player);
+						break;
+					case "setSaturation":
+						type = "saturation";
+						FoodStats fs = player.getFoodStats();
+						result = String.valueOf(Math.min(fs.getFoodLevel(), satVal));
+						fs.setFoodSaturationLevel(Math.min(fs.getFoodLevel(), satVal));
+						break;
+					default:
+						break; //This will never occur because of the predicates we've checked beforehand
 				}
-				catch(NumberFormatException e)
-				{
-					sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.numerr", String.valueOf(Short.MAX_VALUE)));
-					return;
-				}
+				sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.success", type, player, result));
+				return true;
 			}
 		}
-		sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.existence", args[1]));
+		catch(NumberFormatException e)
+		{
+			
+		}
+		//If we get here, either a NumberFormatException was thrown, or the parsed floats weren't in range
+		sendErrorMessage(sender, "commands.scalingfeast.command.numerr", String.valueOf(Short.MAX_VALUE));
+		return false;
 	}
+	
 	@Override
 	public List<String> getTabCompletions(MinecraftServer serv, ICommandSender sender, String[] args, BlockPos blockPos)
 	{
@@ -126,7 +156,15 @@ public class SFCommand extends CommandBase {
 		{
 			return getListOfStringsMatchingLastWord(args,  commands);
 		}
+		else if(args.length == 2)
+		{
+			return getListOfStringsMatchingLastWord(args, serv.getOnlinePlayerNames());
+		}
 		return null;
 	}
 
+	private void sendErrorMessage(ICommandSender sender, String msg, Object...args)
+	{
+		sender.sendMessage(new TextComponentTranslation(msg, args).setStyle(new Style().setColor(TextFormatting.RED)));
+	}
 }

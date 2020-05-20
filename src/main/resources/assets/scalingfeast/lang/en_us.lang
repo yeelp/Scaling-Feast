@@ -1,8 +1,9 @@
-commands.scalingfeast.usage=/scalingfeast <setExtendedFood|setExtendedMax|setExtendedSat> <player> [args]
+commands.scalingfeast.usage=/scalingfeast <setMax|setSaturation> <player> [args]
 commands.scalingfeast.command.usage=Usage: /scalingfeast %s <player> <amount>
 commands.scalingfeast.command.existence=Player %s doesn't exist!
+commands.scalingfeast.command.emptytarget=Target selector %s found nothing.
 commands.scalingfeast.command.numerr=Amount must be in range [0, %s)
-commands.scalingfeast.command.success=Success!
+commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
 modules.scalingfeast.sol.reward=You've gained %s max hunger!
 
@@ -14,6 +15,9 @@ modules.scalingfeast.sol.splash4=Yummy!
 modules.scalingfeast.sol.splash5=How savoury!
 modules.scalingfeast.sol.splash6=Succulent!
 modules.scalingfeast.sol.splash7=Tasty!
+
+modules.scalingfeast.spiceoflife.tooltip.punish=Eating this food item will temporarily decrease your max hunger!
+modules.scalingfeast.spiceoflife.tooltip.restore=Eating this food item will restore some of your lost max hunger!
 
 
 
