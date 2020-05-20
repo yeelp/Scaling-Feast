@@ -1,5 +1,6 @@
 package yeelp.scalingfeast.handlers;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,12 +13,17 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindFieldException;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
@@ -317,22 +323,29 @@ public class HUDOverlayHandler extends Handler
 		String foodAddition = "";
 		String maxAddition = "";
 		String satAddition = "";
-		if(player.getHeldItemMainhand().getItem() instanceof ItemFood && player.getFoodStats().needFood())
+		EnumHand hand = getHandWithFood(player);
+		if(hand != null && isFoodAlwaysEdible((ItemFood)player.getHeldItem(hand).getItem()))
 		{
-			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(player.getHeldItemMainhand(), player);
-			if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem || foodValues.hunger > 0)
+			ItemStack heldStack = player.getHeldItem(hand);
+			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(heldStack, player);
+			int deltaHunger = Math.min(foodValues.hunger, max - player.getFoodStats().getFoodLevel());
+			float deltaSat = foodValues.getSaturationIncrement(player);
+			if(deltaHunger > 0)
 			{
-				foodAddition = "+"+Integer.toString(Math.min(foodValues.hunger, max - player.getFoodStats().getFoodLevel()));
-				satAddition = String.format("+%.1f", foodValues.getSaturationIncrement(player));
-				if(player.getHeldItemMainhand().getItem() instanceof HeartyShankItem)
-				{
-					maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
-				}
+				foodAddition = "+"+Integer.toString(deltaHunger);
+			}
+			if(deltaSat > 0)
+			{
+				satAddition = String.format("+%.1f", deltaSat);
+			}
+			if(heldStack.getItem() instanceof HeartyShankItem)
+			{
+				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
 			}
 		}
 		String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
-		String satInfo = String.format("%.1f%s", sat, satAddition);
-		float satOffset = mc.fontRenderer.getStringWidth(hungerInfo)/8.0f;
+		String satInfo = String.format("%.1f%s", sat, satAddition).trim();
+		float satOffset = (float) Math.max(Math.floor(mc.fontRenderer.getStringWidth(hungerInfo)/2.0f - mc.fontRenderer.getStringWidth(satInfo)/2.0f), 0);
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
@@ -345,7 +358,7 @@ public class HUDOverlayHandler extends Handler
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
-	
+
 	private void drawStatBar(int[] jitterAmount, Minecraft mc, int left, int top, float amount, int u, int v, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour)
 	{
 		//this is a one indexed value, the variable currShank will be a zero indexed value
@@ -548,5 +561,51 @@ public class HUDOverlayHandler extends Handler
 			}
 		}
 		return true;
+	}
+	
+	private boolean isFoodAlwaysEdible(ItemFood heldItem)
+	{
+		Field edibility = null;
+		try
+		{
+			edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "field_77852_bZ");
+		}
+		catch(UnableToFindFieldException e)
+		{
+			//perhaps the field is deobfuscated?
+			try
+			{
+				edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "alwaysEdible"); 
+			}
+			catch(UnableToFindFieldException f)
+			{
+				//for now, silently ignore, no point spaming the console ~60 times a second for this (in fact it'd get blocked)
+				return false;
+			}
+		}
+		try
+		{
+			return edibility != null ? (boolean) edibility.getBoolean(heldItem) : false;
+		}
+		catch(IllegalAccessException e)
+		{
+			return false;
+		}
+	}
+
+	private EnumHand getHandWithFood(EntityPlayer player)
+	{
+		if(AppleCoreAPI.accessor.isFood(player.getHeldItemMainhand()))
+		{
+			return EnumHand.MAIN_HAND;
+		}
+		else if(AppleCoreAPI.accessor.isFood(player.getHeldItemOffhand()))
+		{
+			return EnumHand.OFF_HAND;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
