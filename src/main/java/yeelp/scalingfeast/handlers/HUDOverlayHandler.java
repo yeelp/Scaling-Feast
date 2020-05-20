@@ -361,6 +361,7 @@ public class HUDOverlayHandler extends Handler
 
 	private void drawStatBar(int[] jitterAmount, Minecraft mc, int left, int top, float amount, int u, int v, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour)
 	{
+		GlStateManager.enableBlend();
 		//this is a one indexed value, the variable currShank will be a zero indexed value
 		float shanksNeeded = amount/2.0f;
 		int x, y = top, i;
@@ -370,6 +371,7 @@ public class HUDOverlayHandler extends Handler
 			y = top + jitterAmount[i];
 			drawIcon(mc, x, y, u, v, i, shanksNeeded, vanilla, vanillaOverride, sat, hungerEffectActive, colour);
 		}
+		GlStateManager.disableBlend();
 	}
 
 	private void drawIcon(Minecraft mc, int x, int y, int u, int v, int currShank, float shanksNeeded, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour)
