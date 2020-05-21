@@ -136,7 +136,7 @@ public class SFCommand extends CommandBase {
 					default:
 						break; //This will never occur because of the predicates we've checked beforehand
 				}
-				sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.success", type, player, result));
+				sender.sendMessage(new TextComponentTranslation("commands.scalingfeast.command.success", type, player.getName(), result));
 				return true;
 			}
 		}
