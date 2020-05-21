@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.DamageSource;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
@@ -116,6 +121,21 @@ public class FoodHandler extends Handler
 		else
 		{
 			satLevels.remove(evt.player.getUniqueID());
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerAttacked(LivingHurtEvent evt)
+	{
+		DamageSource src = evt.getSource();
+		if(src.damageType.equals(DamageSource.GENERIC.damageType) && !(src.getTrueSource() instanceof EntityPlayer))
+		{
+			EntityLivingBase entity = evt.getEntityLiving();
+			if(entity instanceof EntityPlayer)
+			{
+				EntityPlayer player = (EntityPlayer) entity;
+				player.addExhaustion(AppleCoreAPI.accessor.getMaxExhaustion(player)*evt.getAmount());
+			}
 		}
 	}
 }
