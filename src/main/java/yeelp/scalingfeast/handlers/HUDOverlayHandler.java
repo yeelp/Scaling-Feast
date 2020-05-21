@@ -324,7 +324,7 @@ public class HUDOverlayHandler extends Handler
 		String maxAddition = "";
 		String satAddition = "";
 		EnumHand hand = getHandWithFood(player);
-		if(hand != null && isFoodAlwaysEdible((ItemFood)player.getHeldItem(hand).getItem()))
+		if(hand != null && (player.getFoodStats().needFood() || isFoodAlwaysEdible((ItemFood)player.getHeldItem(hand).getItem())))
 		{
 			ItemStack heldStack = player.getHeldItem(hand);
 			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(heldStack, player);
