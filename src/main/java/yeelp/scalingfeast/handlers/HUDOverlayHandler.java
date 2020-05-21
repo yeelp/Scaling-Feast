@@ -597,11 +597,11 @@ public class HUDOverlayHandler extends Handler
 
 	private EnumHand getHandWithFood(EntityPlayer player)
 	{
-		if(AppleCoreAPI.accessor.isFood(player.getHeldItemMainhand()))
+		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)
 		{
 			return EnumHand.MAIN_HAND;
 		}
-		else if(AppleCoreAPI.accessor.isFood(player.getHeldItemOffhand()))
+		else if(player.getHeldItemOffhand().getItem() instanceof ItemFood)
 		{
 			return EnumHand.OFF_HAND;
 		}

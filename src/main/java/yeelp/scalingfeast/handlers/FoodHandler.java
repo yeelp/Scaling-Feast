@@ -124,7 +124,7 @@ public class FoodHandler extends Handler
 		}
 	}
 	
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onPlayerAttacked(LivingHurtEvent evt)
 	{
 		DamageSource src = evt.getSource();
@@ -137,5 +137,5 @@ public class FoodHandler extends Handler
 				player.addExhaustion(AppleCoreAPI.accessor.getMaxExhaustion(player)*evt.getAmount());
 			}
 		}
-	}
+	}*/
 }
