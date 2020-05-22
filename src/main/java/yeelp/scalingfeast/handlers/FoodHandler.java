@@ -18,10 +18,12 @@ import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.network.SatSyncMessage;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.HungerDamage;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
@@ -124,18 +126,20 @@ public class FoodHandler extends Handler
 		}
 	}
 	
-	/*@SubscribeEvent
+	@SubscribeEvent
 	public void onPlayerAttacked(LivingHurtEvent evt)
 	{
 		DamageSource src = evt.getSource();
-		if(src.damageType.equals(DamageSource.GENERIC.damageType) && !(src.getTrueSource() instanceof EntityPlayer))
+		ScalingFeast.info(String.format("DAMAGE TYPE: %s, SOURCE: %s", src.damageType, src.getTrueSource().getName()));
+		if(src.damageType.equals("mob") || (src.getTrueSource() instanceof EntityLivingBase && !(src.getTrueSource() instanceof EntityPlayer)))
 		{
 			EntityLivingBase entity = evt.getEntityLiving();
 			if(entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer) entity;
-				player.addExhaustion(AppleCoreAPI.accessor.getMaxExhaustion(player)*evt.getAmount());
+				ScalingFeast.info(String.format("Damaging %s's foodstats by %f", player.getName(), evt.getAmount()));
+				HungerDamage.damageFoodStats(player, evt.getAmount());
 			}
 		}
-	}*/
+	}
 }

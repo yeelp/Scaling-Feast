@@ -351,7 +351,7 @@ public class HUDOverlayHandler extends Handler
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
 		if(ModConfig.hud.drawSaturation)
 		{	
-			mc.fontRenderer.drawStringWithShadow(satInfo, left/0.5f + satOffset/0.5f, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
+			mc.fontRenderer.drawStringWithShadow(satInfo, (left+1)/0.5f + satOffset, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
 		}
 		mc.fontRenderer.drawStringWithShadow(hungerInfo, left/0.5f + 1/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
