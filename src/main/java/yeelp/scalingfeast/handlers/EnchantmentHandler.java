@@ -36,8 +36,7 @@ public class EnchantmentHandler extends Handler
 			float mod = (1 + 0.5f*level);
 			FoodValues foodvals = evt.foodValues;
 			int newHunger = (int)(foodvals.hunger*mod);
-			float newSat = foodvals.saturationModifier*mod;
-			evt.foodValues = new FoodValues(newHunger, newSat);
+			evt.foodValues = new FoodValues(newHunger, foodvals.saturationModifier);
 		}
 	}
 	
