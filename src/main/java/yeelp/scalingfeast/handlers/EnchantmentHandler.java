@@ -13,6 +13,7 @@ import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.util.HungerDamage;
 
 public class EnchantmentHandler extends Handler
 {
@@ -49,15 +50,16 @@ public class EnchantmentHandler extends Handler
 			int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.famine, (EntityLivingBase) evt.getSource().getTrueSource());
 			if(level != 0)
 			{
-				//20 ticks a second, so duration should be multiplied by 20
-				int hduration = level*20;
-				int wlevel = (level < 3 ? 0 : 1);
-				//level is also zero indexed.
-				if(entity instanceof EntityPlayer)
+				if(!(entity instanceof EntityPlayer))
 				{
-					entity.addPotionEffect(new PotionEffect(MobEffects.HUNGER, hduration, 50));
+					int wlevel = (level < 3 ? 0 : 1);
+					entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 15*20,  wlevel));
 				}
-				entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 15*20,  wlevel));
+				else
+				{
+					EntityPlayer player = (EntityPlayer) entity;
+					HungerDamage.damageFoodStats(player, 2.25f*level);
+				}	
 			}
 		}
 	}

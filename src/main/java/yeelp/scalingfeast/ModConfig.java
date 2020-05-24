@@ -15,6 +15,9 @@ import java.util.Queue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
@@ -26,8 +29,10 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
+import yeelp.scalingfeast.util.FoodCapProvider;
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig
 {	
@@ -54,13 +59,52 @@ public class ModConfig
 	
 	public static class FoodCapCategory
 	{
+		public enum SaturationScaling
+		{
+			MAX_HUNGER(1.0f),
+			HALF_HUNGER(2.0f),
+			QUARTER_HUNGER(4.0f);
+			private float divisor;
+			private SaturationScaling(float divisor)
+			{
+				this.divisor = divisor;
+			}
+			/**
+			 * Cap a player's saturation based on scaling
+			 * @param player player to cap
+			 */
+			public void cap(EntityPlayer player)
+			{
+				float currSat = player.getFoodStats().getSaturationLevel();
+				float maxSat = FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
+				AppleCoreAPI.mutator.setSaturation(player, currSat <= maxSat ? currSat : maxSat);
+			}
+		}
+		
 		@Name("Global Cap")
 		@Comment({"The highest extended hunger the player can have.",
 				  "Note that any players with an extended hunger value greater than this will be set to this cap",
 			      "This ignores vanilla's hunger level; it ONLY affects the additional amount of hunger you can gain from Scaling Feast.",
 			      "If set to -1, this cap is ignored."})
 		@RangeInt(min = -1, max = Short.MAX_VALUE)
+		@RequiresMcRestart
 		public int globalCap = -1;
+		
+		@Name("Saturation Cap")
+		@Comment({"A hard cap on a player's saturation. It can never go above this value.",
+			      "Any player's with a saturation above this value will be set to this value.",
+			      "If set to -1, this cap is ignored."})
+		@RangeDouble(min = -1.0)
+		@RequiresMcRestart
+		public double satCap = -1;
+		
+		@Name("Saturation Scaling")
+		@Comment({"How a player's max saturation should scale to their max hunger",
+			      "If set to MAX_HUNGER, no scaling is done. A player's max saturation is bounded by their max hunger",
+			      "If set to HALF_HUNGER, a player's saturation can never be higher than half of their max hunger.",
+			      "If set to QUARTER_HUNGER, a player's saturation can never be higher than a quarter of their max hunger"})
+		@RequiresMcRestart
+		public SaturationScaling satScaling = SaturationScaling.MAX_HUNGER;
 		
 		@Name("Increase Per Hearty Shank Eaten")
 		@Comment("The increase in your total max hunger, in half shanks (i.e. 2 = one full hunger shank) per Hearty Shank eaten.")

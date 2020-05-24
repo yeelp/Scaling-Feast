@@ -26,6 +26,7 @@ import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.HungerDamage;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.SaturationUtil;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 public class FoodHandler extends Handler 
@@ -88,6 +89,7 @@ public class FoodHandler extends Handler
 				CapabilityHandler.syncTracker(evt.player);
 			}
 		}
+		SaturationUtil.capSaturation(evt.player);
 	}
 	
 	@SubscribeEvent
@@ -125,7 +127,7 @@ public class FoodHandler extends Handler
 			satLevels.remove(evt.player.getUniqueID());
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingHurtEvent evt)
 	{

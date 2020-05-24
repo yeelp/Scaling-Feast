@@ -27,6 +27,7 @@ import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.SaturationUtil;
 import yeelp.scalingfeast.util.StarvationTracker;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
@@ -52,13 +53,14 @@ public class CapabilityHandler extends Handler
 		FoodStats fs = player.getFoodStats();
 		if(fs.getFoodLevel() > foodCap)
 		{
-			fs.setFoodLevel(foodCap);
+			AppleCoreAPI.mutator.setHunger(player, foodCap);
 			if(fs.getSaturationLevel() > fs.getFoodLevel())
 			{
 				fs.setFoodSaturationLevel(fs.getFoodLevel());
 			}
 		}
 		ModuleHandler.updatePlayer(player);
+		SaturationUtil.capSaturation(player);
 	}
 	
 	@SubscribeEvent
@@ -94,6 +96,7 @@ public class CapabilityHandler extends Handler
 			
 			AppleCoreAPI.mutator.setHunger(evt.getEntityPlayer(), newFoodCap.getMaxFoodLevel(newMod));
 			AppleCoreAPI.mutator.setSaturation(evt.getEntityPlayer(), newFoodCap.getMaxFoodLevel(newMod) < 5 ? newFoodCap.getMaxFoodLevel(newMod) : 5);
+			SaturationUtil.capSaturation(evt.getEntityPlayer());
 			
 			if(ModConfig.foodCap.death.maxLossAmount != 0)
 			{
