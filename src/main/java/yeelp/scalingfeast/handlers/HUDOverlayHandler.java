@@ -32,6 +32,7 @@ import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
+import yeelp.scalingfeast.ModConfig.HUDCategory.TrackerStyle;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
@@ -248,6 +249,10 @@ public class HUDOverlayHandler extends Handler
 		{
 			drawMax(19, ticks, mc, left, top, jitterAmount[9]);
 		}
+		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.foodCap.starve.lossFreq > 1)
+		{
+			drawStatBar(jitterAmount, mc, left, top, (20.0f/(ModConfig.foodCap.starve.lossFreq-1))*ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
+		}
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
 		{
@@ -383,7 +388,7 @@ public class HUDOverlayHandler extends Handler
 			x = left - i * 8 - 9;
 		}
 		int hunger = mc.player.getFoodStats().getFoodLevel();
-		int foodMax = mc.player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(mc.player.getCapability(FoodCapModifierProvider.foodCapMod, null));
+		int foodMax = ScalingFeastAPI.accessor.getModifiedFoodCap(mc.player);
 		float alpha = (hunger < 20*Math.floor(foodMax/20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
 		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
 		GL11.glColor4f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB(), alpha);
@@ -468,40 +473,49 @@ public class HUDOverlayHandler extends Handler
 	
 	private Colour getMaxColour(int ticks, int maxTicks)
 	{
-		switch(ModConfig.hud.maxColourStyle)
+		switch(ModConfig.hud.trackerStyle)
 		{
-			case DEFAULT:
-				if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
+			case MAX_COLOUR:		
+				switch(ModConfig.hud.maxColourStyle)
 				{
-					return new Colour("FFFFFF");
+					case DEFAULT:
+						if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
+						{
+							return new Colour("FFFFFF");
+						}
+						else if(ticks + 1 == maxTicks)
+						{
+							return new Colour("AA0000");
+						}
+						else if(ticks > 0.9 * maxTicks)
+						{
+							return new Colour("FF5555");
+						}
+						else if(ticks > 0.75 * maxTicks)
+						{
+							return new Colour("FFAA00");
+						}
+						else if(ticks > 0.5 * maxTicks)
+						{
+							return new Colour("FFFF55");
+						}
+						else if (ticks > 0)
+						{
+							return new Colour("FFFFFF");
+						}
+						else
+						{
+							return new Colour("55FF555");
+						}
+					case CUSTOM:
+						return new Colour(ModConfig.hud.maxColourEnd);
+					//unreachable, but needed for JVM
+					default:
+						return null;
 				}
-				else if(ticks + 1 == maxTicks)
-				{
-					return new Colour("AA0000");
-				}
-				else if(ticks > 0.9 * maxTicks)
-				{
-					return new Colour("FF5555");
-				}
-				else if(ticks > 0.75 * maxTicks)
-				{
-					return new Colour("FFAA00");
-				}
-				else if(ticks > 0.5 * maxTicks)
-				{
-					return new Colour("FFFF55");
-				}
-				else if (ticks > 0)
-				{
-					return new Colour("FFFFFF");
-				}
-				else
-				{
-					return new Colour("55FF555");
-				}
-			case CUSTOM:
+			case SATURATION:
 				return new Colour(ModConfig.hud.maxColourEnd);
-			//unreachable, but needed for JVM
+			//again, unreachable, but needed for JVM
 			default:
 				return null;
 		}

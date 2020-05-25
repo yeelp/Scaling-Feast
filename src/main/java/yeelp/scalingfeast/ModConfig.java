@@ -242,6 +242,11 @@ public class ModConfig
 			DEFAULT,
 			CUSTOM;
 		}
+		public enum TrackerStyle
+		{
+			MAX_COLOUR,
+			SATURATION;
+		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
 			      "If set to OVERLAY, Scaling Feast will overlay coloured shanks over your hunger bar to display your extended food stats.",
@@ -263,6 +268,12 @@ public class ModConfig
 			      "If set to DEFAULT, the default colour style will be used.",
 			      "If set to CUSTOM, Scaling Feast will take the colour value specified in Max Custom Colour Start and transition to Max Custom Colour End when taking starvation damage."})
 		public MaxColourStyle maxColourStyle = MaxColourStyle.DEFAULT;
+		
+		@Name("Starvation Tracker Style")
+		@Comment({"The style for tracking starvation.",
+			      "If set to MAX_COLOUR, the max outline colour will change depending on how many times you've taken starvation damage. The colours used depend on Max Outline Colour Style.",
+			      "If set to SATURATION, then only when the hunger bar is empty, each starvation damage will cause a \'saturation bar\' to fill up over your hunger bar more and more. once full, taking starvation damage will decrease your max hunger."})
+		public TrackerStyle trackerStyle = TrackerStyle.MAX_COLOUR;
 		
 		@Name("Max Outline Transparency")
 		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
