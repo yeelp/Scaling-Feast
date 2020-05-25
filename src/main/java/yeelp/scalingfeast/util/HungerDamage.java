@@ -8,7 +8,7 @@ import squeek.applecore.api.AppleCoreAPI;
  * @author Yeelp
  *
  */
-public class HungerDamage
+public final class HungerDamage
 {
 	/**
 	 * Damage a player's saturation directly
@@ -16,7 +16,7 @@ public class HungerDamage
 	 * @param amount amount of saturation to deduct
 	 * @return the remaining amount of saturation that could not be deducted from the player's saturation, or 0 if the entire amount was deducted.
 	 */
-	public static float damagePierceSaturation(EntityPlayer player, float amount)
+	public static final float damagePierceSaturation(EntityPlayer player, float amount)
 	{
 		if(amount <= 0)
 		{
@@ -33,7 +33,7 @@ public class HungerDamage
 	 * @param amount amount of hunger to deduct
 	 * @return the remaining amount of hunger that could not be deducted from the player's hunger, or 0 if all of it was deducted.
 	 */
-	public static int damagePierceHunger(EntityPlayer player, int amount)
+	public static final int damagePierceHunger(EntityPlayer player, int amount)
 	{
 		if(amount <= 0)
 		{
@@ -49,7 +49,7 @@ public class HungerDamage
 	 * @param player player to target
 	 * @param amount amount to deduct.
 	 */
-	public static void damagePierceFoodStats(EntityPlayer player, float amount)
+	public static final void damagePierceFoodStats(EntityPlayer player, float amount)
 	{
 		damagePierceHunger(player, (int)Math.floor(damagePierceSaturation(player, amount)));
 	}
@@ -59,7 +59,7 @@ public class HungerDamage
 	 * @param player player to target
 	 * @param amount amount to reduce
 	 */
-	public static void damageFoodStats(EntityPlayer player, float amount)
+	public static final void damageFoodStats(EntityPlayer player, float amount)
 	{
 		player.addExhaustion(AppleCoreAPI.accessor.getMaxExhaustion(player)*amount);
 	}

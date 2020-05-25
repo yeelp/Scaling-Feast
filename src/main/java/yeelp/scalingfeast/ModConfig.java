@@ -79,6 +79,26 @@ public class ModConfig
 				float maxSat = FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
 				AppleCoreAPI.mutator.setSaturation(player, currSat <= maxSat ? currSat : maxSat);
 			}
+			
+			/**
+			 * Cap a saturation value
+			 * @param player player tp target
+			 * @return the capped saturation
+			 */
+			public float getCap(EntityPlayer player)
+			{
+				return FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
+			}
+			
+			/**
+			 * Cap a specific saturation value
+			 * @param sat saturation value to cap
+			 * @return the result of capping this saturation value with the current scaling.
+			 */
+			public float clampSaturation(float sat)
+			{
+				return sat/this.divisor;
+			}
 		}
 		
 		@Name("Global Cap")

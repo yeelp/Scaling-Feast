@@ -17,6 +17,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.api.impl.ScalingFeastAPIImpl;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
@@ -50,6 +52,7 @@ public class ScalingFeast
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+        ScalingFeastAPI.init();
         hasAppleSkin = Loader.isModLoaded(ModConsts.APPLESKIN_ID);
         hasSolCarrot = Loader.isModLoaded(ModConsts.SOLCARROT_ID);
         hasSpiceOfLife = Loader.isModLoaded(ModConsts.SPICEOFLIFE_ID);
