@@ -33,6 +33,7 @@ import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.SaturationScaling;
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig
 {	
@@ -58,49 +59,7 @@ public class ModConfig
 	
 	
 	public static class FoodCapCategory
-	{
-		public enum SaturationScaling
-		{
-			MAX_HUNGER(1.0f),
-			HALF_HUNGER(2.0f),
-			QUARTER_HUNGER(4.0f);
-			private float divisor;
-			private SaturationScaling(float divisor)
-			{
-				this.divisor = divisor;
-			}
-			/**
-			 * Cap a player's saturation based on scaling
-			 * @param player player to cap
-			 */
-			public void cap(EntityPlayer player)
-			{
-				float currSat = player.getFoodStats().getSaturationLevel();
-				float maxSat = FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
-				AppleCoreAPI.mutator.setSaturation(player, currSat <= maxSat ? currSat : maxSat);
-			}
-			
-			/**
-			 * Cap a saturation value
-			 * @param player player tp target
-			 * @return the capped saturation
-			 */
-			public float getCap(EntityPlayer player)
-			{
-				return FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
-			}
-			
-			/**
-			 * Cap a specific saturation value
-			 * @param sat saturation value to cap
-			 * @return the result of capping this saturation value with the current scaling.
-			 */
-			public float clampSaturation(float sat)
-			{
-				return sat/this.divisor;
-			}
-		}
-		
+	{	
 		@Name("Global Cap")
 		@Comment({"The highest extended hunger the player can have.",
 				  "Note that any players with an extended hunger value greater than this will be set to this cap",
@@ -132,7 +91,7 @@ public class ModConfig
 		public int inc = 2;
 		
 		@Name("Starting Hunger")
-		@Comment("Players joining worlds for the first time will have thier max hunger cap set to this value in half shanks. Vanilla default is 20")
+		@Comment("Players joining worlds for the first time will have their max hunger cap set to this value in half shanks. Vanilla default is 20")
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
 		public int startingHunger = 20;
 		

@@ -12,24 +12,19 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.StarvationTrackerMessage;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
-import yeelp.scalingfeast.util.FoodCapModifierProvider;
-import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
-import yeelp.scalingfeast.util.SaturationUtil;
 import yeelp.scalingfeast.util.StarvationTracker;
-import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 public class CapabilityHandler extends Handler
 {
@@ -49,7 +44,7 @@ public class CapabilityHandler extends Handler
 	public void onPlayerLogin(PlayerLoggedInEvent evt)
 	{
 		EntityPlayer player = evt.player;
-		short foodCap = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null));
+		short foodCap = ScalingFeastAPI.accessor.getFoodCap(player).getUnmodifiedMaxFoodLevel();
 		FoodStats fs = player.getFoodStats();
 		if(fs.getFoodLevel() > foodCap)
 		{
@@ -59,8 +54,9 @@ public class CapabilityHandler extends Handler
 				fs.setFoodSaturationLevel(fs.getFoodLevel());
 			}
 		}
+		ScalingFeastAPI.mutator.capPlayerHunger(player);
+		ScalingFeastAPI.mutator.capPlayerSaturation(player);
 		ModuleHandler.updatePlayer(player);
-		SaturationUtil.capSaturation(player);
 	}
 	
 	@SubscribeEvent
@@ -80,12 +76,14 @@ public class CapabilityHandler extends Handler
 	@SubscribeEvent 
 	public void onClone(PlayerEvent.Clone evt)
 	{
-		IFoodCap oldFoodCap = evt.getOriginal().getCapability(FoodCapProvider.capFoodStat, null);
-		IFoodCap newFoodCap = evt.getEntityPlayer().getCapability(FoodCapProvider.capFoodStat, null);
-		IStarvationTracker oldTracker = evt.getOriginal().getCapability(StarvationTrackerProvider.starvationTracker, null);
-		IStarvationTracker newTracker = evt.getEntityPlayer().getCapability(StarvationTrackerProvider.starvationTracker, null);
-		IFoodCapModifier oldMod = evt.getOriginal().getCapability(FoodCapModifierProvider.foodCapMod, null);
-		IFoodCapModifier newMod = evt.getEntityPlayer().getCapability(FoodCapModifierProvider.foodCapMod, null);
+		EntityPlayer oldPlayer = evt.getOriginal();
+		EntityPlayer newPlayer = evt.getEntityPlayer();
+		IFoodCap oldFoodCap = ScalingFeastAPI.accessor.getFoodCap(oldPlayer);
+		IFoodCap newFoodCap = ScalingFeastAPI.accessor.getFoodCap(newPlayer);
+		IStarvationTracker oldTracker = ScalingFeastAPI.accessor.getStarvationTracker(oldPlayer);
+		IStarvationTracker newTracker = ScalingFeastAPI.accessor.getStarvationTracker(newPlayer);
+		IFoodCapModifier oldMod = ScalingFeastAPI.accessor.getFoodCapModifier(oldPlayer);
+		IFoodCapModifier newMod = ScalingFeastAPI.accessor.getFoodCapModifier(newPlayer);
 		newFoodCap.deserializeNBT(oldFoodCap.serializeNBT());
 		newTracker.deserializeNBT(oldTracker.serializeNBT());
 		newMod.deserializeNBT(oldMod.serializeNBT());
@@ -94,28 +92,31 @@ public class CapabilityHandler extends Handler
 			FoodStats newFs = evt.getEntityPlayer().getFoodStats();
 			FoodStats oldFs = evt.getOriginal().getFoodStats();
 			
-			AppleCoreAPI.mutator.setHunger(evt.getEntityPlayer(), newFoodCap.getMaxFoodLevel(newMod));
-			AppleCoreAPI.mutator.setSaturation(evt.getEntityPlayer(), newFoodCap.getMaxFoodLevel(newMod) < 5 ? newFoodCap.getMaxFoodLevel(newMod) : 5);
-			SaturationUtil.capSaturation(evt.getEntityPlayer());
+			AppleCoreAPI.mutator.setHunger(newPlayer, newFoodCap.getMaxFoodLevel(newMod));
+			AppleCoreAPI.mutator.setSaturation(newPlayer, newFoodCap.getMaxFoodLevel(newMod) < 5 ? newFoodCap.getMaxFoodLevel(newMod) : 5);
+			ScalingFeastAPI.mutator.capPlayerSaturation(newPlayer);
 			
-			if(ModConfig.foodCap.death.maxLossAmount != 0)
+			short maxToLose = (short) ModConfig.foodCap.death.maxLossAmount;
+			short hungerToLose = (short) ModConfig.foodCap.death.hungerLossOnDeath;
+			
+			if(maxToLose != 0)
 			{
-				newFoodCap.decreaseMax((short) ModConfig.foodCap.death.maxLossAmount);
+				newFoodCap.decreaseMax((short) maxToLose);
 			}
-			if(ModConfig.foodCap.death.hungerLossOnDeath != 0)
+			if(hungerToLose != 0)
 			{
-				if(oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath >= 20)
+				if(oldFs.getFoodLevel() - hungerToLose >= 20)
 				{
-					AppleCoreAPI.mutator.setHunger(evt.getEntityPlayer(), oldFs.getFoodLevel() - ModConfig.foodCap.death.hungerLossOnDeath);
+					AppleCoreAPI.mutator.setHunger(newPlayer, oldFs.getFoodLevel() - hungerToLose);
 				}
 			}
 		}
 		if(!evt.isWasDeath() || !ModConfig.foodCap.starve.doesFreqReset)
 		{
-			syncTracker(evt.getEntityPlayer());
+			syncTracker(newPlayer);
 		}
-		syncCap(evt.getEntityPlayer());
-		syncMod(evt.getEntityPlayer());
+		syncCap(newPlayer);
+		syncMod(newPlayer);
 	}
 	
 	public static void sync(EntityPlayer player)
@@ -127,19 +128,16 @@ public class CapabilityHandler extends Handler
 	
 	public static void syncCap(EntityPlayer player)
 	{
-		IFoodCap cap = player.getCapability(FoodCapProvider.capFoodStat, null);
-		PacketHandler.INSTANCE.sendTo(new FoodCapMessage(cap), (EntityPlayerMP) player);
+		PacketHandler.INSTANCE.sendTo(new FoodCapMessage(ScalingFeastAPI.accessor.getFoodCap(player)), (EntityPlayerMP) player);
 	}
 	
 	public static void syncTracker(EntityPlayer player)
 	{
-		IStarvationTracker tracker = player.getCapability(StarvationTrackerProvider.starvationTracker, null);
-		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(tracker), (EntityPlayerMP)player);
+		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP)player);
 	}
 	
 	public static void syncMod(EntityPlayer player)
 	{
-		IFoodCapModifier mod = player.getCapability(FoodCapModifierProvider.foodCapMod, null);
-		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(mod), (EntityPlayerMP)player);
+		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP)player);
 	}
 }

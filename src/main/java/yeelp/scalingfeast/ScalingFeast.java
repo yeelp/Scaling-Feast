@@ -44,7 +44,6 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
-    public static File config;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 

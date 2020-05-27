@@ -16,16 +16,20 @@ public class Colour
 	 * This constructor assumes a String of just hex characters.
 	 * i.e., a String like "0xffffff", while a valid hex string for Java, will
 	 * NOT work for this. Instead, pass the String "ffffff" (that is, omit the "0x" part of the String)
-	 * @param hex
+	 * @param hex Hex string. Must be of length 6.
 	 * @throws IllegalArgumentException if the String doesn't match the format.
 	 */
 	public Colour(String hex) throws IllegalArgumentException
 	{
+		if(hex.length() != 6)
+		{
+			throw new IllegalArgumentException(hex + "is not the right size! Should be legnth 6 exactly!");
+		}
 		try
 		{
-			this.r = new Integer(Integer.parseInt(hex.substring(0, 2), 16)).byteValue();
-			this.g = new Integer(Integer.parseInt(hex.substring(2, 4), 16)).byteValue();
-			this.b = new Integer(Integer.parseInt(hex.substring(4, 6), 16)).byteValue();
+			this.r = Integer.valueOf(Integer.parseInt(hex.substring(0, 2), 16)).byteValue();
+			this.g = Integer.valueOf(Integer.parseInt(hex.substring(2, 4), 16)).byteValue();
+			this.b = Integer.valueOf(Integer.parseInt(hex.substring(4, 6), 16)).byteValue();
 		}
 		catch(NumberFormatException e)
 		{

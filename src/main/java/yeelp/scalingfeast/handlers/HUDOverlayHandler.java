@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.handlers;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +11,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -21,29 +18,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindFieldException;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodValues;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
-import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.TrackerStyle;
-import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.util.Colour;
-import yeelp.scalingfeast.util.FoodCapModifierProvider;
-import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.SaturationUtil;
-import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 @SideOnly(Side.CLIENT)
 public class HUDOverlayHandler extends Handler
@@ -241,6 +231,7 @@ public class HUDOverlayHandler extends Handler
 				mc.mcProfiler.endSection();
 			}
 		}
+		mc.mcProfiler.endStartSection("Max");
 		if(max % 20 != 0)
 		{
 			drawMax(max%20, ticks, mc, left, top, jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1]);
@@ -249,9 +240,11 @@ public class HUDOverlayHandler extends Handler
 		{
 			drawMax(19, ticks, mc, left, top, jitterAmount[9]);
 		}
-		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.foodCap.starve.lossFreq > 1)
+		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.foodCap.starve.lossFreq > 1 && hunger <= 0)
 		{
-			drawStatBar(jitterAmount, mc, left, top, (20.0f/(ModConfig.foodCap.starve.lossFreq-1))*ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
+			mc.mcProfiler.endStartSection("Tracker");
+			mc.getTextureManager().bindTexture(icons);
+			drawStatBar(jitterAmount, mc, left, top, ((max < 20.0f ? max : 20.0f)/(ModConfig.foodCap.starve.lossFreq-1))*ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
 		}
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
@@ -283,7 +276,7 @@ public class HUDOverlayHandler extends Handler
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
 		int max = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
-		float maxSat = SaturationUtil.getSaturationCapForPlayer(player);
+		float maxSat = ScalingFeastAPI.accessor.getPlayerSaturationCap(player);
 		String foodAddition = "";
 		String maxAddition = "";
 		String satAddition = "";
@@ -306,7 +299,9 @@ public class HUDOverlayHandler extends Handler
 			if(heldStack.getItem() instanceof HeartyShankItem)
 			{
 				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
-				maxSatAddition = String.format("+%.1f", SaturationUtil.capSaturationValue(maxSat + ModConfig.foodCap.inc) - maxSat);
+				float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
+				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(maxSat + ModConfig.foodCap.inc);
+				maxSatAddition = String.format("+%.1f", (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat);
 				if(maxSatAddition.equals("+0.0"))
 				{
 					maxSatAddition = "";
@@ -505,7 +500,7 @@ public class HUDOverlayHandler extends Handler
 						}
 						else
 						{
-							return new Colour("55FF555");
+							return new Colour("55FF55");
 						}
 					case CUSTOM:
 						return new Colour(ModConfig.hud.maxColourEnd);
@@ -514,7 +509,7 @@ public class HUDOverlayHandler extends Handler
 						return null;
 				}
 			case SATURATION:
-				return new Colour(ModConfig.hud.maxColourEnd);
+				return new Colour("FFFFFF");
 			//again, unreachable, but needed for JVM
 			default:
 				return null;
@@ -543,36 +538,6 @@ public class HUDOverlayHandler extends Handler
 		return true;
 	}
 	
-	private boolean isFoodAlwaysEdible(ItemFood heldItem)
-	{
-		Field edibility = null;
-		try
-		{
-			edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "field_77852_bZ");
-		}
-		catch(UnableToFindFieldException e)
-		{
-			//perhaps the field is deobfuscated?
-			try
-			{
-				edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "alwaysEdible"); 
-			}
-			catch(UnableToFindFieldException f)
-			{
-				//for now, silently ignore, no point spaming the console ~60 times a second for this (in fact it'd get blocked)
-				return false;
-			}
-		}
-		try
-		{
-			return edibility != null ? (boolean) edibility.getBoolean(heldItem) : false;
-		}
-		catch(IllegalAccessException e)
-		{
-			return false;
-		}
-	}
-
 	private EnumHand getHandWithFood(EntityPlayer player)
 	{
 		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)

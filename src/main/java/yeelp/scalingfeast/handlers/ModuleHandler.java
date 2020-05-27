@@ -30,6 +30,7 @@ import squeek.applecore.api.food.FoodEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.ModuleNotLoadedException;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
@@ -152,7 +153,7 @@ public class ModuleHandler extends Handler
 	public static void updatePlayer(EntityPlayer player)
 	{
 		short mod = 0;
-		IFoodCapModifier curr = player.getCapability(FoodCapModifierProvider.foodCapMod, null);
+		IFoodCapModifier curr = ScalingFeastAPI.accessor.getFoodCapModifier(player);
 		if(SpiceOfLifeHelper.isEnabled() && ModConfig.modules.spiceoflife.enabled)
 		{
 			mod += SpiceOfLifeHelper.getPenalty(player);
@@ -169,15 +170,19 @@ public class ModuleHandler extends Handler
 		else
 		{
 			curr.setModifier(mod);
-			int currMax = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(curr);
+			//We want to use the current IFoodCapModifier we have. 
+			//We haven't synced it yet, and calling the convenience method from the API uses what's currently been synced, which is outdated.
+			short currMax = ScalingFeastAPI.accessor.getFoodCap(player).getMaxFoodLevel(curr);
 			FoodStats fs = player.getFoodStats();
 			if(fs.getFoodLevel() > currMax)
 			{
-				fs.setFoodLevel(currMax);
+				AppleCoreAPI.mutator.setHunger(player, currMax);
+				ScalingFeastAPI.mutator.capPlayerSaturation(player);
 			}
 			if(fs.getSaturationLevel() > currMax)
 			{
-				fs.setFoodSaturationLevel(fs.getFoodLevel());
+				AppleCoreAPI.mutator.setSaturation(player, currMax);
+				ScalingFeastAPI.mutator.capPlayerSaturation(player);
 			}
 			if(!player.world.isRemote)
 			{

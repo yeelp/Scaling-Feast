@@ -18,9 +18,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
-import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.util.HungerDamage;
 
 public class EnchantmentHandler extends Handler
 {
@@ -86,7 +85,7 @@ public class EnchantmentHandler extends Handler
 				if(!isPlayerAttacker || canPlayerUseFamine) //Player attacker => PlayerUsedFamine
 				{
 					EntityPlayer player = (EntityPlayer) defender;
-					HungerDamage.damageFoodStats(player, 2.25f*level);
+					ScalingFeastAPI.mutator.damageFoodStats(player, 2.25f*level);
 				}
 			}	
 		}
@@ -95,9 +94,10 @@ public class EnchantmentHandler extends Handler
 	@SubscribeEvent
 	public void onKillEvent(LivingDeathEvent evt)
 	{
-		if(evt.getSource().getTrueSource() instanceof EntityPlayer)
+		Entity entity = evt.getSource().getTrueSource();
+		if(entity != null && entity instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer) evt.getSource().getTrueSource();
+			EntityPlayer player = (EntityPlayer) entity;
 			int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.eternalfeast, player);
 			if(level!=0)
 			{
