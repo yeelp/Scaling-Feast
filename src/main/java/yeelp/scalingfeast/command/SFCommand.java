@@ -21,6 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.command.SelectorHandlerManager;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
@@ -97,7 +98,6 @@ public class SFCommand extends CommandBase {
 				sendErrorMessage(sender, "commands.scalingfeast.command.existence", args[1]);
 			}
 		}
-
 	}
 	
 	private boolean editStats(MinecraftServer server, ICommandSender sender, String[] args, EntityPlayerMP player)
@@ -132,6 +132,7 @@ public class SFCommand extends CommandBase {
 						FoodStats fs = player.getFoodStats();
 						result = String.valueOf(Math.min(fs.getFoodLevel(), satVal));
 						fs.setFoodSaturationLevel(Math.min(fs.getFoodLevel(), satVal));
+						ScalingFeastAPI.mutator.capPlayerSaturation(player);
 						break;
 					default:
 						break; //This will never occur because of the predicates we've checked beforehand

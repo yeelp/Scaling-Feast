@@ -287,7 +287,8 @@ public class HUDOverlayHandler extends Handler
 			ItemStack heldStack = player.getHeldItem(hand);
 			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(heldStack, player);
 			int deltaHunger = Math.min(foodValues.hunger, max - hunger);
-			float deltaSat = Math.min(foodValues.getUnboundedSaturationIncrement(), hunger + deltaHunger - sat);
+			float satCap = Math.min(hunger + deltaHunger, maxSat);
+			float deltaSat = Math.min(foodValues.getUnboundedSaturationIncrement(), satCap - sat);
 			if(deltaHunger > 0)
 			{
 				foodAddition = "+"+Integer.toString(deltaHunger);
@@ -300,7 +301,7 @@ public class HUDOverlayHandler extends Handler
 			{
 				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
 				float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
-				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(maxSat + ModConfig.foodCap.inc);
+				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max + ModConfig.foodCap.inc);
 				maxSatAddition = String.format("+%.1f", (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat);
 				if(maxSatAddition.equals("+0.0"))
 				{

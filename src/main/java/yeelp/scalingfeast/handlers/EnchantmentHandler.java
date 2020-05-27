@@ -85,7 +85,7 @@ public class EnchantmentHandler extends Handler
 				if(!isPlayerAttacker || canPlayerUseFamine) //Player attacker => PlayerUsedFamine
 				{
 					EntityPlayer player = (EntityPlayer) defender;
-					ScalingFeastAPI.mutator.damageFoodStats(player, 2.25f*level);
+					ScalingFeastAPI.mutator.damageFoodStats(player, 1.25f*level);
 				}
 			}	
 		}

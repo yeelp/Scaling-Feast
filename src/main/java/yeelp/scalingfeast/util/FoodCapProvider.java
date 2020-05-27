@@ -11,16 +11,6 @@ public class FoodCapProvider
 	
 	private IFoodCap instance = capFoodStat.getDefaultInstance();
 	
-	public static short getMaxFoodLevel(EntityPlayer player)
-	{
-		return player.getCapability(capFoodStat, null).getMaxFoodLevel(FoodCapModifierProvider.getFoodMod(player));
-	}
-	
-	public static short getUnmodifiedMaxFoodLevel(EntityPlayer player)
-	{
-		return player.getCapability(capFoodStat, null).getUnmodifiedMaxFoodLevel();
-	}
-	
 	public static IFoodCap getFoodCap(EntityPlayer player)
 	{
 		return player.getCapability(capFoodStat, null);

@@ -56,7 +56,12 @@ public class FoodHandler extends Handler
 				CapabilityHandler.syncTracker(player);
 			}
 		}
-		ScalingFeastAPI.mutator.capPlayerSaturation(player);
+	}
+	
+	@SubscribeEvent
+	public void onFoodEaten(FoodEvent.FoodEaten evt)
+	{
+		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
 	}
 	
 	@SubscribeEvent

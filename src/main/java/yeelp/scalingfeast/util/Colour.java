@@ -23,7 +23,7 @@ public class Colour
 	{
 		if(hex.length() != 6)
 		{
-			throw new IllegalArgumentException(hex + "is not the right size! Should be legnth 6 exactly!");
+			throw new IllegalArgumentException(hex + "is not the right size! Should be length 6 exactly!");
 		}
 		try
 		{

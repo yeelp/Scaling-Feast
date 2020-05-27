@@ -15,9 +15,4 @@ public class StarvationTrackerProvider
 	{
 		return player.getCapability(starvationTracker, null);
 	}
-	
-	public static short getCount(EntityPlayer player)
-	{
-		return player.getCapability(starvationTracker, null).getCount();
-	}
 }

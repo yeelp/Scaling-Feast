@@ -2,6 +2,7 @@ package yeelp.scalingfeast.util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 
 public enum SaturationScaling
 {
@@ -13,26 +14,15 @@ public enum SaturationScaling
 	{
 		this.divisor = divisor;
 	}
-	/**
-	 * Cap a player's saturation based on scaling
-	 * @param player player to cap
-	 */
-	@Deprecated
-	public void cap(EntityPlayer player)
-	{
-		float currSat = player.getFoodStats().getSaturationLevel();
-		float maxSat = FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
-		AppleCoreAPI.mutator.setSaturation(player, currSat <= maxSat ? currSat : maxSat);
-	}
 	
 	/**
 	 * Cap a saturation value
-	 * @param player player tp target
+	 * @param player player to target
 	 * @return the capped saturation
 	 */
 	public float getCap(EntityPlayer player)
 	{
-		return FoodCapProvider.getMaxFoodLevel(player)/this.divisor;
+		return ScalingFeastAPI.accessor.getModifiedFoodCap(player)/this.divisor;
 	}
 	
 	/**
