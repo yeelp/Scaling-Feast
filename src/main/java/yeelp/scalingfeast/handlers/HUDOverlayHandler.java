@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.handlers;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +11,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -21,26 +18,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper.UnableToFindFieldException;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodValues;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
-import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
+import yeelp.scalingfeast.ModConfig.HUDCategory.TrackerStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.util.Colour;
-import yeelp.scalingfeast.util.FoodCapModifierProvider;
-import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
 @SideOnly(Side.CLIENT)
 public class HUDOverlayHandler extends Handler
@@ -153,51 +146,7 @@ public class HUDOverlayHandler extends Handler
 				//If we have AppleSkin, we need to redraw the whole exhaustion bar.
 				if(AppleSkinHelper.isLoaded() && !appleSkinErr)
 				{
-					try
-					{
-						Class appleskinOverlay = Class.forName("squeek.appleskin.client.HUDOverlayHandler");
-						Class appleskinConfig = Class.forName("squeek.appleskin.ModConfig");
-						if(appleskinConfig.getDeclaredField("SHOW_FOOD_EXHAUSTION_UNDERLAY").getBoolean(null))
-						{
-							appleskinOverlay.getDeclaredMethod("drawExhaustionOverlay", float.class, Minecraft.class, int.class, int.class, float.class).invoke(null, AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 1f); 
-						}
-					}
-					catch (NoSuchMethodException e) 
-					{
-						e.printStackTrace();
-						appleSkinErr = true;
-					} 
-					catch (SecurityException e) 
-					{
-						e.printStackTrace();
-						appleSkinErr = true;
-					} 
-					catch (IllegalAccessException e) 
-					{
-						e.printStackTrace();
-						appleSkinErr = true;
-					} 
-					catch (IllegalArgumentException e) 
-					{
-						e.printStackTrace();
-						appleSkinErr = true;
-					} 
-					catch (InvocationTargetException e) 
-					{
-						e.printStackTrace();
-						appleSkinErr = true;
-					}
-					catch(ClassNotFoundException e)
-					{
-						ScalingFeast.err("Class not found");
-						e.printStackTrace();
-						appleSkinErr = true;
-					}
-					catch (NoSuchFieldException e) 
-					{
-						appleSkinErr = true;
-						e.printStackTrace();
-					}
+					appleSkinErr = !AppleSkinHelper.drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 0);
 				}
 				//Calculate the random jitter amount beforehand and pass it to the draw methods
 				int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
@@ -217,8 +166,8 @@ public class HUDOverlayHandler extends Handler
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
-		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null));
-		int ticks = player.getCapability(StarvationTrackerProvider.starvationTracker, null).getCount();
+		int max = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
+		int ticks = ScalingFeastAPI.accessor.getStarvationTracker(player).getCount();
 		//Get the number of full bars to draw
 		int numBars = hunger/ModConsts.VANILLA_MAX_HUNGER;
 		int remainingShanks = hunger % ModConsts.VANILLA_MAX_HUNGER;
@@ -282,6 +231,7 @@ public class HUDOverlayHandler extends Handler
 				mc.mcProfiler.endSection();
 			}
 		}
+		mc.mcProfiler.endStartSection("Max");
 		if(max % 20 != 0)
 		{
 			drawMax(max%20, ticks, mc, left, top, jitterAmount[(int) Math.ceil((max%20)/2.0f) - 1]);
@@ -289,6 +239,12 @@ public class HUDOverlayHandler extends Handler
 		else
 		{
 			drawMax(19, ticks, mc, left, top, jitterAmount[9]);
+		}
+		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.foodCap.starve.lossFreq > 1 && hunger <= 0)
+		{
+			mc.mcProfiler.endStartSection("Tracker");
+			mc.getTextureManager().bindTexture(icons);
+			drawStatBar(jitterAmount, mc, left, top, ((max < 20.0f ? max : 20.0f)/(ModConfig.foodCap.starve.lossFreq-1))*ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
 		}
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 		if(ModConfig.hud.style == DisplayStyle.OVERLAY)
@@ -319,17 +275,20 @@ public class HUDOverlayHandler extends Handler
 	{
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
-		int max = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null));
+		int max = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
+		float maxSat = ScalingFeastAPI.accessor.getPlayerSaturationCap(player);
 		String foodAddition = "";
 		String maxAddition = "";
 		String satAddition = "";
+		String maxSatAddition = "";
 		EnumHand hand = getHandWithFood(player);
-		if(hand != null && (player.getFoodStats().needFood() || isFoodAlwaysEdible((ItemFood)player.getHeldItem(hand).getItem())))
+		if(hand != null && AppleCoreAPI.accessor.canPlayerEatFood(player.getHeldItem(hand), player))
 		{
 			ItemStack heldStack = player.getHeldItem(hand);
 			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(heldStack, player);
 			int deltaHunger = Math.min(foodValues.hunger, max - hunger);
-			float deltaSat = Math.min(foodValues.getSaturationIncrement(player), hunger + deltaHunger - sat);
+			float satCap = Math.min(hunger + deltaHunger, maxSat);
+			float deltaSat = Math.min(foodValues.getUnboundedSaturationIncrement(), satCap - sat);
 			if(deltaHunger > 0)
 			{
 				foodAddition = "+"+Integer.toString(deltaHunger);
@@ -341,19 +300,25 @@ public class HUDOverlayHandler extends Handler
 			if(heldStack.getItem() instanceof HeartyShankItem)
 			{
 				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
+				float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
+				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max + ModConfig.foodCap.inc);
+				maxSatAddition = String.format("+%.1f", (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat);
+				if(maxSatAddition.equals("+0.0"))
+				{
+					maxSatAddition = "";
+				}
 			}
 		}
 		String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
-		String satInfo = String.format("%.1f%s", sat, satAddition).trim();
-		float satOffset = (float) Math.max(Math.floor(mc.fontRenderer.getStringWidth(hungerInfo)/2.0f - mc.fontRenderer.getStringWidth(satInfo)/2.0f), 0);
+		String satInfo = String.format("%.1f%s/%.1f%s", sat, satAddition, maxSat, maxSatAddition).trim();
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
 		if(ModConfig.hud.drawSaturation)
 		{	
-			mc.fontRenderer.drawStringWithShadow(satInfo, left/0.5f + satOffset/0.5f, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
+			mc.fontRenderer.drawStringWithShadow(satInfo, (left+1)/0.5f, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
 		}
-		mc.fontRenderer.drawStringWithShadow(hungerInfo, left/0.5f + 1/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));
+		mc.fontRenderer.drawStringWithShadow(hungerInfo, (left+1)/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -419,7 +384,7 @@ public class HUDOverlayHandler extends Handler
 			x = left - i * 8 - 9;
 		}
 		int hunger = mc.player.getFoodStats().getFoodLevel();
-		int foodMax = mc.player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(mc.player.getCapability(FoodCapModifierProvider.foodCapMod, null));
+		int foodMax = ScalingFeastAPI.accessor.getModifiedFoodCap(mc.player);
 		float alpha = (hunger < 20*Math.floor(foodMax/20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER? (float)ModConfig.hud.maxOutlineTransparency : 1.0f);
 		Colour maxColour = getMaxColour(ticks, ModConfig.foodCap.starve.lossFreq);
 		GL11.glColor4f(1.0f/255*maxColour.getR(), 1.0f/255*maxColour.getG(), 1.0f/255*maxColour.getB(), alpha);
@@ -504,40 +469,49 @@ public class HUDOverlayHandler extends Handler
 	
 	private Colour getMaxColour(int ticks, int maxTicks)
 	{
-		switch(ModConfig.hud.maxColourStyle)
+		switch(ModConfig.hud.trackerStyle)
 		{
-			case DEFAULT:
-				if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
+			case MAX_COLOUR:		
+				switch(ModConfig.hud.maxColourStyle)
 				{
-					return new Colour("FFFFFF");
+					case DEFAULT:
+						if(maxTicks == 1 || ModConfig.foodCap.starve.starveLoss == 0)
+						{
+							return new Colour("FFFFFF");
+						}
+						else if(ticks + 1 == maxTicks)
+						{
+							return new Colour("AA0000");
+						}
+						else if(ticks > 0.9 * maxTicks)
+						{
+							return new Colour("FF5555");
+						}
+						else if(ticks > 0.75 * maxTicks)
+						{
+							return new Colour("FFAA00");
+						}
+						else if(ticks > 0.5 * maxTicks)
+						{
+							return new Colour("FFFF55");
+						}
+						else if (ticks > 0)
+						{
+							return new Colour("FFFFFF");
+						}
+						else
+						{
+							return new Colour("55FF55");
+						}
+					case CUSTOM:
+						return new Colour(ModConfig.hud.maxColourEnd);
+					//unreachable, but needed for JVM
+					default:
+						return null;
 				}
-				else if(ticks + 1 == maxTicks)
-				{
-					return new Colour("AA0000");
-				}
-				else if(ticks > 0.9 * maxTicks)
-				{
-					return new Colour("FF5555");
-				}
-				else if(ticks > 0.75 * maxTicks)
-				{
-					return new Colour("FFAA00");
-				}
-				else if(ticks > 0.5 * maxTicks)
-				{
-					return new Colour("FFFF55");
-				}
-				else if (ticks > 0)
-				{
-					return new Colour("FFFFFF");
-				}
-				else
-				{
-					return new Colour("55FF555");
-				}
-			case CUSTOM:
-				return new Colour(ModConfig.hud.maxColourEnd);
-			//unreachable, but needed for JVM
+			case SATURATION:
+				return new Colour("FFFFFF");
+			//again, unreachable, but needed for JVM
 			default:
 				return null;
 		}
@@ -565,36 +539,6 @@ public class HUDOverlayHandler extends Handler
 		return true;
 	}
 	
-	private boolean isFoodAlwaysEdible(ItemFood heldItem)
-	{
-		Field edibility = null;
-		try
-		{
-			edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "field_77852_bZ");
-		}
-		catch(UnableToFindFieldException e)
-		{
-			//perhaps the field is deobfuscated?
-			try
-			{
-				edibility = ObfuscationReflectionHelper.findField(ItemFood.class, "alwaysEdible"); 
-			}
-			catch(UnableToFindFieldException f)
-			{
-				//for now, silently ignore, no point spaming the console ~60 times a second for this (in fact it'd get blocked)
-				return false;
-			}
-		}
-		try
-		{
-			return edibility != null ? (boolean) edibility.getBoolean(heldItem) : false;
-		}
-		catch(IllegalAccessException e)
-		{
-			return false;
-		}
-	}
-
 	private EnumHand getHandWithFood(EntityPlayer player)
 	{
 		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)

@@ -17,6 +17,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.api.impl.ScalingFeastAPIImpl;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
@@ -35,14 +37,14 @@ import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.StarvationTracker;
 
-@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION)
+@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies="required-after:applecore@[3.3.0,)")
 public class ScalingFeast
 {
     public static Logger logger;
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
-    public static File config;
+    private static final boolean debug = false;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -50,6 +52,7 @@ public class ScalingFeast
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+        ScalingFeastAPI.init();
         hasAppleSkin = Loader.isModLoaded(ModConsts.APPLESKIN_ID);
         hasSolCarrot = Loader.isModLoaded(ModConsts.SOLCARROT_ID);
         hasSpiceOfLife = Loader.isModLoaded(ModConsts.SPICEOFLIFE_ID);
@@ -121,6 +124,18 @@ public class ScalingFeast
     public void serverStarting(FMLServerStartingEvent event)
     {
     	event.registerServerCommand(new SFCommand());
+    }
+    
+    /**
+     * Log a message at the info level only when in debug mode
+     * @param msg message to log 
+     */
+    public static void debug(String msg)
+    {
+    	if(debug)
+    	{
+    		info(msg);
+    	}
     }
     
     /**

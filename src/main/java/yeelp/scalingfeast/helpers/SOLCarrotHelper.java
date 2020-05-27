@@ -98,7 +98,8 @@ public final class SOLCarrotHelper
 			catch (InvocationTargetException e)
 			{
 				e.printStackTrace();
-			} catch (NoSuchFieldException e) 
+			} 
+			catch (NoSuchFieldException e) 
 			{
 				e.printStackTrace();
 			}

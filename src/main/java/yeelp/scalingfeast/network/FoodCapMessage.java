@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
 
@@ -67,7 +68,7 @@ public class FoodCapMessage implements IMessage
 		public void handle(FoodCapMessage msg, MessageContext ctx)
 		{
 			EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
-			player.getCapability(FoodCapProvider.capFoodStat, null).deserializeNBT((NBTTagShort) msg.serializeNBT());
+			ScalingFeastAPI.accessor.getFoodCap(player).deserializeNBT((NBTTagShort) msg.serializeNBT());
 		}
 	}
 	@Override

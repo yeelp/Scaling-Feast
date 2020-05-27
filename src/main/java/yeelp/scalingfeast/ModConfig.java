@@ -15,6 +15,9 @@ import java.util.Queue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
@@ -26,8 +29,11 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
+import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.SaturationScaling;
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig
 {	
@@ -53,14 +59,31 @@ public class ModConfig
 	
 	
 	public static class FoodCapCategory
-	{
+	{	
 		@Name("Global Cap")
 		@Comment({"The highest extended hunger the player can have.",
 				  "Note that any players with an extended hunger value greater than this will be set to this cap",
 			      "This ignores vanilla's hunger level; it ONLY affects the additional amount of hunger you can gain from Scaling Feast.",
 			      "If set to -1, this cap is ignored."})
 		@RangeInt(min = -1, max = Short.MAX_VALUE)
+		@RequiresMcRestart
 		public int globalCap = -1;
+		
+		@Name("Saturation Cap")
+		@Comment({"A hard cap on a player's saturation. It can never go above this value.",
+			      "Any player's with a saturation above this value will be set to this value.",
+			      "If set to -1, this cap is ignored."})
+		@RangeDouble(min = -1.0)
+		@RequiresMcRestart
+		public double satCap = -1;
+		
+		@Name("Saturation Scaling")
+		@Comment({"How a player's max saturation should scale to their max hunger",
+			      "If set to MAX_HUNGER, no scaling is done. A player's max saturation is bounded by their max hunger",
+			      "If set to HALF_HUNGER, a player's saturation can never be higher than half of their max hunger.",
+			      "If set to QUARTER_HUNGER, a player's saturation can never be higher than a quarter of their max hunger"})
+		@RequiresMcRestart
+		public SaturationScaling satScaling = SaturationScaling.MAX_HUNGER;
 		
 		@Name("Increase Per Hearty Shank Eaten")
 		@Comment("The increase in your total max hunger, in half shanks (i.e. 2 = one full hunger shank) per Hearty Shank eaten.")
@@ -68,7 +91,7 @@ public class ModConfig
 		public int inc = 2;
 		
 		@Name("Starting Hunger")
-		@Comment("Players joining worlds for the first time will have thier max hunger cap set to this value in half shanks. Vanilla default is 20")
+		@Comment("Players joining worlds for the first time will have their max hunger cap set to this value in half shanks. Vanilla default is 20")
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
 		public int startingHunger = 20;
 		
@@ -178,6 +201,11 @@ public class ModConfig
 			DEFAULT,
 			CUSTOM;
 		}
+		public enum TrackerStyle
+		{
+			MAX_COLOUR,
+			SATURATION;
+		}
 		@Name("Display Style")
 		@Comment({"The display style in the HUD.",
 			      "If set to OVERLAY, Scaling Feast will overlay coloured shanks over your hunger bar to display your extended food stats.",
@@ -199,6 +227,12 @@ public class ModConfig
 			      "If set to DEFAULT, the default colour style will be used.",
 			      "If set to CUSTOM, Scaling Feast will take the colour value specified in Max Custom Colour Start and transition to Max Custom Colour End when taking starvation damage."})
 		public MaxColourStyle maxColourStyle = MaxColourStyle.DEFAULT;
+		
+		@Name("Starvation Tracker Style")
+		@Comment({"The style for tracking starvation.",
+			      "If set to MAX_COLOUR, the max outline colour will change depending on how many times you've taken starvation damage. The colours used depend on Max Outline Colour Style.",
+			      "If set to SATURATION, then only when the hunger bar is empty, each starvation damage will cause a \'saturation bar\' to fill up over your hunger bar more and more. once full, taking starvation damage will decrease your max hunger."})
+		public TrackerStyle trackerStyle = TrackerStyle.MAX_COLOUR;
 		
 		@Name("Max Outline Transparency")
 		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
