@@ -44,6 +44,7 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
+    private static final boolean debug = false;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -123,6 +124,18 @@ public class ScalingFeast
     public void serverStarting(FMLServerStartingEvent event)
     {
     	event.registerServerCommand(new SFCommand());
+    }
+    
+    /**
+     * Log a message at the info level only when in debug mode
+     * @param msg message to log 
+     */
+    public static void debug(String msg)
+    {
+    	if(debug)
+    	{
+    		info(msg);
+    	}
     }
     
     /**

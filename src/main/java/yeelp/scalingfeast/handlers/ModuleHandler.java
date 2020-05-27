@@ -157,7 +157,6 @@ public class ModuleHandler extends Handler
 		if(SpiceOfLifeHelper.isEnabled() && ModConfig.modules.spiceoflife.enabled)
 		{
 			mod += SpiceOfLifeHelper.getPenalty(player);
-			ScalingFeast.info(""+mod);
 		}
 		if(SOLCarrotHelper.isEnabled() && ModConfig.modules.sol.enabled)
 		{
