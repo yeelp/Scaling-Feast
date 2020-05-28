@@ -1,10 +1,15 @@
 package yeelp.scalingfeast.helpers;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 
 /**
@@ -16,6 +21,8 @@ public class AppleSkinHelper
 {
 	private static Class overlay;
 	private static Class config;
+	private static boolean showTooltipOnShift;
+	private static boolean showTooltipAlways;
 	private static boolean loaded = false;
 	
 	/**
@@ -26,6 +33,7 @@ public class AppleSkinHelper
 	{
 		overlay = Class.forName("squeek.appleskin.client.HUDOverlayHandler");
 		config = Class.forName("squeek.appleskin.ModConfig");
+		updateConfigSettings(); 
 		loaded = true;
 	}
 	
@@ -63,5 +71,45 @@ public class AppleSkinHelper
 			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
 			return false;
 		}
+	}
+
+	/**
+	 * Get AppleSkin's texture map.
+	 * @return The ResourceLocation for AppleSkin's textures.
+	 */
+	public static ResourceLocation getTextures()
+	{
+		return new ResourceLocation(ModConsts.MOD_ID, "textures/gui/appleskinicons.png");
+	}
+	
+	/**
+	 * Should AppleSkin draw its tooltip?
+	 * @return {@code true} if AppleSkin's typical conditions are met (depending on config), {@code false} if not.
+	 */
+	public static boolean shouldDrawTooltip()
+	{
+		return (showTooltipOnShift && isShiftHeld()) || showTooltipAlways;
+	}
+	
+	/**
+	 * Update the config settings to match AppleSkin's.
+	 */
+	public static void updateConfigSettings()
+	{
+		try
+		{
+			showTooltipOnShift = config.getDeclaredField("SHOW_FOOD_VALUES_IN_TOOLTIP").getBoolean(null);
+			showTooltipAlways = config.getDeclaredField("ALWAYS_SHOW_FOOD_VALUES_TOOLTIP").getBoolean(null);
+		}
+		catch(NoSuchFieldException | IllegalAccessException e)
+		{
+			ScalingFeast.err("Scaling Feast can't find AppleSkin config values!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+		}
+	}
+	
+	private static boolean isShiftHeld()
+	{
+		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 	}
 }

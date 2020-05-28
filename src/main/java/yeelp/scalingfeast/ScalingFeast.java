@@ -21,6 +21,7 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.ScalingFeastAPIImpl;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
+import yeelp.scalingfeast.handlers.CompatibilityHandler;
 import yeelp.scalingfeast.handlers.EnchantmentHandler;
 import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.handlers.LootTableInjector;
@@ -44,7 +45,7 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
-    private static final boolean debug = false;
+    private static final boolean debug = true;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -90,6 +91,10 @@ public class ScalingFeast
         if(ModConfig.modules.sol.enabled || ModConfig.modules.spiceoflife.enabled)
         {	
         	new ModuleHandler().register();
+        }
+        if(hasAppleSkin)
+        {
+        	new CompatibilityHandler().register();
         }
         info("Scaling Feast initialization complete!");
     }
