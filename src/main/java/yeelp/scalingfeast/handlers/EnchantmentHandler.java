@@ -25,7 +25,7 @@ public class EnchantmentHandler extends Handler
 {
 	private static final Map<UUID, Boolean> fullSwing = new HashMap<UUID, Boolean>();
 	
-	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+	/*@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onExhaustionAddition(ExhaustionEvent.ExhaustionAddition evt)
 	{
 		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.fasting, evt.player);
@@ -34,7 +34,7 @@ public class EnchantmentHandler extends Handler
 			float mod = (1-0.1f*level);
 			evt.deltaExhaustion*=(mod > 0 ? mod : 0);
 		}
-	}
+	}*/
 	
 	@SubscribeEvent(priority=EventPriority.LOW, receiveCanceled=true)
 	public void getPlayerSpecificFoodValues(FoodEvent.GetPlayerFoodValues evt)

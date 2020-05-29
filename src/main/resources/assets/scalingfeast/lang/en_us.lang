@@ -53,3 +53,7 @@ tipped_arrow.effect.metabolism_strong=Metabolic Arrow
 tipped_arrow.effect.metabolism_extended=Metabolic Arrow
 
 effect.ironstomach=Iron Stomach
+effect.bloated=Bloated
+effect.hungerplus=Hunger Plus
+effect.hungerminus=Hunger Minus
+effect.softstomach=Soft Stomach

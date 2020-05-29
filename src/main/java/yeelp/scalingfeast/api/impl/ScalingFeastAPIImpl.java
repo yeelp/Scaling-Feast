@@ -1,5 +1,9 @@
 package yeelp.scalingfeast.api.impl;
 
+import java.util.UUID;
+
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import squeek.applecore.api.AppleCoreAPI;
@@ -13,6 +17,7 @@ import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.SaturationScaling;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
 
@@ -85,6 +90,18 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public boolean canPlayerLoseMaxHunger(EntityPlayer player)
 	{
 		return this.getFoodCap(player).getUnmodifiedMaxFoodLevel() < ModConfig.foodCap.starve.starveLowerCap;
+	}
+	
+	@Override
+	public IAttributeInstance getExhaustionRate(EntityPlayer player)
+	{
+		return player.getAttributeMap().getAttributeInstance(SFAttributes.EXHAUSTION_RATE);
+	}
+	
+	@Override
+	public IAttributeInstance getMaxHungerAttributeModifier(EntityPlayer player)
+	{
+		return player.getAttributeMap().getAttributeInstance(SFAttributes.MAX_HUNGER_MOD);
 	}
 	/*****************************/
 	/*          MUTATOR          */
@@ -176,5 +193,41 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		int rem = (int) Math.floor(currSat < amount ? amount - currSat : 0);
 		AppleCoreAPI.mutator.setSaturation(player, Math.min(currSat - amount, 0));
 		AppleCoreAPI.mutator.setHunger(player, Math.min(currHunger - rem, 0));
+	}
+	
+	@Override
+	public void setExhaustionRateModifier(EntityPlayer player, UUID id, String name, double amount)
+	{
+		IAttributeInstance instance = getExhaustionRate(player);
+		AttributeModifier modifier = instance.getModifier(id);
+		if(modifier != null)
+		{
+			instance.removeModifier(modifier);
+		}
+		instance.applyModifier(new AttributeModifier(id, name, amount, 2));
+	}
+	
+	@Override
+	public void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount)
+	{
+		IAttributeInstance instance = getMaxHungerAttributeModifier(player);
+		AttributeModifier modifier = instance.getModifier(id);
+		if(modifier != null)
+		{
+			instance.removeModifier(modifier);
+		}
+		instance.applyModifier(new AttributeModifier(id, name, amount, 0));
+	}
+	
+	@Override
+	public void removeExhaustionRateModifier(EntityPlayer player, UUID id)
+	{
+		getExhaustionRate(player).removeModifier(id);
+	}
+	
+	@Override
+	public void removeMaxHungerAttributeModifier(EntityPlayer player, UUID id)
+	{
+		getMaxHungerAttributeModifier(player).removeModifier(id);
 	}
 }

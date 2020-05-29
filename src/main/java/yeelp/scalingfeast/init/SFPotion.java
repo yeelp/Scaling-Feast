@@ -19,12 +19,20 @@ import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.potion.PotionIronStomach;
 import yeelp.scalingfeast.potion.PotionMetabolism;
+import yeelp.scalingfeast.potion.PotionSoftStomach;
 import yeelp.scalingfeast.potion.PotionBase;
+import yeelp.scalingfeast.potion.PotionBloated;
+import yeelp.scalingfeast.potion.PotionHungerMinus;
+import yeelp.scalingfeast.potion.PotionHungerPlus;
 
 public class SFPotion 
 {
 	public static Potion metabolism;
 	public static Potion ironstomach;
+	public static Potion bloated;
+	public static Potion hungerplus;
+	public static Potion hungerminus;
+	public static Potion softstomach;
 	public static PotionType metabolic;
 	public static PotionType metabolicStrong;
 	public static PotionType metabolicLong;
@@ -33,7 +41,12 @@ public class SFPotion
 	{
 		metabolism = new PotionMetabolism();
 		ironstomach = new PotionIronStomach();
-		ForgeRegistries.POTIONS.registerAll(metabolism, ironstomach);
+		bloated = new PotionBloated();
+		hungerplus = new PotionHungerPlus();
+		hungerminus = new PotionHungerMinus();
+		softstomach = new PotionSoftStomach();
+		
+		ForgeRegistries.POTIONS.registerAll(metabolism, ironstomach, bloated, hungerplus, hungerminus, softstomach);
 		
 		if(ModConfig.items.enableMetabolicPotion)
 		{

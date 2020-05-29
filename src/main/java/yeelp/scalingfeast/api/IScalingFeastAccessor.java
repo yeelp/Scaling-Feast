@@ -1,5 +1,6 @@
 package yeelp.scalingfeast.api;
 
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
@@ -74,4 +75,19 @@ public abstract interface IScalingFeastAccessor
 	 * @return true if that player can lose max hunger by starving
 	 */
 	boolean canPlayerLoseMaxHunger(EntityPlayer player);
+	
+	/**
+	 * Get the exhaustion rate attribute for this player.
+	 * @param player player to get this attribute for
+	 * @return The IAttribute with the exhaustion rate for this player.
+	 */
+	IAttributeInstance getExhaustionRate(EntityPlayer player);
+	
+	/**
+	 * Get the max hunger modifier from attributes for a player.
+	 * @param player player to target
+	 * @return the IAttribute with the modifier for max hunger for this player. This is NOT the actual max hunger of this player.
+	 * Use {@link #getFoodCap(EntityPlayer)} to get the actual capability. This is just the modifiers for max hunger from attributes.
+	 */
+	IAttributeInstance getMaxHungerAttributeModifier(EntityPlayer player);
 }

@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
@@ -38,6 +39,12 @@ public class CapabilityHandler extends Handler
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "Modifier"), new FoodCapModifier());
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerTick(PlayerTickEvent evt)
+	{
+		ScalingFeastAPI.accessor.getFoodCapModifier(evt.player).setModifier("attributes", (short)ScalingFeastAPI.accessor.getMaxHungerAttributeModifier(evt.player).getAttributeValue());
 	}
 	
 	@SubscribeEvent

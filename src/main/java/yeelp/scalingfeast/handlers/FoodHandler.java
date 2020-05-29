@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,12 +14,14 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import squeek.applecore.api.food.FoodEvent;
+import squeek.applecore.api.hunger.ExhaustionEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
+import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.network.SatSyncMessage;
 
 public class FoodHandler extends Handler 
@@ -98,6 +101,19 @@ public class FoodHandler extends Handler
 		{
 			satLevels.remove(evt.player.getUniqueID());
 		}
+	}
+	
+	@SubscribeEvent
+	public void onExhaustion(ExhaustionEvent.ExhaustionAddition evt)
+	{
+		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.fasting, evt.player);
+		float fastingMod = 1.0f;
+		if(level != 0)
+		{
+			fastingMod = (1-0.1f*level);
+		}
+		double reduction = (1+ScalingFeastAPI.accessor.getExhaustionRate(evt.player).getAttributeValue())*fastingMod;
+		evt.deltaExhaustion *= reduction < 0 ? 0 : reduction;
 	}
 
 	/*

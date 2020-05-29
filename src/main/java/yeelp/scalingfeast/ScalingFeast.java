@@ -36,6 +36,7 @@ import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
+import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.StarvationTracker;
 
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies="required-after:applecore@[3.3.0,)")
@@ -70,6 +71,7 @@ public class ScalingFeast
         	info("Scaling Feast found Spice of Life!");
         }
         proxy.preInit();
+        new SFAttributes().register();
         SFEnchantments.init();
         SFPotion.init();
         FoodCap.register();
