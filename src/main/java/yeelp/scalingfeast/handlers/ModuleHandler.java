@@ -179,7 +179,7 @@ public class ModuleHandler extends Handler
 		}
 		else
 		{
-			curr.setModifier(mod);
+			curr.setModifier("modules", mod);
 			//We want to use the current IFoodCapModifier we have. 
 			//We haven't synced it yet, and calling the convenience method from the API uses what's currently been synced, which is outdated.
 			short currMax = ScalingFeastAPI.accessor.getFoodCap(player).getMaxFoodLevel(curr);
