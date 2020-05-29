@@ -40,9 +40,10 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
 
 public class ModuleHandler extends Handler 
 {	
-	private HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
-	private ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
-	private ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
+	private static HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
+	private static HashMap<UUID, Short> modifiers = new HashMap<UUID, Short>();
+	private static ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
+	private static ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
 	
 	
 	@SubscribeEvent 
@@ -95,7 +96,7 @@ public class ModuleHandler extends Handler
 	{
 		if(eatingPlayers.containsKey(evt.player.getUniqueID()))
 		{
-			updatePlayer(evt.player);
+			setModuleModifier(evt.player, updatePlayer(evt.player));
 			if(SOLCarrotHelper.isEnabled())
 			{
 				try 
@@ -150,7 +151,17 @@ public class ModuleHandler extends Handler
 		}
 	}
 	
-	public static void updatePlayer(EntityPlayer player)
+	/**
+	 * Set this handler's internal modifier amount for a player
+	 * @param player
+	 * @param amount
+	 */
+	public static void setModuleModifier(EntityPlayer player, short amount)
+	{
+		modifiers.put(player.getUniqueID(), amount);
+	}
+	
+	public static short updatePlayer(EntityPlayer player)
 	{
 		short mod = 0;
 		IFoodCapModifier curr = ScalingFeastAPI.accessor.getFoodCapModifier(player);
@@ -164,7 +175,7 @@ public class ModuleHandler extends Handler
 		}
 		if(curr.getModifier() == mod)
 		{
-			return;
+			return curr.getModifier();
 		}
 		else
 		{
@@ -187,6 +198,7 @@ public class ModuleHandler extends Handler
 			{
 				CapabilityHandler.sync(player);
 			}
+			return mod;
 		}
 	}
 }
