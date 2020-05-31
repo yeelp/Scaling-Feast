@@ -19,6 +19,9 @@ public class SFEnchantments
 	public static Enchantment gluttony;
 	public static Enchantment famine;
 	public static Enchantment eternalfeast;
+	public static Enchantment sensitivityCurse;
+	public static Enchantment lazinessCurse;
+	public static Enchantment deprivationCurse;
 	
 	public static void init()
 	{
@@ -26,7 +29,10 @@ public class SFEnchantments
 		gluttony = new EnchantmentGluttony();
 		famine = new EnchantmentFamine();
 		eternalfeast = new EnchantmentEternalFeast();
+		sensitivityCurse = new CurseSensitivity();
+		lazinessCurse = new CurseLaziness();
+		deprivationCurse = new CurseDeprivation();
 		
-		ForgeRegistries.ENCHANTMENTS.registerAll(fasting, gluttony, famine, eternalfeast);
+		ForgeRegistries.ENCHANTMENTS.registerAll(fasting, gluttony, famine, eternalfeast, sensitivityCurse, lazinessCurse, deprivationCurse);
 	}
 }

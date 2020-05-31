@@ -44,7 +44,7 @@ repositories {
 	}
 }
 dependencies {
-deobfCompile "applecore:AppleCore:1.12.2-3.3.0:api"
+deobfCompile "applecore:AppleCore:1.12.2-3.4.0+356.64453:api"
 deobfProvided "curse.maven:spiceoflife:2571951"
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..

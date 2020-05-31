@@ -1,8 +1,16 @@
 package yeelp.scalingfeast.network;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -22,25 +30,36 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
  */
 public class FoodCapModifierMessage implements IMessage
 {
-	private NBTTagShort tag;
+	private NBTTagList tag;
 	public FoodCapModifierMessage(IFoodCapModifier mod)
 	{
-		this.tag = new NBTTagShort(mod.getModifier());
+		this.tag = new NBTTagList();
+		for(Entry<String, Short> entry : mod.getAllModifiers().entrySet())
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setString("id", entry.getKey());
+			tag.setShort("modifier", entry.getValue());
+			this.tag.appendTag(tag);
+		}
 	}
 	
 	public FoodCapModifierMessage()
 	{
-		
+		this.tag = new NBTTagList();
 	}
 	
-	public NBTTagShort serializeNBT()
+	public NBTTagList serializeNBT()
 	{
 		return this.tag;
 	}
 	
-	public void deserializeNBT(NBTTagShort tag)
+	public void deserializeNBT(List<NBTTagCompound> lst)
 	{
-		this.tag = tag.copy();
+		this.tag = new NBTTagList();
+		for(NBTTagCompound tag : lst)
+		{
+			this.tag.appendTag(tag);
+		}
 	}
 	
 	/**
@@ -63,7 +82,7 @@ public class FoodCapModifierMessage implements IMessage
 		public void handle(FoodCapModifierMessage msg, MessageContext ctx)
 		{
 			EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
-			ScalingFeastAPI.accessor.getFoodCapModifier(player).deserializeNBT((NBTTagShort) msg.serializeNBT());
+			ScalingFeastAPI.accessor.getFoodCapModifier(player).deserializeNBT((NBTTagList) msg.serializeNBT());
 		}
 		
 	}
@@ -71,12 +90,36 @@ public class FoodCapModifierMessage implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf) 
 	{
-		deserializeNBT(new NBTTagShort(new PacketBuffer(buf).readShort()));
+		List<NBTTagCompound> lst = new LinkedList<NBTTagCompound>();
+		PacketBuffer pb = new PacketBuffer(buf.copy());
+		while(pb.isReadable())
+		{
+			try
+			{
+				lst.add(pb.readCompoundTag());
+			}
+			catch (IOException e)
+			{
+				//If we're here, we couldn't read the PacketBuffer as a list of Compound Tags. Must be pre 1.5.0 - read it as a short!
+				pb = new PacketBuffer(buf);
+				lst.clear();
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setString("id", "modules");
+				tag.setShort("modifier", pb.readShort());
+				lst.add(tag);
+				break;
+			}
+		}
+		deserializeNBT(lst);
 	}
 	@Override
 	public void toBytes(ByteBuf buf) 
 	{
-		new PacketBuffer(buf).writeShort(((NBTTagShort) serializeNBT()).getShort());
+		PacketBuffer pb = new PacketBuffer(buf);
+		for(NBTBase tag : this.tag)
+		{
+			pb.writeCompoundTag((NBTTagCompound) tag);
+		}
 	}
 
 }

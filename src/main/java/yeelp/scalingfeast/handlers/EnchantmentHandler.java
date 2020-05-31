@@ -18,8 +18,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
+import squeek.applecore.api.hunger.StarvationEvent;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.init.SFPotion;
 
 public class EnchantmentHandler extends Handler
 {
@@ -88,6 +91,42 @@ public class EnchantmentHandler extends Handler
 					ScalingFeastAPI.mutator.damageFoodStats(player, 1.25f*level);
 				}
 			}	
+		}
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void getMaxExhaustion(ExhaustionEvent.GetMaxExhaustion evt)
+	{
+		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.lazinessCurse, evt.player);
+		if(level != 0)
+		{
+			evt.maxExhaustionLevel /= 2.0f;
+		}
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void getStarvationRate(StarvationEvent.GetStarveTickPeriod evt)
+	{
+		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.deprivationCurse, evt.player);
+		if(level != 0)
+		{
+			evt.starveTickPeriod /= 2.0f;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFoodStatsAddition(FoodEvent.FoodStatsAddition evt)
+	{
+		EntityPlayer player = evt.player;
+		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.sensitivityCurse, player);
+		if(level != 0)
+		{
+			int overflow = (evt.foodValuesToBeAdded.hunger + player.getFoodStats().getFoodLevel()) - ScalingFeastAPI.accessor.getModifiedFoodCap(player);
+			ScalingFeast.debug(Integer.toString(overflow));
+			if(overflow > 0)
+			{
+				player.addPotionEffect(new PotionEffect(SFPotion.softstomach, 15*20, overflow-1));
+			}
 		}
 	}
 	

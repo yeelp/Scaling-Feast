@@ -1,5 +1,8 @@
 package yeelp.scalingfeast.util;
 
+
+import java.util.Map;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -26,6 +29,8 @@ public interface IFoodCapModifier extends ICapabilitySerializable<NBTBase>
 	 * @return the modifier associated with the id, or 0 if there was no modifier for this id.
 	 */
 	short getModifier(String id);
+	
+	Map<String, Short> getAllModifiers();
 	
 	/**
 	 * Set the modifier value

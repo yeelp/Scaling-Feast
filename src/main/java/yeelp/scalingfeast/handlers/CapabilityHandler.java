@@ -17,9 +17,11 @@ import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.network.BloatedHungerMessage;
 import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.StarvationTrackerMessage;
+import yeelp.scalingfeast.util.BloatedHunger;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.IFoodCap;
@@ -38,6 +40,7 @@ public class CapabilityHandler extends Handler
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "FoodCap"), new FoodCap((short)ModConfig.foodCap.startingHunger));
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "Modifier"), new FoodCapModifier());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "BloatedAmount"),  new BloatedHunger());
 		}
 	}
 	
@@ -131,6 +134,7 @@ public class CapabilityHandler extends Handler
 		syncCap(player);
 		syncTracker(player);
 		syncMod(player);
+		syncBloatedHunger(player);
 	}
 	
 	public static void syncCap(EntityPlayer player)
@@ -140,11 +144,16 @@ public class CapabilityHandler extends Handler
 	
 	public static void syncTracker(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP)player);
+		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP) player);
 	}
 	
 	public static void syncMod(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP)player);
+		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP) player);
+	}
+	
+	public static void syncBloatedHunger(EntityPlayer player)
+	{
+		PacketHandler.INSTANCE.sendTo(new BloatedHungerMessage(ScalingFeastAPI.accessor.getBloatedHunger(player)), (EntityPlayerMP) player);
 	}
 }

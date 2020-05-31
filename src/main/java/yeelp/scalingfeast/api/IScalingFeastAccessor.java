@@ -2,6 +2,7 @@ package yeelp.scalingfeast.api;
 
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
@@ -34,6 +35,23 @@ public abstract interface IScalingFeastAccessor
 	 * @return that player's starvation tracker
 	 */
 	IStarvationTracker getStarvationTracker(EntityPlayer player);
+	
+	/**
+	 * Get a player's bloated hunger - an instance of {@link #IBloatedHunger}
+	 * @param player
+	 * @return that player's bloated hunger
+	 */
+	IBloatedHunger getBloatedHunger(EntityPlayer player);
+	
+	/**
+	 * Get a player's bloated hunger amount. This just calls {@link IBloatedHunger#getBloatedAmount()} but is included for convenience.
+	 * @param player
+	 * @return that player's bloated hunger amount
+	 */
+	default short getBloatedHungerAmount(EntityPlayer player)
+	{
+		return getBloatedHunger(player).getBloatedAmount();
+	}
 	
 	/**
 	 * Get a player's modified food cap. This just calls {@link IFoodCap#getMaxFoodLevel(IFoodCapModifier)} but is included for convenience.

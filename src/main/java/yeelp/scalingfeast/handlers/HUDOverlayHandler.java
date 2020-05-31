@@ -153,6 +153,13 @@ public class HUDOverlayHandler extends Handler
 				drawStatsOverlay(jitterAmount, mc, player, left, top);
 				//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
 				GuiIngameForge.right_height += 10;
+				int bloatedAmount = ScalingFeastAPI.accessor.getBloatedHungerAmount(player);
+				if(bloatedAmount > 0)
+				{
+					top = res.getScaledHeight() - offset;
+					drawBloatedAmount(mc, player, bloatedAmount, left, top);
+					GuiIngameForge.right_height += 10;
+				}
 				if(ModConfig.compat.shouldFirePost)
 				{
 					MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(evt, RenderGameOverlayEvent.ElementType.FOOD));
@@ -161,6 +168,14 @@ public class HUDOverlayHandler extends Handler
 		}
 	}
 	
+	private void drawBloatedAmount(Minecraft mc, EntityPlayer player, int bloatedAmount, int left, int top)
+	{
+		// TODO draw extra empty shanks on top
+		// TODO draw bloated style shanks
+		// TODO overlay bloated colour
+		
+	}
+
 	private void drawStatsOverlay(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
 	{
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);

@@ -34,12 +34,13 @@ import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.proxy.Proxy;
+import yeelp.scalingfeast.util.BloatedHunger;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.StarvationTracker;
 
-@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies="required-after:applecore@[3.3.0,)")
+@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies="required-after:applecore@[3.4.0,)")
 public class ScalingFeast
 {
     public static Logger logger;
@@ -77,6 +78,7 @@ public class ScalingFeast
         FoodCap.register();
         StarvationTracker.register();
         FoodCapModifier.register();
+        BloatedHunger.register();
         new CapabilityHandler().register();
         PacketHandler.init();
         info("Scaling Feast pre-initialization complete!");

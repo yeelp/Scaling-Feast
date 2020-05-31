@@ -12,8 +12,10 @@ import yeelp.scalingfeast.api.IScalingFeastAccessor;
 import yeelp.scalingfeast.api.IScalingFeastMutator;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
+import yeelp.scalingfeast.util.BloatedHungerProvider;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
@@ -59,6 +61,12 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public IStarvationTracker getStarvationTracker(EntityPlayer player)
 	{
 		return StarvationTrackerProvider.getTracker(player);
+	}
+	
+	@Override 
+	public IBloatedHunger getBloatedHunger(EntityPlayer player)
+	{
+		return BloatedHungerProvider.getBloatedHunger(player);
 	}
 
 	@Override

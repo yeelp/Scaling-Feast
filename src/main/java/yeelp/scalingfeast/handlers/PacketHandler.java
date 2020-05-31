@@ -3,6 +3,7 @@ package yeelp.scalingfeast.handlers;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.network.BloatedHungerMessage;
 import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.SatSyncMessage;
@@ -18,5 +19,6 @@ public final class PacketHandler
 		INSTANCE.registerMessage(StarvationTrackerMessage.Handler.class, StarvationTrackerMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(FoodCapModifierMessage.Handler.class, FoodCapModifierMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(SatSyncMessage.Handler.class, SatSyncMessage.class, id++, Side.CLIENT);
+		INSTANCE.registerMessage(BloatedHungerMessage.Handler.class, BloatedHungerMessage.class, id++, Side.CLIENT);
 	}
 }

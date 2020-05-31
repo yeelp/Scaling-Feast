@@ -62,6 +62,7 @@ public class FoodCapModifier implements IFoodCapModifier
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("id", entry.getKey());
 			tag.setShort("modifier", entry.getValue());
+			lst.appendTag(tag);
 		}
 		return lst;
 	}
@@ -107,6 +108,12 @@ public class FoodCapModifier implements IFoodCapModifier
 	}
 	
 	@Override
+	public Map<String, Short> getAllModifiers()
+	{
+		return this.mods;
+	}
+	
+	@Override
 	public void setModifier(String id, short amount)
 	{
 		this.mods.put(id, amount);//this.mod = amount;
@@ -117,7 +124,7 @@ public class FoodCapModifier implements IFoodCapModifier
 		CapabilityManager.INSTANCE.register(IFoodCapModifier.class, new FoodModStorage(), new FoodModFactory());
 	}
 
-	public static class FoodModFactory implements Callable<IFoodCapModifier>
+	private static class FoodModFactory implements Callable<IFoodCapModifier>
 	{
 		@Override
 		public IFoodCapModifier call() throws Exception 
@@ -126,7 +133,7 @@ public class FoodCapModifier implements IFoodCapModifier
 		}	
 	}
 	
-	public static class FoodModStorage implements IStorage<IFoodCapModifier>
+	private static class FoodModStorage implements IStorage<IFoodCapModifier>
 	{
 
 		@Override

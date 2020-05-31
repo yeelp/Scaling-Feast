@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import squeek.applecore.api.food.FoodEvent;
@@ -112,8 +113,14 @@ public class FoodHandler extends Handler
 		{
 			fastingMod = (1-0.1f*level);
 		}
-		double reduction = (1+ScalingFeastAPI.accessor.getExhaustionRate(evt.player).getAttributeValue())*fastingMod;
+		double reduction = (ScalingFeastAPI.accessor.getExhaustionRate(evt.player).getAttributeValue())*fastingMod;
 		evt.deltaExhaustion *= reduction < 0 ? 0 : reduction;
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void onGetExhaustionCap(ExhaustionEvent.GetExhaustionCap evt)
+	{
+		evt.exhaustionLevelCap = Float.MAX_VALUE;
 	}
 
 	/*

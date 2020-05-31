@@ -25,11 +25,17 @@ enchantment.scalingfeast.fasting=Fasting
 enchantment.scalingfeast.gluttony=Gluttony
 enchantment.scalingfeast.famine=Famine
 enchantment.scalingfeast.eternalfeast=Eternal Feast
+enchantment.scalingfeast.sensitivitycurse=Curse of Sensitivity
+enchantment.scalingfeast.lazinesscurse=Curse of Laziness
+enchantment.scalingfeast.deprivationcurse=Curse of Deprivation
 
 enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10% per level.
 enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level.
-enchantment.scalingfeast.famine.desc=Severely drains hunger from a target struck with this enchantment. Also applies a weakness debuff. The strength of these effects depend on the enchantment level.
+enchantment.scalingfeast.famine.desc=Severely drains hunger from a player struck with this enchantment or applies a weakness debuff to non player entities struck with this enchantment. The strength of these effects depend on the enchantment level.
 enchantment.scalingfeast.eternalfeast.desc=Killing an entity replenishes your food level, depending on the level of the enchantment.
+enchantment.scalingfeast.sensitivitycurse.desc=Overeating gives you a Soft Stomach debuff for 15 seconds. The strength is equal to the amount overeaten.
+enchantment.scalingfeast.lazinesscurse.desc=Halves your max exhaustion.
+enchantment.scalingfeast.deprivationcurse.desc=Causes you to starve twice as fast.
 
 item.scalingfeast.heartyshank.name=Hearty Shank
 item.scalingfeast.ironapple.name=§bIron Apple§f
@@ -57,3 +63,4 @@ effect.bloated=Bloated
 effect.hungerplus=Hunger Plus
 effect.hungerminus=Hunger Minus
 effect.softstomach=Soft Stomach
+effect.deficiency=Deficiency
