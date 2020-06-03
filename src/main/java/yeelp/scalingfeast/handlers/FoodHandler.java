@@ -62,6 +62,7 @@ public class FoodHandler extends Handler
 				CapabilityHandler.syncTracker(player);
 			}
 		}
+		ScalingFeastAPI.mutator.capPlayerSaturation(player);
 	}
 	
 	@SubscribeEvent
