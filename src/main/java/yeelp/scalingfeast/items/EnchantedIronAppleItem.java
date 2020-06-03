@@ -39,6 +39,7 @@ public class EnchantedIronAppleItem extends ItemFood
 		entityLiving.heal(4.0f*mod);
 		entityLiving.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 3));
 		entityLiving.addPotionEffect(new PotionEffect(SFPotion.ironstomach, 6*60*20, 1));
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.bloated, 20*60*2, 3));
 		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}
 }

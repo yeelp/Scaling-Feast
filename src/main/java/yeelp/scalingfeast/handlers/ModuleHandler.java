@@ -96,7 +96,7 @@ public class ModuleHandler extends Handler
 	{
 		if(eatingPlayers.containsKey(evt.player.getUniqueID()))
 		{
-			setModuleModifier(evt.player, updatePlayer(evt.player));
+			updatePlayer(evt.player);
 			if(SOLCarrotHelper.isEnabled())
 			{
 				try 
@@ -149,16 +149,6 @@ public class ModuleHandler extends Handler
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Set this handler's internal modifier amount for a player
-	 * @param player
-	 * @param amount
-	 */
-	public static void setModuleModifier(EntityPlayer player, short amount)
-	{
-		modifiers.put(player.getUniqueID(), amount);
 	}
 	
 	public static short updatePlayer(EntityPlayer player)

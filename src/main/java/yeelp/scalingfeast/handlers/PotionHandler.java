@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.hunger.ExhaustionEvent;
 import yeelp.scalingfeast.init.SFPotion;
 
+@Deprecated
 public class PotionHandler extends Handler
 {
 	

@@ -169,10 +169,15 @@ public class ModConfig
 		@RequiresMcRestart
 		public double heartyShankSatLevel = 0.8;
 		
-		@Name("Enable Metabolic Potions")
-		@Comment("If false, Scaling Feast will not register Metabolic Potions and its variants. This does not remove the Metabolism Potion Effect from the game, just the potions.")
+		@Name("Hearty Feast Restoration Cap")
+		@Comment("This is the maximum value the Hearty Feast will restore. If set to -1, there is no limit. If set to 0, the Hearty Feast won't restore anything.")
+		@RangeInt(min=-1)
+		public int heartyFeastCap = -1;
+		
+		@Name("Enable Potions")
+		@Comment("If false, Scaling Feast will not register potions for all of its potion effects. This doesn't remove the potion effects from the game, just the potions. Note only the Metabolic Potion has brewing recipes added by Scaling Feast.")
 		@RequiresMcRestart
-		public boolean enableMetabolicPotion = true;
+		public boolean enablePotions = true;
 		
 		@Name("Enable Brewing Recipes")
 		@Comment("If false, Scaling Feast will not create brewing recipes for Metabolic Potions. The potions will still be registered. However, if Metabolic Potions are disabled, recipes will of course not be added, and this config option will do nothing.")
@@ -284,6 +289,12 @@ public class ModConfig
 				  "If the number of \'rows\' of saturation exceed the length of this list, it will wrap around to the beginning.",
 				  "If any invalid hex string is entered, it will be ignored."})
 		public String[] Scolours = {"d70000", "d700d7", "6400d7", "00d3d7", "64d700", "d7d700", "d7d7d7"}; 
+		
+		@Name("Bloated Overlay Colours")
+		@Comment({"A List of hex colours for coloured shanks a player receives while under the Bloated effect. Each entry is of the form XXXXXX, where X is a hexadecimal digit",
+				  "If the number of \'rows\' of bloated shanks exceed the length of this list, it will wrap around to the beginning.",
+				  "If any invalid hex string is entered, it will be ignored."})
+		public String[] Bcolours = {"ffff6e", "ff6e6e", "6eff6e", "6effff", "6e6eff", "ff6eff", "e6e6e6"};
 	}
 	
 	public static class ModuleCategory

@@ -33,6 +33,7 @@ public class IronAppleItem extends ItemFood
 		float mod = (1 + 0.5f*gluttonyLevel);
 		entityLiving.heal(4.0f*mod);
 		entityLiving.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 1));
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.bloated, 20*60*2));
 		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}
 }

@@ -67,6 +67,10 @@ public class BloatedHunger implements IBloatedHunger
 	@Override
 	public short deductBloatedAmount(short amount)
 	{
+		if(amount < 0)
+		{
+			return 0;
+		}
 		short deduction = amount >= this.bloatedAmount ? this.bloatedAmount : amount;
 		this.bloatedAmount -= deduction;
 		return (short) (amount - deduction);

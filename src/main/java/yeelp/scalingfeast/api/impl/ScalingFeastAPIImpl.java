@@ -199,8 +199,8 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		float currSat = player.getFoodStats().getSaturationLevel();
 		int currHunger = player.getFoodStats().getFoodLevel();
 		int rem = (int) Math.floor(currSat < amount ? amount - currSat : 0);
-		AppleCoreAPI.mutator.setSaturation(player, Math.min(currSat - amount, 0));
-		AppleCoreAPI.mutator.setHunger(player, Math.min(currHunger - rem, 0));
+		AppleCoreAPI.mutator.setSaturation(player, Math.max(currSat - amount, 0));
+		AppleCoreAPI.mutator.setHunger(player, Math.max(currHunger - rem, 0));
 	}
 	
 	@Override
@@ -237,5 +237,21 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public void removeMaxHungerAttributeModifier(EntityPlayer player, UUID id)
 	{
 		getMaxHungerAttributeModifier(player).removeModifier(id);
+	}
+	
+	@Override
+	public void addBloatedHunger(EntityPlayer player, short amount)
+	{
+		IBloatedHunger bloatedHunger = getBloatedHunger(player);
+		bloatedHunger.setBloatedAmount((short) (bloatedHunger.getBloatedAmount() + amount));
+		CapabilityHandler.syncBloatedHunger(player);
+	}
+	
+	@Override
+	public void setBloatedHunger(EntityPlayer player, short amount)
+	{
+		IBloatedHunger bloatedHunger = getBloatedHunger(player);
+		bloatedHunger.setBloatedAmount(amount);
+		CapabilityHandler.syncBloatedHunger(player);
 	}
 }

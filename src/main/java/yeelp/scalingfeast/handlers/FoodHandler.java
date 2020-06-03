@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.FoodStats;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -24,6 +25,7 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.network.SatSyncMessage;
+import yeelp.scalingfeast.util.IBloatedHunger;
 
 public class FoodHandler extends Handler 
 {	
@@ -115,6 +117,36 @@ public class FoodHandler extends Handler
 		}
 		double reduction = (ScalingFeastAPI.accessor.getExhaustionRate(evt.player).getAttributeValue())*fastingMod;
 		evt.deltaExhaustion *= reduction < 0 ? 0 : reduction;
+	}
+	
+	@SubscribeEvent
+	public void onExhausted(ExhaustionEvent.Exhausted evt)
+	{
+		if(ScalingFeastAPI.accessor.getBloatedHungerAmount(evt.player) > 0)
+		{
+			EntityPlayer player = evt.player;
+			short remainder = ScalingFeastAPI.accessor.getBloatedHunger(player).deductBloatedAmount((short) -(evt.deltaHunger + evt.deltaSaturation));
+			FoodStats fs = player.getFoodStats();
+			float currSatLevel = fs.getSaturationLevel();
+			if(currSatLevel == 0)
+			{
+				evt.deltaHunger = remainder;
+			}
+			else
+			{
+				if(currSatLevel >= remainder)
+				{
+					evt.deltaSaturation = remainder;
+					evt.deltaHunger = 0;
+				}
+				else
+				{
+					evt.deltaSaturation = currSatLevel;
+					evt.deltaHunger = (int) (remainder - currSatLevel);
+				}
+			}
+			CapabilityHandler.syncBloatedHunger(player);
+		}
 	}
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)

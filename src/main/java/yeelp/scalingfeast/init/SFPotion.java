@@ -22,6 +22,7 @@ import yeelp.scalingfeast.potion.PotionMetabolism;
 import yeelp.scalingfeast.potion.PotionSoftStomach;
 import yeelp.scalingfeast.potion.PotionBase;
 import yeelp.scalingfeast.potion.PotionBloated;
+import yeelp.scalingfeast.potion.PotionDeficiency;
 import yeelp.scalingfeast.potion.PotionHungerMinus;
 import yeelp.scalingfeast.potion.PotionHungerPlus;
 
@@ -33,6 +34,7 @@ public class SFPotion
 	public static Potion hungerplus;
 	public static Potion hungerminus;
 	public static Potion softstomach;
+	public static Potion deficiency;
 	public static PotionType metabolic;
 	public static PotionType metabolicStrong;
 	public static PotionType metabolicLong;
@@ -45,10 +47,11 @@ public class SFPotion
 		hungerplus = new PotionHungerPlus();
 		hungerminus = new PotionHungerMinus();
 		softstomach = new PotionSoftStomach();
+		deficiency = new PotionDeficiency();
 		
-		ForgeRegistries.POTIONS.registerAll(metabolism, ironstomach, bloated, hungerplus, hungerminus, softstomach);
+		ForgeRegistries.POTIONS.registerAll(metabolism, ironstomach, bloated, hungerplus, hungerminus, softstomach, deficiency);
 		
-		if(ModConfig.items.enableMetabolicPotion)
+		if(ModConfig.items.enablePotions)
 		{
 			PotionType metabolic = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 120*20)});
 			PotionType metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});

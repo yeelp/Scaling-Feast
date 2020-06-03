@@ -66,7 +66,7 @@ public class CapabilityHandler extends Handler
 		}
 		ScalingFeastAPI.mutator.capPlayerHunger(player);
 		ScalingFeastAPI.mutator.capPlayerSaturation(player);
-		ModuleHandler.setModuleModifier(player, ModuleHandler.updatePlayer(player));
+		ModuleHandler.updatePlayer(player);
 	}
 	
 	@SubscribeEvent

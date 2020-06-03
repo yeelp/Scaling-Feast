@@ -84,4 +84,18 @@ public abstract interface IScalingFeastMutator
 	 * @param id the id of the modifier to remove.
 	 */
 	void removeMaxHungerAttributeModifier(EntityPlayer player, UUID id);
+	
+	/**
+	 * Add an amount to a player's bloated hunger value.
+	 * @param player player to target
+	 * @param amount amount to add. If negative, the amount will be deducted, but will never go below zero.
+	 */
+	void addBloatedHunger(EntityPlayer player, short amount);
+	
+	/**
+	 * Set a player's bloated hunger value to a certain amount.
+	 * @param player player to target
+	 * @param amount amount to set.If negative, will instead set it to zero.
+	 */
+	void setBloatedHunger(EntityPlayer player, short amount);
 }
