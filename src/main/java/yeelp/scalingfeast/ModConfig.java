@@ -30,6 +30,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.util.FoodCapProvider;
@@ -95,6 +96,11 @@ public class ModConfig
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
 		public int startingHunger = 20;
 		
+		@Name("Hunger Damage Multiplier")
+		@Comment("When a player is attacked by a non-player entity, they will lose some hunger proportional to the damage dealt. This value determines this proportion (For example, setting to 1.0 means all damage inflicted is deducted from a player's food stats, 0.5 would mean only half that damage will be deducted from a player's food stats. 2.0 would do double damage etc.). If set to 0, this feature is disabled.")
+		@RangeDouble(min = 0.0)
+		public double hungerDamageMultiplier = 0.0;
+		
 		@Name("Death Penalty")
 		@Comment("Configure what happens to player's extended food stats on death")
 		public DeathCategory death = new DeathCategory();
@@ -145,6 +151,15 @@ public class ModConfig
 			@Name("Frequency Reset on Penalty")
 			@Comment("Should the frequency counter for a player be reset when they lose max hunger?")
 			public boolean doesFreqResetOnStarve = true;
+			
+			@Name("Dynamic Starvation")
+			@Comment("If true, Scaling Feast will remeber how much exhaustion a player has received since going to zero hunger. Then, Scaling Feast will increase starvation damage proprtional to the amount of food points a player would have lost if they weren't starving. In addition, a player's starvation tracker, as described in the other settings here, will be increased multiple times in accordance to the amount of extra starvation damage received.")
+			public boolean doDynamicStarvation = false;
+			
+			@Name("Bonus Starvation Damage Multiplier")
+			@Comment("When starving with dynamic starvation enabled, this is the amount of bonus damage to do, in half hearts, per food point lost via exhaustion")
+			@RangeInt(min = 1)
+			public int bonusStarveDamageMult = 1;
 		}
 	}
 	
@@ -183,6 +198,32 @@ public class ModConfig
 		@Comment("If false, Scaling Feast will not create brewing recipes for Metabolic Potions. The potions will still be registered. However, if Metabolic Potions are disabled, recipes will of course not be added, and this config option will do nothing.")
 		@RequiresMcRestart
 		public boolean enableMetabolicRecipes = true;
+		
+		@Name("Enchantments")
+		@Comment("Configure enchantments added by Scaling Feast")
+		public EnchantmentCategory enchants = new EnchantmentCategory();
+		public static class EnchantmentCategory
+		{
+			@Name("Enable Laziness Curse")
+			@Comment("Enables or disables the Curse of Laziness. If disabled, the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableLaziness = true;
+			
+			@Name("Enable Deprivation Curse")
+			@Comment("Enables or disables the Curse of Deprivation. If disabled, the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableDeprivation = true;
+			
+			@Name("Enable Sensitivity Curse")
+			@Comment("Enables or disables the Curse of Sensitivity. If disabled, the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableSensitivity = true;
+			
+			@Name("Global Sensitivity")
+			@Comment("If true, the Curse of Sensitivity will be disabled, but the effects will apply to all players at all times, regardless if you have the curse or not.")
+			@RequiresMcRestart
+			public boolean globalSensitvity = false;
+		}
 	}
 	public static class HUDCategory
 	{
@@ -376,6 +417,7 @@ public class ModConfig
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
 				SOLCarrotHelper.parseMilestones();
+				HeartyFeastBlock.updateCap();
 			}
 		}
 	}

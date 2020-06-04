@@ -98,4 +98,11 @@ public abstract interface IScalingFeastMutator
 	 * @param amount amount to set.If negative, will instead set it to zero.
 	 */
 	void setBloatedHunger(EntityPlayer player, short amount);
+	
+	/**
+	 * Add exhaustion to a player's tracker. Only works while starving.
+	 * @param player player to target
+	 * @param amount amount to add. If negative, will deduct the amount instead - but will never go below zero.
+	 */
+	void addStarveExhaustion(EntityPlayer player, float amount);
 }

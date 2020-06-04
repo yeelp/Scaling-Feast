@@ -9,6 +9,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 
@@ -41,6 +42,7 @@ public class PotionMetabolism extends PotionBase
 			{
 				fs.setFoodSaturationLevel(fs.getSaturationLevel() + 1);
 			}
+			ScalingFeastAPI.mutator.capPlayerSaturation(player);
 		}
 	}
 	

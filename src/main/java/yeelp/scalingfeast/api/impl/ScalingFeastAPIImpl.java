@@ -19,9 +19,11 @@ import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.IStarveExhaustionTracker;
 import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.SaturationScaling;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
+import yeelp.scalingfeast.util.StarveExhaustionTrackerProvider;
 
 public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastMutator
 {
@@ -67,6 +69,12 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public IBloatedHunger getBloatedHunger(EntityPlayer player)
 	{
 		return BloatedHungerProvider.getBloatedHunger(player);
+	}
+	
+	@Override
+	public IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player)
+	{
+		return StarveExhaustionTrackerProvider.getStarveExhaustionTracker(player);
 	}
 
 	@Override
@@ -135,7 +143,6 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		float cap = this.getPlayerSaturationCap(player);
 		if(player.getFoodStats().getSaturationLevel() > cap)
 		{
-			//AppleCoreAPI.mutator.setSaturation(player, cap);
 			player.getFoodStats().setFoodSaturationLevel(cap);
 		}
 	}
@@ -253,5 +260,12 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		IBloatedHunger bloatedHunger = getBloatedHunger(player);
 		bloatedHunger.setBloatedAmount(amount);
 		CapabilityHandler.syncBloatedHunger(player);
+	}
+	
+	@Override
+	public void addStarveExhaustion(EntityPlayer player, float amount)
+	{
+		getStarveExhaustionTracker(player).addExhaustion(player.getFoodStats().getFoodLevel(), amount);
+		CapabilityHandler.syncStarveExhaust(player);
 	}
 }

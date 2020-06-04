@@ -6,6 +6,7 @@ import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.IStarveExhaustionTracker;
 import yeelp.scalingfeast.util.SaturationScaling;
 
 /**
@@ -44,6 +45,13 @@ public abstract interface IScalingFeastAccessor
 	IBloatedHunger getBloatedHunger(EntityPlayer player);
 	
 	/**
+	 * Get a player's exhaustion tracker for tracker exhaustion at zero hunger - an instance of {@link #IStarveExhaustionTracker}
+	 * @param player
+	 * @return that player's exhaustion tracker for zero hunger.
+	 */
+	IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player);
+	
+	/**
 	 * Get a player's bloated hunger amount. This just calls {@link IBloatedHunger#getBloatedAmount()} but is included for convenience.
 	 * @param player
 	 * @return that player's bloated hunger amount
@@ -61,6 +69,16 @@ public abstract interface IScalingFeastAccessor
 	default short getModifiedFoodCap(EntityPlayer player) 
 	{
 		return getFoodCap(player).getMaxFoodLevel(getFoodCapModifier(player));
+	}
+	
+	/**
+	 * Get the bonus damage to deal to the player on starvation.
+	 * @param player
+	 * @return the amount of extra damage to do from exhaustion.
+	 */
+	default int getBonusExhaustionDamage(EntityPlayer player)
+	{
+		return getStarveExhaustionTracker(player).getTotalDamage(player);
 	}
 	
 	/**

@@ -27,7 +27,6 @@ import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.ModuleHandler;
 import yeelp.scalingfeast.handlers.PacketHandler;
-import yeelp.scalingfeast.handlers.PotionHandler;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
@@ -39,6 +38,7 @@ import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.StarvationTracker;
+import yeelp.scalingfeast.util.StarveExhaustionTracker;
 
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies="required-after:applecore@[3.4.0,)")
 public class ScalingFeast
@@ -47,7 +47,7 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
-    private static final boolean debug = true;
+    private static final boolean debug = false;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -79,6 +79,7 @@ public class ScalingFeast
         StarvationTracker.register();
         FoodCapModifier.register();
         BloatedHunger.register();
+        StarveExhaustionTracker.register();
         new CapabilityHandler().register();
         PacketHandler.init();
         info("Scaling Feast pre-initialization complete!");
@@ -90,7 +91,6 @@ public class ScalingFeast
     	proxy.init();
     	new FoodHandler().register();
         new EnchantmentHandler().register();
-        new PotionHandler().register();
         new LootTableInjector().register();
         if(ModConfig.modules.sol.enabled || ModConfig.modules.spiceoflife.enabled)
         {	

@@ -21,6 +21,7 @@ import yeelp.scalingfeast.network.BloatedHungerMessage;
 import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.StarvationTrackerMessage;
+import yeelp.scalingfeast.network.StarveExhaustMessage;
 import yeelp.scalingfeast.util.BloatedHunger;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
@@ -28,6 +29,7 @@ import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTracker;
+import yeelp.scalingfeast.util.StarveExhaustionTracker;
 
 public class CapabilityHandler extends Handler
 {
@@ -41,6 +43,7 @@ public class CapabilityHandler extends Handler
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "Modifier"), new FoodCapModifier());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "BloatedAmount"),  new BloatedHunger());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "ExhaustionSinceStarve"), new StarveExhaustionTracker());
 		}
 	}
 	
@@ -135,6 +138,7 @@ public class CapabilityHandler extends Handler
 		syncTracker(player);
 		syncMod(player);
 		syncBloatedHunger(player);
+		syncStarveExhaust(player);
 	}
 	
 	public static void syncCap(EntityPlayer player)
@@ -155,5 +159,10 @@ public class CapabilityHandler extends Handler
 	public static void syncBloatedHunger(EntityPlayer player)
 	{
 		PacketHandler.INSTANCE.sendTo(new BloatedHungerMessage(ScalingFeastAPI.accessor.getBloatedHunger(player)), (EntityPlayerMP) player);
+	}
+	
+	public static void syncStarveExhaust(EntityPlayer player)
+	{
+		PacketHandler.INSTANCE.sendTo(new StarveExhaustMessage(ScalingFeastAPI.accessor.getStarveExhaustionTracker(player)), (EntityPlayerMP) player);
 	}
 }

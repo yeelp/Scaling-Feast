@@ -25,8 +25,10 @@ import squeek.applecore.api.IAppleCoreAccessor;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.food.IEdibleBlock;
 import squeek.applecore.api.food.ItemFoodProxy;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.init.SFFood;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
@@ -40,6 +42,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 {
 	public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
 	private static HashSet<UUID> users = new HashSet<UUID>();
+	private static int cap = ModConfig.items.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.heartyFeastCap;
 	private boolean alwaysEdible = false;
 	private int food = 0;
 	private float sat = 0;
@@ -73,7 +76,8 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	@Override
 	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		this.food = player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null))/7;
+		this.food = ScalingFeastAPI.accessor.getModifiedFoodCap(player)/7;
+		this.food = this.food < cap ? this.food : cap;
 		this.sat = 0.5f;
 		users.add(player.getUniqueID());
 		return this.eat(world, pos, state, player);
@@ -104,5 +108,10 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
 	{
 		player.getFoodStats().addStats(new ItemFoodProxy(this), itemStack);
 		users.remove(player.getUniqueID());
+	}
+	
+	public static void updateCap()
+	{
+		cap = ModConfig.items.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.heartyFeastCap;
 	}
 }

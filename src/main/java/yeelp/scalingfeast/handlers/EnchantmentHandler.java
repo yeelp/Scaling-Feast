@@ -19,6 +19,7 @@ import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.hunger.ExhaustionEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.init.SFEnchantments;
@@ -108,13 +109,17 @@ public class EnchantmentHandler extends Handler
 	{
 		EntityPlayer player = evt.player;
 		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.sensitivityCurse, player);
-		if(level != 0)
+		if(level != 0 || ModConfig.items.enchants.globalSensitvity)
 		{
 			int overflow = (evt.foodValuesToBeAdded.hunger + player.getFoodStats().getFoodLevel()) - ScalingFeastAPI.accessor.getModifiedFoodCap(player);
 			ScalingFeast.debug(Integer.toString(overflow));
 			if(overflow > 0)
 			{
-				player.addPotionEffect(new PotionEffect(SFPotion.softstomach, 15*20, overflow-1));
+				if(overflow > 256)
+				{
+					overflow = 256; //fail safe in case potion amplifiers > 255 behave oddly.
+				}
+				player.addPotionEffect(new PotionEffect(SFPotion.softstomach, 20*20, overflow-1));
 			}
 		}
 	}

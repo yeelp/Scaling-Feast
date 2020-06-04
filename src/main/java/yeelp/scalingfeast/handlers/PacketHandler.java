@@ -8,6 +8,7 @@ import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.SatSyncMessage;
 import yeelp.scalingfeast.network.StarvationTrackerMessage;
+import yeelp.scalingfeast.network.StarveExhaustMessage;
 
 public final class PacketHandler 
 {
@@ -20,5 +21,6 @@ public final class PacketHandler
 		INSTANCE.registerMessage(FoodCapModifierMessage.Handler.class, FoodCapModifierMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(SatSyncMessage.Handler.class, SatSyncMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(BloatedHungerMessage.Handler.class, BloatedHungerMessage.class, id++, Side.CLIENT);
+		INSTANCE.registerMessage(StarveExhaustMessage.Handler.class, StarveExhaustMessage.class, id++, Side.CLIENT);
 	}
 }
