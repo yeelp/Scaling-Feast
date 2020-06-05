@@ -41,7 +41,6 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
 public class ModuleHandler extends Handler 
 {	
 	private static HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
-	private static HashMap<UUID, Short> modifiers = new HashMap<UUID, Short>();
 	private static ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
 	private static ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
 	

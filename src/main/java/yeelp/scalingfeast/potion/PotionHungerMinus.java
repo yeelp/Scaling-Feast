@@ -42,7 +42,7 @@ public class PotionHungerMinus extends PotionBase
 		{
 			EntityPlayer player = (EntityPlayer) entityLivingBaseIn;
 			FoodStats fs = player.getFoodStats();
-			int newCap = ScalingFeastAPI.accessor.getModifiedFoodCap(player) - (amplifier + 1);
+			int newCap = ScalingFeastAPI.accessor.getModifiedFoodCap(player) + (amplifier + 1);
 			if(fs.getFoodLevel() > newCap)
 			{
 				AppleCoreAPI.mutator.setHunger(player, newCap);
