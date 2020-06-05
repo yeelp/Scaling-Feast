@@ -117,7 +117,7 @@ public abstract interface IScalingFeastAccessor
 	 * @param player player to get this attribute for
 	 * @return The IAttribute with the exhaustion rate for this player.
 	 */
-	IAttributeInstance getExhaustionRate(EntityPlayer player);
+	IAttributeInstance getFoodEfficiency(EntityPlayer player);
 	
 	/**
 	 * Get the max hunger modifier from attributes for a player.

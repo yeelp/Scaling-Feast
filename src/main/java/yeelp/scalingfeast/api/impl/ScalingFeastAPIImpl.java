@@ -109,9 +109,9 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	}
 	
 	@Override
-	public IAttributeInstance getExhaustionRate(EntityPlayer player)
+	public IAttributeInstance getFoodEfficiency(EntityPlayer player)
 	{
-		return player.getAttributeMap().getAttributeInstance(SFAttributes.EXHAUSTION_RATE);
+		return player.getAttributeMap().getAttributeInstance(SFAttributes.FOOD_EFFICIENCY);
 	}
 	
 	@Override
@@ -211,9 +211,9 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	}
 	
 	@Override
-	public void setExhaustionRateModifier(EntityPlayer player, UUID id, String name, double amount)
+	public void setFoodEfficiencyModifier(EntityPlayer player, UUID id, String name, double amount)
 	{
-		IAttributeInstance instance = getExhaustionRate(player);
+		IAttributeInstance instance = getFoodEfficiency(player);
 		AttributeModifier modifier = instance.getModifier(id);
 		if(modifier != null)
 		{
@@ -235,9 +235,9 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	}
 	
 	@Override
-	public void removeExhaustionRateModifier(EntityPlayer player, UUID id)
+	public void removeFoodEfficiencyModifier(EntityPlayer player, UUID id)
 	{
-		getExhaustionRate(player).removeModifier(id);
+		getFoodEfficiency(player).removeModifier(id);
 	}
 	
 	@Override

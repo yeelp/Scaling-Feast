@@ -127,8 +127,15 @@ public class FoodHandler extends Handler
 		if(level != 0)
 		{
 			fastingMod = (1-0.1f*level);
+			fastingMod = fastingMod < 0 ? 0 : fastingMod;
 		}
-		double reduction = (ScalingFeastAPI.accessor.getExhaustionRate(evt.player).getAttributeValue())*fastingMod;
+		double foodEfficiency = ScalingFeastAPI.accessor.getFoodEfficiency(evt.player).getAttributeValue();
+		ScalingFeast.debug("foodEfficiency:" + foodEfficiency);
+		if(foodEfficiency < 1)
+		{
+			foodEfficiency = -1.0/(foodEfficiency-2);
+		}
+		double reduction = fastingMod/foodEfficiency;
 		evt.deltaExhaustion *= reduction < 0 ? 0 : reduction;
 		if(evt.player.getFoodStats().getFoodLevel() == 0 && !evt.player.isDead)
 		{

@@ -14,13 +14,12 @@ import yeelp.scalingfeast.util.SFAttributes;
  */
 public class PotionIronStomach extends PotionBase
 {
-	public static double reductionMultiplier = -0.2;
+	public static double reductionMultiplier = 0.2;
 	public PotionIronStomach() 
 	{
 		super(false, 0xCCCCCC, 0, 0, false);
 		this.setRegistryName("ironstomach");
 		this.setPotionName("effect.ironstomach");
 		this.setBeneficial();
-		this.registerPotionAttributeModifier(SFAttributes.EXHAUSTION_RATE, "39e48ce7-2afc-4f80-83b2-11eccd2faabc", reductionMultiplier, 2);
 	}
 }

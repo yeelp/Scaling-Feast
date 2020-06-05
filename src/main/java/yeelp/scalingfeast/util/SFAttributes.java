@@ -10,7 +10,7 @@ import yeelp.scalingfeast.handlers.Handler;
 
 public final class SFAttributes extends Handler
 {
-	public static final IAttribute EXHAUSTION_RATE = new RangedAttribute((IAttribute) null, "scalingfeast.exhaustionRate", 0.0, -2048.0, 2048.0).setShouldWatch(true);
+	public static final IAttribute FOOD_EFFICIENCY = new RangedAttribute((IAttribute) null, "scalingfeast.foodEfficiency", 1.0, -2048.0, 2048.0).setShouldWatch(true);
 	public static final IAttribute MAX_HUNGER_MOD = new RangedAttribute((IAttribute) null, "scalingfeast.maxHungerMod", 0.0, -2048.0, 2048.0).setShouldWatch(true);
 
 	@SubscribeEvent
@@ -19,7 +19,7 @@ public final class SFAttributes extends Handler
 		if(evt.getEntity() instanceof EntityPlayer)
 		{
 			AbstractAttributeMap playerAttributes = ((EntityPlayer) evt.getEntity()).getAttributeMap();
-			playerAttributes.registerAttribute(EXHAUSTION_RATE);
+			playerAttributes.registerAttribute(FOOD_EFFICIENCY).setBaseValue(1.0);
 			playerAttributes.registerAttribute(MAX_HUNGER_MOD);
 		}
 	}

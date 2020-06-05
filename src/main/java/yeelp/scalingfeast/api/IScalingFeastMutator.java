@@ -59,7 +59,7 @@ public abstract interface IScalingFeastMutator
 	 * @param name the name for this modifier. May not be unique.
 	 * @param amount value for this modifier. This value represents the net percentage change for this modifier. That is, for a 50% increase to exhaustion, this argument would be {@code 0.5}. For a 50% decrease to exhaustion, this argument would be {@code -0.5}.
 	 */
-	void setExhaustionRateModifier(EntityPlayer player, UUID id, String name, double amount);
+	void setFoodEfficiencyModifier(EntityPlayer player, UUID id, String name, double amount);
 	
 	/**
 	 * Modify the max hunger for this player with an attribute modifier. If the max hunger modifier for this player already has a modifier with this id, the value is changed to {@code amount}
@@ -76,7 +76,7 @@ public abstract interface IScalingFeastMutator
 	 * @param player player to target
 	 * @param id the id of the modifier to remove.
 	 */
-	void removeExhaustionRateModifier(EntityPlayer player, UUID id);
+	void removeFoodEfficiencyModifier(EntityPlayer player, UUID id);
 	
 	/**
 	 * Remove a modifier for a player's max hunger attribute

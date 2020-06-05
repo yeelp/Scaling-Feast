@@ -27,6 +27,7 @@ import yeelp.scalingfeast.handlers.FoodHandler;
 import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.ModuleHandler;
 import yeelp.scalingfeast.handlers.PacketHandler;
+import yeelp.scalingfeast.handlers.PotionHandler;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
@@ -47,7 +48,7 @@ public class ScalingFeast
     public static boolean hasAppleSkin;
     public static boolean hasSolCarrot;
     public static boolean hasSpiceOfLife;
-    private static final boolean debug = false;
+    private static final boolean debug = true;
     @SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
     public static Proxy proxy;
 
@@ -91,6 +92,7 @@ public class ScalingFeast
     	proxy.init();
     	new FoodHandler().register();
         new EnchantmentHandler().register();
+        new PotionHandler().register();
         new LootTableInjector().register();
         if(ModConfig.modules.sol.enabled || ModConfig.modules.spiceoflife.enabled)
         {	

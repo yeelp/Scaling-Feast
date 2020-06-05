@@ -56,10 +56,21 @@ public class SFPotion
 			PotionType metabolic = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 120*20)});
 			PotionType metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});
 			PotionType metabolicStrong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)});
+			
+			PotionType deficiencyPotion = new PotionType(new PotionEffect[] {new PotionEffect(deficiency, 1)});
+			PotionType deficiencyStrongPotion = new PotionType(new PotionEffect[] {new PotionEffect(deficiency, 1, 1)});
+			
+			registerPotionType(ironstomach, 150, "ironstomach");
+			registerPotionType(bloated, 120, "bloated");
+			registerPotionType(hungerplus, 180, "hungerplus");
+			registerPotionType(hungerminus, 120, "hungerminus");
+			registerPotionType(softstomach, 120, "softstomach");
+			deficiencyPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "deficiency"));
+			deficiencyStrongPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "deficiency_strong"));
 			metabolic.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism"));
 			metabolicLong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_extended"));
 			metabolicStrong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism_strong"));
-			ForgeRegistries.POTION_TYPES.registerAll(metabolic, metabolicLong, metabolicStrong);
+			ForgeRegistries.POTION_TYPES.registerAll(metabolic, metabolicLong, metabolicStrong, deficiencyPotion, deficiencyStrongPotion);
 			if(ModConfig.items.enableMetabolicRecipes)
 			{
 				PotionHelper.addMix(PotionTypes.THICK, SFFood.heartyshank, metabolic);
@@ -67,5 +78,16 @@ public class SFPotion
 				PotionHelper.addMix(metabolic, Items.GLOWSTONE_DUST, metabolicStrong);
 			}
 		}
+	}
+	
+	private static void registerPotionType(Potion p, int baseDuration, String rootName)
+	{
+		PotionType normal = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration*20)});
+		PotionType extended = new PotionType(new PotionEffect[] {new PotionEffect(p, 2*baseDuration*20)});
+		PotionType strong = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration/2, 1)});
+		normal.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName));
+		extended.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName+"_extended"));
+		strong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName+"_strong"));
+		ForgeRegistries.POTION_TYPES.registerAll(normal, extended, strong);
 	}
 }

@@ -44,7 +44,7 @@ item.scalingfeast.enchantedironapple.name=§dIron Apple§f
 tile.scalingfeast.heartyfeast.name=Hearty Feast
 
 attribute.name.scalingfeast.maxHungerMod=Max Hunger
-attribute.name.scalingfeast.exhaustionRate=Exhaustion Rate
+attribute.name.scalingfeast.foodEfficiency=Food Efficiency
 
 effect.metabolism=Metabolism
 
@@ -140,13 +140,9 @@ effect.deficiency=Deficiency
 
 potion.effect.deficiency=Potion of Deficiency
 potion.effect.deficiency_strong=Potion of Deficiency
-potion.effect.deficiency_extended=Potion of Deficiency
 splash_potion.effect.deficiency=Splash Potion of Deficiency
 splash_potion.effect.deficiency_strong=Splash Potion of Deficiency
-splash_potion.effect.deficiency_extended=Splash Potion of Deficiency
 lingering_potion.effect.deficiency=Lingering Potion of Deficiency
 lingering_potion.effect.deficiency_strong=Lingering Potion of Deficiency
-lingering_potion.effect.deficiency_extended=Lingering Potion of Deficiency
 tipped_arrow.effect.deficiency=Arrow of Deficiency
 tipped_arrow.effect.deficiency_strong=Arrow of Deficiency
-tipped_arrow.effect.deficiency_extended=Arrow of Deficiency
