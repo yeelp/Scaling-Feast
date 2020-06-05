@@ -1,8 +1,13 @@
 package yeelp.scalingfeast.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,6 +22,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 public class FoodCapModifier implements IFoodCapModifier 
 {
 	private short mod;
+	private Map<String, Short> mods = new HashMap<String, Short>();
 
 	/**
 	 * Create a new FoodCapModifier
@@ -48,27 +54,69 @@ public class FoodCapModifier implements IFoodCapModifier
 	}
 
 	@Override
-	public NBTTagShort serializeNBT() 
+	public NBTTagList serializeNBT() 
 	{
-		return new NBTTagShort(this.mod);
+		NBTTagList lst = new NBTTagList();
+		for(Entry<String, Short> entry : mods.entrySet())
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setString("id", entry.getKey());
+			tag.setShort("modifier", entry.getValue());
+			lst.appendTag(tag);
+		}
+		return lst;
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagShort nbt)
+	public void deserializeNBT(NBTBase nbt)
 	{
-		this.mod = nbt.getShort();
+		this.mods = new HashMap<String, Short>();
+		if(nbt instanceof NBTTagShort)
+		{
+			this.mods.put("modules", ((NBTTagShort) nbt).getShort());
+		}
+		else if(nbt instanceof NBTTagList)
+		{
+			NBTTagList lst = (NBTTagList) nbt;
+			if(lst.getTagType() == 10) //10 is the ID for NBTTagCompounds
+			{
+				for(NBTBase tag : lst)
+				{
+					NBTTagCompound modifier = (NBTTagCompound) tag;
+					this.mods.put(modifier.getString("id"), modifier.getShort("modifier"));
+				}
+			}
+		}
 	}
 	
 	@Override
 	public short getModifier()
 	{
+		short mod = 0;
+		for(short s : this.mods.values())
+		{
+			mod += s;
+		}
 		return mod;
 	}
 	
 	@Override
-	public void setModifier(short amount)
+	public short getModifier(String id)
 	{
-		this.mod = amount;
+		Short val = this.mods.get(id);
+		return val == null ? 0 : val.shortValue();
+	}
+	
+	@Override
+	public Map<String, Short> getAllModifiers()
+	{
+		return this.mods;
+	}
+	
+	@Override
+	public void setModifier(String id, short amount)
+	{
+		this.mods.put(id, amount);//this.mod = amount;
 	}
 	
 	public static void register()
@@ -76,7 +124,7 @@ public class FoodCapModifier implements IFoodCapModifier
 		CapabilityManager.INSTANCE.register(IFoodCapModifier.class, new FoodModStorage(), new FoodModFactory());
 	}
 
-	public static class FoodModFactory implements Callable<IFoodCapModifier>
+	private static class FoodModFactory implements Callable<IFoodCapModifier>
 	{
 		@Override
 		public IFoodCapModifier call() throws Exception 
@@ -85,19 +133,19 @@ public class FoodCapModifier implements IFoodCapModifier
 		}	
 	}
 	
-	public static class FoodModStorage implements IStorage<IFoodCapModifier>
+	private static class FoodModStorage implements IStorage<IFoodCapModifier>
 	{
 
 		@Override
 		public NBTBase writeNBT(Capability<IFoodCapModifier> capability, IFoodCapModifier instance, EnumFacing side) 
 		{
-			return new NBTTagShort(instance.getModifier());
+			return instance.serializeNBT();
 		}
 
 		@Override
 		public void readNBT(Capability<IFoodCapModifier> capability, IFoodCapModifier instance, EnumFacing side, NBTBase nbt) 
 		{
-			instance.setModifier(((NBTTagShort) nbt).getShort());
+			instance.deserializeNBT(nbt);
 		}
 		
 	}

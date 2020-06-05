@@ -30,6 +30,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.util.FoodCapProvider;
@@ -95,6 +96,11 @@ public class ModConfig
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
 		public int startingHunger = 20;
 		
+		@Name("Hunger Damage Multiplier")
+		@Comment("When a player is attacked by a non-player entity, they will lose some hunger proportional to the damage dealt. This value determines this proportion (For example, setting to 1.0 means all damage inflicted is deducted from a player's food stats, 0.5 would mean only half that damage will be deducted from a player's food stats. 2.0 would do double damage etc.). If set to 0, this feature is disabled.")
+		@RangeDouble(min = 0.0)
+		public double hungerDamageMultiplier = 0.0;
+		
 		@Name("Death Penalty")
 		@Comment("Configure what happens to player's extended food stats on death")
 		public DeathCategory death = new DeathCategory();
@@ -145,6 +151,15 @@ public class ModConfig
 			@Name("Frequency Reset on Penalty")
 			@Comment("Should the frequency counter for a player be reset when they lose max hunger?")
 			public boolean doesFreqResetOnStarve = true;
+			
+			@Name("Dynamic Starvation")
+			@Comment("If true, Scaling Feast will remeber how much exhaustion a player has received since going to zero hunger. Then, Scaling Feast will increase starvation damage proprtional to the amount of food points a player would have lost if they weren't starving. In addition, a player's starvation tracker, as described in the other settings here, will be increased multiple times in accordance to the amount of extra starvation damage received.")
+			public boolean doDynamicStarvation = false;
+			
+			@Name("Bonus Starvation Damage Multiplier")
+			@Comment("When starving with dynamic starvation enabled, this is the amount of bonus damage to do, in half hearts, per food point lost via exhaustion")
+			@RangeInt(min = 1)
+			public int bonusStarveDamageMult = 1;
 		}
 	}
 	
@@ -169,15 +184,46 @@ public class ModConfig
 		@RequiresMcRestart
 		public double heartyShankSatLevel = 0.8;
 		
-		@Name("Enable Metabolic Potions")
-		@Comment("If false, Scaling Feast will not register Metabolic Potions and its variants. This does not remove the Metabolism Potion Effect from the game, just the potions.")
+		@Name("Hearty Feast Restoration Cap")
+		@Comment("This is the maximum value the Hearty Feast will restore. If set to -1, there is no limit. If set to 0, the Hearty Feast won't restore anything.")
+		@RangeInt(min=-1)
+		public int heartyFeastCap = -1;
+		
+		@Name("Enable Potions")
+		@Comment("If false, Scaling Feast will not register potions for all of its potion effects. This doesn't remove the potion effects from the game, just the potions. Note only the Metabolic Potion has brewing recipes added by Scaling Feast.")
 		@RequiresMcRestart
-		public boolean enableMetabolicPotion = true;
+		public boolean enablePotions = true;
 		
 		@Name("Enable Brewing Recipes")
 		@Comment("If false, Scaling Feast will not create brewing recipes for Metabolic Potions. The potions will still be registered. However, if Metabolic Potions are disabled, recipes will of course not be added, and this config option will do nothing.")
 		@RequiresMcRestart
 		public boolean enableMetabolicRecipes = true;
+		
+		@Name("Enchantments")
+		@Comment("Configure enchantments added by Scaling Feast")
+		public EnchantmentCategory enchants = new EnchantmentCategory();
+		public static class EnchantmentCategory
+		{
+			@Name("Enable Laziness Curse")
+			@Comment("Enables or disables the Curse of Laziness. If disabled, the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableLaziness = true;
+			
+			@Name("Enable Deprivation Curse")
+			@Comment("Enables or disables the Curse of Deprivation. If disabled, the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableDeprivation = true;
+			
+			@Name("Enable Sensitivity Curse")
+			@Comment("Enables or disables the Curse of Sensitivity. If disabled, the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableSensitivity = true;
+			
+			@Name("Global Sensitivity")
+			@Comment("If true, the Curse of Sensitivity will be disabled, but the effects will apply to all players at all times, regardless if you have the curse or not.")
+			@RequiresMcRestart
+			public boolean globalSensitvity = false;
+		}
 	}
 	public static class HUDCategory
 	{
@@ -284,6 +330,12 @@ public class ModConfig
 				  "If the number of \'rows\' of saturation exceed the length of this list, it will wrap around to the beginning.",
 				  "If any invalid hex string is entered, it will be ignored."})
 		public String[] Scolours = {"d70000", "d700d7", "6400d7", "00d3d7", "64d700", "d7d700", "d7d7d7"}; 
+		
+		@Name("Bloated Overlay Colours")
+		@Comment({"A List of hex colours for coloured shanks a player receives while under the Bloated effect. Each entry is of the form XXXXXX, where X is a hexadecimal digit",
+				  "If the number of \'rows\' of bloated shanks exceed the length of this list, it will wrap around to the beginning.",
+				  "If any invalid hex string is entered, it will be ignored."})
+		public String[] Bcolours = {"ffff6e", "ff6e6e", "6eff6e", "6effff", "6e6eff", "ff6eff", "e6e6e6"};
 	}
 	
 	public static class ModuleCategory
@@ -365,6 +417,7 @@ public class ModConfig
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
 				SOLCarrotHelper.parseMilestones();
+				HeartyFeastBlock.updateCap();
 			}
 		}
 	}

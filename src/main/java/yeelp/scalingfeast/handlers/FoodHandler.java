@@ -4,21 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.FoodStats;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.food.FoodEvent;
+import squeek.applecore.api.hunger.ExhaustionEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
+import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.network.SatSyncMessage;
 
 public class FoodHandler extends Handler 
@@ -30,16 +36,29 @@ public class FoodHandler extends Handler
 	{
 		evt.maxHunger = ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player);
 	}
-	
-	//Even if this event is canceled, we probably want to tick the starvation tracker. This is fine, as it will only succeed if the food level is zero.
-	@SubscribeEvent(receiveCanceled=true)
+
+	@SubscribeEvent
 	public void onStarve(StarvationEvent.Starve evt)
 	{
-		//only do any of this if there is max hunger to lose, otherwise this is a waste of processing.
-		EntityPlayer player = evt.player;
-		if(ModConfig.foodCap.starve.starveLoss != 0 && !player.isDead)
+		if(ScalingFeastAPI.accessor.getBloatedHungerAmount(evt.player) > 0)
 		{
-			ScalingFeastAPI.mutator.tickPlayerStarvationTracker(player);
+			evt.setCanceled(true);
+		}
+		else
+		{
+			EntityPlayer player = evt.player;
+			int bonusDamage = ModConfig.foodCap.starve.doDynamicStarvation ? ModConfig.foodCap.starve.bonusStarveDamageMult*ScalingFeastAPI.accessor.getBonusExhaustionDamage(player) : 0;
+			ScalingFeastAPI.accessor.getStarveExhaustionTracker(player).reset();
+			CapabilityHandler.syncStarveExhaust(player);
+			evt.starveDamage += bonusDamage;
+			if(ModConfig.foodCap.starve.starveLoss != 0 && !player.isDead)
+			{
+				if(bonusDamage > 0)
+				{
+					ScalingFeastAPI.mutator.tickPlayerStarvationTracker(player, bonusDamage);
+				}
+				ScalingFeastAPI.mutator.tickPlayerStarvationTracker(player);
+			}
 		}
 	}
 	
@@ -56,12 +75,6 @@ public class FoodHandler extends Handler
 				CapabilityHandler.syncTracker(player);
 			}
 		}
-	}
-	
-	@SubscribeEvent
-	public void onFoodEaten(FoodEvent.FoodEaten evt)
-	{
-		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
 	}
 	
 	@SubscribeEvent
@@ -88,6 +101,12 @@ public class FoodHandler extends Handler
 	}
 	
 	@SubscribeEvent
+	public void onPlayerUpdate(PlayerTickEvent evt)
+	{
+		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
+	}
+	
+	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent evt)
 	{
 		if(!(evt.player instanceof EntityPlayerMP))
@@ -99,21 +118,79 @@ public class FoodHandler extends Handler
 			satLevels.remove(evt.player.getUniqueID());
 		}
 	}
-
-	/*
+	
 	@SubscribeEvent
-	public void onPlayerAttacked(LivingHurtEvent evt)
+	public void onExhaustion(ExhaustionEvent.ExhaustionAddition evt)
+	{
+		int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.fasting, evt.player);
+		float fastingMod = 1.0f;
+		if(level != 0)
+		{
+			fastingMod = (1-0.1f*level);
+			fastingMod = fastingMod < 0 ? 0 : fastingMod;
+		}
+		double foodEfficiency = ScalingFeastAPI.accessor.getFoodEfficiency(evt.player).getAttributeValue();
+		ScalingFeast.debug("foodEfficiency:" + foodEfficiency);
+		if(foodEfficiency < 1)
+		{
+			foodEfficiency = -1.0/(foodEfficiency-2);
+		}
+		double reduction = fastingMod/foodEfficiency;
+		evt.deltaExhaustion *= reduction < 0 ? 0 : reduction;
+		if(evt.player.getFoodStats().getFoodLevel() == 0 && !evt.player.isDead)
+		{
+			ScalingFeastAPI.mutator.addStarveExhaustion(evt.player, evt.deltaExhaustion);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onExhausted(ExhaustionEvent.Exhausted evt)
+	{
+		if(ScalingFeastAPI.accessor.getBloatedHungerAmount(evt.player) > 0)
+		{
+			EntityPlayer player = evt.player;
+			short remainder = ScalingFeastAPI.accessor.getBloatedHunger(player).deductBloatedAmount((short) -(evt.deltaHunger + evt.deltaSaturation));
+			FoodStats fs = player.getFoodStats();
+			float currSatLevel = fs.getSaturationLevel();
+			if(currSatLevel == 0)
+			{
+				evt.deltaHunger = remainder;
+			}
+			else
+			{
+				if(currSatLevel >= remainder)
+				{
+					evt.deltaSaturation = remainder;
+					evt.deltaHunger = 0;
+				}
+				else
+				{
+					evt.deltaSaturation = currSatLevel;
+					evt.deltaHunger = (int) (remainder - currSatLevel);
+				}
+			}
+			CapabilityHandler.syncBloatedHunger(player);
+		}
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void onGetExhaustionCap(ExhaustionEvent.GetExhaustionCap evt)
+	{
+		evt.exhaustionLevelCap = Float.MAX_VALUE;
+	}
+
+	@SubscribeEvent
+	public void onPlayerAttacked(LivingDamageEvent evt)
 	{
 		DamageSource src = evt.getSource();
 		if(src.damageType.equals("mob") || (src.getTrueSource() instanceof EntityLivingBase && !(src.getTrueSource() instanceof EntityPlayer)))
 		{
 			EntityLivingBase entity = evt.getEntityLiving();
-			if(entity instanceof EntityPlayer)
+			if(entity instanceof EntityPlayer && ModConfig.foodCap.hungerDamageMultiplier != 0)
 			{
 				EntityPlayer player = (EntityPlayer) entity;
-				ScalingFeast.info(String.format("Damaging %s's foodstats by %f", player.getName(), evt.getAmount()));
-				ScalingFeastAPI.mutator.damageFoodStats(player, evt.getAmount());
+				ScalingFeastAPI.mutator.damageFoodStats(player, (float) (ModConfig.foodCap.hungerDamageMultiplier*evt.getAmount()));
 			}
 		}
-	}*/
+	}
 }

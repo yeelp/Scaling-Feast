@@ -44,6 +44,7 @@ public class HUDOverlayHandler extends Handler
 	protected int offset;
 	private static ArrayList<Colour> colours = new ArrayList<Colour>();
 	private static ArrayList<Colour> satColours = new ArrayList<Colour>();
+	private static ArrayList<Colour> bloatedColours = new ArrayList<Colour>();
 	private Random rand = new Random();
 	private boolean appleSkinErr = false;
 	private static int satColour = 0xffff55;
@@ -100,6 +101,21 @@ public class HUDOverlayHandler extends Handler
 		{
 			satColours = colourize(ModConfig.hud.Scolours);
 		}
+		
+		if(isEmpty(ModConfig.hud.Bcolours))
+		{
+			bloatedColours.add(new Colour("ffff6e"));
+			bloatedColours.add(new Colour("ff6e6e"));
+			bloatedColours.add(new Colour("6eff6e"));
+			bloatedColours.add(new Colour("6effff"));
+			bloatedColours.add(new Colour("6e6eff"));
+			bloatedColours.add(new Colour("ff6eff"));
+			bloatedColours.add(new Colour("e6e6e6"));
+		}
+		else
+		{
+			bloatedColours = colourize(ModConfig.hud.Bcolours);
+		}
 	}
 	
 	public static void loadTextColours()
@@ -153,6 +169,15 @@ public class HUDOverlayHandler extends Handler
 				drawStatsOverlay(jitterAmount, mc, player, left, top);
 				//air meter expects this to be done before it runs so it doesn't draw on top of hunger.
 				GuiIngameForge.right_height += 10;
+				//reset offset value to reflect change to right_height.
+				offset = GuiIngameForge.right_height;
+				int bloatedAmount = ScalingFeastAPI.accessor.getBloatedHungerAmount(player);
+				if(bloatedAmount > 0)
+				{
+					top = res.getScaledHeight() - offset;
+					drawBloatedAmount(jitterAmount, mc, player, bloatedAmount, left, top);
+					GuiIngameForge.right_height += 10;
+				}
 				if(ModConfig.compat.shouldFirePost)
 				{
 					MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(evt, RenderGameOverlayEvent.ElementType.FOOD));
@@ -161,6 +186,39 @@ public class HUDOverlayHandler extends Handler
 		}
 	}
 	
+	private void drawBloatedAmount(int[] jitterAmount, Minecraft mc, EntityPlayer player, int bloatedAmount, int left, int top)
+	{
+		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
+		mc.getTextureManager().bindTexture(Gui.ICONS);
+		drawStatBar(jitterAmount, mc, left, top, bloatedAmount < ModConsts.VANILLA_MAX_HUNGER ? (int) (2*Math.ceil(bloatedAmount/2.0f)) : ModConsts.VANILLA_MAX_HUNGER, 16 + (player.isPotionActive(MobEffects.HUNGER) ? 117 : 0), 27, true, false, false, isHungerEffectActive, null);
+		int i = 0;
+		int colourIndex = 0;
+		int numBars = bloatedAmount/ModConsts.VANILLA_MAX_HUNGER;
+		int remainingShanks = bloatedAmount % ModConsts.VANILLA_MAX_HUNGER;
+		mc.getTextureManager().bindTexture(icons);
+		for(i = 0; i < numBars; i++)
+		{
+			if(i == 0)
+			{
+				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 27, false, false, false, false, null);
+			}
+			mc.mcProfiler.startSection("Bloated Bar: "+(i+1));
+			drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 18, false, false, false, isHungerEffectActive, bloatedColours.get((colourIndex++) % bloatedColours.size()));
+		}
+		if(remainingShanks > 0)
+		{
+			if(i == 0)
+			{
+				drawStatBar(jitterAmount, mc, left, top, remainingShanks, 0, 27, false, false, false, false, null);
+				drawStatBar(jitterAmount, mc, left, top, remainingShanks, 0, 18, false, true, false, isHungerEffectActive, bloatedColours.get((colourIndex++) % bloatedColours.size()));
+			}
+			else
+			{
+				drawStatBar(jitterAmount, mc, left, top, remainingShanks, 0, 18, false, false, false, isHungerEffectActive, bloatedColours.get((colourIndex++) % bloatedColours.size()));
+			}
+		}
+	}
+
 	private void drawStatsOverlay(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
 	{
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
@@ -522,6 +580,10 @@ public class HUDOverlayHandler extends Handler
 		ArrayList<Colour> lst = new ArrayList<Colour>();
 		for(String hex : arr)
 		{
+			if(hex.trim().isEmpty())
+			{
+				continue;
+			}
 			lst.add(new Colour(hex));
 		}
 		return lst;

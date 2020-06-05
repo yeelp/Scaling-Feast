@@ -1,5 +1,9 @@
 package yeelp.scalingfeast.api.impl;
 
+import java.util.UUID;
+
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import squeek.applecore.api.AppleCoreAPI;
@@ -8,13 +12,18 @@ import yeelp.scalingfeast.api.IScalingFeastAccessor;
 import yeelp.scalingfeast.api.IScalingFeastMutator;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
+import yeelp.scalingfeast.util.BloatedHungerProvider;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.IStarveExhaustionTracker;
+import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.SaturationScaling;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
+import yeelp.scalingfeast.util.StarveExhaustionTrackerProvider;
 
 public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastMutator
 {
@@ -55,6 +64,18 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	{
 		return StarvationTrackerProvider.getTracker(player);
 	}
+	
+	@Override 
+	public IBloatedHunger getBloatedHunger(EntityPlayer player)
+	{
+		return BloatedHungerProvider.getBloatedHunger(player);
+	}
+	
+	@Override
+	public IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player)
+	{
+		return StarveExhaustionTrackerProvider.getStarveExhaustionTracker(player);
+	}
 
 	@Override
 	public SaturationScaling getSaturationScaling()
@@ -86,6 +107,18 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	{
 		return this.getFoodCap(player).getUnmodifiedMaxFoodLevel() < ModConfig.foodCap.starve.starveLowerCap;
 	}
+	
+	@Override
+	public IAttributeInstance getFoodEfficiency(EntityPlayer player)
+	{
+		return player.getAttributeMap().getAttributeInstance(SFAttributes.FOOD_EFFICIENCY);
+	}
+	
+	@Override
+	public IAttributeInstance getMaxHungerAttributeModifier(EntityPlayer player)
+	{
+		return player.getAttributeMap().getAttributeInstance(SFAttributes.MAX_HUNGER_MOD);
+	}
 	/*****************************/
 	/*          MUTATOR          */
 	/*****************************/
@@ -110,7 +143,6 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		float cap = this.getPlayerSaturationCap(player);
 		if(player.getFoodStats().getSaturationLevel() > cap)
 		{
-			//AppleCoreAPI.mutator.setSaturation(player, cap);
 			player.getFoodStats().setFoodSaturationLevel(cap);
 		}
 	}
@@ -174,7 +206,66 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		float currSat = player.getFoodStats().getSaturationLevel();
 		int currHunger = player.getFoodStats().getFoodLevel();
 		int rem = (int) Math.floor(currSat < amount ? amount - currSat : 0);
-		AppleCoreAPI.mutator.setSaturation(player, Math.min(currSat - amount, 0));
-		AppleCoreAPI.mutator.setHunger(player, Math.min(currHunger - rem, 0));
+		AppleCoreAPI.mutator.setSaturation(player, Math.max(currSat - amount, 0));
+		AppleCoreAPI.mutator.setHunger(player, Math.max(currHunger - rem, 0));
+	}
+	
+	@Override
+	public void setFoodEfficiencyModifier(EntityPlayer player, UUID id, String name, double amount)
+	{
+		IAttributeInstance instance = getFoodEfficiency(player);
+		AttributeModifier modifier = instance.getModifier(id);
+		if(modifier != null)
+		{
+			instance.removeModifier(modifier);
+		}
+		instance.applyModifier(new AttributeModifier(id, name, amount, 2));
+	}
+	
+	@Override
+	public void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount)
+	{
+		IAttributeInstance instance = getMaxHungerAttributeModifier(player);
+		AttributeModifier modifier = instance.getModifier(id);
+		if(modifier != null)
+		{
+			instance.removeModifier(modifier);
+		}
+		instance.applyModifier(new AttributeModifier(id, name, amount, 0));
+	}
+	
+	@Override
+	public void removeFoodEfficiencyModifier(EntityPlayer player, UUID id)
+	{
+		getFoodEfficiency(player).removeModifier(id);
+	}
+	
+	@Override
+	public void removeMaxHungerAttributeModifier(EntityPlayer player, UUID id)
+	{
+		getMaxHungerAttributeModifier(player).removeModifier(id);
+	}
+	
+	@Override
+	public void addBloatedHunger(EntityPlayer player, short amount)
+	{
+		IBloatedHunger bloatedHunger = getBloatedHunger(player);
+		bloatedHunger.setBloatedAmount((short) (bloatedHunger.getBloatedAmount() + amount));
+		CapabilityHandler.syncBloatedHunger(player);
+	}
+	
+	@Override
+	public void setBloatedHunger(EntityPlayer player, short amount)
+	{
+		IBloatedHunger bloatedHunger = getBloatedHunger(player);
+		bloatedHunger.setBloatedAmount(amount);
+		CapabilityHandler.syncBloatedHunger(player);
+	}
+	
+	@Override
+	public void addStarveExhaustion(EntityPlayer player, float amount)
+	{
+		getStarveExhaustionTracker(player).addExhaustion(player.getFoodStats().getFoodLevel(), amount);
+		CapabilityHandler.syncStarveExhaust(player);
 	}
 }

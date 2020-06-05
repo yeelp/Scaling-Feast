@@ -1,5 +1,7 @@
 package yeelp.scalingfeast.api;
 
+import java.util.UUID;
+
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -47,4 +49,60 @@ public abstract interface IScalingFeastMutator
 	 * @param amount amount of hunger/saturation to reduce.
 	 */
 	void deductFoodStats(EntityPlayer player, float amount);
+	
+	/**
+	 * Modify the exhaustion rate attribute for a player. If the exhaustion rate for this player already has a modifier with this id, the value is changed to {@code amount}
+	 * <p>
+	 * The exhaustion rate attribute will only use operation 2 for modifiers, since other operations are too niche to support. See <a href="http://minecraft.gamepedia.com/Attribute#Modifiers">Minecraft's description on Attribute Modifiers</a> for more info about this operation value.
+	 * @param player player to target
+	 * @param id the UUID for this modifier.
+	 * @param name the name for this modifier. May not be unique.
+	 * @param amount value for this modifier. This value represents the net percentage change for this modifier. That is, for a 50% increase to exhaustion, this argument would be {@code 0.5}. For a 50% decrease to exhaustion, this argument would be {@code -0.5}.
+	 */
+	void setFoodEfficiencyModifier(EntityPlayer player, UUID id, String name, double amount);
+	
+	/**
+	 * Modify the max hunger for this player with an attribute modifier. If the max hunger modifier for this player already has a modifier with this id, the value is changed to {@code amount}
+	 * The max hunger modifier attribute will only use operation 1 for modifiers, since other operations are too niche to support. See <a href="http://minecraft.gamepedia.com/Attribute#Modifiers">Minecraft's description on Attribute Modifiers</a> for more info about this operation value.
+	 * @param player player to target
+	 * @param id the id of the modifier
+	 * @param name name of the modifier. May not be unique.
+	 * @param amount value of this modifier.
+	 */
+	void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount);
+	
+	/**
+	 * Remove a modifier for a player's exhaustion rate.
+	 * @param player player to target
+	 * @param id the id of the modifier to remove.
+	 */
+	void removeFoodEfficiencyModifier(EntityPlayer player, UUID id);
+	
+	/**
+	 * Remove a modifier for a player's max hunger attribute
+	 * @param player player to target
+	 * @param id the id of the modifier to remove.
+	 */
+	void removeMaxHungerAttributeModifier(EntityPlayer player, UUID id);
+	
+	/**
+	 * Add an amount to a player's bloated hunger value.
+	 * @param player player to target
+	 * @param amount amount to add. If negative, the amount will be deducted, but will never go below zero.
+	 */
+	void addBloatedHunger(EntityPlayer player, short amount);
+	
+	/**
+	 * Set a player's bloated hunger value to a certain amount.
+	 * @param player player to target
+	 * @param amount amount to set.If negative, will instead set it to zero.
+	 */
+	void setBloatedHunger(EntityPlayer player, short amount);
+	
+	/**
+	 * Add exhaustion to a player's tracker. Only works while starving.
+	 * @param player player to target
+	 * @param amount amount to add. If negative, will deduct the amount instead - but will never go below zero.
+	 */
+	void addStarveExhaustion(EntityPlayer player, float amount);
 }

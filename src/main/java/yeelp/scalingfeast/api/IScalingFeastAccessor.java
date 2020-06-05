@@ -1,9 +1,12 @@
 package yeelp.scalingfeast.api;
 
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
+import yeelp.scalingfeast.util.IStarveExhaustionTracker;
 import yeelp.scalingfeast.util.SaturationScaling;
 
 /**
@@ -35,6 +38,30 @@ public abstract interface IScalingFeastAccessor
 	IStarvationTracker getStarvationTracker(EntityPlayer player);
 	
 	/**
+	 * Get a player's bloated hunger - an instance of {@link #IBloatedHunger}
+	 * @param player
+	 * @return that player's bloated hunger
+	 */
+	IBloatedHunger getBloatedHunger(EntityPlayer player);
+	
+	/**
+	 * Get a player's exhaustion tracker for tracker exhaustion at zero hunger - an instance of {@link #IStarveExhaustionTracker}
+	 * @param player
+	 * @return that player's exhaustion tracker for zero hunger.
+	 */
+	IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player);
+	
+	/**
+	 * Get a player's bloated hunger amount. This just calls {@link IBloatedHunger#getBloatedAmount()} but is included for convenience.
+	 * @param player
+	 * @return that player's bloated hunger amount
+	 */
+	default short getBloatedHungerAmount(EntityPlayer player)
+	{
+		return getBloatedHunger(player).getBloatedAmount();
+	}
+	
+	/**
 	 * Get a player's modified food cap. This just calls {@link IFoodCap#getMaxFoodLevel(IFoodCapModifier)} but is included for convenience.
 	 * @param player
 	 * @return this player's modified food cap.
@@ -42,6 +69,16 @@ public abstract interface IScalingFeastAccessor
 	default short getModifiedFoodCap(EntityPlayer player) 
 	{
 		return getFoodCap(player).getMaxFoodLevel(getFoodCapModifier(player));
+	}
+	
+	/**
+	 * Get the bonus damage to deal to the player on starvation.
+	 * @param player
+	 * @return the amount of extra damage to do from exhaustion.
+	 */
+	default int getBonusExhaustionDamage(EntityPlayer player)
+	{
+		return getStarveExhaustionTracker(player).getTotalDamage(player);
 	}
 	
 	/**
@@ -74,4 +111,19 @@ public abstract interface IScalingFeastAccessor
 	 * @return true if that player can lose max hunger by starving
 	 */
 	boolean canPlayerLoseMaxHunger(EntityPlayer player);
+	
+	/**
+	 * Get the exhaustion rate attribute for this player.
+	 * @param player player to get this attribute for
+	 * @return The IAttribute with the exhaustion rate for this player.
+	 */
+	IAttributeInstance getFoodEfficiency(EntityPlayer player);
+	
+	/**
+	 * Get the max hunger modifier from attributes for a player.
+	 * @param player player to target
+	 * @return the IAttribute with the modifier for max hunger for this player. This is NOT the actual max hunger of this player.
+	 * Use {@link #getFoodCap(EntityPlayer)} to get the actual capability. This is just the modifiers for max hunger from attributes.
+	 */
+	IAttributeInstance getMaxHungerAttributeModifier(EntityPlayer player);
 }

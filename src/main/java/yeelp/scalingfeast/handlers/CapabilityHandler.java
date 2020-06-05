@@ -12,19 +12,24 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.network.BloatedHungerMessage;
 import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.StarvationTrackerMessage;
+import yeelp.scalingfeast.network.StarveExhaustMessage;
+import yeelp.scalingfeast.util.BloatedHunger;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTracker;
+import yeelp.scalingfeast.util.StarveExhaustionTracker;
 
 public class CapabilityHandler extends Handler
 {
@@ -37,7 +42,15 @@ public class CapabilityHandler extends Handler
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "FoodCap"), new FoodCap((short)ModConfig.foodCap.startingHunger));
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "Modifier"), new FoodCapModifier());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "BloatedAmount"),  new BloatedHunger());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "ExhaustionSinceStarve"), new StarveExhaustionTracker());
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerTick(PlayerTickEvent evt)
+	{
+		ScalingFeastAPI.accessor.getFoodCapModifier(evt.player).setModifier("attributes", (short)ScalingFeastAPI.accessor.getMaxHungerAttributeModifier(evt.player).getAttributeValue());
 	}
 	
 	@SubscribeEvent
@@ -124,6 +137,8 @@ public class CapabilityHandler extends Handler
 		syncCap(player);
 		syncTracker(player);
 		syncMod(player);
+		syncBloatedHunger(player);
+		syncStarveExhaust(player);
 	}
 	
 	public static void syncCap(EntityPlayer player)
@@ -133,11 +148,21 @@ public class CapabilityHandler extends Handler
 	
 	public static void syncTracker(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP)player);
+		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP) player);
 	}
 	
 	public static void syncMod(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP)player);
+		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP) player);
+	}
+	
+	public static void syncBloatedHunger(EntityPlayer player)
+	{
+		PacketHandler.INSTANCE.sendTo(new BloatedHungerMessage(ScalingFeastAPI.accessor.getBloatedHunger(player)), (EntityPlayerMP) player);
+	}
+	
+	public static void syncStarveExhaust(EntityPlayer player)
+	{
+		PacketHandler.INSTANCE.sendTo(new StarveExhaustMessage(ScalingFeastAPI.accessor.getStarveExhaustionTracker(player)), (EntityPlayerMP) player);
 	}
 }

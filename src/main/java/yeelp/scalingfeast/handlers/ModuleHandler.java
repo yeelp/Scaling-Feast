@@ -40,9 +40,9 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
 
 public class ModuleHandler extends Handler 
 {	
-	private HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
-	private ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
-	private ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
+	private static HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
+	private static ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
+	private static ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
 	
 	
 	@SubscribeEvent 
@@ -150,7 +150,7 @@ public class ModuleHandler extends Handler
 		}
 	}
 	
-	public static void updatePlayer(EntityPlayer player)
+	public static short updatePlayer(EntityPlayer player)
 	{
 		short mod = 0;
 		IFoodCapModifier curr = ScalingFeastAPI.accessor.getFoodCapModifier(player);
@@ -164,11 +164,11 @@ public class ModuleHandler extends Handler
 		}
 		if(curr.getModifier() == mod)
 		{
-			return;
+			return curr.getModifier();
 		}
 		else
 		{
-			curr.setModifier(mod);
+			curr.setModifier("modules", mod);
 			//We want to use the current IFoodCapModifier we have. 
 			//We haven't synced it yet, and calling the convenience method from the API uses what's currently been synced, which is outdated.
 			short currMax = ScalingFeastAPI.accessor.getFoodCap(player).getMaxFoodLevel(curr);
@@ -187,6 +187,7 @@ public class ModuleHandler extends Handler
 			{
 				CapabilityHandler.sync(player);
 			}
+			return mod;
 		}
 	}
 }

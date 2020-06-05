@@ -42,7 +42,7 @@ public abstract class PotionBase extends Potion
 		return this.isInstant;
 	}
 	
-	@Override 
+	@Override
 	public boolean hasStatusIcon()
 	{
 		return false;

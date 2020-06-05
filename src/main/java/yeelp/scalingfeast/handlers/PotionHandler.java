@@ -2,24 +2,36 @@ package yeelp.scalingfeast.handlers;
 
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.hunger.ExhaustionEvent;
 import yeelp.scalingfeast.init.SFPotion;
 
 public class PotionHandler extends Handler
 {
 	@SubscribeEvent
-	public void onAddExhaution(ExhaustionEvent.ExhaustionAddition evt)
+	public void onPlayerExhaustion(ExhaustionEvent.ExhaustionAddition evt)
 	{
-		PotionEffect ironstomachEffect = evt.player.getActivePotionEffect(SFPotion.ironstomach);
-		if(ironstomachEffect == null)
+		PotionEffect ironstomach = evt.player.getActivePotionEffect(SFPotion.ironstomach);
+		PotionEffect softstomach = evt.player.getActivePotionEffect(SFPotion.softstomach);
+		int netEffect = 0;
+		if(ironstomach != null)
 		{
-			return;
+			netEffect += (ironstomach.getAmplifier() + 1);
 		}
-		else
+		if(softstomach != null)
 		{
-			double reduction = (ironstomachEffect.getAmplifier() + 1)*0.2;
-			evt.deltaExhaustion *= (1-reduction > 0 ? 1-reduction : 0);
+			netEffect -= (softstomach.getAmplifier() + 1);
+		}
+		if(netEffect != 0)
+		{
+			if(netEffect >= 5)
+			{
+				evt.deltaExhaustion = 0;
+			}
+			else
+			{
+				double reduction = netEffect*0.2;
+				evt.deltaExhaustion *= (1-reduction);
+			}
 		}
 	}
 }
