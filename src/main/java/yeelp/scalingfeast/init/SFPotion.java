@@ -84,7 +84,7 @@ public class SFPotion
 	{
 		PotionType normal = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration*20)});
 		PotionType extended = new PotionType(new PotionEffect[] {new PotionEffect(p, 2*baseDuration*20)});
-		PotionType strong = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration/2, 1)});
+		PotionType strong = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration/2*20, 1)});
 		normal.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName));
 		extended.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName+"_extended"));
 		strong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName+"_strong"));

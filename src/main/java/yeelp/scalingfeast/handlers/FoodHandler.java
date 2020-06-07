@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.ExhaustionEvent;
 import squeek.applecore.api.hunger.HungerEvent;
@@ -103,6 +104,10 @@ public class FoodHandler extends Handler
 	@SubscribeEvent
 	public void onPlayerUpdate(PlayerTickEvent evt)
 	{
+		if(ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player) > evt.player.getFoodStats().getFoodLevel());
+		{
+			AppleCoreAPI.mutator.setHunger(evt.player, ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player));
+		}
 		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
 	}
 	
