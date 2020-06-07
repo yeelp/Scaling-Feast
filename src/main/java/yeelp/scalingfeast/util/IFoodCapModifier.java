@@ -16,11 +16,11 @@ public interface IFoodCapModifier extends ICapabilitySerializable<NBTBase>
 {
 	/**
 	 * Get the final FoodCapModifier
-	 * @return the amount to modify food stats by
+	 * @return the amount to modify food stats by. The first elements is the result of all add operations, the second is the result of all multiply operators and the third is the result of all operation 2 multiply operators.
 	 */
-	default short getModifier()
+	default float[] getModifier()
 	{
-		return 0;
+		return new float[] {0, 1, 1};
 	}
 	
 	/**
@@ -28,14 +28,15 @@ public interface IFoodCapModifier extends ICapabilitySerializable<NBTBase>
 	 * @param id
 	 * @return the modifier associated with the id, or 0 if there was no modifier for this id.
 	 */
-	short getModifier(String id);
+	float getModifier(String id);
 	
-	Map<String, Short> getAllModifiers();
+	Map<String, FoodCapModifier.Modifier> getAllModifiers();
 	
 	/**
 	 * Set the modifier value
 	 * @param id identifier for this modifier amount
 	 * @param amount
+	 * @param op operation for this modifier
 	 */
-	void setModifier(String id, short amount);
+	void setModifier(String id, float amount, FoodCapModifier.Operation op);
 }

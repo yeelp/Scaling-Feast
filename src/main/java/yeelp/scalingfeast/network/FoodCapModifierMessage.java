@@ -3,15 +3,12 @@ package yeelp.scalingfeast.network;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -20,7 +17,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
-import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 
 /**
@@ -33,14 +29,7 @@ public class FoodCapModifierMessage implements IMessage
 	private NBTTagList tag;
 	public FoodCapModifierMessage(IFoodCapModifier mod)
 	{
-		this.tag = new NBTTagList();
-		for(Entry<String, Short> entry : mod.getAllModifiers().entrySet())
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("id", entry.getKey());
-			tag.setShort("modifier", entry.getValue());
-			this.tag.appendTag(tag);
-		}
+		this.tag = (NBTTagList) mod.serializeNBT();
 	}
 	
 	public FoodCapModifierMessage()
@@ -105,7 +94,8 @@ public class FoodCapModifierMessage implements IMessage
 				lst.clear();
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setString("id", "modules");
-				tag.setShort("modifier", pb.readShort());
+				tag.setFloat("modifier", pb.readShort());
+				tag.setByte("op", (byte) 0);
 				lst.add(tag);
 				break;
 			}

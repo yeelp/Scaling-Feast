@@ -34,6 +34,7 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.ModuleNotLoadedException;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
+import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IFoodCapModifier;
@@ -162,13 +163,13 @@ public class ModuleHandler extends Handler
 		{
 			mod += SOLCarrotHelper.getReward(player);
 		}
-		if(curr.getModifier() == mod)
+		if(curr.getModifier("modules") == mod)
 		{
-			return curr.getModifier();
+			return curr.getModifier("modules");
 		}
 		else
 		{
-			curr.setModifier("modules", mod);
+			curr.setModifier("modules", mod, FoodCapModifier.Operation.ADD);
 			//We want to use the current IFoodCapModifier we have. 
 			//We haven't synced it yet, and calling the convenience method from the API uses what's currently been synced, which is outdated.
 			short currMax = ScalingFeastAPI.accessor.getFoodCap(player).getMaxFoodLevel(curr);
