@@ -165,7 +165,7 @@ public class ModuleHandler extends Handler
 		}
 		if(curr.getModifier("modules") == mod)
 		{
-			return curr.getModifier("modules");
+			return (short) curr.getModifier("modules");
 		}
 		else
 		{
