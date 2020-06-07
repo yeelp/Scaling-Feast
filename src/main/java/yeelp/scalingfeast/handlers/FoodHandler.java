@@ -104,7 +104,7 @@ public class FoodHandler extends Handler
 	@SubscribeEvent
 	public void onPlayerUpdate(PlayerTickEvent evt)
 	{
-		if(ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player) > evt.player.getFoodStats().getFoodLevel());
+		if(evt.player.getFoodStats().getFoodLevel() > ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player))
 		{
 			AppleCoreAPI.mutator.setHunger(evt.player, ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player));
 		}

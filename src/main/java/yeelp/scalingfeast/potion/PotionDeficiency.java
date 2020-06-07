@@ -1,5 +1,8 @@
 package yeelp.scalingfeast.potion;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
@@ -25,6 +28,16 @@ public class PotionDeficiency extends PotionBase
 		if(entityLivingBase instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) entityLivingBase;
+			ScalingFeastAPI.mutator.deductFoodStats(player, amplifier+1);
+		}
+	}
+	
+	@Override
+	public void affectEntity(@Nullable Entity source, @Nullable Entity indirectSource, EntityLivingBase entityLivingBaseIn, int amplifier, double health)
+	{
+		if(entityLivingBaseIn instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) entityLivingBaseIn;
 			ScalingFeastAPI.mutator.deductFoodStats(player, amplifier+1);
 		}
 	}

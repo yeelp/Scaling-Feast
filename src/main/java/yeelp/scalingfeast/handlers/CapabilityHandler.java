@@ -54,9 +54,18 @@ public class CapabilityHandler extends Handler
 	}
 	
 	@SubscribeEvent
-	public void onPlayerLogin(PlayerLoggedInEvent evt)
+	public void onPlayerJoin(EntityJoinWorldEvent evt)
 	{
-		EntityPlayer player = evt.player;
+		if(evt.getWorld().isRemote)
+		{
+			return;
+		}
+		if(!(evt.getEntity() instanceof EntityPlayer))
+		{
+			return;
+		}
+		EntityPlayer player = (EntityPlayer) evt.getEntity();
+		sync(player);
 		short foodCap = ScalingFeastAPI.accessor.getFoodCap(player).getUnmodifiedMaxFoodLevel();
 		FoodStats fs = player.getFoodStats();
 		if(fs.getFoodLevel() > foodCap)
@@ -70,20 +79,6 @@ public class CapabilityHandler extends Handler
 		ScalingFeastAPI.mutator.capPlayerHunger(player);
 		ScalingFeastAPI.mutator.capPlayerSaturation(player);
 		ModuleHandler.updatePlayer(player);
-	}
-	
-	@SubscribeEvent
-	public void onPlayerJoin(EntityJoinWorldEvent evt)
-	{
-		if(evt.getWorld().isRemote)
-		{
-			return;
-		}
-		if(!(evt.getEntity() instanceof EntityPlayer))
-		{
-			return;
-		}
-		sync((EntityPlayer) evt.getEntity());
 	}
 	
 	@SubscribeEvent 
