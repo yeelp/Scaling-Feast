@@ -78,7 +78,7 @@ public class CapabilityHandler extends Handler
 		}
 		modifier.setModifier("attributes", mods[0], FoodCapModifier.Operation.ADD);
 		modifier.setModifier("attributesMult", mods[1], FoodCapModifier.Operation.PERCENT_STACK_ADDITVELY);
-		modifier.setModifier("attributesPercent", mods[2]-1, FoodCapModifier.Operation.PERCENT_STACK_MULTIPLICATIVELY);
+		modifier.setModifier("attributesPercent", flag ? mods[2]-1 : mods[2], FoodCapModifier.Operation.PERCENT_STACK_MULTIPLICATIVELY);
 	}
 	
 	@SubscribeEvent

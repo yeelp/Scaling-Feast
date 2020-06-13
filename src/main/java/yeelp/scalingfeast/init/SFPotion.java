@@ -57,14 +57,14 @@ public class SFPotion
 			PotionType metabolicLong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 240*20)});
 			PotionType metabolicStrong = new PotionType(new PotionEffect[] {new PotionEffect(metabolism, 60*20, 1)});
 			
-			PotionType deficiencyPotion = new PotionType(new PotionEffect[] {new PotionEffect(deficiency, 1)});
-			PotionType deficiencyStrongPotion = new PotionType(new PotionEffect[] {new PotionEffect(deficiency, 1, 1)});
+			PotionType deficiencyPotion = new PotionType(new PotionEffect[] {new PotionEffect(deficiency, 1, 3)});
+			PotionType deficiencyStrongPotion = new PotionType(new PotionEffect[] {new PotionEffect(deficiency, 1, 6)});
 			
-			registerPotionType(ironstomach, 150, "ironstomach");
-			registerPotionType(bloated, 120, "bloated");
-			registerPotionType(hungerplus, 180, "hungerplus");
-			registerPotionType(hungerminus, 120, "hungerminus");
-			registerPotionType(softstomach, 120, "softstomach");
+			registerPotionType(ironstomach, 150, "ironstomach", 0, 1);
+			registerPotionType(bloated, 120, "bloated", 0, 1);
+			registerPotionType(hungerplus, 180, "hungerplus", 3, 7);
+			registerPotionType(hungerminus, 120, "hungerminus", 3, 7);
+			registerPotionType(softstomach, 120, "softstomach", 0, 1);
 			deficiencyPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "deficiency"));
 			deficiencyStrongPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "deficiency_strong"));
 			metabolic.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "metabolism"));
@@ -80,11 +80,11 @@ public class SFPotion
 		}
 	}
 	
-	private static void registerPotionType(Potion p, int baseDuration, String rootName)
+	private static void registerPotionType(Potion p, int baseDuration, String rootName, int baseAmplifier, int strongAmplifier)
 	{
-		PotionType normal = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration*20)});
-		PotionType extended = new PotionType(new PotionEffect[] {new PotionEffect(p, 2*baseDuration*20)});
-		PotionType strong = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration/2*20, 1)});
+		PotionType normal = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration*20, baseAmplifier)});
+		PotionType extended = new PotionType(new PotionEffect[] {new PotionEffect(p, 2*baseDuration*20, baseAmplifier)});
+		PotionType strong = new PotionType(new PotionEffect[] {new PotionEffect(p, baseDuration/2*20, strongAmplifier)});
 		normal.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName));
 		extended.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName+"_extended"));
 		strong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName+"_strong"));

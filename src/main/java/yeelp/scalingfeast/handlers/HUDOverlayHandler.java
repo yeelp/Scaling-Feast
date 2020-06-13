@@ -217,6 +217,11 @@ public class HUDOverlayHandler extends Handler
 				drawStatBar(jitterAmount, mc, left, top, remainingShanks, 0, 18, false, false, false, isHungerEffectActive, bloatedColours.get((colourIndex++) % bloatedColours.size()));
 			}
 		}
+		GL11.glPushMatrix();
+		GL11.glScalef(0.6f, 0.6f, 1.0f);
+		mc.fontRenderer.drawStringWithShadow("x"+(i+1), left/0.6f + 1/0.6f, top/0.6f + 4.5f/0.6f, 0xffffff);
+		GL11.glPopMatrix();
+		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
 	private void drawStatsOverlay(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top)
