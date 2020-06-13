@@ -63,13 +63,14 @@ public abstract interface IScalingFeastMutator
 	
 	/**
 	 * Modify the max hunger for this player with an attribute modifier. If the max hunger modifier for this player already has a modifier with this id, the value is changed to {@code amount}
-	 * The max hunger modifier attribute will only use operation 1 for modifiers, since other operations are too niche to support. See <a href="http://minecraft.gamepedia.com/Attribute#Modifiers">Minecraft's description on Attribute Modifiers</a> for more info about this operation value.
+	 * See <a href="http://minecraft.gamepedia.com/Attribute#Modifiers">Minecraft's description on Attribute Modifiers</a> for more info about.
 	 * @param player player to target
 	 * @param id the id of the modifier
 	 * @param name name of the modifier. May not be unique.
 	 * @param amount value of this modifier.
+	 * @param op operator for this modifier. Must be 0,1,2. Defaults to 0 if specified incorrectly.
 	 */
-	void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount);
+	void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount, byte op);
 	
 	/**
 	 * Remove a modifier for a player's exhaustion rate.
