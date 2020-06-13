@@ -13,6 +13,7 @@ import yeelp.scalingfeast.api.IScalingFeastMutator;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.util.BloatedHungerProvider;
+import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IBloatedHunger;
@@ -178,9 +179,11 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		if(tracker.getCount() >= threshold)
 		{
 			IFoodCap foodCap = this.getFoodCap(player);
-			if(foodCap.getUnmodifiedMaxFoodLevel() > lowerBound)
+			IFoodCapModifier foodCapMod = this.getFoodCapModifier(player);
+			if(foodCap.getMaxFoodLevel(foodCapMod) > lowerBound)
 			{
-				foodCap.decreaseMax((short) ModConfig.foodCap.starve.starveLoss);
+				float penalty = foodCapMod.getModifier("starvation");
+				foodCapMod.setModifier("starvation", penalty-1, FoodCapModifier.Operation.ADD);
 			}
 			if(ModConfig.foodCap.starve.doesFreqResetOnStarve)
 			{
@@ -190,7 +193,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 			{
 				tracker.setCount((short)(threshold - 1));
 			}
-			CapabilityHandler.syncCap(player);
+			CapabilityHandler.syncMod(player);
 		}
 	}
 	

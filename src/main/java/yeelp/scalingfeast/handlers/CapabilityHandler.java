@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.network.BloatedHungerMessage;
 import yeelp.scalingfeast.network.FoodCapMessage;
@@ -93,8 +94,10 @@ public class CapabilityHandler extends Handler
 			return;
 		}
 		EntityPlayer player = (EntityPlayer) evt.getEntity();
+		ScalingFeast.info("foodstats: "+player.getFoodStats().getFoodLevel() + ", " + player.getFoodStats().getSaturationLevel());
 		sync(player);
-		short foodCap = ScalingFeastAPI.accessor.getFoodCap(player).getUnmodifiedMaxFoodLevel();
+		short foodCap = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
+		ScalingFeast.info("cap: "+foodCap);
 		FoodStats fs = player.getFoodStats();
 		if(fs.getFoodLevel() > foodCap)
 		{
