@@ -223,7 +223,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	}
 	
 	@Override
-	public void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount)
+	public void setMaxHungerAttributeModifier(EntityPlayer player, UUID id, String name, double amount, byte op)
 	{
 		IAttributeInstance instance = getMaxHungerAttributeModifier(player);
 		AttributeModifier modifier = instance.getModifier(id);
@@ -231,7 +231,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		{
 			instance.removeModifier(modifier);
 		}
-		instance.applyModifier(new AttributeModifier(id, name, amount, 0));
+		instance.applyModifier(new AttributeModifier(id, name, amount, op < 3 && op > -1 ? op : 0));
 	}
 	
 	@Override

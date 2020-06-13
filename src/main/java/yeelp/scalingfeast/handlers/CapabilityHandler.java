@@ -3,6 +3,8 @@ package yeelp.scalingfeast.handlers;
 
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.FoodStats;
@@ -50,7 +52,33 @@ public class CapabilityHandler extends Handler
 	@SubscribeEvent
 	public void onPlayerTick(PlayerTickEvent evt)
 	{
-		ScalingFeastAPI.accessor.getFoodCapModifier(evt.player).setModifier("attributes", (short)ScalingFeastAPI.accessor.getMaxHungerAttributeModifier(evt.player).getAttributeValue());
+		IAttributeInstance instance = ScalingFeastAPI.accessor.getMaxHungerAttributeModifier(evt.player);
+		IFoodCapModifier modifier = ScalingFeastAPI.accessor.getFoodCapModifier(evt.player);
+		float[] mods = new float[] {0, 0, 0};
+		boolean flag = false;
+		for(FoodCapModifier.Operation op : FoodCapModifier.Operation.values())
+		{
+			int i = op.ordinal();
+			for(AttributeModifier mod : instance.getModifiersByOperation(i))
+			{
+				if(i != 2)
+				{
+					mods[i] += mod.getAmount();
+				}
+				else
+				{
+					if(!flag)
+					{
+						mods[2] = (float) (1 + mod.getAmount());
+						flag = true;
+					}
+					mods[2] *= (float) (1 + mod.getAmount());
+				}
+			}
+		}
+		modifier.setModifier("attributes", mods[0], FoodCapModifier.Operation.ADD);
+		modifier.setModifier("attributesMult", mods[1], FoodCapModifier.Operation.PERCENT_STACK_ADDITVELY);
+		modifier.setModifier("attributesPercent", mods[2]-1, FoodCapModifier.Operation.PERCENT_STACK_MULTIPLICATIVELY);
 	}
 	
 	@SubscribeEvent

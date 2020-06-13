@@ -22,7 +22,44 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 public class FoodCapModifier implements IFoodCapModifier 
 {
 	private short mod;
-	private Map<String, Short> mods = new HashMap<String, Short>();
+	private Map<String, Modifier> mods = new HashMap<String, Modifier>();
+	public class Modifier
+	{
+		private float value;
+		private Operation op;
+		/**
+		 * Build a new modifier for the food cap
+		 * @param value value for the modifier
+		 * @param op operation to perform.
+		 */
+		public Modifier(float value, Operation op)
+		{
+			this.value = value;
+			this.op = op;
+		}
+		/**
+		 * Get the value of this modifier
+		 * @return the value
+		 */
+		public float getValue()
+		{
+			return this.value;
+		}
+		/**
+		 * Get the operation of this modifier
+		 * @return the operation
+		 */
+		public Operation getOp()
+		{
+			return this.op;
+		}
+	}
+	public enum Operation
+	{
+		ADD,
+		PERCENT_STACK_ADDITVELY,
+		PERCENT_STACK_MULTIPLICATIVELY;
+	}
 
 	/**
 	 * Create a new FoodCapModifier
@@ -57,11 +94,13 @@ public class FoodCapModifier implements IFoodCapModifier
 	public NBTTagList serializeNBT() 
 	{
 		NBTTagList lst = new NBTTagList();
-		for(Entry<String, Short> entry : mods.entrySet())
+		for(Entry<String, Modifier> entry : mods.entrySet())
 		{
+			Modifier mod = entry.getValue();
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("id", entry.getKey());
-			tag.setShort("modifier", entry.getValue());
+			tag.setFloat("modifier", mod.value);
+			tag.setByte("op", (byte) mod.op.ordinal());
 			lst.appendTag(tag);
 		}
 		return lst;
@@ -70,10 +109,10 @@ public class FoodCapModifier implements IFoodCapModifier
 	@Override
 	public void deserializeNBT(NBTBase nbt)
 	{
-		this.mods = new HashMap<String, Short>();
+		this.mods = new HashMap<String, Modifier>();
 		if(nbt instanceof NBTTagShort)
 		{
-			this.mods.put("modules", ((NBTTagShort) nbt).getShort());
+			this.mods.put("modules", new Modifier(((NBTTagShort) nbt).getShort(), Operation.ADD));
 		}
 		else if(nbt instanceof NBTTagList)
 		{
@@ -83,40 +122,60 @@ public class FoodCapModifier implements IFoodCapModifier
 				for(NBTBase tag : lst)
 				{
 					NBTTagCompound modifier = (NBTTagCompound) tag;
-					this.mods.put(modifier.getString("id"), modifier.getShort("modifier"));
+					float amount = modifier.getFloat("modifier");
+					String name = modifier.getString("id");
+					byte opByte = modifier.getByte("op"); //will be zero if it doesn't exist. This is fine, since that will default to add.
+					Operation op = Operation.values()[(int) (0 <= opByte && opByte <= 2 ? opByte : 0)]; 
+					this.mods.put(modifier.getString("id"), new Modifier(amount, op));
 				}
 			}
 		}
 	}
 	
 	@Override
-	public short getModifier()
+	public float[] getModifier()
 	{
-		short mod = 0;
-		for(short s : this.mods.values())
+		float addMod = 0;
+		float multMod = 1;
+		float percentMod = 1;
+		for(Modifier m : mods.values())
 		{
-			mod += s;
+			switch(m.op)
+			{
+				case ADD:
+					addMod += m.value;
+					break;
+				case PERCENT_STACK_ADDITVELY:
+					multMod += m.value;
+					break;
+				case PERCENT_STACK_MULTIPLICATIVELY:
+					percentMod *= 1 + m.value;
+					break;
+				default:
+					break;
+					
+			}
 		}
-		return mod;
+		return new float[] {addMod, multMod, percentMod};
 	}
 	
 	@Override
-	public short getModifier(String id)
+	public float getModifier(String id)
 	{
-		Short val = this.mods.get(id);
-		return val == null ? 0 : val.shortValue();
+		Modifier mod = this.mods.get(id);
+		return mod == null ? 0 : mod.value;
 	}
 	
 	@Override
-	public Map<String, Short> getAllModifiers()
+	public Map<String, Modifier> getAllModifiers()
 	{
 		return this.mods;
 	}
 	
 	@Override
-	public void setModifier(String id, short amount)
+	public void setModifier(String id, float amount, Operation op)
 	{
-		this.mods.put(id, amount);//this.mod = amount;
+		this.mods.put(id, new Modifier(amount, op));//this.mod = amount;
 	}
 	
 	public static void register()
