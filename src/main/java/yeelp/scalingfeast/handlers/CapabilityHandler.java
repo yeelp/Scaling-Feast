@@ -94,10 +94,8 @@ public class CapabilityHandler extends Handler
 			return;
 		}
 		EntityPlayer player = (EntityPlayer) evt.getEntity();
-		ScalingFeast.info("foodstats: "+player.getFoodStats().getFoodLevel() + ", " + player.getFoodStats().getSaturationLevel());
 		sync(player);
 		short foodCap = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
-		ScalingFeast.info("cap: "+foodCap);
 		FoodStats fs = player.getFoodStats();
 		if(fs.getFoodLevel() > foodCap)
 		{
