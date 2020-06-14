@@ -10,6 +10,7 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 
 /**
  * A class that implements the IFoodCap
@@ -40,7 +41,7 @@ public final class FoodCap implements IFoodCap
 	public short getMaxFoodLevel(IFoodCapModifier mod)
 	{
 		float[] mods = mod.getModifier();
-		return (short) (Math.max(1, (this.max + mods[0])*mods[1]*mods[2]));
+		return (short) Math.min(ScalingFeastAPI.accessor.getHungerHardCap(), (Math.max(1, (this.max + mods[0])*mods[1]*mods[2])));
 	}
 
 	public short getUnmodifiedMaxFoodLevel()
