@@ -27,6 +27,11 @@ import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 
 @SideOnly(Side.CLIENT)
+/**
+ * This handler is currently not registered as the solution it employs isn't a good one.
+ * @author Yeelp
+ *
+ */
 public class CompatibilityHandler extends Handler
 {	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)

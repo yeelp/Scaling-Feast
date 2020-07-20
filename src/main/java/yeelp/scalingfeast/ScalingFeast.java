@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.ScalingFeastAPIImpl;
 import yeelp.scalingfeast.command.SFCommand;
@@ -98,9 +99,9 @@ public class ScalingFeast
         {	
         	new ModuleHandler().register();
         }
-        if(hasAppleSkin)
+        if(hasAppleSkin && event.getSide() == Side.CLIENT)
         {
-        	new CompatibilityHandler().register();
+        	//new CompatibilityHandler().register();
         }
         info("Scaling Feast initialization complete!");
     }
