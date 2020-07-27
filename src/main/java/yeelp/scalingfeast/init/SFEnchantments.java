@@ -34,7 +34,22 @@ public class SFEnchantments
 		lazinessCurse = new CurseLaziness();
 		deprivationCurse = new CurseDeprivation();
 		
-		ForgeRegistries.ENCHANTMENTS.registerAll(fasting, gluttony, famine, eternalfeast);
+		if(ModConfig.items.enchants.enableEternalFeast)
+		{
+			ForgeRegistries.ENCHANTMENTS.register(eternalfeast);
+		}
+		if(ModConfig.items.enchants.enableFamine)
+		{
+			ForgeRegistries.ENCHANTMENTS.register(famine);
+		}
+		if(ModConfig.items.enchants.enableGluttony)
+		{
+			ForgeRegistries.ENCHANTMENTS.register(gluttony);
+		}
+		if(ModConfig.items.enchants.enableFasting)
+		{
+			ForgeRegistries.ENCHANTMENTS.register(fasting);
+		}
 		if(ModConfig.items.enchants.enableDeprivation)
 		{
 			ForgeRegistries.ENCHANTMENTS.register(deprivationCurse);

@@ -204,6 +204,26 @@ public class ModConfig
 		public EnchantmentCategory enchants = new EnchantmentCategory();
 		public static class EnchantmentCategory
 		{
+			@Name("Enable Eternal Feast")
+			@Comment("Enables or disables the Eternal Feast enchantment. If disabled the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableEternalFeast = true;
+			
+			@Name("Enable Gluttony")
+			@Comment("Enables or disables the Gluttony enchantment. If disabled the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableGluttony = true;
+			
+			@Name("Enable Famine")
+			@Comment("Enables or disables the Famine enchantment. If disabled the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableFamine = true;
+			
+			@Name("Enable Fasting")
+			@Comment("Enables or disables the Fasting enchantment. If disabled the enchantment won't be registered at all.")
+			@RequiresMcRestart
+			public boolean enableFasting = true;
+			
 			@Name("Enable Laziness Curse")
 			@Comment("Enables or disables the Curse of Laziness. If disabled, the enchantment won't be registered at all.")
 			@RequiresMcRestart
