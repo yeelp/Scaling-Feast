@@ -2,7 +2,7 @@
 
 ## [Scaling Feast](https://www.curseforge.com/minecraft/mc-mods/scaling-feast)
 
-[![](https://img.shields.io/github/issues/yeelp/scaling-feast)](https://github.com/yeelp/Scaling-Feast/issues) [![](https://img.shields.io/travis/yeelp/scaling-feast)](https://travis-ci.org/github/yeelp/Scaling-Feast)
+[![](https://img.shields.io/github/issues/yeelp/scaling-feast)](https://github.com/yeelp/Scaling-Feast/issues) [![](https://img.shields.io/travis/yeelp/scaling-feast)](https://travis-ci.org/github/yeelp/Scaling-Feast) [![](http://cf.way2muchnoise.eu/full_scaling-feast_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/scaling-feast) 
 
 A simple, balanced way to increase your maximum hunger in Minecraft over the course of a world.
 
