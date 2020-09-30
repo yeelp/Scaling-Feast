@@ -134,6 +134,14 @@ public class CapabilityHandler extends Handler
 			ScalingFeastAPI.mutator.capPlayerSaturation(newPlayer);
 			
 			short maxToLose = (short) ModConfig.foodCap.death.maxLossAmount;
+			if(newFoodCap.getUnmodifiedMaxFoodLevel() - ModConfig.foodCap.death.maxLossAmount < ModConfig.foodCap.death.maxLossLowerBound)
+			{
+				maxToLose = (short)(newFoodCap.getUnmodifiedMaxFoodLevel() - ModConfig.foodCap.death.maxLossLowerBound);
+			}
+			if(newFoodCap.getUnmodifiedMaxFoodLevel() < ModConfig.foodCap.death.maxLossLowerBound)
+			{
+				maxToLose = 0;
+			}
 			short hungerToLose = (short) ModConfig.foodCap.death.hungerLossOnDeath;
 			
 			if(maxToLose != 0)

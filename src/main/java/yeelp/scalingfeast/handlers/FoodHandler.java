@@ -8,6 +8,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -26,6 +27,7 @@ import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.network.SatSyncMessage;
 
 public class FoodHandler extends Handler 
@@ -74,6 +76,17 @@ public class FoodHandler extends Handler
 			if(!player.world.isRemote)
 			{
 				CapabilityHandler.syncTracker(player);
+			}
+		}
+		
+		if(!player.isPotionActive(SFPotion.bloated) && ModConfig.foodCap.doBloatedOverflow)
+		{
+			int diff = evt.foodValuesToBeAdded.hunger - (AppleCoreAPI.accessor.getMaxHunger(player) - player.getFoodStats().getFoodLevel());
+			int level = diff > 0 ? evt.foodValuesToBeAdded.hunger/4 - 1 : -1;
+			
+			if(level >= 0)
+			{
+				player.addPotionEffect(new PotionEffect(SFPotion.bloated, ModConfig.foodCap.bloatedOverflowDuration, level));
 			}
 		}
 	}

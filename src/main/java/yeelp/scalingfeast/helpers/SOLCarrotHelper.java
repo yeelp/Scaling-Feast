@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
@@ -20,8 +22,8 @@ import yeelp.scalingfeast.util.SOLCarrotMilestone;
  */
 public final class SOLCarrotHelper
 {
-	private static Class sol;
-	private static Class prog;
+	private static Class<?> sol;
+	private static Class<?> prog;
 	private static boolean enabled;
 	private static Queue<SOLCarrotMilestone> milestones;
 	private static int rewardMsgs = 8;
@@ -209,6 +211,12 @@ public final class SOLCarrotHelper
 		return rand.nextInt(rewardMsgs);
 	}
 	
+	/**
+	 * Get the last milestone reached by this player
+	 * @param player
+	 * @return the last SolCarrotMilestone reached by this player, or null if none was reached yet.
+	 */
+	@Nullable
 	public static SOLCarrotMilestone getLastMilestoneReached(EntityPlayer player)
 	{
 		try 
@@ -234,5 +242,11 @@ public final class SOLCarrotHelper
 			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
 			return null;
 		}
+	}
+
+	public static boolean reachedFoodEfficiencyMilestone(EntityPlayer player)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

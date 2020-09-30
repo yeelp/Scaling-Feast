@@ -101,7 +101,8 @@ public class ModuleHandler extends Handler
 			{
 				try 
 				{
-					if(SOLCarrotHelper.reachedMilestone(evt.player) && eatingPlayers.get(evt.player.getUniqueID()) != SOLCarrotHelper.getCountableFoodListLength(evt.player))
+					boolean b = eatingPlayers.get(evt.player.getUniqueID()) != SOLCarrotHelper.getCountableFoodListLength(evt.player);
+					if(SOLCarrotHelper.reachedMilestone(evt.player) && b)
 					{
 						ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
 						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastMilestoneReached(evt.player).getReward());
@@ -114,6 +115,10 @@ public class ModuleHandler extends Handler
 					
 						evt.player.sendStatusMessage(fullMsg, ModConfig.modules.sol.rewardMsgAboveHotbar);
 						evt.player.world.playSound(null, evt.player.posX, evt.player.posY, evt.player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+					}
+					else if(SOLCarrotHelper.reachedFoodEfficiencyMilestone(evt.player)&& b)
+					{
+						
 					}
 				}	 
 				catch (ModuleNotLoadedException e) 
