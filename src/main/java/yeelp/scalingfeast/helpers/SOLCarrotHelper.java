@@ -1,17 +1,24 @@
 package yeelp.scalingfeast.helpers;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 import java.util.Random;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
+import yeelp.scalingfeast.util.FoodEfficiencyMilestone;
+import yeelp.scalingfeast.util.Milestone;
 import yeelp.scalingfeast.util.SOLCarrotMilestone;
 
 /**
@@ -25,8 +32,9 @@ public final class SOLCarrotHelper
 	private static Class<?> sol;
 	private static Class<?> prog;
 	private static boolean enabled;
-	private static Queue<SOLCarrotMilestone> milestones;
-	private static int rewardMsgs = 8;
+	private static List<SOLCarrotMilestone> milestones;
+	private static List<FoodEfficiencyMilestone> efficiencyMilestones;
+	private static final int rewardMsgs = 8;
 	private static Random rand;
 	/**
 	 * Initialize this module
@@ -56,7 +64,7 @@ public final class SOLCarrotHelper
 			enabled = false;
 		}
 	}
-	
+
 	/**
 	 * Has the module loaded successfully?
 	 * @return true if Scaling Feast found Spice of Life: Carrot Edition.
@@ -121,44 +129,53 @@ public final class SOLCarrotHelper
 	public static short getReward(EntityPlayer player)
 	{
 		short reward = 0;
-		try
-		{
-			int foodsEaten = getCountableFoodListLength(player);
-			for(SOLCarrotMilestone milestone : milestones)
-			{
-				if(foodsEaten >= milestone.getAmountNeeded())
-				{
-					reward += milestone.getReward();
-				}
-			}
-			return reward;
-		} 
-		catch (ModuleNotLoadedException e) 
-		{
-			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
-			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
-			return 0;
-		}
+		getReward(player, milestones, (n, r) -> r = Short.valueOf((short) (r.shortValue() + n.shortValue())), reward);
+		return reward;
+	}
+	
+	/**
+	 * Get the food efficiency modifier for this player.
+	 * @param player
+	 * @return a float for the new foodEfficiency modifier.
+	 */
+	public static float getEfficiencyModifier(EntityPlayer player)
+	{
+		float mod = 0;
+		getReward(player, efficiencyMilestones, (n, r) -> r = Float.valueOf((float) (r.floatValue() + n.floatValue())), mod);
+		return mod;
 	}
 	
 	/**
 	 * Has this player reached a milestone
 	 * @param player player to check
-	 * @return true if the player reached a milestone, false otherwise.
+	 * @return true if the player just reached a milestone, false otherwise.
 	 */
 	public static boolean reachedMilestone(EntityPlayer player)
 	{
 		try
 		{
 			int foodsEaten = getCountableFoodListLength(player);
-			for(SOLCarrotMilestone milestone : milestones)
-			{
-				if(foodsEaten == milestone.getAmountNeeded())
-				{
-					return true;
-				}
-			}
+			return getMilestoneIndicesSatisfying(m -> foodsEaten == m.getTarget(), milestones).size() > 0;
+		}
+		catch(ModuleNotLoadedException e)
+		{
+			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
 			return false;
+		}
+	}
+	
+	/**
+	 * Has this player reached a milestone
+	 * @param player player to check
+	 * @return true if the player just reached a milestone, false otherwise
+	 */
+	public static boolean reachedFoodEfficiencyMilestone(EntityPlayer player)
+	{
+		try
+		{
+			int foodsEaten = getCountableFoodListLength(player);
+			return getMilestoneIndicesSatisfying(m -> foodsEaten == m.getTarget(), efficiencyMilestones).size() > 0;
 		}
 		catch(ModuleNotLoadedException e)
 		{
@@ -174,31 +191,69 @@ public final class SOLCarrotHelper
 	 */
 	public static void parseMilestones()
 	{
-		milestones = new LinkedList<SOLCarrotMilestone>();
-		for(String str : ModConfig.modules.sol.milestones)
+		milestones = new ArrayList<SOLCarrotMilestone>();
+		efficiencyMilestones = new ArrayList<FoodEfficiencyMilestone>();
+		if(ModConfig.modules.sol.useMilestones)
 		{
-			try
+			for(String str : ModConfig.modules.sol.milestones)
 			{
-				milestones.add(new SOLCarrotMilestone(str));
+				try
+				{
+					milestones.add(new SOLCarrotMilestone(str));
+				}
+				catch(IllegalArgumentException e)
+				{
+					//silently ignore
+					continue;
+				}
 			}
-			catch(IllegalArgumentException e)
+			if(milestones.size() == 0)
 			{
-				//silently ignore
-				continue;
+				ScalingFeast.warn("No milestones were parsed! Falling back to default...");
+				parseMilestones("regular", "5:2", "10:2", "15:2", "20:2", "25:2", "30:2", "35:2", "40:2", "45:2", "50:2");
 			}
 		}
-		if(milestones.size() == 0)
+		if(ModConfig.modules.sol.useFoodEfficiencyMilestones)
 		{
-			ScalingFeast.warn("No milestones were parsed! Falling back to default...");
-			parseMilestones("5:2", "10:2", "15:2", "20:2", "25:2", "30:2", "35:2", "40:2", "45:2", "50:2");
+			for(String str : ModConfig.modules.sol.foodEfficiencyMilstones)
+			{
+				try
+				{
+					efficiencyMilestones.add(new FoodEfficiencyMilestone(str));
+				}
+				catch(IllegalArgumentException e)
+				{
+					//silently ignore
+					continue;
+				}
+			}
+			if(efficiencyMilestones.size() == 0)
+			{
+				ScalingFeast.warn("No efficiency milestones were parsed! Falling back to default...");
+				parseMilestones("regular", "20:0.05", "40:0.05", "60:0.05");
+			}
 		}
+		
 	}
 	
-	private static void parseMilestones(String...strings)
+	private static void parseMilestones(String type, String...strings)
 	{
-		for(String str : strings)
+		switch(type)
 		{
-			milestones.add(new SOLCarrotMilestone(str));
+			case "regular":
+				for(String str : strings)
+				{
+					milestones.add(new SOLCarrotMilestone(str));
+				}
+				return;
+			case "foodEfficiency":
+				for(String str : strings)
+				{
+					efficiencyMilestones.add(new FoodEfficiencyMilestone(str));
+				}
+				return;
+			default:
+				ScalingFeast.debug("Invalid type of milestone to parse: "+type);
 		}
 	}
 	
@@ -217,24 +272,12 @@ public final class SOLCarrotHelper
 	 * @return the last SolCarrotMilestone reached by this player, or null if none was reached yet.
 	 */
 	@Nullable
-	public static SOLCarrotMilestone getLastMilestoneReached(EntityPlayer player)
+	public static SOLCarrotMilestone getLastRegularMilestoneReached(EntityPlayer player)
 	{
 		try 
 		{
 			int foodsEaten = getCountableFoodListLength(player);
-			SOLCarrotMilestone lastMilestone = null;
-			for(SOLCarrotMilestone milestone : milestones)
-			{
-				if(foodsEaten >= milestone.getAmountNeeded())
-				{
-					lastMilestone = milestone;
-				}
-				else
-				{
-					return lastMilestone;
-				}
-			}
-			return lastMilestone;
+			return milestones.get(getMilestoneIndicesSatisfying(m -> foodsEaten >= m.getTarget(), milestones).getLast());
 		} 
 		catch (ModuleNotLoadedException e) 
 		{
@@ -243,10 +286,56 @@ public final class SOLCarrotHelper
 			return null;
 		}
 	}
-
-	public static boolean reachedFoodEfficiencyMilestone(EntityPlayer player)
+	
+	/**
+	 * Get the last efficiency milestone reached by this player
+	 * @param player
+	 * @return the last FoodEfficiencyMilestone reached by this player, or null if none was reached yet.
+	 */
+	@Nullable
+	public static FoodEfficiencyMilestone getLastEfficiencyMilestoneReached(EntityPlayer player)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		try
+		{
+			int foodsEaten = getCountableFoodListLength(player);
+			return efficiencyMilestones.get(getMilestoneIndicesSatisfying (m -> foodsEaten >= m.getTarget(), efficiencyMilestones).getLast());
+		}
+		catch (ModuleNotLoadedException e) 
+		{
+			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+			return null;
+		}
+	}
+	
+	private static <T extends Milestone> Deque<Integer> getMilestoneIndicesSatisfying(Predicate<T> p, List<T> lst)
+	{
+		ArrayDeque<Integer> deque = new ArrayDeque<Integer>();
+		for(int i = 0; i < lst.size(); i++)
+		{
+			if(p.test(lst.get(i)))
+			{
+				deque.addFirst(i);
+			}
+		}
+		return deque;
+	}
+	
+	private static <T extends Milestone, N extends Number> void getReward(EntityPlayer player, List<T> lst, BiConsumer<Number, N> combiningFunc, N accumulator)
+	{
+		try
+		{
+			List<N> reward = new ArrayList<N>();
+			int foodsEaten = getCountableFoodListLength(player);
+			for(int i : getMilestoneIndicesSatisfying(m -> foodsEaten >= m.getTarget(), lst))
+			{
+				combiningFunc.accept(lst.get(i).getReward(), accumulator);
+			}
+		}
+		catch (ModuleNotLoadedException e) 
+		{
+			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+		}
 	}
 }

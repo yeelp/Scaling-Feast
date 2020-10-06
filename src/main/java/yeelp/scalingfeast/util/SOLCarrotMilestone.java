@@ -5,7 +5,7 @@ package yeelp.scalingfeast.util;
  * @author Yeelp
  *
  */
-public class SOLCarrotMilestone 
+public class SOLCarrotMilestone extends Milestone
 {
 	private int milestoneTarget;
 	private short milestoneReward; 
@@ -24,48 +24,26 @@ public class SOLCarrotMilestone
 	 */
 	public SOLCarrotMilestone(String milestone) throws NumberFormatException, IllegalArgumentException
 	{
-		String[] arr = milestone.split(":");
-		if(arr.length != 2)
-		{
-			throw new IllegalArgumentException(milestone + " isn't a valid milestone!");
-		}
-		try
-		{
-			this.milestoneTarget = Integer.parseInt(arr[0]);
-			int temp = Integer.parseInt(arr[1]);
-			if(milestoneTarget <= 0)
-			{
-				throw new IllegalArgumentException(milestoneTarget+ " isn't a valid amount for a milestone!");
-			}
-			else if(temp <= 0)
-			{
-				throw new IllegalArgumentException(temp +" isn't a valid milestone reward amount!");
-			}
-			else
-			{
-				this.milestoneReward = (short)(Math.abs(temp) % 32768);
-			}
-		}
-		catch(NumberFormatException e)
-		{
-			throw e;
-		}
+		super(milestone);
 	}
 	
-	/**
-	 * Get the amount needed for this milestone
-	 * @return the amount needed for this milestone
-	 */
-	public int getAmountNeeded()
+	@Override
+	void setReward(String str)
 	{
-		return this.milestoneTarget;
+		int temp = Integer.parseInt(str);
+		if(temp <= 0)
+		{
+			throw new IllegalArgumentException(temp +" isn't a valid milestone reward amount!");
+		}
+		else
+		{
+			this.milestoneReward = (short)(Math.abs(temp) % 32768);
+		}
 	}
 	
-	/**
-	 * Get the reward amount in half shanks for a player's max hunger due to reaching this milestone
-	 * @return the reward amount
-	 */
-	public short getReward()
+	
+	@Override
+	public Short getReward()
 	{
 		return this.milestoneReward;
 	}

@@ -419,6 +419,16 @@ public class ModConfig
 			@RequiresMcRestart
 			public boolean enabled = false;
 			
+			@Name("Use Milestones")
+			@Comment("Set to true to use regular milestones that increase max hunger as a reward.")
+			@RequiresMcRestart
+			public boolean useMilestones = true;
+			
+			@Name("Use Food Efficiency Milestones")
+			@Comment("Set to true to use food efficiency milestones that alter a player's exhaustion increase rate")
+			@RequiresMcRestart
+			public boolean useFoodEfficiencyMilestones = true;
+			
 			@Name("Milestones")
 			@Comment({"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
 					  "When a player eats m unique food items, they will gain r max hunger, in half shanks. m must be a positive integer and r must be a positive integer less than 32767.",
@@ -430,6 +440,7 @@ public class ModConfig
 			@Comment({"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
 					  "Identical to regular milestones, however instead of granting the player bonus hunger, these food efficiency milstones increase a player's food efficiency attribute by r when they eat m unique food items, which changes a player's exhaustion rate.", 
 					  "Use positive values to DECREASE the rate of exhaustion, and use negative values to INCREASE the rate of exhaustion."})
+			@RequiresMcRestart
 			public String[] foodEfficiencyMilstones = {"20:0.05", "40:0.05", "60:0.05"};
 		
 			@Name("Reward Messages Above Hotbar?")
@@ -456,7 +467,6 @@ public class ModConfig
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
-				SOLCarrotHelper.parseMilestones();
 				HeartyFeastBlock.updateCap();
 			}
 		}

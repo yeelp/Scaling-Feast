@@ -105,7 +105,7 @@ public class ModuleHandler extends Handler
 					if(SOLCarrotHelper.reachedMilestone(evt.player) && b)
 					{
 						ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
-						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastMilestoneReached(evt.player).getReward());
+						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastRegularMilestoneReached(evt.player).getReward());
 						if(!ModConfig.modules.sol.rewardMsgAboveHotbar)
 						{
 							msg.setStyle(new Style().setColor(TextFormatting.GREEN));
