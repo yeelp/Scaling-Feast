@@ -444,7 +444,7 @@ public class ModConfig
 			public String[] foodEfficiencyMilstones = {"20:0.05", "40:0.05", "60:0.05"};
 		
 			@Name("Reward Messages Above Hotbar?")
-			@Comment("If true, Scaling Feast will display its reward messages above a player's hotbar. Else, it will display it in chat.")
+			@Comment("If true, Scaling Feast will display its reward messages above a player's hotbar. Else, it will display it in chat. If multiple reward messages are sent, only the last one is displayed in the hotbar if this is true.")
 			public boolean rewardMsgAboveHotbar = false;
 		}
 	}

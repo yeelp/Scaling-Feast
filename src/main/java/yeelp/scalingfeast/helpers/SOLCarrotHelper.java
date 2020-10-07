@@ -166,6 +166,30 @@ public final class SOLCarrotHelper
 	}
 	
 	/**
+	 * Has this player reached all milestones?
+	 * @param player
+	 * @return True if they have, false otherwise.
+	 */
+	public static boolean reachedAllMilestones(EntityPlayer player)
+	{
+		try
+		{
+			int foodsEaten = getCountableFoodListLength(player);
+			boolean m = ModConfig.modules.sol.useMilestones;
+			boolean e = ModConfig.modules.sol.useFoodEfficiencyMilestones;
+			boolean rm = getMilestoneIndicesSatisfying(milestone -> foodsEaten >= milestone.getTarget(), milestones).size() == milestones.size();
+			boolean re = getMilestoneIndicesSatisfying(milestone -> foodsEaten >= milestone.getTarget(), efficiencyMilestones).size() == efficiencyMilestones.size();
+			return (m || e) && (!e || re) && (!m || rm);
+		}
+		catch (ModuleNotLoadedException e)
+		{
+			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
+			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+			return false;
+		}
+	}
+	
+	/**
 	 * Has this player reached a milestone
 	 * @param player player to check
 	 * @return true if the player just reached a milestone, false otherwise

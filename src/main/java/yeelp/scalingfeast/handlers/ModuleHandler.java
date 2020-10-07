@@ -1,7 +1,11 @@
 package yeelp.scalingfeast.handlers;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
@@ -42,9 +46,11 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
 public class ModuleHandler extends Handler 
 {	
 	private static HashMap<UUID, Integer> eatingPlayers = new HashMap<UUID, Integer>();
-	private static ITextComponent punishFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
-	private static ITextComponent restoreFoodTooltip = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
-	
+	private static final UUID EFFICIENCY_UUID = UUID.fromString("1736a445-1a35-4230-8e3a-7aedda394df2");
+	private static final ITextComponent PUNISH_FOOD_TOOLTIP = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.punish").setStyle(new Style().setColor(TextFormatting.RED));
+	private static final ITextComponent RESTORE_FOOD_TOOLTIP = new TextComponentTranslation("modules.scalingfeast.spiceoflife.tooltip.restore").setStyle(new Style().setColor(TextFormatting.GREEN));
+	private static final Style GREEN_STYLE = new Style().setColor(TextFormatting.GREEN);
+	private static final DecimalFormat PERCENT = new DecimalFormat("#%");
 	
 	@SubscribeEvent 
 	public void start(LivingEntityUseItemEvent.Start evt)
@@ -102,23 +108,42 @@ public class ModuleHandler extends Handler
 				try 
 				{
 					boolean b = eatingPlayers.get(evt.player.getUniqueID()) != SOLCarrotHelper.getCountableFoodListLength(evt.player);
+					Deque<ITextComponent> msgs = new LinkedList<ITextComponent>();
+					ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
+					splash.setStyle(GREEN_STYLE);
 					if(SOLCarrotHelper.reachedMilestone(evt.player) && b)
 					{
-						ITextComponent splash = new TextComponentTranslation("modules.scalingfeast.sol.splash"+SOLCarrotHelper.getRewardSplashNumber());
 						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reward", SOLCarrotHelper.getLastRegularMilestoneReached(evt.player).getReward());
-						if(!ModConfig.modules.sol.rewardMsgAboveHotbar)
-						{
-							msg.setStyle(new Style().setColor(TextFormatting.GREEN));
-							splash.setStyle(new Style().setColor(TextFormatting.GREEN));
-						}
+						msg.setStyle(GREEN_STYLE);
 						ITextComponent fullMsg = new TextComponentString(splash.getFormattedText() +" "+ msg.getFormattedText());
-					
-						evt.player.sendStatusMessage(fullMsg, ModConfig.modules.sol.rewardMsgAboveHotbar);
-						evt.player.world.playSound(null, evt.player.posX, evt.player.posY, evt.player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
+						msgs.add(fullMsg);
 					}
-					else if(SOLCarrotHelper.reachedFoodEfficiencyMilestone(evt.player)&& b)
+					if(SOLCarrotHelper.reachedFoodEfficiencyMilestone(evt.player) && b)
 					{
-						
+						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.efficiencyReward", PERCENT.format(SOLCarrotHelper.getLastEfficiencyMilestoneReached(evt.player).getReward()));
+						msg.setStyle(GREEN_STYLE);
+						ITextComponent fullMsg = new TextComponentString(splash.getFormattedText() +" "+ msg.getFormattedText());
+						msgs.add(fullMsg);
+					}
+					if(SOLCarrotHelper.reachedAllMilestones(evt.player) && b)
+					{
+						ITextComponent msg = new TextComponentTranslation("modules.scalingfeast.sol.reachedAllMilestones");
+						msg.setStyle(GREEN_STYLE);
+						msgs.add(msg);
+					}
+					if(msgs.size() > 0)
+					{
+						ITextComponent lastMsg = msgs.removeLast();
+						for(ITextComponent msg : msgs)
+						{
+							evt.player.sendStatusMessage(msg, false);
+						}
+						if(ModConfig.modules.sol.rewardMsgAboveHotbar)
+						{
+							lastMsg.setStyle(new Style());
+						}
+						evt.player.sendStatusMessage(lastMsg, ModConfig.modules.sol.rewardMsgAboveHotbar);
+						evt.player.world.playSound(null, evt.player.posX, evt.player.posY, evt.player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0f, 1.0f);
 					}
 				}	 
 				catch (ModuleNotLoadedException e) 
@@ -144,10 +169,10 @@ public class ModuleHandler extends Handler
 				switch(type)
 				{
 					case GOOD:
-						evt.getToolTip().add(restoreFoodTooltip.getFormattedText());
+						evt.getToolTip().add(RESTORE_FOOD_TOOLTIP.getFormattedText());
 						break;
 					case BAD:
-						evt.getToolTip().add(punishFoodTooltip.getFormattedText());
+						evt.getToolTip().add(PUNISH_FOOD_TOOLTIP.getFormattedText());
 						break;
 					default:
 						break;
@@ -166,7 +191,14 @@ public class ModuleHandler extends Handler
 		}
 		if(SOLCarrotHelper.isEnabled() && ModConfig.modules.sol.enabled)
 		{
-			mod += SOLCarrotHelper.getReward(player);
+			if(ModConfig.modules.sol.useMilestones)
+			{
+				mod += SOLCarrotHelper.getReward(player);
+			}
+			if(ModConfig.modules.sol.useFoodEfficiencyMilestones)
+			{
+				ScalingFeastAPI.mutator.setFoodEfficiencyModifier(player, EFFICIENCY_UUID, "SOL:Carrot Efficiency Milestone", SOLCarrotHelper.getEfficiencyModifier(player));
+			}
 		}
 		if(curr.getModifier("modules") == mod)
 		{

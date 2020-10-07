@@ -6,6 +6,8 @@ commands.scalingfeast.command.numerr=Amount must be in range [0, %s)
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
 modules.scalingfeast.sol.reward=You've gained %s max hunger!
+modules.scalingfeast.sol.efficiencyReward=You've gained %s food efficiency!
+modules.scalingfeast.sol.reachedAllMilestones=What a feast! You've satisfied your lust for hunger!
 
 modules.scalingfeast.sol.splash0=Scrumptious!
 modules.scalingfeast.sol.splash1=What unique flavour!
