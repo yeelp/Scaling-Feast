@@ -5,7 +5,7 @@ import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenExpansion;
 import stanhebben.zenscript.annotations.ZenGetter;
 
-@ZenExpansion("crafttweaker.entity.IPlayer")
+@ZenExpansion("crafttweaker.player.IPlayer")
 @ZenRegister
 public class CTIPlayerExt
 {

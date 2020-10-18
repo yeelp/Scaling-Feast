@@ -109,9 +109,6 @@ public class SFStats
 			AppleCoreAPI.mutator.setSaturation(this.player, currMax);
 			ScalingFeastAPI.mutator.capPlayerSaturation(this.player);
 		}
-		if(!this.player.world.isRemote)
-		{
-			CapabilityHandler.sync(this.player);
-		}
+		CapabilityHandler.sync(this.player);
 	}
 }
