@@ -37,7 +37,7 @@ public class SFCommand extends CommandBase {
 	}
 
 	@Override
-	public List getAliases()
+	public List<String> getAliases()
 	{
 		return Lists.newArrayList("sf");
 	}

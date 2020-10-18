@@ -19,9 +19,9 @@ import yeelp.scalingfeast.ScalingFeast;
  */
 public class AppleSkinHelper
 {
-	private static Class overlay;
-	private static Class config;
-	private static Class appleSkinBase;
+	private static Class<?> overlay;
+	private static Class<?> config;
+	private static Class<?> appleSkinBase;
 	private static boolean loaded = false;
 	
 	/**

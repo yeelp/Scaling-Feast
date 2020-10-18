@@ -45,7 +45,7 @@ public abstract interface IScalingFeastAccessor
 	IBloatedHunger getBloatedHunger(EntityPlayer player);
 	
 	/**
-	 * Get a player's exhaustion tracker for tracker exhaustion at zero hunger - an instance of {@link #IStarveExhaustionTracker}
+	 * Get a player's exhaustion tracker for tracking exhaustion at zero hunger - an instance of {@link #IStarveExhaustionTracker}
 	 * @param player
 	 * @return that player's exhaustion tracker for zero hunger.
 	 */

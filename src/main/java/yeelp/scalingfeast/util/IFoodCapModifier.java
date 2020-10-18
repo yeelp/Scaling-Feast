@@ -30,6 +30,10 @@ public interface IFoodCapModifier extends ICapabilitySerializable<NBTBase>
 	 */
 	float getModifier(String id);
 	
+	/**
+	 * Get all modifiers
+	 * @return a map with all modifiers.
+	 */
 	Map<String, FoodCapModifier.Modifier> getAllModifiers();
 	
 	/**
