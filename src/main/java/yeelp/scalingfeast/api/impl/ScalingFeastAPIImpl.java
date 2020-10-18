@@ -14,6 +14,7 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
 import yeelp.scalingfeast.util.BloatedHungerProvider;
 import yeelp.scalingfeast.util.FoodCapModifier;
+import yeelp.scalingfeast.util.FoodCapModifier.Operation;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
 import yeelp.scalingfeast.util.IBloatedHunger;
@@ -263,6 +264,49 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		IBloatedHunger bloatedHunger = getBloatedHunger(player);
 		bloatedHunger.setBloatedAmount(amount);
 		CapabilityHandler.syncBloatedHunger(player);
+	}
+	
+	@Override
+	public void setModifier(EntityPlayer player, String id, float amount, byte op)
+	{
+		if(0 <= op && op < 3)
+		{
+			IFoodCapModifier mod = getFoodCapModifier(player);
+			mod.setModifier(id, amount, Operation.values()[op]);
+			short currMax = getFoodCap(player).getMaxFoodLevel(mod);
+			FoodStats fs = player.getFoodStats();
+			if(fs.getFoodLevel() > currMax)
+			{
+				AppleCoreAPI.mutator.setHunger(player, currMax);
+				capPlayerSaturation(player);
+			}
+			if(fs.getSaturationLevel() > currMax)
+			{
+				AppleCoreAPI.mutator.setSaturation(player, currMax);
+				capPlayerSaturation(player);
+			}
+			CapabilityHandler.syncMod(player);
+		}
+		else
+		{
+			throw new RuntimeException("op argument for setModifier must be either 0, 1 or 2!");
+		}
+	}
+	
+	@Override
+	public void removeModifier(EntityPlayer player, String id)
+	{
+		IFoodCapModifier mod = getFoodCapModifier(player);
+		mod.getAllModifiers().remove(id);
+		CapabilityHandler.syncMod(player);
+	}
+	
+	@Override 
+	public void setUnmodifiedMaxHunger(EntityPlayer player, short amount)
+	{
+		IFoodCap cap = getFoodCap(player);
+		cap.setMax(amount);
+		CapabilityHandler.syncCap(player);
 	}
 	
 	@Override

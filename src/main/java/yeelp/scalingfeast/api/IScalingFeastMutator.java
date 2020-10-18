@@ -3,6 +3,7 @@ package yeelp.scalingfeast.api;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
+import yeelp.scalingfeast.util.IFoodCapModifier;
 
 /**
  * A collection of methods for modifying properties about Scaling Feast. Typically for convenience.
@@ -96,9 +97,32 @@ public abstract interface IScalingFeastMutator
 	/**
 	 * Set a player's bloated hunger value to a certain amount.
 	 * @param player player to target
-	 * @param amount amount to set.If negative, will instead set it to zero.
+	 * @param amount amount to set. If negative, will instead set it to zero.
 	 */
 	void setBloatedHunger(EntityPlayer player, short amount);
+	
+	/**
+	 * Set a new food cap modifier.
+	 * @param player player to target
+	 * @param id the name of the modifier
+	 * @param amount the amount
+	 * @param op the operation to use. MUST be 0, 1 or 2 for add, multiply, and percentage multiply.
+	 */
+	void setModifier(EntityPlayer player, String id, float amount, byte op);
+	
+	/**
+	 * Remove a modifier
+	 * @param player
+	 * @param id id of the modifier
+	 */
+	void removeModifier(EntityPlayer player, String id);
+	
+	/**
+	 * Set a player's unmodified max hunger in their IFoodCap.
+	 * @param player
+	 * @param amount
+	 */
+	void setUnmodifiedMaxHunger(EntityPlayer player, short amount);
 	
 	/**
 	 * Add exhaustion to a player's tracker. Only works while starving.
