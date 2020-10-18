@@ -5,11 +5,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -128,9 +126,7 @@ public final class SOLCarrotHelper
 	 */
 	public static short getReward(EntityPlayer player)
 	{
-		short reward = 0;
-		getReward(player, milestones, (n, r) -> r = Short.valueOf((short) (r.shortValue() + n.shortValue())), reward);
-		return reward;
+		return getReward(player, milestones, (n, r) -> (short) (r.shortValue() + n.shortValue()), (short) 0).shortValue();
 	}
 	
 	/**
@@ -140,9 +136,7 @@ public final class SOLCarrotHelper
 	 */
 	public static float getEfficiencyModifier(EntityPlayer player)
 	{
-		float mod = 0;
-		getReward(player, efficiencyMilestones, (n, r) -> r = Float.valueOf((float) (r.floatValue() + n.floatValue())), mod);
-		return mod;
+		return getReward(player, efficiencyMilestones, (n, r) -> r.floatValue() + n.floatValue(), 0.0f).floatValue();
 	}
 	
 	/**
@@ -345,7 +339,7 @@ public final class SOLCarrotHelper
 		return deque;
 	}
 	
-	private static <T extends Milestone, N extends Number> void getReward(EntityPlayer player, List<T> lst, BiConsumer<Number, N> combiningFunc, N accumulator)
+	private static <T extends Milestone, N extends Number> Number getReward(EntityPlayer player, List<T> lst, BinaryOperator<Number> combiningFunc, Number accumulator)
 	{
 		try
 		{
@@ -353,13 +347,15 @@ public final class SOLCarrotHelper
 			int foodsEaten = getCountableFoodListLength(player);
 			for(int i : getMilestoneIndicesSatisfying(m -> foodsEaten >= m.getTarget(), lst))
 			{
-				combiningFunc.accept(lst.get(i).getReward(), accumulator);
+				accumulator = combiningFunc.apply(lst.get(i).getReward(), accumulator);
 			}
+			return accumulator;
 		}
 		catch (ModuleNotLoadedException e) 
 		{
 			ScalingFeast.err("Scaling Feast expected Spice of Life: Carrot Edition to be loaded, but it wasn't! This doesn't make any sense!");
 			ScalingFeast.err(Arrays.toString(e.getStackTrace()));
+			return 0;
 		}
 	}
 }
