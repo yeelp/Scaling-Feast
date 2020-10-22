@@ -102,7 +102,7 @@ public class CapabilityHandler extends Handler
 			AppleCoreAPI.mutator.setHunger(player, foodCap);
 			if(fs.getSaturationLevel() > fs.getFoodLevel())
 			{
-				fs.setFoodSaturationLevel(fs.getFoodLevel());
+				AppleCoreAPI.mutator.setSaturation(player, fs.getFoodLevel());
 			}
 		}
 		ScalingFeastAPI.mutator.capPlayerHunger(player);

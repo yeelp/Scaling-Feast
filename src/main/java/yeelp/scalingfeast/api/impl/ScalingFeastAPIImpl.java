@@ -145,7 +145,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		float cap = this.getPlayerSaturationCap(player);
 		if(player.getFoodStats().getSaturationLevel() > cap)
 		{
-			player.getFoodStats().setFoodSaturationLevel(cap);
+			AppleCoreAPI.mutator.setSaturation(player, cap);
 		}
 	}
 

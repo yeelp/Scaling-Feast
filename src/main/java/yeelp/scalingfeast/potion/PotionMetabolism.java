@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
+import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
@@ -36,11 +37,11 @@ public class PotionMetabolism extends PotionBase
 			FoodStats fs = player.getFoodStats();
 			if(fs.getFoodLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null)))
 			{
-				fs.setFoodLevel(fs.getFoodLevel() + 1);
+				AppleCoreAPI.mutator.setHunger(player, fs.getFoodLevel() + 1);
 			}
 			else if(fs.getSaturationLevel() < player.getCapability(FoodCapProvider.capFoodStat, null).getMaxFoodLevel(player.getCapability(FoodCapModifierProvider.foodCapMod, null)))
 			{
-				fs.setFoodSaturationLevel(fs.getSaturationLevel() + 1);
+				AppleCoreAPI.mutator.setSaturation(player, fs.getSaturationLevel() + 1);
 			}
 			ScalingFeastAPI.mutator.capPlayerSaturation(player);
 		}

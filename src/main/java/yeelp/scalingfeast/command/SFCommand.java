@@ -20,6 +20,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.command.SelectorHandlerManager;
+import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
@@ -110,6 +111,7 @@ public class SFCommand extends CommandBase {
 				short val = (short) satVal;
 				String type = "";
 				String result = "";
+				FoodStats fs = player.getFoodStats();
 				switch(args[0])
 				{
 					case "setMax":
@@ -117,21 +119,20 @@ public class SFCommand extends CommandBase {
 						result = String.valueOf(val);
 						IFoodCap cap = player.getCapability(FoodCapProvider.capFoodStat, null);
 						cap.setMax(val);
-						if(player.getFoodStats().getFoodLevel() > val)
+						if(fs.getFoodLevel() > val)
 						{
-							player.getFoodStats().setFoodLevel(val);
-							if(player.getFoodStats().getSaturationLevel() > val)
+							AppleCoreAPI.mutator.setHunger(player, val);
+							if(fs.getSaturationLevel() > val)
 							{
-								player.getFoodStats().setFoodSaturationLevel(val);
+								AppleCoreAPI.mutator.setSaturation(player, val);
 							}
 						}
 						CapabilityHandler.syncCap(player);
 						break;
 					case "setSaturation":
 						type = "saturation";
-						FoodStats fs = player.getFoodStats();
 						result = String.valueOf(Math.min(fs.getFoodLevel(), satVal));
-						fs.setFoodSaturationLevel(Math.min(fs.getFoodLevel(), satVal));
+						AppleCoreAPI.mutator.setSaturation(player, Math.min(fs.getFoodLevel(), satVal));
 						ScalingFeastAPI.mutator.capPlayerSaturation(player);
 						break;
 					default:

@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import squeek.applecore.api.AppleCoreAPI;
 
 /**
  * Message to sync saturation to the client for the HUD
@@ -68,7 +69,7 @@ public class SatSyncMessage implements IMessage
 		@SideOnly(Side.CLIENT)
 		private void handle(SatSyncMessage msg, MessageContext ctx)
 		{
-			NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodSaturationLevel(msg.saturationLevel);;	
+			AppleCoreAPI.mutator.setSaturation(NetworkHelper.getSidedPlayer(ctx), msg.getSaturationLevel());	
 		}
 	}
 }
