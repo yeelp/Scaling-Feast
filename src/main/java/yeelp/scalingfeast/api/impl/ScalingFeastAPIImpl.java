@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.math.MathHelper;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.IScalingFeastAccessor;
@@ -184,7 +185,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 			if(foodCap.getMaxFoodLevel(foodCapMod) > lowerBound)
 			{
 				float penalty = foodCapMod.getModifier("starvation");
-				foodCapMod.setModifier("starvation", penalty-1, FoodCapModifier.Operation.ADD);
+				foodCapMod.setModifier("starvation", MathHelper.clamp(penalty-ModConfig.foodCap.starve.starveLoss, lowerBound, Integer.MAX_VALUE), FoodCapModifier.Operation.ADD);
 			}
 			if(ModConfig.foodCap.starve.doesFreqResetOnStarve)
 			{

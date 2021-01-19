@@ -248,7 +248,7 @@ public final class SOLCarrotHelper
 			if(efficiencyMilestones.size() == 0)
 			{
 				ScalingFeast.warn("No efficiency milestones were parsed! Falling back to default...");
-				parseMilestones("regular", "20:0.05", "40:0.05", "60:0.05");
+				parseMilestones("foodEfficiency", "20:0.05", "40:0.05", "60:0.05");
 			}
 		}
 		

@@ -23,6 +23,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -68,7 +69,7 @@ public class ModuleHandler extends Handler
 				{
 					try 
 					{
-						eatingPlayers.put(player.getUniqueID(), SOLCarrotHelper.getCountableFoodListLength(player));
+						eatingPlayers.put(player.getUniqueID(), SOLCarrotHelper.isEnabled() ? SOLCarrotHelper.getCountableFoodListLength(player) : 0);
 					} 
 					catch (ModuleNotLoadedException e)
 					{
@@ -178,6 +179,16 @@ public class ModuleHandler extends Handler
 						break;
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@Optional.Method(modid = ModConsts.SOLCARROT_ID)
+	public void onDeath(PlayerEvent.Clone evt)
+	{
+		if(evt.isWasDeath())
+		{
+			updatePlayer(evt.getEntityPlayer());
 		}
 	}
 	

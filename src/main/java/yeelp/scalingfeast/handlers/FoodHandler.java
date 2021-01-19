@@ -13,6 +13,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -20,7 +21,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.hunger.ExhaustionEvent;
+import squeek.applecore.api.hunger.HealthRegenEvent;
 import squeek.applecore.api.hunger.HungerEvent;
+import squeek.applecore.api.hunger.HungerRegenEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ScalingFeast;
@@ -195,6 +198,64 @@ public class FoodHandler extends Handler
 	public void onGetExhaustionCap(ExhaustionEvent.GetExhaustionCap evt)
 	{
 		evt.exhaustionLevelCap = Float.MAX_VALUE;
+	}
+	
+	@SubscribeEvent
+	public void onHungerRegen(HealthRegenEvent.AllowRegen evt)
+	{
+		if(!evt.getResult().equals(Result.DENY))
+		{
+			switch(ModConfig.foodCap.hungerRegen)
+			{
+				case DISABLED:
+					evt.setResult(Result.DENY);
+					break;
+				case VANILLA:
+					break;
+				case VANILLA_LIKE:
+					EntityPlayer player = evt.player;
+					if(player.getFoodStats().getFoodLevel() >= ScalingFeastAPI.accessor.getModifiedFoodCap(player) - 2)
+					{
+						evt.setResult(Result.ALLOW);
+					}
+					else
+					{
+						evt.setResult(Result.DENY);
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onSaturatedRegen(HealthRegenEvent.AllowSaturatedRegen evt)
+	{
+		if(!evt.getResult().equals(Result.DENY))
+		{
+			switch(ModConfig.foodCap.satRegen)
+			{
+				case DISABLED:
+					evt.setResult(Result.DENY);
+					break;
+				case VANILLA:
+					break;
+				case VANILLA_LIKE:
+					EntityPlayer player = evt.player;
+					if(player.getFoodStats().getFoodLevel() >= ScalingFeastAPI.accessor.getModifiedFoodCap(player) && player.getFoodStats().getSaturationLevel() > 0.0f)
+					{
+						evt.setResult(Result.ALLOW);
+					}
+					else
+					{
+						evt.setResult(Result.DENY);
+					}
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	@SubscribeEvent
