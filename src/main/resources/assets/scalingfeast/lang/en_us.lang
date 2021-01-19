@@ -5,6 +5,17 @@ commands.scalingfeast.command.emptytarget=Target selector %s found nothing.
 commands.scalingfeast.command.numerr=Amount must be in range [0, %s)
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
+tooltips.scalingfeast.heartyshank.info1=Delicious!
+tooltips.scalingfeast.heartyshank.info2=Eat this to increase your max hunger by at most %s shank(s)!
+tooltips.scalingfeast.heartyshank.info3=You can gain max hunger by eating this %s more times.
+tooltips.scalingfeast.heartyshank.nobonus=You can't gain any more max hunger from eating this...
+tooltips.scalingfeast.heartyshank.atmax=Your max hunger is already at the maximum allowed level!
+tooltips.scalingfeast.ironapple.splash=A suitable iron supplement!
+tooltips.scalingfeast.ironapple.info=The cousin of the Golden Apple; eat it to restore 4 health and recover hunger over time.
+tooltips.scalingfeast.enchantedironapple.splash=Now THAT'S metal!
+tooltips.scalingfeast.enchantedironapple.info1=The cousin of the Enchanted Golden Apple; eat it to restore 4 health and recover hunger quickly.
+tooltips.scalingfeast.enchantedironapple.info2=Also makes it take more effort to decrease your hunger for a fair while.
+
 modules.scalingfeast.sol.reward=You've gained %s max hunger!
 modules.scalingfeast.sol.efficiencyReward=You've gained %s food efficiency!
 modules.scalingfeast.sol.reachedAllMilestones=What a feast! You've satisfied your lust for hunger!

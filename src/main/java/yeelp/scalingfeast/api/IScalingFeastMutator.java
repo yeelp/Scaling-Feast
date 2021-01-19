@@ -25,6 +25,12 @@ public abstract interface IScalingFeastMutator
 	void capPlayerSaturation(EntityPlayer player);
 	
 	/**
+	 * Increment a player's Hearty Shank usage ticker.
+	 * @param player
+	 */
+	void tickPlayerShankUsageTicker(EntityPlayer player);
+	
+	/**
 	 * Tick a player's starvation tracker. If the count passes the threshold defined in the config, this method will also punish the player.
 	 * @param player player to target
 	 */

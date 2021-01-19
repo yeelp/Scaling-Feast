@@ -44,6 +44,13 @@ public class SpiceOfLifeHelper
 		}
 	}
 	
+	public static void update()
+	{
+		penalty = (short)ModConfig.modules.spiceoflife.penalty;
+		requiredAmount = ModConfig.modules.spiceoflife.uniqueRequired;
+		useFoodGroups = ModConfig.modules.spiceoflife.useFoodGroups;
+	}
+	
 	/**
 	 * Is this module enabled?
 	 * @return true if initialized and enabled, false otherwise

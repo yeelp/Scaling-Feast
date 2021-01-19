@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
+import yeelp.scalingfeast.util.IHeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.IStarveExhaustionTracker;
 import yeelp.scalingfeast.util.SaturationScaling;
@@ -50,6 +51,23 @@ public abstract interface IScalingFeastAccessor
 	 * @return that player's exhaustion tracker for zero hunger.
 	 */
 	IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player);
+	
+	/**
+	 * Gets the Hearty Shank usage counter for the player
+	 * @param player
+	 * @return the usage counter.
+	 */
+	IHeartyShankUsageTicker getShankUsageTicker(EntityPlayer player);
+	
+	/**
+	 * Gets the amount of time a player has used a Hearty Shank.
+	 * @param player
+	 * @return the number of times that player used a Hearty Shank.
+	 */
+	default int getShankUsageCount(EntityPlayer player)
+	{
+		return getShankUsageTicker(player).getCount();
+	}
 	
 	/**
 	 * Get a player's bloated hunger amount. This just calls {@link IBloatedHunger#getBloatedAmount()} but is included for convenience.

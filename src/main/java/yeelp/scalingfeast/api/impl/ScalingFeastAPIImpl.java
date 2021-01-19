@@ -18,9 +18,11 @@ import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.FoodCapModifier.Operation;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.HeartyShankUsageTickerProvider;
 import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
+import yeelp.scalingfeast.util.IHeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.IStarveExhaustionTracker;
 import yeelp.scalingfeast.util.SFAttributes;
@@ -41,6 +43,13 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		ScalingFeastAPI.accessor = this;
 		ScalingFeastAPI.mutator = this;
 		
+		this.hungerCap = (short) (ModConfig.foodCap.globalCap == -1 ? Short.MAX_VALUE : ModConfig.foodCap.globalCap); 
+		this.saturationCap = (float) (ModConfig.foodCap.satCap == -1 ? Float.MAX_VALUE : ModConfig.foodCap.satCap);
+		this.satScaling = ModConfig.foodCap.satScaling;
+	}
+	
+	public void updateValues()
+	{
 		this.hungerCap = (short) (ModConfig.foodCap.globalCap == -1 ? Short.MAX_VALUE : ModConfig.foodCap.globalCap); 
 		this.saturationCap = (float) (ModConfig.foodCap.satCap == -1 ? Float.MAX_VALUE : ModConfig.foodCap.satCap);
 		this.satScaling = ModConfig.foodCap.satScaling;
@@ -78,6 +87,12 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player)
 	{
 		return StarveExhaustionTrackerProvider.getStarveExhaustionTracker(player);
+	}
+	
+	@Override 
+	public IHeartyShankUsageTicker getShankUsageTicker(EntityPlayer player)
+	{
+		return HeartyShankUsageTickerProvider.getTicker(player);
 	}
 
 	@Override
@@ -148,6 +163,13 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		{
 			AppleCoreAPI.mutator.setSaturation(player, cap);
 		}
+	}
+	
+	@Override
+	public void tickPlayerShankUsageTicker(EntityPlayer player)
+	{
+		getShankUsageTicker(player).inc();
+		CapabilityHandler.sync(player);
 	}
 
 	@Override

@@ -1,23 +1,5 @@
 package yeelp.scalingfeast;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
@@ -25,15 +7,14 @@ import net.minecraftforge.common.config.Config.RangeDouble;
 import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.api.impl.ScalingFeastAPIImpl;
 import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
-import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
 import yeelp.scalingfeast.util.SaturationScaling;
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig
@@ -72,31 +53,38 @@ public class ModConfig
 		@Comment({"The highest extended hunger the player can have.",
 				  "Note that any players with an extended hunger value greater than this will be set to this cap",
 			      "This ignores vanilla's hunger level; it ONLY affects the additional amount of hunger you can gain from Scaling Feast.",
-			      "If set to -1, this cap is ignored."})
+			      "If set to -1, this cap is ignored.",
+			      "Changes in game will be observed on the next player tick"})
 		@RangeInt(min = -1, max = Short.MAX_VALUE)
-		@RequiresMcRestart
 		public int globalCap = -1;
 		
 		@Name("Saturation Cap")
 		@Comment({"A hard cap on a player's saturation. It can never go above this value.",
 			      "Any player's with a saturation above this value will be set to this value.",
-			      "If set to -1, this cap is ignored."})
+			      "If set to -1, this cap is ignored.",
+			      "Changes in game will be observed on the next player tick"})
 		@RangeDouble(min = -1.0)
-		@RequiresMcRestart
 		public double satCap = -1;
 		
 		@Name("Saturation Scaling")
 		@Comment({"How a player's max saturation should scale to their max hunger",
 			      "If set to MAX_HUNGER, no scaling is done. A player's max saturation is bounded by their max hunger",
 			      "If set to HALF_HUNGER, a player's saturation can never be higher than half of their max hunger.",
-			      "If set to QUARTER_HUNGER, a player's saturation can never be higher than a quarter of their max hunger"})
-		@RequiresMcRestart
+			      "If set to QUARTER_HUNGER, a player's saturation can never be higher than a quarter of their max hunger",
+			      "Changes in game will be observed on the next player tick"})
 		public SaturationScaling satScaling = SaturationScaling.MAX_HUNGER;
 		
 		@Name("Increase Per Hearty Shank Eaten")
 		@Comment("The increase in your total max hunger, in half shanks (i.e. 2 = one full hunger shank) per Hearty Shank eaten.")
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
 		public int inc = 2;
+		
+		@Name("Hearty Shank Usage Cap")
+		@Comment({"The maximum number of times a Hearty Shank can be used to increase max hunger.",
+			      "After that, the Hearty Shank can still be consumed, but won't increase max hunger.",
+			      "Set to -1 for no limit."})
+		@RangeInt(min = -1)
+		public int heartyShankCap = -1;
 		
 		@Name("Starting Hunger")
 		@Comment("Players joining worlds for the first time will have their max hunger cap set to this value in half shanks. Vanilla default is 20")
@@ -417,20 +405,17 @@ public class ModConfig
 			
 			@Name("Use Food Groups")
 			@Comment("Should Scaling Feast check food groups in a player's food history instead of individual food items? Must have food groups defined in Spice Of Life")
-			@RequiresMcRestart
 			public boolean useFoodGroups = false;
 			
 			@Name("Required Amount")
 			@Comment("How many unique entries must be found in a player's food history to prevent punishing them. Should be less than or equal to Spice of Life's food history length")
 			@RangeInt(min = 1)
-			@RequiresMcRestart
 			public int uniqueRequired = 5;
 			
 			@Name("Penalty")
 			@Comment({"If the number of unique entires in a player's food history is less than Required Amount, that player will lose this much max hunger for every unique entry missing.",
 					  "For example, if a player has 3 unique entires and the required amount is 5, they will lose (5-3)*(penalty) max hunger"})
 			@RangeInt(min = 1, max = Short.MAX_VALUE)
-			@RequiresMcRestart
 			public int penalty = 2;
 		}
 		
@@ -443,26 +428,22 @@ public class ModConfig
 			
 			@Name("Use Milestones")
 			@Comment("Set to true to use regular milestones that increase max hunger as a reward.")
-			@RequiresMcRestart
 			public boolean useMilestones = true;
 			
 			@Name("Use Food Efficiency Milestones")
 			@Comment("Set to true to use food efficiency milestones that alter a player's exhaustion increase rate")
-			@RequiresMcRestart
 			public boolean useFoodEfficiencyMilestones = true;
 			
 			@Name("Milestones")
 			@Comment({"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
 					  "When a player eats m unique food items, they will gain r max hunger, in half shanks. m must be a positive integer and r must be a positive integer less than 32767.",
 					  "Values for r > 32767 will be brought inside these bounds modulo 32767. list entires that aren't of this form, or pairs containing negative values for either m or r will be silently ignored."})
-			@RequiresMcRestart
 			public String[] milestones = {"5:2", "10:2", "15:2", "20:2", "25:2", "30:2", "35:2", "40:2", "45:2", "50:2"};
 			
 			@Name("Food Efficiency Milestones")
 			@Comment({"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
 					  "Identical to regular milestones, however instead of granting the player bonus hunger, these food efficiency milstones increase a player's food efficiency attribute by r when they eat m unique food items, which changes a player's exhaustion rate.", 
 					  "Use positive values to DECREASE the rate of exhaustion, and use negative values to INCREASE the rate of exhaustion."})
-			@RequiresMcRestart
 			public String[] foodEfficiencyMilstones = {"20:0.05", "40:0.05", "60:0.05"};
 		
 			@Name("Reward Messages Above Hotbar?")
@@ -490,6 +471,9 @@ public class ModConfig
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
 				HeartyFeastBlock.updateCap();
+				SOLCarrotHelper.parseMilestones();
+				SpiceOfLifeHelper.update();
+				ScalingFeastAPIImpl.INSTANCE.updateValues();
 			}
 		}
 	}

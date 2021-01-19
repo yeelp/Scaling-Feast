@@ -1,12 +1,22 @@
 package yeelp.scalingfeast.items;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
@@ -18,6 +28,8 @@ import yeelp.scalingfeast.init.SFPotion;
  */
 public class IronAppleItem extends ItemFood 
 {
+	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.ironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
+	private static final String INFO = new TextComponentTranslation("tooltips.scalingfeast.ironapple.info").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
 	public IronAppleItem()
 	{
 		super(0, 0, false);
@@ -26,6 +38,13 @@ public class IronAppleItem extends ItemFood
 		this.setUnlocalizedName(ModConsts.MOD_ID+".ironapple");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+    {
+		tooltip.add(TEXT_SPLASH);
+		tooltip.add(INFO);
+    }
 	
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
 	{

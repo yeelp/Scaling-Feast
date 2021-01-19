@@ -29,6 +29,7 @@ import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.ModuleHandler;
 import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.handlers.PotionHandler;
+import yeelp.scalingfeast.handlers.TooltipHandler;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.helpers.SOLCarrotHelper;
 import yeelp.scalingfeast.helpers.SpiceOfLifeHelper;
@@ -38,6 +39,7 @@ import yeelp.scalingfeast.proxy.Proxy;
 import yeelp.scalingfeast.util.BloatedHunger;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
+import yeelp.scalingfeast.util.HeartyShankUsageTicker;
 import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.StarvationTracker;
 import yeelp.scalingfeast.util.StarveExhaustionTracker;
@@ -81,6 +83,7 @@ public class ScalingFeast
         StarvationTracker.register();
         FoodCapModifier.register();
         BloatedHunger.register();
+        HeartyShankUsageTicker.register();
         StarveExhaustionTracker.register();
         new CapabilityHandler().register();
         PacketHandler.init();
@@ -95,6 +98,7 @@ public class ScalingFeast
         new EnchantmentHandler().register();
         new PotionHandler().register();
         new LootTableInjector().register();
+        new TooltipHandler().register();
         if(ModConfig.modules.sol.enabled || ModConfig.modules.spiceoflife.enabled)
         {	
         	new ModuleHandler().register();

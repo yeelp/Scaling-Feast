@@ -48,6 +48,7 @@ public abstract class PotionBase extends Potion
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderInventoryEffect(int x, int y, PotionEffect effect, Minecraft mc)
@@ -58,6 +59,7 @@ public abstract class PotionBase extends Potion
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderHUDEffect(int x, int y, PotionEffect effect, Minecraft mc, float alpha)

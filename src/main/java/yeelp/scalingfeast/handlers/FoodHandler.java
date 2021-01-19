@@ -124,6 +124,7 @@ public class FoodHandler extends Handler
 		{
 			AppleCoreAPI.mutator.setHunger(evt.player, ScalingFeastAPI.accessor.getModifiedFoodCap(evt.player));
 		}
+		ScalingFeastAPI.mutator.capPlayerHunger(evt.player);
 		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
 	}
 	

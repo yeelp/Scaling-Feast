@@ -25,9 +25,11 @@ import yeelp.scalingfeast.network.FoodCapMessage;
 import yeelp.scalingfeast.network.FoodCapModifierMessage;
 import yeelp.scalingfeast.network.StarvationTrackerMessage;
 import yeelp.scalingfeast.network.StarveExhaustMessage;
+import yeelp.scalingfeast.network.TickerMessage;
 import yeelp.scalingfeast.util.BloatedHunger;
 import yeelp.scalingfeast.util.FoodCap;
 import yeelp.scalingfeast.util.FoodCapModifier;
+import yeelp.scalingfeast.util.HeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IStarvationTracker;
@@ -47,6 +49,7 @@ public class CapabilityHandler extends Handler
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "Modifier"), new FoodCapModifier());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "BloatedAmount"),  new BloatedHunger());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "ExhaustionSinceStarve"), new StarveExhaustionTracker());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "ShankCounter"), new HeartyShankUsageTicker());
 		}
 	}
 	
@@ -162,6 +165,7 @@ public class CapabilityHandler extends Handler
 		}
 		syncCap(newPlayer);
 		syncMod(newPlayer);
+		syncTicker(newPlayer);
 	}
 	
 	public static void sync(EntityPlayer player)
@@ -171,30 +175,54 @@ public class CapabilityHandler extends Handler
 		syncMod(player);
 		syncBloatedHunger(player);
 		syncStarveExhaust(player);
+		syncTicker(player);
 	}
 	
 	public static void syncCap(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new FoodCapMessage(ScalingFeastAPI.accessor.getFoodCap(player)), (EntityPlayerMP) player);
+		if(!player.world.isRemote)
+		{
+			PacketHandler.INSTANCE.sendTo(new FoodCapMessage(ScalingFeastAPI.accessor.getFoodCap(player)), (EntityPlayerMP) player);
+		}
 	}
 	
 	public static void syncTracker(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP) player);
+		if(!player.world.isRemote)
+		{
+			PacketHandler.INSTANCE.sendTo(new StarvationTrackerMessage(ScalingFeastAPI.accessor.getStarvationTracker(player)), (EntityPlayerMP) player);
+		}
 	}
 	
 	public static void syncMod(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP) player);
+		if(!player.world.isRemote)
+		{
+			PacketHandler.INSTANCE.sendTo(new FoodCapModifierMessage(ScalingFeastAPI.accessor.getFoodCapModifier(player)), (EntityPlayerMP) player);
+		}
 	}
 	
 	public static void syncBloatedHunger(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new BloatedHungerMessage(ScalingFeastAPI.accessor.getBloatedHunger(player)), (EntityPlayerMP) player);
+		if(!player.world.isRemote)
+		{
+			PacketHandler.INSTANCE.sendTo(new BloatedHungerMessage(ScalingFeastAPI.accessor.getBloatedHunger(player)), (EntityPlayerMP) player);
+		}
 	}
 	
 	public static void syncStarveExhaust(EntityPlayer player)
 	{
-		PacketHandler.INSTANCE.sendTo(new StarveExhaustMessage(ScalingFeastAPI.accessor.getStarveExhaustionTracker(player)), (EntityPlayerMP) player);
+		if(!player.world.isRemote)
+		{
+			PacketHandler.INSTANCE.sendTo(new StarveExhaustMessage(ScalingFeastAPI.accessor.getStarveExhaustionTracker(player)), (EntityPlayerMP) player);
+		}
+	}
+	
+	public static void syncTicker(EntityPlayer player)
+	{
+		if(!player.world.isRemote)
+		{
+			PacketHandler.INSTANCE.sendTo(new TickerMessage(ScalingFeastAPI.accessor.getShankUsageTicker(player)), (EntityPlayerMP) player);
+		}
 	}
 }
