@@ -15,6 +15,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,6 +35,7 @@ import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.util.Colour;
+import yeelp.scalingfeast.util.HUDUtils;
 
 @SideOnly(Side.CLIENT)
 public class HUDOverlayHandler extends Handler
@@ -45,7 +47,7 @@ public class HUDOverlayHandler extends Handler
 	private static ArrayList<Colour> colours = new ArrayList<Colour>();
 	private static ArrayList<Colour> satColours = new ArrayList<Colour>();
 	private static ArrayList<Colour> bloatedColours = new ArrayList<Colour>();
-	private Random rand = new Random();
+	private static Random rand = new Random();
 	private boolean appleSkinErr = false;
 	private static int satColour = 0xffff55;
 	private static int satColourEmpty = 0x555555;
@@ -72,7 +74,7 @@ public class HUDOverlayHandler extends Handler
 	
 	public static void loadColours()
 	{
-		if(isEmpty(ModConfig.hud.Hcolours))
+		if(HUDUtils.isEmpty(ModConfig.hud.Hcolours))
 		{
 			colours.add(new Colour("ff9d00"));
 			colours.add(new Colour("ffee00"));
@@ -87,7 +89,7 @@ public class HUDOverlayHandler extends Handler
 			colours = colourize(ModConfig.hud.Hcolours);
 		}
 		
-		if(isEmpty(ModConfig.hud.Scolours))
+		if(HUDUtils.isEmpty(ModConfig.hud.Scolours))
 		{
 			satColours.add(new Colour("d70000"));
 			satColours.add(new Colour("d700d7"));
@@ -102,7 +104,7 @@ public class HUDOverlayHandler extends Handler
 			satColours = colourize(ModConfig.hud.Scolours);
 		}
 		
-		if(isEmpty(ModConfig.hud.Bcolours))
+		if(HUDUtils.isEmpty(ModConfig.hud.Bcolours))
 		{
 			bloatedColours.add(new Colour("ffff6e"));
 			bloatedColours.add(new Colour("ff6e6e"));
@@ -339,7 +341,7 @@ public class HUDOverlayHandler extends Handler
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
 		int max = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
-		float maxSat = ScalingFeastAPI.accessor.getPlayerSaturationCap(player);
+		/*float maxSat = ScalingFeastAPI.accessor.getPlayerSaturationCap(player);
 		String foodAddition = "";
 		String maxAddition = "";
 		String satAddition = "";
@@ -371,17 +373,53 @@ public class HUDOverlayHandler extends Handler
 					maxSatAddition = "";
 				}
 			}
-		}
-		String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
-		String satInfo = String.format("%.1f%s/%.1f%s", sat, satAddition, maxSat, maxSatAddition).trim();
+		}*/
+		//String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
+		//String satInfo = String.format("%.1f%s/%.1f%s", sat, satAddition, maxSat, maxSatAddition).trim();
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
-		if(ModConfig.hud.drawSaturation)
+		float y = top/0.5f + 4.5f/0.5f;
+		boolean drawingSat = false;
+		for(Iterable<Tuple<String, Integer>> it : HUDUtils.getAdvancedInfoString(player))
+		{
+			float x = (left+1)/0.5f;
+			for(Tuple<String, Integer> t : it)
+			{
+				int colour;
+				if(t.getSecond() == null)
+				{
+					if(drawingSat)
+					{
+						colour = sat > 0 ? satColour : satColourEmpty;
+					}
+					else
+					{
+						colour = getColour(hunger, max);
+					}
+				}
+				else
+				{
+					colour = t.getSecond().intValue();
+				}
+				mc.fontRenderer.drawStringWithShadow(t.getFirst(), x, y, colour);
+				x += mc.fontRenderer.getStringWidth(t.getFirst());
+			}
+			if(!ModConfig.hud.drawSaturation)
+			{
+				break;
+			}
+			else
+			{
+				y = top/0.5f;
+				drawingSat = true;
+			}
+		}
+		/*if(ModConfig.hud.drawSaturation)
 		{	
 			mc.fontRenderer.drawStringWithShadow(satInfo, (left+1)/0.5f, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
 		}
-		mc.fontRenderer.drawStringWithShadow(hungerInfo, (left+1)/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));
+		mc.fontRenderer.drawStringWithShadow(hungerInfo, (left+1)/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));*/
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -474,7 +512,7 @@ public class HUDOverlayHandler extends Handler
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 	
-	private int[] getJitterAmount(int updateCounter, EntityPlayer player)
+	private static int[] getJitterAmount(int updateCounter, EntityPlayer player)
 	{
 		rand.setSeed(updateCounter * 70643);
 		int foodLevel = player.getFoodStats().getFoodLevel();
@@ -502,7 +540,7 @@ public class HUDOverlayHandler extends Handler
 		return jitterAmount;
 	}
 	
-	private int getColour(int hunger, int max)
+	private static int getColour(int hunger, int max)
 	{
 		if(hunger == max)
 		{
@@ -530,7 +568,7 @@ public class HUDOverlayHandler extends Handler
 		}
 	}
 	
-	private Colour getMaxColour(int ticks, int maxTicks)
+	private static Colour getMaxColour(int ticks, int maxTicks)
 	{
 		switch(ModConfig.hud.trackerStyle)
 		{
@@ -592,33 +630,5 @@ public class HUDOverlayHandler extends Handler
 			lst.add(new Colour(hex));
 		}
 		return lst;
-	}
-	
-	private static boolean isEmpty(String[] arr)
-	{
-		for(String str : arr)
-		{
-			if(str != null)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private EnumHand getHandWithFood(EntityPlayer player)
-	{
-		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)
-		{
-			return EnumHand.MAIN_HAND;
-		}
-		else if(player.getHeldItemOffhand().getItem() instanceof ItemFood)
-		{
-			return EnumHand.OFF_HAND;
-		}
-		else
-		{
-			return null;
-		}
 	}
 }
