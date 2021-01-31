@@ -22,7 +22,7 @@ public final class FoodCap implements IFoodCap
 	private short max;
 	
 	/**
-	 * Create a new FoodCap container with default value
+	 * Create a new FoodCap container with the default value
 	 */
 	public FoodCap()
 	{
@@ -51,9 +51,9 @@ public final class FoodCap implements IFoodCap
 	
 	public void setMax(short max)
 	{
-		if(max < 0)
+		if(max <= 0)
 		{
-			this.max = 0;
+			this.max = 1;
 		}
 		else
 		{

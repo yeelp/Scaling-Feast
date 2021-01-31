@@ -105,7 +105,7 @@ public class SFCommand extends CommandBase {
 	{
 		try
 		{
-			if(0 <= Float.parseFloat(args[2]) && Float.parseFloat(args[2]) < Short.MAX_VALUE)
+			if(0 < Float.parseFloat(args[2]) && Float.parseFloat(args[2]) <= Short.MAX_VALUE)
 			{
 				float satVal = Float.parseFloat(args[2]);
 				short val = (short) satVal;
