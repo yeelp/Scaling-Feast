@@ -1,8 +1,8 @@
-commands.scalingfeast.usage=/scalingfeast <setMax|setSaturation> <player> [args]
+commands.scalingfeast.usage=/scalingfeast <setMax|setSaturation> <player> <amount>
 commands.scalingfeast.command.usage=Usage: /scalingfeast %s <player> <amount>
 commands.scalingfeast.command.existence=Player %s doesn't exist!
 commands.scalingfeast.command.emptytarget=Target selector %s found nothing.
-commands.scalingfeast.command.numerr=Amount must be in range [0, %s)
+commands.scalingfeast.command.numerr=Amount must be in range (0, %s]
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
 tooltips.scalingfeast.heartyshank.info1=Delicious!
