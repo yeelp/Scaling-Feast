@@ -85,7 +85,7 @@ public class FoodHandler extends Handler
 		if(!player.isPotionActive(SFPotion.bloated) && ModConfig.foodCap.doBloatedOverflow)
 		{
 			int diff = evt.foodValuesToBeAdded.hunger - (AppleCoreAPI.accessor.getMaxHunger(player) - player.getFoodStats().getFoodLevel());
-			int level = diff > 0 ? evt.foodValuesToBeAdded.hunger/4 - 1 : -1;
+			int level = diff > 0 ? diff/4 - 1 : -1;
 			
 			if(level >= 0)
 			{
