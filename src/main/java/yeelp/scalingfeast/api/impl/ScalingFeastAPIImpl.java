@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.api.impl;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -18,6 +19,8 @@ import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.FoodCapModifier.Operation;
 import yeelp.scalingfeast.util.FoodCapModifierProvider;
 import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.util.FoodEfficiencyXPBonus;
+import yeelp.scalingfeast.util.XPBonusType;
 import yeelp.scalingfeast.util.HeartyShankUsageTickerProvider;
 import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
@@ -25,6 +28,7 @@ import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IHeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.IStarveExhaustionTracker;
+import yeelp.scalingfeast.util.MaxHungerXPBonus;
 import yeelp.scalingfeast.util.SFAttributes;
 import yeelp.scalingfeast.util.SaturationScaling;
 import yeelp.scalingfeast.util.StarvationTrackerProvider;
@@ -37,15 +41,15 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	private short hungerCap;
 	private float saturationCap;
 	private SaturationScaling satScaling;
+	private FoodEfficiencyXPBonus efficiencyBonus;
+	private MaxHungerXPBonus maxBonus;
 	
 	private ScalingFeastAPIImpl()
 	{
 		ScalingFeastAPI.accessor = this;
 		ScalingFeastAPI.mutator = this;
 		
-		this.hungerCap = (short) (ModConfig.foodCap.globalCap == -1 ? Short.MAX_VALUE : ModConfig.foodCap.globalCap); 
-		this.saturationCap = (float) (ModConfig.foodCap.satCap == -1 ? Float.MAX_VALUE : ModConfig.foodCap.satCap);
-		this.satScaling = ModConfig.foodCap.satScaling;
+		this.updateValues();
 	}
 	
 	public void updateValues()
@@ -53,6 +57,9 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		this.hungerCap = (short) (ModConfig.foodCap.globalCap == -1 ? Short.MAX_VALUE : ModConfig.foodCap.globalCap); 
 		this.saturationCap = (float) (ModConfig.foodCap.satCap == -1 ? Float.MAX_VALUE : ModConfig.foodCap.satCap);
 		this.satScaling = ModConfig.foodCap.satScaling;
+		this.efficiencyBonus = ModConfig.foodCap.efficiencyXPBonus;
+		this.maxBonus = ModConfig.foodCap.maxHungerXPBonus;
+		XPBonusType.updateRewards();
 	}
 	
 	/******************************/
@@ -99,6 +106,18 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public SaturationScaling getSaturationScaling()
 	{
 		return this.satScaling;
+	}
+	
+	@Override
+	public FoodEfficiencyXPBonus getFoodEfficiencyXPBonus()
+	{
+		return this.efficiencyBonus;
+	}
+	
+	@Override
+	public MaxHungerXPBonus getMaxHungerXPBonus()
+	{
+		return this.maxBonus;
 	}
 
 	@Override
@@ -238,6 +257,16 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	}
 	
 	@Override
+	public void setFoodEfficiencyXPBonus(EntityPlayer player)
+	{
+		if(this.efficiencyBonus == XPBonusType.NONE)
+		{
+			return;
+		}
+		setXPBonus(this.efficiencyBonus.getFoodEfficiencyBonus(player), XPBonusType.getFoodEfficiencyBonusUUID(), "Food Efficiency XP Bonus", getFoodEfficiency(player), 2);
+	}
+	
+	@Override
 	public void setFoodEfficiencyModifier(EntityPlayer player, UUID id, String name, double amount)
 	{
 		IAttributeInstance instance = getFoodEfficiency(player);
@@ -247,6 +276,30 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 			instance.removeModifier(modifier);
 		}
 		instance.applyModifier(new AttributeModifier(id, name, amount, 2));
+	}
+	
+	@Override
+	public void setMaxHungerXPBonus(EntityPlayer player)
+	{
+		if(this.maxBonus == XPBonusType.NONE)
+		{
+			return;
+		}
+		setXPBonus(this.maxBonus.getMaxHungerBonus(player), XPBonusType.getMaxHungerBonusUUID(), "Max Hunger XP Bonus", getMaxHungerAttributeModifier(player), 0);
+	}
+	
+	private void setXPBonus(double newMod, UUID uuid, String name, IAttributeInstance instance, int op)
+	{
+		AttributeModifier mod = instance.getModifier(uuid);
+		if(mod != null)
+		{
+			if(mod.getAmount() == newMod)
+			{
+				return;
+			}
+			instance.removeModifier(mod);
+		}
+		instance.applyModifier(new AttributeModifier(uuid, name, newMod, op));
 	}
 	
 	@Override

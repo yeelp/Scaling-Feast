@@ -2,12 +2,14 @@ package yeelp.scalingfeast.api;
 
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import yeelp.scalingfeast.util.FoodEfficiencyXPBonus;
 import yeelp.scalingfeast.util.IBloatedHunger;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
 import yeelp.scalingfeast.util.IHeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.IStarveExhaustionTracker;
+import yeelp.scalingfeast.util.MaxHungerXPBonus;
 import yeelp.scalingfeast.util.SaturationScaling;
 
 /**
@@ -104,6 +106,18 @@ public abstract interface IScalingFeastAccessor
 	 * @return the current SaturationScaling
 	 */
 	SaturationScaling getSaturationScaling();
+	
+	/**
+	 * Gets the current loaded food efficiency XP bonus
+	 * @return the current FoodEfficiencyXPBonus
+	 */
+	FoodEfficiencyXPBonus getFoodEfficiencyXPBonus();
+	
+	/**
+	 * Gets the currently loaded max hunger XP bonus
+	 * @return the current MaxHungerXPBonus
+	 */
+	MaxHungerXPBonus getMaxHungerXPBonus();
 	
 	/**
 	 * Get the current hunger hard cap.

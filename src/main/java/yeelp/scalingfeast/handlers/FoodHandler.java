@@ -126,6 +126,8 @@ public class FoodHandler extends Handler
 		}
 		ScalingFeastAPI.mutator.capPlayerHunger(evt.player);
 		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
+		ScalingFeastAPI.mutator.setFoodEfficiencyXPBonus(evt.player);
+		ScalingFeastAPI.mutator.setMaxHungerXPBonus(evt.player);
 	}
 	
 	@SubscribeEvent

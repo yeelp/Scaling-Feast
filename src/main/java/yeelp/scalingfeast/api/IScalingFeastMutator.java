@@ -58,6 +58,18 @@ public abstract interface IScalingFeastMutator
 	void deductFoodStats(EntityPlayer player, float amount);
 	
 	/**
+	 * Set the Food Efficiency bonus for the specified player by looking at their current XP (level or total amount, depending on the config).
+	 * @param player player to target.
+	 */
+	void setFoodEfficiencyXPBonus(EntityPlayer player);
+	
+	/**
+	 * Set the max hunger bonus for the specified player by looking at their current XP (level or total amount, depending on the config).
+	 * @param player player to target.
+	 */
+	void setMaxHungerXPBonus(EntityPlayer player);
+	
+	/**
 	 * Modify the exhaustion rate attribute for a player. If the exhaustion rate for this player already has a modifier with this id, the value is changed to {@code amount}
 	 * <p>
 	 * The exhaustion rate attribute will only use operation 2 for modifiers, since other operations are too niche to support. See <a href="http://minecraft.gamepedia.com/Attribute#Modifiers">Minecraft's description on Attribute Modifiers</a> for more info about this operation value.
