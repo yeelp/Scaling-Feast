@@ -10,6 +10,7 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.MathHelper;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.IScalingFeastAccessor;
 import yeelp.scalingfeast.api.IScalingFeastMutator;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
@@ -188,18 +189,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	public void tickPlayerShankUsageTicker(EntityPlayer player)
 	{
 		getShankUsageTicker(player).inc();
-		CapabilityHandler.sync(player);
-	}
-
-	@Override
-	public void tickPlayerStarvationTracker(EntityPlayer player)
-	{
-		short threshold = (short) ModConfig.foodCap.starve.lossFreq;
-		short lowerBound = (short) ModConfig.foodCap.starve.starveLowerCap;
-		IStarvationTracker tracker = this.getStarvationTracker(player);
-		tracker.tickStarvation(player.getFoodStats().getFoodLevel());
-		checkAndPunishPlayer(player, tracker, threshold, lowerBound);
-		CapabilityHandler.syncTracker(player);
+		CapabilityHandler.syncTicker(player);
 	}
 
 	@Override
@@ -226,7 +216,17 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 			if(foodCap.getMaxFoodLevel(foodCapMod) > lowerBound)
 			{
 				float penalty = foodCapMod.getModifier("starvation");
-				foodCapMod.setModifier("starvation", MathHelper.clamp(penalty-ModConfig.foodCap.starve.starveLoss, lowerBound, Integer.MAX_VALUE), FoodCapModifier.Operation.ADD);
+				short max = foodCap.getMaxFoodLevel(foodCapMod);
+				float maxWithoutStarve = max - penalty; //penalty is 0 or negative.
+				penalty -= ModConfig.foodCap.starve.starveLoss;
+				ScalingFeast.debug("penalty: "+penalty);
+				float diff = maxWithoutStarve + penalty;
+				if(diff < lowerBound)
+				{
+					
+				}
+				foodCapMod.setModifier("starvation", MathHelper.clamp(penalty, -(maxWithoutStarve - lowerBound), 0), FoodCapModifier.Operation.ADD);
+				CapabilityHandler.syncMod(player);
 			}
 			if(ModConfig.foodCap.starve.doesFreqResetOnStarve)
 			{
@@ -236,7 +236,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 			{
 				tracker.setCount((short)(threshold - 1));
 			}
-			CapabilityHandler.syncMod(player);
+			
 		}
 	}
 	

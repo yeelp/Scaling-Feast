@@ -34,7 +34,10 @@ public abstract interface IScalingFeastMutator
 	 * Tick a player's starvation tracker. If the count passes the threshold defined in the config, this method will also punish the player.
 	 * @param player player to target
 	 */
-	void tickPlayerStarvationTracker(EntityPlayer player);
+	default void tickPlayerStarvationTracker(EntityPlayer player)
+	{
+		tickPlayerStarvationTracker(player, 1);
+	}
 	
 	/**
 	 * Tick a player's starvation tracker multiple times If the count passes the threshold defined in the config, this method will punish the player appropriately.

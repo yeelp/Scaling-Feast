@@ -32,6 +32,7 @@ import yeelp.scalingfeast.util.FoodCapModifier;
 import yeelp.scalingfeast.util.HeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IFoodCap;
 import yeelp.scalingfeast.util.IFoodCapModifier;
+import yeelp.scalingfeast.util.IHeartyShankUsageTicker;
 import yeelp.scalingfeast.util.IStarvationTracker;
 import yeelp.scalingfeast.util.StarvationTracker;
 import yeelp.scalingfeast.util.StarveExhaustionTracker;
@@ -124,9 +125,12 @@ public class CapabilityHandler extends Handler
 		IStarvationTracker newTracker = ScalingFeastAPI.accessor.getStarvationTracker(newPlayer);
 		IFoodCapModifier oldMod = ScalingFeastAPI.accessor.getFoodCapModifier(oldPlayer);
 		IFoodCapModifier newMod = ScalingFeastAPI.accessor.getFoodCapModifier(newPlayer);
+		IHeartyShankUsageTicker oldTicker = ScalingFeastAPI.accessor.getShankUsageTicker(oldPlayer);
+		IHeartyShankUsageTicker newTicker = ScalingFeastAPI.accessor.getShankUsageTicker(newPlayer);
 		newFoodCap.deserializeNBT(oldFoodCap.serializeNBT());
 		newTracker.deserializeNBT(oldTracker.serializeNBT());
 		newMod.deserializeNBT(oldMod.serializeNBT());
+		newTicker.deserializeNBT(oldTicker.serializeNBT());
 		if(evt.isWasDeath())
 		{
 			FoodStats newFs = evt.getEntityPlayer().getFoodStats();

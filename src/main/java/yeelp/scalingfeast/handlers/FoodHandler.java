@@ -154,7 +154,7 @@ public class FoodHandler extends Handler
 			fastingMod = fastingMod < 0 ? 0 : fastingMod;
 		}
 		double foodEfficiency = ScalingFeastAPI.accessor.getFoodEfficiency(evt.player).getAttributeValue();
-		ScalingFeast.debug("foodEfficiency:" + foodEfficiency);
+		//ScalingFeast.debug("foodEfficiency:" + foodEfficiency);
 		if(foodEfficiency < 1)
 		{
 			foodEfficiency = -1.0/(foodEfficiency-2);
