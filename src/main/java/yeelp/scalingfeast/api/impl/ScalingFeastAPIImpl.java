@@ -216,15 +216,9 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 			if(foodCap.getMaxFoodLevel(foodCapMod) > lowerBound)
 			{
 				float penalty = foodCapMod.getModifier("starvation");
-				short max = foodCap.getMaxFoodLevel(foodCapMod);
-				float maxWithoutStarve = max - penalty; //penalty is 0 or negative.
+				float maxWithoutStarve = foodCap.getMaxFoodLevel(foodCapMod) - penalty; //penalty is 0 or negative.
 				penalty -= ModConfig.foodCap.starve.starveLoss;
 				ScalingFeast.debug("penalty: "+penalty);
-				float diff = maxWithoutStarve + penalty;
-				if(diff < lowerBound)
-				{
-					
-				}
 				foodCapMod.setModifier("starvation", MathHelper.clamp(penalty, -(maxWithoutStarve - lowerBound), 0), FoodCapModifier.Operation.ADD);
 				CapabilityHandler.syncMod(player);
 			}

@@ -341,41 +341,6 @@ public class HUDOverlayHandler extends Handler
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
 		int max = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
-		/*float maxSat = ScalingFeastAPI.accessor.getPlayerSaturationCap(player);
-		String foodAddition = "";
-		String maxAddition = "";
-		String satAddition = "";
-		String maxSatAddition = "";
-		EnumHand hand = getHandWithFood(player);
-		if(hand != null && AppleCoreAPI.accessor.canPlayerEatFood(player.getHeldItem(hand), player))
-		{
-			ItemStack heldStack = player.getHeldItem(hand);
-			FoodValues foodValues = AppleCoreAPI.accessor.getFoodValuesForPlayer(heldStack, player);
-			int deltaHunger = Math.min(foodValues.hunger, max - hunger);
-			float satCap = Math.min(hunger + deltaHunger, maxSat);
-			float deltaSat = Math.min(foodValues.getUnboundedSaturationIncrement(), satCap - sat);
-			if(deltaHunger > 0)
-			{
-				foodAddition = "+"+Integer.toString(deltaHunger);
-			}
-			if(deltaSat > 0)
-			{
-				satAddition = String.format("+%.1f", deltaSat);
-			}
-			if(heldStack.getItem() instanceof HeartyShankItem)
-			{
-				maxAddition = "+"+Integer.toString(ModConfig.foodCap.inc);
-				float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
-				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max + ModConfig.foodCap.inc);
-				maxSatAddition = String.format("+%.1f", (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat);
-				if(maxSatAddition.equals("+0.0"))
-				{
-					maxSatAddition = "";
-				}
-			}
-		}*/
-		//String hungerInfo = String.format("%d%s/%d%s", hunger, foodAddition, max, maxAddition);
-		//String satInfo = String.format("%.1f%s/%.1f%s", sat, satAddition, maxSat, maxSatAddition).trim();
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
@@ -415,11 +380,6 @@ public class HUDOverlayHandler extends Handler
 				drawingSat = true;
 			}
 		}
-		/*if(ModConfig.hud.drawSaturation)
-		{	
-			mc.fontRenderer.drawStringWithShadow(satInfo, (left+1)/0.5f, top/0.5f, (sat > 0 ? satColour : satColourEmpty));
-		}
-		mc.fontRenderer.drawStringWithShadow(hungerInfo, (left+1)/0.5f, top/0.5f + 4.5f/0.5f, getColour(hunger, max));*/
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
