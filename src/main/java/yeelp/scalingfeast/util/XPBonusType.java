@@ -47,11 +47,6 @@ public enum XPBonusType implements FoodEfficiencyXPBonus, MaxHungerXPBonus
 		}
 	}
 	
-	static
-	{
-		updateRewards();
-	}
-	
 	private XPBonusType(Function<EntityPlayer, Integer> f)
 	{
 		this.f = f;
