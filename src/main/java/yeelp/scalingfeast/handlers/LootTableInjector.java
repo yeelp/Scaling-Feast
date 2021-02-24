@@ -47,7 +47,7 @@ public class LootTableInjector extends Handler
 		
 		private static LootEntry[] getLootEntries(String id)
 		{
-			return new LootEntry[] {new LootEntryTable(getResourceLocation(id), 1, 0, null, "ScalingFeast Injector")};
+			return new LootEntry[] {new LootEntryTable(getResourceLocation(id), 1, 0, new LootCondition[] {CHANCE}, "ScalingFeast Injector")};
 		}
 		
 		private static ResourceLocation getResourceLocation(String id)
