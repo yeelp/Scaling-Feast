@@ -20,7 +20,7 @@ public class LootTableInjector extends Handler
 	private static final int PREFIX_LENGTH = MC_CHEST_PREFIX.length();
 	private static class SFLootTables
 	{
-		private static final LootCondition CHANCE = new RandomChance(1.00f);
+		private static final LootCondition[] GUARANTEED = new LootCondition[0];
 		private static final String[] INJECTED_TABLES = new String[] {"abandoned_mineshaft", "desert_pyramid", "end_city_treasure", "jungle_temple", "nether_bridge", "simple_dungeon", "stronghold_crossing", "woodland_mansion"};
 		private static ResourceLocation[] tables = new ResourceLocation[INJECTED_TABLES.length];
 		static
@@ -42,12 +42,12 @@ public class LootTableInjector extends Handler
 		
 		static LootPool getLootPool(String id)
 		{
-			return new LootPool(getLootEntries(id), new LootCondition[] {CHANCE}, new RandomValueRange(1), new RandomValueRange(0), "ScalingFeast Injector");
+			return new LootPool(getLootEntries(id), GUARANTEED, new RandomValueRange(1), new RandomValueRange(0), "ScalingFeast Injector");
 		}
 		
 		private static LootEntry[] getLootEntries(String id)
 		{
-			return new LootEntry[] {new LootEntryTable(getResourceLocation(id), 1, 0, new LootCondition[] {CHANCE}, "ScalingFeast Injector")};
+			return new LootEntry[] {new LootEntryTable(getResourceLocation(id), 1, 0, GUARANTEED, "ScalingFeast Injector")};
 		}
 		
 		private static ResourceLocation getResourceLocation(String id)
