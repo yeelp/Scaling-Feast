@@ -21,7 +21,7 @@ public final class SFSOLCarrotConfigCategory extends SFAbstractModuleConfig {
 	@Comment({
 			"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
 			"When a player eats m unique food items, they will gain r max hunger, in half shanks. m must be a positive integer and r must be a positive integer less than 32767.",
-			"Values for r > 32767 will be brought inside these bounds modulo 32767. list entires that aren't of this form, or pairs containing negative values for either m or r will be silently ignored."})
+			"Values for r > 32767 will be brought inside these bounds modulo 32767. List entries that aren't of this form, or pairs containing negative values for either m or r will be silently ignored."})
 	public String[] milestones = {
 			"5:2",
 			"10:2",

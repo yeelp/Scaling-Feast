@@ -23,7 +23,7 @@ public class Colour {
 	 */
 	public Colour(String hex) throws IllegalArgumentException {
 		if(hex.length() != 6) {
-			throw new IllegalArgumentException(hex + "is not the right size! Should be length 6 exactly!");
+			throw new IllegalArgumentException(hex + " is not the right size! Should be length 6 exactly!");
 		}
 		try {
 			this.r = Integer.valueOf(Integer.parseInt(hex.substring(0, 2), 16)).byteValue();

@@ -150,6 +150,6 @@ public class ScalingFeast {
 	 * @param msg message to log
 	 */
 	public static void fatal(String msg) {
-		logger.fatal("[SCALING FEAST " + msg);
+		logger.fatal("[SCALING FEAST] " + msg);
 	}
 }
