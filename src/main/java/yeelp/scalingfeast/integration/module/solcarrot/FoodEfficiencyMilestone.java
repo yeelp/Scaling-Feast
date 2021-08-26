@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.util;
+package yeelp.scalingfeast.integration.module.solcarrot;
 
 public class FoodEfficiencyMilestone extends Milestone<Float> {
 	private float reward;

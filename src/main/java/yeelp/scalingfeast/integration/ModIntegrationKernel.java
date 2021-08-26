@@ -10,8 +10,8 @@ import net.minecraftforge.fml.common.Loader;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.integration.module.IIntegratable;
-import yeelp.scalingfeast.integration.module.SOLCarrotModule;
-import yeelp.scalingfeast.integration.module.SpiceOfLifeModule;
+import yeelp.scalingfeast.integration.module.solcarrot.SOLCarrotModule;
+import yeelp.scalingfeast.integration.module.spiceoflife.SpiceOfLifeModule;
 
 public final class ModIntegrationKernel {
 	private static final Map<String, Supplier<IIntegratable>> integratableMods = new HashMap<String, Supplier<IIntegratable>>();

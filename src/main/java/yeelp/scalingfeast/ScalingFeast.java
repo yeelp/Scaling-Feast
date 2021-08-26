@@ -23,13 +23,13 @@ import yeelp.scalingfeast.handlers.GenericHandler;
 import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
+import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.integration.ModIntegrationKernel;
 import yeelp.scalingfeast.items.IItemDescribable;
 import yeelp.scalingfeast.potion.PotionExhaustion;
 import yeelp.scalingfeast.proxy.Proxy;
-import yeelp.scalingfeast.util.SFAttributes;
 
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies = "required-after:applecore@[3.4.0,)")
 public class ScalingFeast {

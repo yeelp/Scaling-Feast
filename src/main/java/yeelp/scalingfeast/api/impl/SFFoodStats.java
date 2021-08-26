@@ -1,8 +1,5 @@
 package yeelp.scalingfeast.api.impl;
 
-import java.util.Optional;
-import java.util.function.BiPredicate;
-
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,10 +18,8 @@ import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.capability.impl.BloatedHunger;
 import yeelp.scalingfeast.capability.impl.StarvationTracker;
 import yeelp.scalingfeast.capability.impl.StarveExhaustionTracker;
+import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
-import yeelp.scalingfeast.util.FoodEfficiencyXPBonus;
-import yeelp.scalingfeast.util.MaxHungerXPBonus;
-import yeelp.scalingfeast.util.SFAttributes;
 
 /**
  * A wrapper for Scaling Feast stats with convenience methods that perform operations and sync with the server.
@@ -58,7 +53,6 @@ public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, I
 	private IAttributeInstance maxHunger, foodEfficiency;
 	private final EntityPlayer player;
 	private final Caps caps;
-	private static final BiPredicate<AttributeModifier, Double> MOD_MATCHES = (m, d) -> m.getAmount() == d;
 	
 	public SFFoodStats(EntityPlayer player) {
 		this.player = player;
@@ -79,19 +73,6 @@ public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, I
 	public void applyMaxHungerModifier(AttributeModifier modifier) {
 		IMaxHungerChanger.super.applyMaxHungerModifier(modifier);
 		this.capStats();
-	}
-	
-	public void updateXPBonuses() {
-		MaxHungerXPBonus maxHungerBonus = ModConfig.features.xpBonuses.maxHungerXPBonus;
-		FoodEfficiencyXPBonus foodEfficiencyBonus = ModConfig.features.xpBonuses.efficiencyXPBonus;
-		Optional<AttributeModifier> maxMod = this.getMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.XP.getUUID()), efficiencyMod = this.getFoodEfficiencyModifier(SFBuiltInModifiers.FoodEfficiencyModifiers.XP.getUUID());
-		double newMaxBonus = maxHungerBonus.getMaxHungerBonus(this.player), newEfficiencyBonus = foodEfficiencyBonus.getFoodEfficiencyBonus(this.player);
-		if(maxMod.map((m) -> MOD_MATCHES.test(m, newMaxBonus)).orElse(true)) {
-			this.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.XP.createModifier(newMaxBonus));
-		}
-		if(efficiencyMod.map((m) -> MOD_MATCHES.test(m, newEfficiencyBonus)).orElse(true)) {
-			this.applyFoodEfficiencyModifier(SFBuiltInModifiers.FoodEfficiencyModifiers.XP.createModifier(newEfficiencyBonus));
-		}
 	}
 
 	private void capStats() {

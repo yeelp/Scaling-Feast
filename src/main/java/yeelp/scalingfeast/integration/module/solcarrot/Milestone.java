@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.util;
+package yeelp.scalingfeast.integration.module.solcarrot;
 
 /**
  * Base class for milestones. Used for SOL:Carrot integration

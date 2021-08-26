@@ -16,8 +16,8 @@ import squeek.applecore.api.hunger.HungerEvent;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
+import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.network.SatSyncMessage;
-import yeelp.scalingfeast.util.SFAttributes;
 
 public class GenericHandler extends Handler {
 	private static final Map<UUID, Float> satLevels = new HashMap<UUID, Float>();

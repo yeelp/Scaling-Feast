@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.module;
+package yeelp.scalingfeast.integration.module.spiceoflife;
 
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +30,7 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.modules.SFSpiceOfLifeConfigCategory;
 import yeelp.scalingfeast.handlers.Handler;
+import yeelp.scalingfeast.integration.module.AbstractModule;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
 public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigCategory> {

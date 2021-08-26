@@ -97,7 +97,7 @@ public abstract class AbstractModule<Config extends SFAbstractModuleConfig> impl
 	 * 
 	 * @return the config category
 	 */
-	final Config getConfig() {
+	public final Config getConfig() {
 		return this.config;
 	}
 

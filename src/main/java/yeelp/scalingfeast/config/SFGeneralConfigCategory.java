@@ -4,7 +4,7 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeDouble;
 import net.minecraftforge.common.config.Config.RangeInt;
-import yeelp.scalingfeast.util.SaturationScaling;
+import yeelp.scalingfeast.lib.SaturationScaling;
 
 public class SFGeneralConfigCategory {
 	@Name("Global Cap")

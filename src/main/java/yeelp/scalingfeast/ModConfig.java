@@ -8,8 +8,6 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.api.impl.ScalingFeastAPIImpl;
-import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.config.SFCompatConfigCategory;
 import yeelp.scalingfeast.config.SFGeneralConfigCategory;
 import yeelp.scalingfeast.config.features.SFFeatureConfigCategory;
@@ -199,8 +197,6 @@ public class ModConfig {
 				HUDOverlayHandler.loadColours();
 				HUDOverlayHandler.setIcons();
 				HUDOverlayHandler.loadTextColours();
-				HeartyFeastBlock.updateCap();
-				ScalingFeastAPIImpl.INSTANCE.updateValues();
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.util;
+package yeelp.scalingfeast.lib;
 
 import net.minecraft.entity.player.EntityPlayer;
 import squeek.applecore.api.AppleCoreAPI;

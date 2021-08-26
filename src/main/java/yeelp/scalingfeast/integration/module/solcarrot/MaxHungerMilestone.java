@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.util;
+package yeelp.scalingfeast.integration.module.solcarrot;
 
 /**
  * A simple container for storing Spice of Life: Carrot Edition Milestones
@@ -6,11 +6,11 @@ package yeelp.scalingfeast.util;
  * @author Yeelp
  *
  */
-public class SOLCarrotMilestone extends Milestone<Short> {
+public class MaxHungerMilestone extends Milestone<Short> {
 	private short milestoneReward;
 
 	/**
-	 * Create a new SOLCarrotMilestone
+	 * Create a new MaxHungerMilestone
 	 * 
 	 * @param milestone A String of the form "m:r", where:
 	 * 
@@ -29,7 +29,7 @@ public class SOLCarrotMilestone extends Milestone<Short> {
 	 * @throws NumberFormatException    if the strings m and r can't be parsed as
 	 *                                  numbers.
 	 */
-	public SOLCarrotMilestone(String milestone) throws NumberFormatException, IllegalArgumentException {
+	public MaxHungerMilestone(String milestone) throws NumberFormatException, IllegalArgumentException {
 		super(milestone);
 	}
 

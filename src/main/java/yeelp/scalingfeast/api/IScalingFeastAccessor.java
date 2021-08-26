@@ -2,7 +2,7 @@ package yeelp.scalingfeast.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
-import yeelp.scalingfeast.util.SaturationScaling;
+import yeelp.scalingfeast.lib.SaturationScaling;
 
 /**
  * Collection of ways to get various properties from Scaling Feast

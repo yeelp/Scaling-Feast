@@ -2,7 +2,7 @@ package yeelp.scalingfeast.config.features;
 
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
-import yeelp.scalingfeast.util.XPBonusType;
+import yeelp.scalingfeast.lib.XPBonusType;
 
 public final class SFConfigXPBonuses {
 	@Name("Food Efficiency Bonus")

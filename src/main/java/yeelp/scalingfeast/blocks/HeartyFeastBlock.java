@@ -11,6 +11,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +25,7 @@ import squeek.applecore.api.food.ItemFoodProxy;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.init.SFPotion;
 
 /**
  * The Hearty Feast Block. The hunger restored scales to a player's max hunger
@@ -60,7 +62,6 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 
 	public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
 	private static HashMap<UUID, FoodValues> users = new HashMap<UUID, FoodValues>();
-	private static int cap = ModConfig.items.feast.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.feast.heartyFeastCap;
 	private boolean alwaysEdible = false;
 	private int food = 1;
 	private static final float sat = 0.5f;
@@ -114,14 +115,18 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 
 	private void onEatenCompatibility(ItemStack itemStack, EntityPlayer player) {
 		player.getFoodStats().addStats(new HeartyFeastSlice(this, users.get(player.getUniqueID())), itemStack);
+		int dur = ModConfig.items.feast.heartyFeastEffectDuration;
+		if(dur > 0) {
+			player.addPotionEffect(new PotionEffect(SFPotion.ironstomach, dur));
+		}
 		users.remove(player.getUniqueID());
 	}
 
-	public static void updateCap() {
-		cap = ModConfig.items.feast.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.feast.heartyFeastCap;
+	public static int getCap() {
+		return ModConfig.items.feast.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.feast.heartyFeastCap;
 	}
 	
 	public static FoodValues getFoodValuesFor(EntityPlayer player) {
-		return new FoodValues(MathHelper.clamp(AppleCoreAPI.accessor.getMaxHunger(player) / 7, 1, cap), sat);
+		return new FoodValues(MathHelper.clamp(AppleCoreAPI.accessor.getMaxHunger(player) / 7, 1, getCap()), sat);
 	}
 }

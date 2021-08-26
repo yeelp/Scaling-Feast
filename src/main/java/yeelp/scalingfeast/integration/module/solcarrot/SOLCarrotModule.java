@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.module;
+package yeelp.scalingfeast.integration.module.solcarrot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -32,10 +32,8 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.config.modules.SFSOLCarrotConfigCategory;
 import yeelp.scalingfeast.handlers.Handler;
+import yeelp.scalingfeast.integration.module.AbstractModule;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
-import yeelp.scalingfeast.util.FoodEfficiencyMilestone;
-import yeelp.scalingfeast.util.Milestone;
-import yeelp.scalingfeast.util.SOLCarrotMilestone;
 
 /**
  * Module for Spice of Life:Carrot Edition integration
@@ -51,7 +49,7 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 	static final Random rand = new Random();
 	static final DecimalFormat PERCENT = new DecimalFormat("#%");
 
-	private List<SOLCarrotMilestone> hungerMilestones;
+	private List<MaxHungerMilestone> hungerMilestones;
 	private List<FoodEfficiencyMilestone> efficiencyMilestones;
 
 	public SOLCarrotModule() {
@@ -67,7 +65,7 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 				if(SOLCarrotModule.this.enabled()) {
 					if(SOLCarrotModule.this.updatePlayer(evt.player)) {
 						Deque<ITextComponent> msgs = new LinkedList<ITextComponent>();
-						Optional<SOLCarrotMilestone> lastRegMilestone = SOLCarrotModule.this.getLastReachedRegularMilestone(evt.player);
+						Optional<MaxHungerMilestone> lastRegMilestone = SOLCarrotModule.this.getLastReachedRegularMilestone(evt.player);
 						Optional<FoodEfficiencyMilestone> lastEfficiencyMilestone = SOLCarrotModule.this.getLastReachedEfficiencyMilestone(evt.player);
 						lastRegMilestone.map((m) -> this.buildNewRewardText(new TextComponentTranslation("modules.scalingfeast.sol.reward", m.getReward()))).ifPresent(msgs::add);
 						lastEfficiencyMilestone.map((m) -> this.buildNewRewardText(new TextComponentTranslation("modules.scalingfeast.sol.efficiencyReward", SOLCarrotModule.PERCENT.format(m.getReward())))).ifPresent(msgs::add);
@@ -115,7 +113,7 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 
 	@Override
 	protected boolean updateFromConfig() {
-		List<SOLCarrotMilestone> newHungerMilestones = buildListOfMilestones(SOLCarrotMilestone::new, this.getConfig().milestones, regularRegex);
+		List<MaxHungerMilestone> newHungerMilestones = buildListOfMilestones(MaxHungerMilestone::new, this.getConfig().milestones, regularRegex);
 		List<FoodEfficiencyMilestone> newEfficiencyMilestones = buildListOfMilestones(FoodEfficiencyMilestone::new, this.getConfig().foodEfficiencyMilstones, efficiencyRegex);
 		boolean updated = !newHungerMilestones.equals(this.hungerMilestones) || !newEfficiencyMilestones.equals(this.efficiencyMilestones);
 		this.hungerMilestones = newHungerMilestones;
@@ -145,7 +143,7 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 		return this.getConfig().useMilestones ? getReward(player, this.hungerMilestones) : 0;
 	}
 
-	Optional<SOLCarrotMilestone> getLastReachedRegularMilestone(EntityPlayer player) {
+	Optional<MaxHungerMilestone> getLastReachedRegularMilestone(EntityPlayer player) {
 		return lastReachedMilestone(player, this.hungerMilestones);
 	}
 

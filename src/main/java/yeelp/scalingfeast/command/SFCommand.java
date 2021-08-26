@@ -22,7 +22,7 @@ import net.minecraftforge.common.command.SelectorHandlerManager;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
-import yeelp.scalingfeast.util.SFAttributes;
+import yeelp.scalingfeast.init.SFAttributes;
 
 public class SFCommand extends CommandBase {
 

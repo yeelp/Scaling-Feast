@@ -2,32 +2,20 @@ package yeelp.scalingfeast.api.impl;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.math.MathHelper;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.IScalingFeastAccessor;
 import yeelp.scalingfeast.api.IScalingFeastMutator;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
-import yeelp.scalingfeast.util.SaturationScaling;
-import yeelp.scalingfeast.util.XPBonusType;
+import yeelp.scalingfeast.lib.SaturationScaling;
 
 public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastMutator {
 	INSTANCE;
 
-	private short hungerCap;
-	private float saturationCap;
-	private SaturationScaling satScaling;
 	private ScalingFeastAPIImpl() {
 		ScalingFeastAPI.accessor = this;
 		ScalingFeastAPI.mutator = this;
-
-		this.updateValues();
-	}
-
-	public void updateValues() {
-		this.hungerCap = (short) (ModConfig.general.globalCap == -1 ? Short.MAX_VALUE : ModConfig.general.globalCap);
-		this.saturationCap = (float) (ModConfig.general.satCap == -1 ? Float.MAX_VALUE : ModConfig.general.satCap);
-		this.satScaling = ModConfig.general.satScaling;
-		XPBonusType.updateRewards();
 	}
 
 	/******************************/
@@ -36,23 +24,22 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 
 	@Override
 	public SaturationScaling getSaturationScaling() {
-		return this.satScaling;
+		return ModConfig.general.satScaling;
 	}
 
 	@Override
 	public short getHungerHardCap() {
-		return this.hungerCap;
+		return (short) (ModConfig.general.globalCap == -1 ? Short.MAX_VALUE : ModConfig.general.globalCap);
 	}
 
 	@Override
 	public float getSaturationHardCap() {
-		return this.saturationCap;
+		return (float) (ModConfig.general.satCap == -1 ? Float.MAX_VALUE : ModConfig.general.satCap);
 	}
 
 	@Override
 	public float getPlayerSaturationCap(EntityPlayer player) {
-		float scaledSat = this.satScaling.getCap(player);
-		return scaledSat < this.saturationCap ? scaledSat : this.saturationCap;
+		return MathHelper.clamp(this.getSaturationScaling().getCap(player), 0, this.getSaturationHardCap());
 	}
 
 	@Override
@@ -67,8 +54,8 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 	@Override
 	public void capPlayerHunger(EntityPlayer player) {
 		FoodStats fs = player.getFoodStats();
-		if(fs.getFoodLevel() > this.hungerCap) {
-			AppleCoreAPI.mutator.setHunger(player, this.hungerCap);
+		if(fs.getFoodLevel() > this.getHungerHardCap()) {
+			AppleCoreAPI.mutator.setHunger(player, this.getHungerHardCap());
 			if(fs.getSaturationLevel() > fs.getFoodLevel()) {
 				AppleCoreAPI.mutator.setSaturation(player, fs.getFoodLevel());
 			}

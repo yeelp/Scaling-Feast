@@ -41,13 +41,4 @@ public interface IMaxHungerChanger {
 	default Optional<AttributeModifier> getMaxHungerModifier(UUID type) {
 		return Optional.ofNullable(this.getMaxHungerAttribute().getModifier(type));
 	}
-	
-	/**
-	 * Get the max hunger value. Just syntactic sugar for {@code getMaxHungerAttribute().getAttributeValue()}
-	 * @return The max hunger represented by this attribute.
-	 */
-	@Deprecated
-	default int getMaxHunger() {
-		return (int) this.getMaxHungerAttribute().getAttributeValue();
-	}
 }

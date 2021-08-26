@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.util;
+package yeelp.scalingfeast.init;
 
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.entity.ai.attributes.IAttribute;

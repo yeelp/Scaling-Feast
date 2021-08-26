@@ -19,8 +19,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
+import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.util.SFAttributes;
 
 /**
  * The Fasting Enchantment. This enchantment reduces exhaustion by 10% per
