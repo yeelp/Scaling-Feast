@@ -1,117 +1,127 @@
 package yeelp.scalingfeast.blocks;
 
-import java.util.HashSet;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockCake;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import squeek.applecore.api.IAppleCoreAccessor;
+import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodValues;
+import squeek.applecore.api.food.IEdible;
 import squeek.applecore.api.food.IEdibleBlock;
 import squeek.applecore.api.food.ItemFoodProxy;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.ScalingFeast;
-import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.init.SFFood;
-import yeelp.scalingfeast.util.FoodCapModifierProvider;
-import yeelp.scalingfeast.util.FoodCapProvider;
 
 /**
  * The Hearty Feast Block. The hunger restored scales to a player's max hunger
+ * 
  * @author Yeelp
  *
  */
-public class HeartyFeastBlock extends BlockCake implements IEdibleBlock
-{
+public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
+
+	/**
+	 * Proxy food item when eating feast
+	 * 
+	 * @author Yeelp
+	 *
+	 */
+	private static final class HeartyFeastSlice extends ItemFoodProxy {
+		private final FoodValues fv;
+
+		public HeartyFeastSlice(IEdible proxyEdible, FoodValues fv) {
+			super(proxyEdible);
+			this.fv = fv;
+		}
+
+		@Override
+		public int getHealAmount(ItemStack stack) {
+			return this.fv.hunger;
+		}
+
+		@Override
+		public float getSaturationModifier(ItemStack stack) {
+			return this.fv.saturationModifier;
+		}
+	}
+
 	public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
-	private static HashSet<UUID> users = new HashSet<UUID>();
-	private static int cap = ModConfig.items.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.heartyFeastCap;
+	private static HashMap<UUID, FoodValues> users = new HashMap<UUID, FoodValues>();
+	private static int cap = ModConfig.items.feast.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.feast.heartyFeastCap;
 	private boolean alwaysEdible = false;
-	private int food = 0;
-	private float sat = 0;
-	public HeartyFeastBlock()
-	{
+	private int food = 1;
+	private static final float sat = 0.5f;
+
+	public HeartyFeastBlock() {
 		super();
 		this.blockSoundType = SoundType.CLOTH;
 		this.setRegistryName("heartyfeast");
-		this.setUnlocalizedName(ModConsts.MOD_ID+".heartyfeast");
+		this.setUnlocalizedName(ModConsts.MOD_ID + ".heartyfeast");
 		this.setHardness(0.5f);
-	}
-	
-	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-	{
-		ItemStack stack = new ItemStack(SFFood.heartyfeastitem);
-		return stack;
-	}
-	
-	@Override
-	public FoodValues getFoodValues(ItemStack itemStack) 
-	{
-		return new FoodValues(food, sat);
 	}
 
 	@Override
-	public void setEdibleAtMaxHunger(boolean value) 
-	{
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		ItemStack stack = new ItemStack(SFFood.heartyfeastitem);
+		return stack;
+	}
+
+	@Override
+	public FoodValues getFoodValues(ItemStack itemStack) {
+		return new FoodValues(this.food, sat);
+	}
+
+	@Override
+	public void setEdibleAtMaxHunger(boolean value) {
 		this.alwaysEdible = value;
 	}
+
 	@Override
-	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		this.food = ScalingFeastAPI.accessor.getModifiedFoodCap(player)/7;
-		this.food = this.food < cap ? this.food : cap;
-		this.sat = 0.5f;
-		users.add(player.getUniqueID());
+	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		FoodValues fv = getFoodValuesFor(player);
+		this.food = fv.hunger;
+		users.put(player.getUniqueID(), fv);
 		return this.eat(world, pos, state, player);
 	}
-	
-	private boolean eat(World world, BlockPos pos, IBlockState state, EntityPlayer player)
-	{
-		if (!player.canEat(alwaysEdible))
-		{
+
+	private boolean eat(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+		if(!player.canEat(this.alwaysEdible)) {
 			return false;
 		}
-		else
-		{
-			onEatenCompatibility(new ItemStack(this), player);
-			int bites = state.getValue(BITES);
-			if (bites < 6)
-			{
-				world.setBlockState(pos, state.withProperty(BITES, bites + 1), 3);
-			}
-			else
-			{
-				world.setBlockToAir(pos);
-			}
-			return true;
+		onEatenCompatibility(new ItemStack(this), player);
+		int bites = state.getValue(BITES);
+		if(bites < 6) {
+			world.setBlockState(pos, state.withProperty(BITES, bites + 1), 3);
 		}
+		else {
+			world.setBlockToAir(pos);
+		}
+		return true;
 	}
-	private void onEatenCompatibility(ItemStack itemStack, EntityPlayer player)
-	{
-		player.getFoodStats().addStats(new ItemFoodProxy(this), itemStack);
+
+	private void onEatenCompatibility(ItemStack itemStack, EntityPlayer player) {
+		player.getFoodStats().addStats(new HeartyFeastSlice(this, users.get(player.getUniqueID())), itemStack);
 		users.remove(player.getUniqueID());
 	}
+
+	public static void updateCap() {
+		cap = ModConfig.items.feast.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.feast.heartyFeastCap;
+	}
 	
-	public static void updateCap()
-	{
-		cap = ModConfig.items.heartyFeastCap < 0 ? Integer.MAX_VALUE : ModConfig.items.heartyFeastCap;
+	public static FoodValues getFoodValuesFor(EntityPlayer player) {
+		return new FoodValues(MathHelper.clamp(AppleCoreAPI.accessor.getMaxHunger(player) / 7, 1, cap), sat);
 	}
 }

@@ -22,46 +22,46 @@ import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 
 /**
- * The Enchanted Iron Apple which gives the Iron Stomach effect and a Metabolism effect when eaten.
+ * The Enchanted Iron Apple which gives the Iron Stomach effect and a Metabolism
+ * effect when eaten.
+ * 
  * @author Yeelp
  *
  */
-public class EnchantedIronAppleItem extends ItemFood 
-{
+public class EnchantedIronAppleItem extends ItemFood {
 	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
 	private static final String INFO1 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info1").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
 	private static final String INFO2 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info2").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
-	public EnchantedIronAppleItem()
-	{
+
+	public EnchantedIronAppleItem() {
 		super(0, 0.0f, false);
 		this.setAlwaysEdible();
 		this.setRegistryName("enchantedironapple");
-		this.setUnlocalizedName(ModConsts.MOD_ID+".enchantedironapple");
+		this.setUnlocalizedName(ModConsts.MOD_ID + ".enchantedironapple");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
-	
+
 	@Override
-	public boolean hasEffect(ItemStack stack)
-	{
+	public boolean hasEffect(ItemStack stack) {
 		return true;
 	}
-	
+
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(TEXT_SPLASH);
 		tooltip.add(INFO1);
 		tooltip.add(INFO2);
-    }
-	
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
-	{
+	}
+
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		int gluttonyLevel = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.gluttony, entityLiving);
-		float mod = (1 + 0.5f*gluttonyLevel);
-		entityLiving.heal(4.0f*mod);
-		entityLiving.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 3));
-		entityLiving.addPotionEffect(new PotionEffect(SFPotion.ironstomach, 6*60*20, 1));
-		entityLiving.addPotionEffect(new PotionEffect(SFPotion.bloated, 20*60*2, 3));
+		float mod = (1 + 0.5f * gluttonyLevel);
+		entityLiving.heal(4.0f * mod);
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20 * 20, 3));
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.ironstomach, 6 * 60 * 20, 1));
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.bloated, 20 * 60 * 2, 3));
 		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}
 }

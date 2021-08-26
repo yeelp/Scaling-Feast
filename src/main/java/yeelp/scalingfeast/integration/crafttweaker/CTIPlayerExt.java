@@ -7,11 +7,9 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenExpansion("crafttweaker.player.IPlayer")
 @ZenRegister
-public class CTIPlayerExt
-{
+public class CTIPlayerExt {
 	@ZenGetter("sfStats")
-	public static SFStats getSFStats(IPlayer player)
-	{
-		return new SFStats(player);
+	public static CTSFFoodStats getSFStats(IPlayer player) {
+		return new CTSFFoodStats(player);
 	}
 }

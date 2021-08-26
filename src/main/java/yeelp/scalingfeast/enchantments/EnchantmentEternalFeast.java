@@ -1,43 +1,76 @@
 package yeelp.scalingfeast.enchantments;
 
-import net.minecraft.enchantment.Enchantment;
+import java.util.Optional;
+
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.handlers.Handler;
+import yeelp.scalingfeast.init.SFEnchantments;
+
 /**
  * The Eternal Feast enchantment.
+ * 
  * @author Yeelp
  *
  */
-public class EnchantmentEternalFeast extends Enchantment
-{
+public class EnchantmentEternalFeast extends SFEnchantmentBase {
 	/**
-	 * Create a new Eternal Feast enchantment. This enchantment restores hunger every time the user kills an entity.
+	 * Create a new Eternal Feast enchantment. This enchantment restores hunger
+	 * every time the user kills an entity.
 	 */
-	public EnchantmentEternalFeast() 
-	{
-		super(Rarity.RARE, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});
+	public EnchantmentEternalFeast() {
+		super(Rarity.RARE, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {
+				EntityEquipmentSlot.MAINHAND});
 		this.setRegistryName("eternalfeast");
-		this.setName(ModConsts.MOD_ID+".eternalfeast");
+		this.setName(ModConsts.MOD_ID + ".eternalfeast");
 	}
 
-	public int getMinEnchantability(int level)
-	{
-		return 3*level + 13;
+	@Override
+	public int getMinEnchantability(int level) {
+		return 3 * level + 13;
 	}
-	
-	public int getMaxEnchantability(int level)
-	{
-		return 3*level + 24;
+
+	@Override
+	public int getMaxEnchantability(int level) {
+		return 3 * level + 24;
 	}
-	
-	public boolean isTreasureEnchantment()
-	{
+
+	@Override
+	public boolean isTreasureEnchantment() {
 		return true;
 	}
-	
-	public int getMaxLevel()
-	{
+
+	@Override
+	public int getMaxLevel() {
 		return 3;
+	}
+
+	@Override
+	protected Optional<Handler> getEnchantmentHandler() {
+		return Optional.of(new Handler() {
+			@SubscribeEvent
+			public void onKillEvent(LivingDeathEvent evt) {
+				Entity entity = evt.getSource().getTrueSource();
+				if(entity != null && entity instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) entity;
+					int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.eternalfeast, player);
+					if(level != 0) {
+						player.getFoodStats().addStats(2 * level, 0);
+					}
+				}
+			}
+		});
+	}
+
+	@Override
+	public boolean enabled() {
+		return ModConfig.items.enchants.enableEternalFeast;
 	}
 }

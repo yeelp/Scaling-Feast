@@ -5,11 +5,18 @@ commands.scalingfeast.command.emptytarget=Target selector %s found nothing.
 commands.scalingfeast.command.numerr=Amount must be in range (0, %s]
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
+message.scalingfeast.starvationDeath=%s overexerted themselves while starving
+
 tooltips.scalingfeast.heartyshank.info1=Delicious!
-tooltips.scalingfeast.heartyshank.info2=Eat this to increase your max hunger by at most %s shank(s)!
+tooltips.scalingfeast.heartyshank.info2=Eat this to increase your max hunger by %s shank(s)!
 tooltips.scalingfeast.heartyshank.info3=You can gain max hunger by eating this %s more times.
 tooltips.scalingfeast.heartyshank.nobonus=You can't gain any more max hunger from eating this...
 tooltips.scalingfeast.heartyshank.atmax=Your max hunger is already at the maximum allowed level!
+tooltips.scalingfeast.heartyfeast.splash=Like an all you can eat buffet!
+tooltips.scalingfeast.heartyfeast.info=Restores one seventh of your max hunger (half of that for saturation) per slice!
+tooltips.scalingfeast.heartyfeast.cap=This effect is capped at %s per slice.
+tooltips.scalingfeast.heartyfeast.statincrease=So for you %s, that's %s hunger and %s saturation!
+tooltips.scalingfeast.heartyfeast.effect=Eating this grants Iron Stomach I (%s)
 tooltips.scalingfeast.ironapple.splash=A suitable iron supplement!
 tooltips.scalingfeast.ironapple.info=The cousin of the Golden Apple; eat it to restore 4 health and recover hunger over time.
 tooltips.scalingfeast.enchantedironapple.splash=Now THAT'S metal!
@@ -43,7 +50,7 @@ enchantment.scalingfeast.lazinesscurse=Curse of Laziness
 enchantment.scalingfeast.deprivationcurse=Curse of Deprivation
 
 enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10% per level.
-enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level.
+enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level. Iron Apples heal 50% more health per level too!
 enchantment.scalingfeast.famine.desc=Severely drains hunger from a player struck with this enchantment or applies a weakness debuff to non player entities struck with this enchantment. The strength of these effects depend on the enchantment level.
 enchantment.scalingfeast.eternalfeast.desc=Killing an entity replenishes your food level, depending on the level of the enchantment.
 enchantment.scalingfeast.sensitivitycurse.desc=Overeating gives you a Soft Stomach debuff for 20 seconds. The strength is equal to the amount overeaten.

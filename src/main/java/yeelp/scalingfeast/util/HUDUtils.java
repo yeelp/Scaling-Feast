@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -20,122 +18,102 @@ import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.items.HeartyShankItem;
 
-public class HUDUtils
-{
-	public static class AdvancedInfo implements Iterable<Iterable<Tuple<String, Integer>>>
-	{
+public class HUDUtils {
+	public static class AdvancedInfo implements Iterable<Iterable<Tuple<String, Integer>>> {
 		final List<Tuple<String, Integer>> hStrings, sStrings;
-		
-		AdvancedInfo(Collection<Tuple<String, Integer>> hStrings, Collection<Tuple<String, Integer>> sStrings)
-		{
+
+		AdvancedInfo(Collection<Tuple<String, Integer>> hStrings, Collection<Tuple<String, Integer>> sStrings) {
 			this.hStrings = new LinkedList<Tuple<String, Integer>>(hStrings);
 			this.sStrings = new LinkedList<Tuple<String, Integer>>(sStrings);
 		}
 
 		@Override
-		public Iterator<Iterable<Tuple<String, Integer>>> iterator()
-		{
+		public Iterator<Iterable<Tuple<String, Integer>>> iterator() {
 			return new AdvancedIterator();
 		}
-		
-		private class AdvancedIterator implements Iterator<Iterable<Tuple<String, Integer>>>
-		{
+
+		private class AdvancedIterator implements Iterator<Iterable<Tuple<String, Integer>>> {
 			private byte index;
-			AdvancedIterator()
-			{
-				index = 0;
-			}
-			
-			@Override
-			public boolean hasNext()
-			{
-				return index < 2;
+
+			AdvancedIterator() {
+				this.index = 0;
 			}
 
 			@Override
-			public Iterable<Tuple<String, Integer>> next()
-			{
-				switch(index++)
-				{
+			public boolean hasNext() {
+				return this.index < 2;
+			}
+
+			@Override
+			public Iterable<Tuple<String, Integer>> next() {
+				switch(this.index++) {
 					case 0:
-						return hStrings;
+						return AdvancedInfo.this.hStrings;
 					case 1:
-						return sStrings;
+						return AdvancedInfo.this.sStrings;
 					default:
 						throw new NoSuchElementException();
 				}
-			}	
+			}
 		}
 	}
-	
-	public static boolean isEmpty(String[] arr)
-	{
-		for(String str : arr)
-		{
-			if(str != null)
-			{
+
+	public static boolean isEmpty(String[] arr) {
+		for(String str : arr) {
+			if(str != null) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	public static AdvancedInfo getAdvancedInfoString(EntityPlayer player)
-	{
+
+	public static AdvancedInfo getAdvancedInfoString(EntityPlayer player) {
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
-		int max = ScalingFeastAPI.accessor.getModifiedFoodCap(player);
+		int max = AppleCoreAPI.accessor.getMaxHunger(player);
 		float maxSat = ScalingFeastAPI.accessor.getPlayerSaturationCap(player);
 		EnumHand hand = getHandWithFood(player);
 		String foodAddition = "", maxAddition = "", satAddition = "", maxSatAddition = "";
 		Integer hColour = null, sColour = null;
-		if(hand != null)
-		{
+		if(hand != null) {
 			ItemStack food = player.getHeldItem(hand);
-			if(AppleCoreAPI.accessor.canPlayerEatFood(food, player))
-			{
+			if(AppleCoreAPI.accessor.canPlayerEatFood(food, player)) {
 				FoodValues foodVals = AppleCoreAPI.accessor.getFoodValuesForPlayer(food, player);
-				//The hunger to be gained from eating the food. Either the full amount or the amount of hunger the player is missing.
+				// The hunger to be gained from eating the food. Either the full amount or the
+				// amount of hunger the player is missing.
 				int deltaHunger = Math.min(foodVals.hunger, max - hunger);
-				if(deltaHunger < foodVals.hunger)
-				{
+				if(deltaHunger < foodVals.hunger) {
 					hColour = 0xff0000;
 				}
-				if(deltaHunger > 0)
-				{
+				if(deltaHunger > 0) {
 					foodAddition = String.format("%+d", deltaHunger);
 				}
 				float satCap = Math.min(hunger + deltaHunger, maxSat);
 				float deltaSat = Math.min(foodVals.getUnboundedSaturationIncrement(), satCap - sat);
-				if(deltaSat < foodVals.getUnboundedSaturationIncrement())
-				{
+				if(deltaSat < foodVals.getUnboundedSaturationIncrement()) {
 					sColour = 0xff0000;
 				}
-				if(deltaSat > 0)
-				{
+				if(deltaSat > 0) {
 					satAddition = String.format("%+.1f", deltaSat);
 				}
 				int deltaMaxH = 0;
 				float deltaMaxS = 0.0f;
-				if(food.getItem() instanceof HeartyShankItem)
-				{
-					deltaMaxH = ModConfig.foodCap.inc;
+				if(food.getItem() instanceof HeartyShankItem) {
+					deltaMaxH = ModConfig.items.shank.inc;
 					short hardHungerCap = ScalingFeastAPI.accessor.getHungerHardCap();
-					if(max + deltaMaxH > hardHungerCap)
-					{
+					if(max + deltaMaxH > hardHungerCap) {
 						deltaMaxH = hardHungerCap - max;
 					}
 					maxAddition = String.format("+%d", deltaMaxH);
 					float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
-					float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max + ModConfig.foodCap.inc);
+					float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max + ModConfig.items.shank.inc);
 					deltaMaxS = (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat;
 					maxSatAddition = String.format("+%.1f", deltaMaxS);
-					if(maxSatAddition.equals("+0.0"))
-					{
+					if(maxSatAddition.equals("+0.0")) {
 						maxSatAddition = "";
 					}
 				}
-			}	
+			}
 		}
 		Queue<Tuple<String, Integer>> hQ = new LinkedList<Tuple<String, Integer>>();
 		Queue<Tuple<String, Integer>> sQ = new LinkedList<Tuple<String, Integer>>();
@@ -151,22 +129,17 @@ public class HUDUtils
 		sQ.add(new Tuple<String, Integer>(maxSatAddition, null));
 		return new AdvancedInfo(hQ, sQ);
 	}
-	
-	private static EnumHand getHandWithFood(EntityPlayer player)
-	{
-		if(player.getHeldItemMainhand().getItem() instanceof ItemFood)
-		{
+
+	private static EnumHand getHandWithFood(EntityPlayer player) {
+		if(player.getHeldItemMainhand().getItem() instanceof ItemFood) {
 			return EnumHand.MAIN_HAND;
 		}
-		else if(player.getHeldItemOffhand().getItem() instanceof ItemFood)
-		{
+		else if(player.getHeldItemOffhand().getItem() instanceof ItemFood) {
 			return EnumHand.OFF_HAND;
 		}
-		else
-		{
+		else {
 			return null;
 		}
 	}
-	
-	
+
 }

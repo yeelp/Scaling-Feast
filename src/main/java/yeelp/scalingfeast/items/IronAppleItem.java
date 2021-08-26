@@ -23,36 +23,36 @@ import yeelp.scalingfeast.init.SFPotion;
 
 /**
  * Iron Apple. Eating it restores some health and regens hunger over time.
+ * 
  * @author Yeelp
  *
  */
-public class IronAppleItem extends ItemFood 
-{
+public class IronAppleItem extends ItemFood {
 	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.ironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
 	private static final String INFO = new TextComponentTranslation("tooltips.scalingfeast.ironapple.info").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
-	public IronAppleItem()
-	{
+
+	public IronAppleItem() {
 		super(0, 0, false);
 		this.setAlwaysEdible();
 		this.setRegistryName("ironapple");
-		this.setUnlocalizedName(ModConsts.MOD_ID+".ironapple");
+		this.setUnlocalizedName(ModConsts.MOD_ID + ".ironapple");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
-	
+
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-    {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(TEXT_SPLASH);
 		tooltip.add(INFO);
-    }
-	
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
-	{
+	}
+
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		int gluttonyLevel = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.gluttony, entityLiving);
-		float mod = (1 + 0.5f*gluttonyLevel);
-		entityLiving.heal(4.0f*mod);
-		entityLiving.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20*20, 1));
-		entityLiving.addPotionEffect(new PotionEffect(SFPotion.bloated, 20*60*2));
+		float mod = (1 + 0.5f * gluttonyLevel);
+		entityLiving.heal(4.0f * mod);
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.metabolism, 20 * 20, 1));
+		entityLiving.addPotionEffect(new PotionEffect(SFPotion.bloated, 20 * 60 * 2));
 		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}
 }

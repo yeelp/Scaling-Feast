@@ -1,0 +1,58 @@
+package yeelp.scalingfeast.features;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.FoodStats;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.features.SFConfigDeath;
+import yeelp.scalingfeast.handlers.Handler;
+import yeelp.scalingfeast.lib.SFBuiltInModifiers;
+
+public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
+
+	@Override
+	public Handler getFeatureHandler() {
+		return new Handler() {
+
+			@SubscribeEvent
+			public void onDeath(PlayerEvent.Clone evt) {
+				if(evt.isWasDeath()) {
+					EntityPlayer player = evt.getEntityPlayer();
+					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
+					int maxHunger = AppleCoreAPI.accessor.getMaxHunger(player);
+					SFConfigDeath config = getConfig();
+					// Death Penalties
+					if(maxHunger > config.maxLossLowerBound && config.maxLossAmount > 0) {
+						double currDeathPenalty = SFBuiltInModifiers.MaxHungerModifiers.DEATH.getModifierValueForPlayer(player);
+						sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(MathHelper.clamp(currDeathPenalty - config.maxLossAmount, config.maxLossLowerBound - maxHunger + currDeathPenalty, 0)));
+					}
+					// Stat Persistance
+					int respawningHunger = maxHunger;
+					float respawningSat = Math.min(5.0f, maxHunger);
+					if(getConfig().persistStats) {
+						FoodStats fs = evt.getOriginal().getFoodStats();
+						respawningHunger = fs.getFoodLevel();
+						respawningSat = fs.getSaturationLevel();
+					}
+					AppleCoreAPI.mutator.setHunger(player, respawningHunger);
+					AppleCoreAPI.mutator.setSaturation(player, respawningSat);
+					// Hunger Penalties
+					if(config.hungerLossOnDeath > 0) {
+						ScalingFeastAPI.mutator.deductFoodStats(player, config.hungerLossOnDeath);
+					}
+				}
+			}
+		};
+	}
+
+	@Override
+	protected SFConfigDeath getConfig() {
+		return ModConfig.features.death;
+	}
+
+}

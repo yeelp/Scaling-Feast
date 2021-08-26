@@ -1,31 +1,33 @@
 package yeelp.scalingfeast.init;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import com.google.common.collect.ImmutableList;
+
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import yeelp.scalingfeast.ModConfig;
-import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.enchantments.*;
+import yeelp.scalingfeast.enchantments.CurseDeprivation;
+import yeelp.scalingfeast.enchantments.CurseLaziness;
+import yeelp.scalingfeast.enchantments.CurseSensitivity;
+import yeelp.scalingfeast.enchantments.EnchantmentEternalFeast;
+import yeelp.scalingfeast.enchantments.EnchantmentFamine;
+import yeelp.scalingfeast.enchantments.EnchantmentFasting;
+import yeelp.scalingfeast.enchantments.EnchantmentGluttony;
+import yeelp.scalingfeast.enchantments.SFEnchantmentBase;
 
 /**
  * Initialize all the enchantments
+ * 
  * @author Yeelp
  *
  */
-public class SFEnchantments 
-{
-	public static Enchantment fasting;
-	public static Enchantment gluttony;
-	public static Enchantment famine;
-	public static Enchantment eternalfeast;
-	public static Enchantment sensitivityCurse;
-	public static Enchantment lazinessCurse;
-	public static Enchantment deprivationCurse;
-	
-	public static void init()
-	{
+public class SFEnchantments {
+	public static SFEnchantmentBase fasting;
+	public static SFEnchantmentBase gluttony;
+	public static SFEnchantmentBase famine;
+	public static SFEnchantmentBase eternalfeast;
+	public static SFEnchantmentBase sensitivityCurse;
+	public static SFEnchantmentBase lazinessCurse;
+	public static SFEnchantmentBase deprivationCurse;
+
+	public static void init() {
 		fasting = new EnchantmentFasting();
 		gluttony = new EnchantmentGluttony();
 		famine = new EnchantmentFamine();
@@ -33,34 +35,16 @@ public class SFEnchantments
 		sensitivityCurse = new CurseSensitivity();
 		lazinessCurse = new CurseLaziness();
 		deprivationCurse = new CurseDeprivation();
-		
-		if(ModConfig.items.enchants.enableEternalFeast)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(eternalfeast);
+		ImmutableList.of(fasting, gluttony, famine, eternalfeast, sensitivityCurse, lazinessCurse, deprivationCurse).forEach(SFEnchantments::tryRegisterEnchantment);
+	}
+	
+	private static void tryRegisterEnchantment(SFEnchantmentBase enchantment) {
+		if(enchantment.enabled()) {
+			ForgeRegistries.ENCHANTMENTS.register(enchantment);
+			enchantment.onRegister();
 		}
-		if(ModConfig.items.enchants.enableFamine)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(famine);
-		}
-		if(ModConfig.items.enchants.enableGluttony)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(gluttony);
-		}
-		if(ModConfig.items.enchants.enableFasting)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(fasting);
-		}
-		if(ModConfig.items.enchants.enableDeprivation)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(deprivationCurse);
-		}
-		if(ModConfig.items.enchants.enableLaziness)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(lazinessCurse);
-		}
-		if(ModConfig.items.enchants.enableSensitivity && !ModConfig.items.enchants.globalSensitvity)
-		{
-			ForgeRegistries.ENCHANTMENTS.register(sensitivityCurse);
+		else if (enchantment.shouldRegisterHandlerAnyway()) {
+			enchantment.onRegister();
 		}
 	}
 }
