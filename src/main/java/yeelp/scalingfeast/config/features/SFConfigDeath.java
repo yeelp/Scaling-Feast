@@ -6,7 +6,7 @@ import net.minecraftforge.common.config.Config.RangeInt;
 
 public class SFConfigDeath {
 	@Name("Max Hunger Cap Lost on Death")
-	@Comment("If not set to zero, this field indicates how much of your maximum hunger you lose upon death. Can not go below maxLossLowerBound.")
+	@Comment("If not set to zero, this field indicates how much of your maximum hunger you lose upon death. This can not take a player's max hunger below maxLossLowerBound.")
 	@RangeInt(min = 0, max = Short.MAX_VALUE)
 	public int maxLossAmount = 0;
 

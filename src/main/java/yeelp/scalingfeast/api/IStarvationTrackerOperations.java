@@ -14,7 +14,6 @@ public interface IStarvationTrackerOperations {
 	
 	/**
 	 * Ticks the starvation tracker just once.
-	 * @param player player to check for.
 	 */
 	default void tickStarvation() {
 		this.tickStarvation(1);

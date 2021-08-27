@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
+import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
 import yeelp.scalingfeast.ModConfig.HUDCategory.TrackerStyle;
 import yeelp.scalingfeast.ModConsts;
@@ -190,7 +191,12 @@ public class HUDOverlayHandler extends Handler {
 		}
 		GL11.glPushMatrix();
 		GL11.glScalef(0.6f, 0.6f, 1.0f);
-		mc.fontRenderer.drawStringWithShadow("x" + (i + 1), left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, 0xffffff);
+		if(ModConfig.hud.infoStyle == InfoStyle.SIMPLE) {
+			mc.fontRenderer.drawStringWithShadow("x" + (i + 1), left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, 0xffffff);
+		}
+		else {
+			mc.fontRenderer.drawStringWithShadow("" + bloatedAmount, left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, 0xffffff);
+		}
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
