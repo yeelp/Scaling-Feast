@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.lib.worldgen.xpcalculators;
+package yeelp.scalingfeast.lib.xpcalculators;
 
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;

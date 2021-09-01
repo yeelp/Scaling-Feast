@@ -7,9 +7,9 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigXPBonuses;
 import yeelp.scalingfeast.handlers.Handler;
-import yeelp.scalingfeast.lib.worldgen.xpcalculators.FoodEfficiencyXPBonusCalculator;
-import yeelp.scalingfeast.lib.worldgen.xpcalculators.MaxHungerXPBonusCalculator;
-import yeelp.scalingfeast.lib.worldgen.xpcalculators.XPBonusCalculator;
+import yeelp.scalingfeast.lib.xpcalculators.FoodEfficiencyXPBonusCalculator;
+import yeelp.scalingfeast.lib.xpcalculators.MaxHungerXPBonusCalculator;
+import yeelp.scalingfeast.lib.xpcalculators.XPBonusCalculator;
 
 public final class SFXPBonuses extends FeatureBase<SFConfigXPBonuses> {
 
