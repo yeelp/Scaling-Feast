@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.lib;
+package yeelp.scalingfeast.lib.worldgen.xpcalculators;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,12 +11,13 @@ import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
 
 public abstract class AbstractXPBonusCalculator implements XPBonusCalculator {
 
-	private XPBonusType type;
 	private List<XPMilestone> milestones;
+	private final XPBonusType type;
 	private final BuiltInModifier modifier;
 
-	protected AbstractXPBonusCalculator(BuiltInModifier modifier) {
+	protected AbstractXPBonusCalculator(BuiltInModifier modifier, XPBonusType type) {
 		this.modifier = modifier;
+		this.type = type;
 	}
 	
 	@Override
@@ -37,15 +38,6 @@ public abstract class AbstractXPBonusCalculator implements XPBonusCalculator {
 	
 	protected final List<XPMilestone> getMilestones() {
 		return this.milestones;
-	}
-
-	@Override
-	public void setFunction(XPBonusType type) {
-		this.type = type;
-	}
-	
-	protected final XPBonusType getFunction() {
-		return this.type;
 	}
 	
 	protected abstract IAttributeInstance getAttributeInstance(EntityPlayer player);

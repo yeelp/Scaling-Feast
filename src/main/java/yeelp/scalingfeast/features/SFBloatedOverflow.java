@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
 import squeek.applecore.api.food.FoodValues;
-import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigBloatedOverflow;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFPotion;

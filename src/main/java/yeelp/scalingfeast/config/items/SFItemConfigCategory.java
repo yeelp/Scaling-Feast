@@ -6,14 +6,14 @@ import net.minecraftforge.common.config.Config.RequiresMcRestart;
 
 public final class SFItemConfigCategory {
 	@Name("Enable Potions")
-	@Comment("If false, Scaling Feast will not register potions for all of its potion effects. This doesn't remove the potion effects from the game, just the potions. Note only the Metabolic Potion has brewing recipes added by Scaling Feast.")
+	@Comment("If false, Scaling Feast will not register potions for all of its potion effects. This doesn't remove the potion effects from the game, just the potions.")
 	@RequiresMcRestart
 	public boolean enablePotions = true;
 
 	@Name("Enable Brewing Recipes")
-	@Comment("If false, Scaling Feast will not create brewing recipes for Metabolic Potions. The potions will still be registered. However, if Metabolic Potions are disabled, recipes will of course not be added, and this config option will do nothing.")
+	@Comment("If false, Scaling Feast will not create brewing recipes for potions that have built in recipes. The potions will still be registered. This option does nothing if potions are disabled.")
 	@RequiresMcRestart
-	public boolean enableMetabolicRecipes = true;
+	public boolean enableBrewingRecipes = true;
 	
 	@Name("Hearty Shank")
 	@Comment("Change properties about Scaling Feast's Hearty Shank item.")

@@ -4,7 +4,7 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
 
-public class SFSpiceOfLifeConfigCategory extends SFAbstractModuleConfig {
+public class SFSpiceOfLifeConfigCategory {
 
 	@Name("Enabled")
 	@Comment("Set to true to enable the Spice Of Life module. This module will only work when NOT using time based queues or hunger based queues in Spice of Life")
@@ -25,9 +25,4 @@ public class SFSpiceOfLifeConfigCategory extends SFAbstractModuleConfig {
 			"For example, if a player has 3 unique entires and the required amount is 5, they will lose (5-3)*(penalty) max hunger"})
 	@RangeInt(min = 1, max = Short.MAX_VALUE)
 	public int penalty = 2;
-	
-	@Override
-	public boolean getEnabledEntry() {
-		return this.enabled;
-	}
 }

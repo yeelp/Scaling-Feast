@@ -3,7 +3,7 @@ package yeelp.scalingfeast.features;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.hunger.HealthRegenEvent.AllowRegen;
 import squeek.applecore.api.hunger.HealthRegenEvent.AllowSaturatedRegen;
-import yeelp.scalingfeast.ModConfig;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigHealthRegen;
 import yeelp.scalingfeast.handlers.Handler;
 

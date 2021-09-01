@@ -20,15 +20,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import squeek.applecore.api.AppleCoreAPI;
-import yeelp.scalingfeast.ModConfig;
-import yeelp.scalingfeast.ModConfig.HUDCategory.DisplayStyle;
-import yeelp.scalingfeast.ModConfig.HUDCategory.InfoStyle;
-import yeelp.scalingfeast.ModConfig.HUDCategory.MaxColourStyle;
-import yeelp.scalingfeast.ModConfig.HUDCategory.TrackerStyle;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.config.ModConfig.HUDCategory.DisplayStyle;
+import yeelp.scalingfeast.config.ModConfig.HUDCategory.InfoStyle;
+import yeelp.scalingfeast.config.ModConfig.HUDCategory.MaxColourStyle;
+import yeelp.scalingfeast.config.ModConfig.HUDCategory.TrackerStyle;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.Colour;
@@ -207,7 +207,7 @@ public class HUDOverlayHandler extends Handler {
 		float sat = player.getFoodStats().getSaturationLevel();
 		SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
 		int max = AppleCoreAPI.accessor.getMaxHunger(player);
-		int ticks = sfstats.getStarvationCount();
+		int ticks = sfstats.getStarvationTrackerCount();
 		// Get the number of full bars to draw
 		int numBars = hunger / ModConsts.VANILLA_MAX_HUNGER;
 		int remainingShanks = hunger % ModConsts.VANILLA_MAX_HUNGER;
@@ -269,10 +269,10 @@ public class HUDOverlayHandler extends Handler {
 		else {
 			drawMax(19, ticks, mc, left, top, jitterAmount[9]);
 		}
-		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.features.starve.lossFreq > 1 && hunger <= 0) {
+		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.features.starve.tracker.lossFreq > 1 && hunger <= 0) {
 			mc.mcProfiler.endStartSection("Tracker");
 			mc.getTextureManager().bindTexture(icons);
-			drawStatBar(jitterAmount, mc, left, top, ((max < 20.0f ? max : 20.0f) / (ModConfig.features.starve.lossFreq - 1)) * ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
+			drawStatBar(jitterAmount, mc, left, top, ((max < 20.0f ? max : 20.0f) / (ModConfig.features.starve.tracker.lossFreq - 1)) * ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
 		}
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 		if(ModConfig.hud.style == DisplayStyle.OVERLAY) {
@@ -387,7 +387,7 @@ public class HUDOverlayHandler extends Handler {
 		int hunger = mc.player.getFoodStats().getFoodLevel();
 		int foodMax = AppleCoreAPI.accessor.getMaxHunger(mc.player);
 		float alpha = (hunger < 20 * Math.floor(foodMax / 20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER ? (float) ModConfig.hud.maxOutlineTransparency : 1.0f);
-		Colour maxColour = getMaxColour(ticks, ModConfig.features.starve.lossFreq);
+		Colour maxColour = getMaxColour(ticks, ModConfig.features.starve.tracker.lossFreq);
 		GL11.glColor4f(1.0f / 255 * maxColour.getR(), 1.0f / 255 * maxColour.getG(), 1.0f / 255 * maxColour.getB(), alpha);
 
 		if(ModConfig.hud.maxColourStyle == MaxColourStyle.CUSTOM) {
@@ -397,7 +397,7 @@ public class HUDOverlayHandler extends Handler {
 				mc.ingameGUI.drawTexturedModalRect((float) x, y, 36, 9, 9, 9);
 			}
 			Colour overlayColour = new Colour(ModConfig.hud.maxColourStart);
-			GL11.glColor4f(1.0f / 255 * overlayColour.getR(), 1.0f / 255 * overlayColour.getG(), 1.0f / 255 * overlayColour.getB(), (ticks + 1 < ModConfig.features.starve.lossFreq ? ((float) ModConfig.features.starve.lossFreq - ticks) / ModConfig.features.starve.lossFreq : 0) * alpha);
+			GL11.glColor4f(1.0f / 255 * overlayColour.getR(), 1.0f / 255 * overlayColour.getG(), 1.0f / 255 * overlayColour.getB(), (ticks + 1 < ModConfig.features.starve.tracker.lossFreq ? ((float) ModConfig.features.starve.tracker.lossFreq - ticks) / ModConfig.features.starve.tracker.lossFreq : 0) * alpha);
 			mc.ingameGUI.drawTexturedModalRect((float) x, y, 36, 9, 9, 9);
 		}
 		else {
@@ -458,7 +458,7 @@ public class HUDOverlayHandler extends Handler {
 			case MAX_COLOUR:
 				switch(ModConfig.hud.maxColourStyle) {
 					case DEFAULT:
-						if(maxTicks == 1 || ModConfig.features.starve.starveLoss == 0) {
+						if(maxTicks == 1 || ModConfig.features.starve.tracker.starveLoss == 0) {
 							return new Colour("FFFFFF");
 						}
 						else if(ticks + 1 == maxTicks) {

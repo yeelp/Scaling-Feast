@@ -8,7 +8,6 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.config.modules.SFAbstractModuleConfig;
 import yeelp.scalingfeast.handlers.Handler;
 
 /**
@@ -17,12 +16,12 @@ import yeelp.scalingfeast.handlers.Handler;
  * @author Yeelp
  * @param <Config> the config entry class this module uses.
  */
-public abstract class AbstractModule<Config extends SFAbstractModuleConfig> implements IIntegratable {
+public abstract class AbstractModule<Config> implements IIntegratable {
 
 	final class ModuleHandler extends Handler {
 		@SubscribeEvent
 		public final void onPlayerJoinWorld(final EntityJoinWorldEvent evt) {
-			if(evt.getEntity() instanceof EntityPlayerMP) {
+			if(evt.getEntity() instanceof EntityPlayerMP && AbstractModule.this.enabled()) {
 				EntityPlayerMP player = (EntityPlayerMP) evt.getEntity();
 				AbstractModule.this.processPlayerUpdate(player);
 			}
@@ -53,15 +52,11 @@ public abstract class AbstractModule<Config extends SFAbstractModuleConfig> impl
 	 * Build a new module
 	 * 
 	 * @param config the config
+	 * @param enabled starting enabled status of the module
 	 */
-	protected AbstractModule(Config config) {
+	protected AbstractModule(Config config, boolean enabled) {
 		this.config = config;
-		this.enabled = this.config.getEnabledEntry();
-	}
-
-	@Override
-	public final boolean enabled() {
-		return this.getConfig().getEnabledEntry();
+		this.enabled = enabled;
 	}
 
 	@Override

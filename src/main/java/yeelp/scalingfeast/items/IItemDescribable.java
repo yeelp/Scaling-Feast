@@ -27,7 +27,7 @@ public interface IItemDescribable {
 			if(evt.getEntityPlayer() != null) {
 				if(evt.getItemStack().getItem() instanceof IItemDescribable) {
 					IItemDescribable describable = (IItemDescribable) evt.getItemStack().getItem();
-					evt.getToolTip().addAll(describable.getDescription(evt.getEntityPlayer()));
+					evt.getToolTip().addAll(1, describable.getDescription(evt.getEntityPlayer()));
 				}
 			}
 		}

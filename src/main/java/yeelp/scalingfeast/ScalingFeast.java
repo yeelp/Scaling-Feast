@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.Logger;
 
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,9 +12,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.blocks.ExhaustionIncreasingBlock;
 import yeelp.scalingfeast.capability.IBloatedHunger;
-import yeelp.scalingfeast.capability.IStarvationTracker;
+import yeelp.scalingfeast.capability.IStarvationStats;
 import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.features.SFFeatures;
@@ -26,8 +29,10 @@ import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
+import yeelp.scalingfeast.init.SFRecipes;
 import yeelp.scalingfeast.integration.ModIntegrationKernel;
 import yeelp.scalingfeast.items.IItemDescribable;
+import yeelp.scalingfeast.lib.worldgen.OreGenerator;
 import yeelp.scalingfeast.potion.PotionExhaustion;
 import yeelp.scalingfeast.proxy.Proxy;
 
@@ -54,7 +59,7 @@ public class ScalingFeast {
 		new SFAttributes().register();
 		SFEnchantments.init();
 		SFPotion.init();
-		IStarvationTracker.register();
+		IStarvationStats.register();
 		IBloatedHunger.register();
 		IStarveExhaustionTracker.register();		
 		PacketHandler.init();
@@ -69,14 +74,25 @@ public class ScalingFeast {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
+		GameRegistry.registerWorldGenerator(OreGenerator.getInstance(), 1);
 		new CapabilityHandler().register();
 		new GenericHandler().register();
 		new LootTableInjector().register();
 		new PotionExhaustion.ExhaustionHandler().register();
 		new IItemDescribable.TooltipHandler().register();
 		new BloatedHandler().register();
+		new ExhaustionIncreasingBlock.ExhaustionHandler().register();
 		SFFeatures.init();
 		ModIntegrationKernel.load();
+		if(Loader.isModLoaded(ModConsts.APPLESKIN_ID)) {
+			try {
+				AppleSkinHelper.init();
+			}
+			catch(ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		info("Scaling Feast initialization complete!");
 	}
 
@@ -87,7 +103,7 @@ public class ScalingFeast {
 	@SuppressWarnings("static-method")
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		
+		SFRecipes.init();
 		if(hasAppleSkin) {
 			try {
 				AppleSkinHelper.init();

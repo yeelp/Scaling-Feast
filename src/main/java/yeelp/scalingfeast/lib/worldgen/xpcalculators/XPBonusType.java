@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.lib;
+package yeelp.scalingfeast.lib.worldgen.xpcalculators;
 
 import java.util.OptionalInt;
 

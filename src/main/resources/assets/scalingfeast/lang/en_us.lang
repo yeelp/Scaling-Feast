@@ -5,7 +5,7 @@ commands.scalingfeast.command.emptytarget=Target selector %s found nothing.
 commands.scalingfeast.command.numerr=Amount must be in range (0, %s]
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
-message.scalingfeast.starvationDeath=%s overexerted themselves while starving
+message.scalingfeast.starvationDeath=%s wasted away from starvation.
 
 tooltips.scalingfeast.heartyshank.info1=Delicious!
 tooltips.scalingfeast.heartyshank.info2=Eat this to increase your max hunger by %s shank(s)!
@@ -22,6 +22,13 @@ tooltips.scalingfeast.ironapple.info=The cousin of the Golden Apple; eat it to r
 tooltips.scalingfeast.enchantedironapple.splash=Now THAT'S metal!
 tooltips.scalingfeast.enchantedironapple.info1=The cousin of the Enchanted Golden Apple; eat it to restore 4 health and recover hunger quickly.
 tooltips.scalingfeast.enchantedironapple.info2=Also makes it take more effort to decrease your hunger for a fair while.
+tooltips.scalingfeast.exhaustingore.info1=Mining this is exhausting work...
+tooltips.scalingfeast.exhaustingore.info2=You receive 50%% more exhaustion while you're standing on this!
+tooltips.scalingfeast.exhaustingblock.info1=Can be used as a beacon base.
+tooltips.scalingfeast.exhaustingblock.info2=You receive 100%% more exhaustion while you're standing on this!
+tooltips.scalingfeast.exhaustingapple.splash=The Forbidden Fruit
+tooltips.scalingfeast.exhaustingapple.info=Eating this will refill your hunger and saturation bar completely... and lowers your max hunger by the same amount of a Hearty Shank...
+tooltips.scalingfeast.exhaustingingot.info=Can be used as beacon payment
 
 modules.scalingfeast.sol.reward=You've gained %s max hunger!
 modules.scalingfeast.sol.efficiencyReward=You've gained %s food efficiency!
@@ -49,8 +56,8 @@ enchantment.scalingfeast.sensitivitycurse=Curse of Sensitivity
 enchantment.scalingfeast.lazinesscurse=Curse of Laziness
 enchantment.scalingfeast.deprivationcurse=Curse of Deprivation
 
-enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10% per level.
-enchantment.scalingfeast.gluttony.desc=Increases food values by 50% per level. Iron Apples heal 50% more health per level too!
+enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10%% per level.
+enchantment.scalingfeast.gluttony.desc=Increases food values by 50%% per level. Iron Apples heal 50%% more health per level too!
 enchantment.scalingfeast.famine.desc=Severely drains hunger from a player struck with this enchantment or applies a weakness debuff to non player entities struck with this enchantment. The strength of these effects depend on the enchantment level.
 enchantment.scalingfeast.eternalfeast.desc=Killing an entity replenishes your food level, depending on the level of the enchantment.
 enchantment.scalingfeast.sensitivitycurse.desc=Overeating gives you a Soft Stomach debuff for 20 seconds. The strength is equal to the amount overeaten.
@@ -60,8 +67,14 @@ enchantment.scalingfeast.deprivationcurse.desc=Causes you to starve twice as fas
 item.scalingfeast.heartyshank.name=Hearty Shank
 item.scalingfeast.ironapple.name=§bIron Apple§f
 item.scalingfeast.enchantedironapple.name=§dIron Apple§f
+item.scalingfeast.exhaustingingot.name=Exhausting Ingot
+item.scalingfeast.exhaustingnugget.name=Exhausting Nugget
+item.scalingfeast.exhaustingapple.name=§cExhausting Apple§f
 
 tile.scalingfeast.heartyfeast.name=Hearty Feast
+tile.scalingfeast.exhaustingore.stone.name=Exhausting Stone
+tile.scalingfeast.exhaustingore.netherrack.name=Exhausting Netherrack
+tile.scalingfeast.exhaustingblock.name=Exhausting Block
 
 attribute.name.scalingfeast.maxHungerMod=Max Hunger
 attribute.name.scalingfeast.foodEfficiency=Food Efficiency

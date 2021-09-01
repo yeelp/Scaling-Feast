@@ -1,11 +1,11 @@
 package yeelp.scalingfeast.api;
 
 /**
- * Interface that outlines basic operations with starvation trackers
+ * Interface that outlines basic operations with starvation stats
  * @author Yeelp
  *
  */
-public interface IStarvationTrackerOperations {
+public interface IStarvationOperations {
 	/**
 	 * Ticks starvation a specified amount of times, using the given player's hunger as reference and punishes that player appropriately
 	 * @param amount amount of times to tick
@@ -25,8 +25,24 @@ public interface IStarvationTrackerOperations {
 	void resetStarvationTracker();
 	
 	/**
+	 * Reset the count of the number of times this player has starved in a row
+	 */
+	void resetStarvationCountAllTime();
+	
+	/**
+	 * Reset both the tracker and the counter.
+	 */
+	void resetStarvationStats();
+	
+	/**
 	 * Get the amount of times this tracker has been ticked
 	 * @return the current count in the starvation tracker.
 	 */
-	short getStarvationCount();
+	short getStarvationTrackerCount();
+	
+	/**
+	 * Get the total number of times this player has starved in a row
+	 * @return the current count in the starvation counter.
+	 */
+	short getStarvationCountAllTime();
 }

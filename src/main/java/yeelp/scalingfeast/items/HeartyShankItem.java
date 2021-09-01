@@ -18,10 +18,10 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
 
@@ -61,10 +61,10 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 				double currentDeathPenalty = getCurrentDeathPenalty(player);
 				List<AttributeModifier> newMods = new LinkedList<AttributeModifier>();
 				double overflow = currentStarvePenalty + ModConfig.items.shank.inc;
-				double newStarvePenalty = MathHelper.clamp(overflow, Double.MIN_VALUE, 0.0);
-				overflow = currentDeathPenalty + MathHelper.clamp(overflow, 0, Double.MAX_VALUE);
-				double newDeathPenalty = MathHelper.clamp(overflow, Double.MIN_VALUE, 0.0);
-				double newShankBonus = MathHelper.clamp(currentShankBonus + MathHelper.clamp(overflow, 0, Double.MAX_VALUE), 0, getShankUsageCap());
+				double newStarvePenalty = Math.min(overflow, 0.0);
+				overflow = currentDeathPenalty + Math.max(overflow, 0);
+				double newDeathPenalty = Math.min(overflow, 0.0);
+				double newShankBonus = Math.min(currentShankBonus + Math.max(overflow, 0), getShankUsageCap());
 				if(newShankBonus != currentShankBonus) {
 					newMods.add(SFBuiltInModifiers.MaxHungerModifiers.SHANK.createModifier(newShankBonus));
 				}
@@ -77,7 +77,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 				newMods.forEach(sfstats::applyMaxHungerModifier);
 				worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 1.0f, 1.0f);
 			}
-			if(ModConfig.features.starve.shankResetsCounter) {
+			if(ModConfig.features.starve.tracker.shankResetsCounter) {
 				sfstats.resetStarvationTracker();
 			}
 		}

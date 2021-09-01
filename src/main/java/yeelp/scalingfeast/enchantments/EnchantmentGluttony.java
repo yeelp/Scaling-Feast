@@ -10,8 +10,8 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 

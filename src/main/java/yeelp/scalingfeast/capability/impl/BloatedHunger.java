@@ -30,7 +30,7 @@ public class BloatedHunger extends SFSingleValueCapabilityShort implements IBloa
 
 	@Override
 	public void setVal(Short val) {
-		if(this.getVal() < 0) {
+		if(val < 0) {
 			super.setVal((short) 0);
 		}
 		else {

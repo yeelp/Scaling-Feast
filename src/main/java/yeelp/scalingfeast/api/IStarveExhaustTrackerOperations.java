@@ -21,7 +21,7 @@ public interface IStarveExhaustTrackerOperations {
 	 * 
 	 * @return the amount of bonus damage to deal.
 	 */
-	int getTotalBonusStarvationDamage();
+	int getTotalBonusDynamicStarvationDamage();
 	
 	/**
 	 * Reset the starvation exhaustion tracker

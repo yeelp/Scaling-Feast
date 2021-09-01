@@ -22,9 +22,9 @@ import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.food.IEdible;
 import squeek.applecore.api.food.IEdibleBlock;
 import squeek.applecore.api.food.ItemFoodProxy;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.init.SFItems;
 import yeelp.scalingfeast.init.SFPotion;
 
 /**
@@ -67,7 +67,6 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 	private static final float sat = 0.5f;
 
 	public HeartyFeastBlock() {
-		super();
 		this.blockSoundType = SoundType.CLOTH;
 		this.setRegistryName("heartyfeast");
 		this.setUnlocalizedName(ModConsts.MOD_ID + ".heartyfeast");
@@ -76,7 +75,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-		ItemStack stack = new ItemStack(SFFood.heartyfeastitem);
+		ItemStack stack = new ItemStack(SFItems.heartyfeastitem);
 		return stack;
 	}
 

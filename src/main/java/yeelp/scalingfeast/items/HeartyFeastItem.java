@@ -15,9 +15,9 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import squeek.applecore.api.food.FoodValues;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.blocks.HeartyFeastBlock;
+import yeelp.scalingfeast.config.ModConfig;
 
 /**
  * Hearty Feast cake block item
@@ -54,7 +54,7 @@ public class HeartyFeastItem extends ItemBlock implements IItemDescribable {
 		int durationSeconds = ModConfig.items.feast.heartyFeastEffectDuration / 20;
 		int durationMinutes = durationSeconds/60;
 		durationSeconds %= 60;
-		String time = String.format("%d:%d", durationMinutes, durationSeconds);
+		String time = String.format("%d:%02d", durationMinutes, durationSeconds);
 		tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyfeast.effect", time).setStyle(new Style().setColor(TextFormatting.GREEN)).getFormattedText());
 		return tooltips;
 	}

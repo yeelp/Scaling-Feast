@@ -3,13 +3,13 @@ package yeelp.scalingfeast.features;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.PostConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigXPBonuses;
 import yeelp.scalingfeast.handlers.Handler;
-import yeelp.scalingfeast.lib.FoodEfficiencyXPBonusCalculator;
-import yeelp.scalingfeast.lib.MaxHungerXPBonusCalculator;
-import yeelp.scalingfeast.lib.XPBonusCalculator;
+import yeelp.scalingfeast.lib.worldgen.xpcalculators.FoodEfficiencyXPBonusCalculator;
+import yeelp.scalingfeast.lib.worldgen.xpcalculators.MaxHungerXPBonusCalculator;
+import yeelp.scalingfeast.lib.worldgen.xpcalculators.XPBonusCalculator;
 
 public final class SFXPBonuses extends FeatureBase<SFConfigXPBonuses> {
 

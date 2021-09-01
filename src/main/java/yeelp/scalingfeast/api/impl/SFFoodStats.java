@@ -5,19 +5,20 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import squeek.applecore.api.AppleCoreAPI;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.IBloatedHungerOperations;
 import yeelp.scalingfeast.api.IFoodEfficiencyChanger;
 import yeelp.scalingfeast.api.IMaxHungerChanger;
-import yeelp.scalingfeast.api.IStarvationTrackerOperations;
+import yeelp.scalingfeast.api.IStarvationOperations;
 import yeelp.scalingfeast.api.IStarveExhaustTrackerOperations;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.capability.IBloatedHunger;
-import yeelp.scalingfeast.capability.IStarvationTracker;
+import yeelp.scalingfeast.capability.IStarvationStats;
+import yeelp.scalingfeast.capability.IStarvationStats.ICountable;
 import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.capability.impl.BloatedHunger;
-import yeelp.scalingfeast.capability.impl.StarvationTracker;
+import yeelp.scalingfeast.capability.impl.StarvationStats;
 import yeelp.scalingfeast.capability.impl.StarveExhaustionTracker;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
@@ -26,28 +27,28 @@ import yeelp.scalingfeast.lib.SFBuiltInModifiers;
  * @author Yeelp
  *
  */
-public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, IBloatedHungerOperations, IStarvationTrackerOperations, IStarveExhaustTrackerOperations {
+public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, IBloatedHungerOperations, IStarvationOperations, IStarveExhaustTrackerOperations {
 	
 	private static final class Caps {
 		private IBloatedHunger bloat;
-		private IStarvationTracker tracker;
 		private IStarveExhaustionTracker starveExhaustTracker;
+		private IStarvationStats starveStats;
 		private final EntityPlayer player;
 		
 		Caps(EntityPlayer player) {
 			this.player = player;
 		}
 		
-		IStarvationTracker getStarvationTrackerCapability() {
-			return this.tracker == null ? this.tracker = this.player.getCapability(StarvationTracker.cap, null) : this.tracker;
-		}
-
 		IBloatedHunger getBloatedHungerCapability() {
 			return this.bloat == null ? this.bloat = this.player.getCapability(BloatedHunger.cap, null) : this.bloat;
 		}
 		
 		IStarveExhaustionTracker getStarvationExhaustionTrackerCapability() {
 			return this.starveExhaustTracker == null ? this.starveExhaustTracker = this.player.getCapability(StarveExhaustionTracker.cap, null) : this.starveExhaustTracker;
+		}
+		
+		IStarvationStats getStarvationStatsCapability() {
+			return this.starveStats == null ? this.starveStats = this.player.getCapability(StarvationStats.cap, null) : this.starveStats;
 		}
 	}
 	private IAttributeInstance maxHunger, foodEfficiency;
@@ -117,44 +118,65 @@ public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, I
 	@Override
 	public void tickStarvation(int amount) {
 		int hunger = this.player.getFoodStats().getFoodLevel();
-		int threshold = ModConfig.features.starve.lossFreq;
-		int lowerBound = ModConfig.features.starve.starveLowerCap;
-		int lossAmount = ModConfig.features.starve.starveLoss;
+		int threshold = ModConfig.features.starve.tracker.lossFreq;
+		int lowerBound = ModConfig.features.starve.tracker.starveLowerCap;
+		int lossAmount = ModConfig.features.starve.tracker.starveLoss;
 		if(hunger == 0 || threshold == 0) {
 			return;
 		}
-		IStarvationTracker tracker = this.caps.getStarvationTrackerCapability();
-		
+		ICountable tracker = this.caps.getStarvationStatsCapability().getTracker();
+		ICountable counter = this.caps.getStarvationStatsCapability().getCounter();
+		counter.inc((short) 1);
 		for(int i = 0; i < amount; i++) {
 			tracker.inc((short) 1);
 			int maxHunger = AppleCoreAPI.accessor.getMaxHunger(this.player);
-			if(tracker.getVal() >= threshold) { 
+			if(tracker.get() >= threshold) { 
 				if(maxHunger > lowerBound) {
 					double base = SFBuiltInModifiers.MaxHungerModifiers.PENALTY.getModifierValueForPlayer(this.player);
 					double penalty = MathHelper.clamp(base - lossAmount, maxHunger - base - lowerBound, 0.0);
 					this.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.PENALTY.createModifier(penalty));
 				}
-				if(ModConfig.features.starve.doesFreqResetOnStarve) {
+				if(ModConfig.features.starve.tracker.doesFreqResetOnStarve) {
 					tracker.reset();
 				}
 				else {
-					tracker.setVal((short) (threshold - 1));
+					tracker.set((short) (threshold - 1));
 				}
 			}
 		}
-		tracker.sync(this.player);
+		this.caps.getStarvationStatsCapability().sync(this.player);
 	}
 
 	@Override
 	public void resetStarvationTracker() {
-		IStarvationTracker tracker = this.caps.getStarvationTrackerCapability();
-		tracker.reset();
-		tracker.sync(this.player);
+		IStarvationStats stats = this.caps.getStarvationStatsCapability();
+		stats.getTracker().reset();
+		stats.sync(this.player);
 	}
 
 	@Override
-	public short getStarvationCount() {
-		return this.caps.getStarvationTrackerCapability().getVal();
+	public short getStarvationTrackerCount() {
+		return this.caps.getStarvationStatsCapability().getTracker().get();
+	}
+	
+	@Override
+	public short getStarvationCountAllTime() {
+		return this.caps.getStarvationStatsCapability().getCounter().get();
+	}
+	
+	@Override
+	public void resetStarvationCountAllTime() {
+		IStarvationStats stats = this.caps.getStarvationStatsCapability();
+		stats.getCounter().reset();
+		stats.sync(this.player);
+	}
+
+	@Override
+	public void resetStarvationStats() {
+		IStarvationStats stats = this.caps.getStarvationStatsCapability();
+		stats.getCounter().reset();
+		stats.getTracker().reset();
+		stats.sync(this.player);
 	}
 
 	@Override
@@ -172,7 +194,7 @@ public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, I
 	}
 
 	@Override
-	public int getTotalBonusStarvationDamage() {
+	public int getTotalBonusDynamicStarvationDamage() {
 		return (int) Math.floor(this.getTotalExhaustionAtZeroHunger() / AppleCoreAPI.accessor.getMaxExhaustion(this.player));
 	}
 

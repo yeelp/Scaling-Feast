@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.MathHelper;
 import squeek.applecore.api.AppleCoreAPI;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.IScalingFeastAccessor;
 import yeelp.scalingfeast.api.IScalingFeastMutator;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.lib.SaturationScaling;
 
 public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastMutator {
@@ -44,7 +44,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 
 	@Override
 	public boolean canPlayerLoseMaxHunger(EntityPlayer player) {
-		return AppleCoreAPI.accessor.getMaxHunger(player) < ModConfig.features.starve.starveLowerCap;
+		return AppleCoreAPI.accessor.getMaxHunger(player) < ModConfig.features.starve.tracker.starveLowerCap;
 	}
 
 	/*****************************/

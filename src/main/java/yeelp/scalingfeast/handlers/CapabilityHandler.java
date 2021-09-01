@@ -7,11 +7,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.capability.IStarvationStats;
 import yeelp.scalingfeast.capability.impl.BloatedHunger;
-import yeelp.scalingfeast.capability.impl.StarvationTracker;
+import yeelp.scalingfeast.capability.impl.StarvationStats;
 import yeelp.scalingfeast.capability.impl.StarveExhaustionTracker;
+import yeelp.scalingfeast.config.ModConfig;
 
 public class CapabilityHandler extends Handler {
 
@@ -19,7 +20,7 @@ public class CapabilityHandler extends Handler {
 	@SubscribeEvent
 	public void onAddCapabilities(AttachCapabilitiesEvent<Entity> evt) {
 		if(evt.getObject() instanceof EntityPlayer) {
-			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationTracker"), new StarvationTracker());
+			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "StarvationStats"), new StarvationStats());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "BloatedAmount"), new BloatedHunger());
 			evt.addCapability(new ResourceLocation(ModConsts.MOD_ID, "ExhaustionSinceStarve"), new StarveExhaustionTracker());
 		}
@@ -31,8 +32,15 @@ public class CapabilityHandler extends Handler {
 		EntityPlayer oldPlayer = evt.getOriginal();
 		EntityPlayer newPlayer = evt.getEntityPlayer();
 		oldPlayer.getCapability(StarveExhaustionTracker.cap, null).sync(newPlayer);
-		if(!evt.isWasDeath() || !ModConfig.features.starve.doesFreqReset) {
-			oldPlayer.getCapability(StarvationTracker.cap, null).sync(newPlayer);
+		IStarvationStats starveStats = oldPlayer.getCapability(StarvationStats.cap, null);
+		if(evt.isWasDeath()) {
+			starveStats.getCounter().reset();
+			if(ModConfig.features.starve.tracker.doesFreqReset) {
+				starveStats.getTracker().reset();
+			}
+		}
+		if(starveStats.getCounter().get() != 0 || starveStats.getTracker().get() != 0) {
+			starveStats.sync(newPlayer);			
 		}
 	}
 }

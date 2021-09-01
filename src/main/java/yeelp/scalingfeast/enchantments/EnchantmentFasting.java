@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,16 +8,14 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
-import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.init.SFEnchantments;
 
 /**
@@ -32,8 +28,6 @@ import yeelp.scalingfeast.init.SFEnchantments;
 public class EnchantmentFasting extends SFEnchantmentBase {
 
 	static final UUID FASTING_MOD_UUID = UUID.fromString("33c7ebac-21ef-476f-8f95-6ab9a1cb3a14");
-	private static final String FASTING_MOD_KEY = "Fasting Modifier";
-	private static final int FASTING_MOD_OP = 2;
 
 	/**
 	 * Create a new Fasting Enchantment
@@ -72,73 +66,19 @@ public class EnchantmentFasting extends SFEnchantmentBase {
 			public void onPlayerUpdate(LivingUpdateEvent evt) {
 				if(evt.getEntityLiving() instanceof EntityPlayer) {
 					EntityPlayer player = (EntityPlayer) evt.getEntityLiving();
-					InventoryPlayer inv = player.inventory;
-					Collection<ItemStack> items = new ArrayList<ItemStack>(inv.mainInventory);
-					items.addAll(inv.armorInventory);
-					items.addAll(inv.offHandInventory);
-					for(ItemStack itemStack : items) {
-						if(itemStack.isEmpty()) {
-							continue;
+					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
+					double newFastingAmount = 0.1 * EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.fasting, player);
+					double oldFastingAmount = sfstats.getFoodEfficiencyModifier(FASTING_MOD_UUID).map(AttributeModifier::getAmount).orElse(0.0d);
+					if(newFastingAmount != oldFastingAmount) {
+						AttributeModifier fastingMod = new AttributeModifier(FASTING_MOD_UUID, "Fasting enchantment", newFastingAmount, 0);
+						if(fastingMod.getAmount() > 0) {
+							sfstats.applyFoodEfficiencyModifier(fastingMod);
 						}
-						if(this.shouldApplyFastingMod(itemStack)) {
-							this.addFastingModifier(itemStack);
-						}
-						else if(this.shouldUpdateFastingMod(itemStack)) {
-							this.updateFastingModifier(itemStack);
-						}
-						else if(this.shouldRemoveFastingMod(itemStack)) {
-							this.removeFastingModifier(itemStack);
+						else {
+							sfstats.getFoodEfficiencyModifierAttribute().removeModifier(fastingMod);
 						}
 					}
 				}
-			}
-
-			private boolean shouldApplyFastingMod(ItemStack stack) {
-				return this.hasFasting(stack) && !this.hasFastingModifier(stack);
-			}
-
-			private boolean shouldRemoveFastingMod(ItemStack stack) {
-				return !this.hasFasting(stack) && this.hasFastingModifier(stack);
-			}
-
-			private boolean shouldUpdateFastingMod(ItemStack stack) {
-				return stack.getAttributeModifiers(EntityEquipmentSlot.CHEST).get(SFAttributes.FOOD_EFFICIENCY.getName()).stream().filter((m) -> m.getID().equals(FASTING_MOD_UUID)).findFirst().map((m) -> m.getAmount() != EnchantmentHelper.getEnchantmentLevel(SFEnchantments.fasting, stack) * 0.1).orElse(false);
-			}
-
-			private boolean hasFastingModifier(ItemStack stack) {
-				return stack.getAttributeModifiers(EntityEquipmentSlot.CHEST).get(SFAttributes.FOOD_EFFICIENCY.getName()).stream().anyMatch((m) -> m.getID().equals(FASTING_MOD_UUID));
-			}
-
-			private boolean hasFasting(ItemStack stack) {
-				return EnchantmentHelper.getEnchantmentLevel(SFEnchantments.fasting, stack) > 0;
-			}
-
-			private void addFastingModifier(ItemStack stack) {
-				stack.addAttributeModifier(EnchantmentFasting.FASTING_MOD_KEY, new AttributeModifier(FASTING_MOD_UUID, FASTING_MOD_KEY, 0.1 * EnchantmentHelper.getEnchantmentLevel(SFEnchantments.fasting, stack), FASTING_MOD_OP), EntityEquipmentSlot.CHEST);
-			}
-
-			private void removeFastingModifier(ItemStack stack) {
-				NBTTagList lst = getModifiers(stack);
-				int index = getIndexOfFastingModifier(lst);
-				if(index != -1) {
-					lst.removeTag(index);
-				}
-			}
-
-			private void updateFastingModifier(ItemStack stack) {
-				NBTTagList lst = getModifiers(stack);
-				int index = getIndexOfFastingModifier(lst);
-				lst.getCompoundTagAt(index).setDouble("Amount", 0.1 * EnchantmentHelper.getEnchantmentLevel(SFEnchantments.fasting, stack));
-			}
-
-			private NBTTagList getModifiers(ItemStack stack) {
-				return stack.getTagCompound().getTagList("AttributeModifiers", 10);
-			}
-
-			private int getIndexOfFastingModifier(NBTTagList lst) {
-				int index = 0;
-				for(; index < lst.tagCount() && !lst.getCompoundTagAt(index).getUniqueId("UUID").equals(EnchantmentFasting.FASTING_MOD_UUID); index++);
-				return index < lst.tagCount() ? index : -1;
 			}
 		});
 	}

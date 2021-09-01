@@ -33,11 +33,16 @@ public class CTSFFoodStats {
 
 	@ZenGetter("starvationTrackerCount")
 	public short getStarvationTrackerCount() {
-		return this.sfstats.getStarvationCount();
+		return this.sfstats.getStarvationTrackerCount();
+	}
+	
+	@ZenGetter("consecutiveStarvations")
+	public short getStarvationCountAllTime() {
+		return this.sfstats.getStarvationCountAllTime();
 	}
 	
 	@ZenGetter("bonusStarvationDamage")
 	public int getBonusStarvationDamage() {
-		return this.sfstats.getTotalBonusStarvationDamage();
+		return this.sfstats.getTotalBonusDynamicStarvationDamage();
 	}
 }

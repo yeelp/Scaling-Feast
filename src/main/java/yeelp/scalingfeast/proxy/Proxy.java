@@ -1,13 +1,13 @@
 package yeelp.scalingfeast.proxy;
 
 import yeelp.scalingfeast.init.SFBlocks;
-import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.init.SFItems;
 
 public class Proxy {
 	@SuppressWarnings("static-method")
 	public void preInit() {
 		SFBlocks.init();
-		SFFood.init();
+		SFItems.init();
 	}
 
 	@SuppressWarnings("static-method")

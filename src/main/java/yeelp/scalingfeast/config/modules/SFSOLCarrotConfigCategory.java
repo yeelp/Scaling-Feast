@@ -3,7 +3,7 @@ package yeelp.scalingfeast.config.modules;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 
-public final class SFSOLCarrotConfigCategory extends SFAbstractModuleConfig {
+public final class SFSOLCarrotConfigCategory {
 
 	@Name("Enabled")
 	@Comment("Set to true to enable the Spice Of Life: Carrot Edition module")
@@ -47,9 +47,4 @@ public final class SFSOLCarrotConfigCategory extends SFAbstractModuleConfig {
 	@Name("Reward Messages Above Hotbar?")
 	@Comment("If true, Scaling Feast will display its reward messages above a player's hotbar. Else, it will display it in chat. If multiple reward messages are sent, only the last one is displayed in the hotbar if this is true.")
 	public boolean rewardMsgAboveHotbar = false;
-	
-	@Override
-	public boolean getEnabledEntry() {
-		return this.enabled;
-	}
 }

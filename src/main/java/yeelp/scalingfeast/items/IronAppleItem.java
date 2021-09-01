@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -28,8 +29,8 @@ import yeelp.scalingfeast.init.SFPotion;
  *
  */
 public class IronAppleItem extends ItemFood {
-	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.ironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
-	private static final String INFO = new TextComponentTranslation("tooltips.scalingfeast.ironapple.info").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
+	private static final ITextComponent TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.ironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
+	private static final ITextComponent INFO = new TextComponentTranslation("tooltips.scalingfeast.ironapple.info").setStyle(new Style().setColor(TextFormatting.GRAY));
 
 	public IronAppleItem() {
 		super(0, 0, false);
@@ -42,8 +43,9 @@ public class IronAppleItem extends ItemFood {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add(TEXT_SPLASH);
-		tooltip.add(INFO);
+		tooltip.add(TEXT_SPLASH.getFormattedText());
+		tooltip.add(INFO.getFormattedText());
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
 	@Override

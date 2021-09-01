@@ -1,15 +1,17 @@
-package yeelp.scalingfeast.lib;
+package yeelp.scalingfeast.lib.worldgen.xpcalculators;
 
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
 public class MaxHungerXPBonusCalculator extends AbstractXPBonusCalculator {
 
 	private static MaxHungerXPBonusCalculator instance;
 	
 	public MaxHungerXPBonusCalculator() {
-		super(SFBuiltInModifiers.MaxHungerModifiers.XP);
+		super(SFBuiltInModifiers.MaxHungerModifiers.XP, ModConfig.features.xpBonuses.maxHungerXPBonus);
 	}
 
 	@Override

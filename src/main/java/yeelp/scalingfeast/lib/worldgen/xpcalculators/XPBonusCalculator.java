@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.lib;
+package yeelp.scalingfeast.lib.worldgen.xpcalculators;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,10 +73,4 @@ public interface XPBonusCalculator {
 	 * @param lst
 	 */
 	void setMilestoneList(List<XPMilestone> lst);
-	
-	/**
-	 * Set the function used for determining if the player has reached a target or not.
-	 * @param type the function type to use.
-	 */
-	void setFunction(XPBonusType type);
 }

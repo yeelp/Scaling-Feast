@@ -14,8 +14,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Tuple;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodValues;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.items.ExhaustingApple;
 import yeelp.scalingfeast.items.HeartyShankItem;
 
 public class HUDUtils {
@@ -112,6 +113,22 @@ public class HUDUtils {
 					if(maxSatAddition.equals("+0.0")) {
 						maxSatAddition = "";
 					}
+				}
+				else if (food.getItem() instanceof ExhaustingApple) {
+					deltaMaxH = -ModConfig.items.shank.inc;
+					if(max + deltaMaxH < 1) {
+						deltaMaxH = 1 - max;
+					}
+					maxAddition = String.format("%d", deltaMaxH);
+					float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
+					float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max - ModConfig.items.shank.inc);
+					deltaMaxS = (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat;
+					maxSatAddition = String.format("%.1f", deltaMaxS);
+					if(maxSatAddition.equals("0.0")) {
+						maxSatAddition = "";
+					}
+					foodAddition = String.format("%+d", (max + deltaMaxH) - hunger);
+					satAddition = String.format("%+.1f", (maxSat + deltaMaxS) - sat);
 				}
 			}
 		}

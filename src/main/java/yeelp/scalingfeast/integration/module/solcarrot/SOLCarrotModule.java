@@ -26,10 +26,10 @@ import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent.FoodEaten;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.modules.SFSOLCarrotConfigCategory;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.integration.module.AbstractModule;
@@ -37,7 +37,7 @@ import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
 /**
  * Module for Spice of Life:Carrot Edition integration
- * @author dunca
+ * @author Yeelp
  *
  */
 public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCategory> {
@@ -53,7 +53,12 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 	private List<FoodEfficiencyMilestone> efficiencyMilestones;
 
 	public SOLCarrotModule() {
-		super(ModConfig.modules.sol);
+		super(ModConfig.modules.sol, ModConfig.modules.sol.enabled);
+	}
+	
+	@Override
+	public boolean enabled() {
+		return ModConfig.modules.sol.enabled;
 	}
 
 	@Override
@@ -184,7 +189,4 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 	private static <M extends Milestone<?>> boolean reachedAll(int amount, List<M> lst) {
 		return lst.stream().allMatch((m) -> amount >= m.getTarget());
 	}
-
-	
-
 }

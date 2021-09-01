@@ -9,9 +9,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
 import squeek.applecore.api.hunger.ExhaustionEvent.ExhaustionAddition;
 import squeek.applecore.api.hunger.StarvationEvent.Starve;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigStarvation;
 import yeelp.scalingfeast.handlers.Handler;
 
@@ -47,15 +47,26 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			public final void onStarve(Starve evt) {
 				if(!evt.player.isDead) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
-					int bonusDamage = getBonusDamage(sfstats);
-					if(getConfig().dynamicStarvationUnblockable) {
-						evt.player.attackEntityFrom(PiercingStarvation.INSTANCE, bonusDamage);
+					int bonusDynamicDamage = getBonusDynamicDamage(sfstats);
+					float scaledDamage = getConfig().counter.starveScaling.compute(sfstats.getStarvationCountAllTime());
+					float unblockableDmg = 0;
+					if(getConfig().dynamic.dynamicStarvationUnblockable) {
+						unblockableDmg += bonusDynamicDamage;
 					}
 					else {
-						evt.starveDamage += bonusDamage;
+						evt.starveDamage += bonusDynamicDamage;
 					}
-					if(getConfig().starveLoss != 0) {
-						sfstats.tickStarvation(bonusDamage + 1);
+					if(getConfig().counter.starvationScalingUnblockable) {
+						unblockableDmg += scaledDamage;
+					}
+					else {
+						evt.starveDamage += scaledDamage;
+					}
+					if(unblockableDmg != 0) {
+						evt.player.attackEntityFrom(PiercingStarvation.INSTANCE, unblockableDmg);
+					}
+					if(getConfig().tracker.starveLoss != 0) {
+						sfstats.tickStarvation(bonusDynamicDamage + 1);
 					}
 					sfstats.resetStarvationExhaustionTracker();
 				}
@@ -63,8 +74,12 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			
 			@SubscribeEvent
 			public final void onFoodStatsAddition(FoodStatsAddition evt) {
-				if(getConfig().doesFreqReset && evt.player.getFoodStats().getFoodLevel() == 0) {
-					ScalingFeastAPI.accessor.getSFFoodStats(evt.player).resetStarvationTracker();
+				if(evt.player.getFoodStats().getFoodLevel() == 0) {
+					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
+					sfstats.resetStarvationCountAllTime();
+					if(getConfig().tracker.doesFreqReset) {
+						sfstats.resetStarvationTracker();
+					}
 				}
 			}
 			
@@ -75,9 +90,9 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 				}
 			}
 
-			private int getBonusDamage(SFFoodStats sfstats) {
+			private int getBonusDynamicDamage(SFFoodStats sfstats) {
 				SFConfigStarvation config = getConfig();
-				return config.doDynamicStarvation ? config.bonusStarveDamageMult * sfstats.getTotalBonusStarvationDamage() : 0;
+				return config.dynamic.doDynamicStarvation ? config.dynamic.bonusStarveDamageMult * sfstats.getTotalBonusDynamicStarvationDamage() : 0;
 			}
 		};
 	}

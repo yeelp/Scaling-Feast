@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -29,9 +30,9 @@ import yeelp.scalingfeast.init.SFPotion;
  *
  */
 public class EnchantedIronAppleItem extends ItemFood {
-	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
-	private static final String INFO1 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info1").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
-	private static final String INFO2 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info2").setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText();
+	private static final ITextComponent TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
+	private static final ITextComponent INFO1 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info1").setStyle(new Style().setColor(TextFormatting.GRAY));
+	private static final ITextComponent INFO2 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info2").setStyle(new Style().setColor(TextFormatting.GRAY));
 
 	public EnchantedIronAppleItem() {
 		super(0, 0.0f, false);
@@ -49,9 +50,10 @@ public class EnchantedIronAppleItem extends ItemFood {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add(TEXT_SPLASH);
-		tooltip.add(INFO1);
-		tooltip.add(INFO2);
+		tooltip.add(TEXT_SPLASH.getFormattedText());
+		tooltip.add(INFO1.getFormattedText());
+		tooltip.add(INFO2.getFormattedText());
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
 	@Override

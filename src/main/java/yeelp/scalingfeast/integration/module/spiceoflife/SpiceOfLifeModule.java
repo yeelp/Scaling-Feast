@@ -25,9 +25,9 @@ import squeek.spiceoflife.foodtracker.FoodHistory;
 import squeek.spiceoflife.foodtracker.foodgroups.FoodGroup;
 import squeek.spiceoflife.foodtracker.foodgroups.FoodGroupRegistry;
 import squeek.spiceoflife.foodtracker.foodqueue.FoodQueue;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.modules.SFSpiceOfLifeConfigCategory;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.integration.module.AbstractModule;
@@ -67,7 +67,12 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 	}
 
 	public SpiceOfLifeModule() {
-		super(ModConfig.modules.spiceoflife);
+		super(ModConfig.modules.spiceoflife, ModConfig.modules.spiceoflife.enabled);
+	}
+	
+	@Override
+	public boolean enabled() {
+		return ModConfig.modules.spiceoflife.enabled;
 	}
 
 	@Override
@@ -76,7 +81,7 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 			@Method(modid = ModConsts.SPICEOFLIFE_ID)
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onFoodEaten(FoodEaten evt) {
-				if(SpiceOfLifeModule.this.enabled()) {
+				if(SpiceOfLifeModule.this.enabled() && this.applicableToFoodHistory()) {
 					SpiceOfLifeModule.this.updatePlayer(evt.player);
 				}
 			}
@@ -85,9 +90,13 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 			@SideOnly(Side.CLIENT)
 			@SubscribeEvent
 			public final void onTooltip(ItemTooltipEvent evt) {
-				if(SpiceOfLifeModule.this.enabled()) {
+				if(SpiceOfLifeModule.this.enabled() && this.applicableToFoodHistory()) {
 					SpiceOfLifeModule.this.getTooltipTypeForItem(evt.getItemStack(), evt.getEntityPlayer()).getTooltipText().ifPresent(evt.getToolTip()::add);
 				}
+			}
+
+			private boolean applicableToFoodHistory() {
+				return !squeek.spiceoflife.ModConfig.USE_HUNGER_QUEUE && !squeek.spiceoflife.ModConfig.USE_TIME_QUEUE;
 			}
 		};
 	}
@@ -139,35 +148,33 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 	}
 
 	TooltipType getTooltipTypeForItem(ItemStack stack, EntityPlayer player) {
-		if(!squeek.spiceoflife.ModConfig.USE_HUNGER_QUEUE && !squeek.spiceoflife.ModConfig.USE_TIME_QUEUE) {
-			FoodHistory history = FoodHistory.get(player);
-			FoodQueue queue = history.getHistory();
-			// If we eat one more item, are we set to count history?
-			// Note that the FoodQueue is of fixed size but this doesn't matter if the + 1
-			// exceeds the normal size; we're fine regardless
-			if(history.totalFoodsEatenAllTime + 1 >= squeek.spiceoflife.ModConfig.FOOD_EATEN_THRESHOLD && queue.size() + 1 >= this.requiredAmount) {
-				long newCount;
-				long oldPenalty;
-				List<squeek.spiceoflife.foodtracker.FoodEaten> simulatedOldHistory = queue.subList(1, queue.size());
-				if(this.usingFoodGroups) {
-					HashSet<FoodGroup> oldGroups = simulatedOldHistory.stream().filter((f) -> f.itemStack != ItemStack.EMPTY).collect(HashSet<FoodGroup>::new, (s, f) -> s.addAll(f.getFoodGroups()), Set<FoodGroup>::addAll);
-					Set<FoodGroup> newGroups = FoodGroupRegistry.getFoodGroupsForFood(stack);
-					newCount = Sets.union(newGroups, oldGroups).size();
-					oldPenalty = this.getPenaltyWithFoodGroups(history);
-				}
-				else {
-					long prevCount = simulatedOldHistory.stream().map((f) -> f.itemStack.getItem()).distinct().count();
-					boolean containsNewFoodItem = simulatedOldHistory.stream().map((f) -> f.itemStack).filter(stack::isItemEqual).count() == 0;
-					newCount = prevCount + (containsNewFoodItem ? 1 : 0);
-					oldPenalty = this.getPenaltyWithoutFoodGroups(queue);
-				}
-				long newPenalty = (long) MathHelper.clamp(newCount - this.requiredAmount, Integer.MIN_VALUE, 0);
-				if(newPenalty > oldPenalty) {
-					return TooltipType.GOOD;
-				}
-				else if(newPenalty < oldPenalty) {
-					return TooltipType.BAD;
-				}
+		FoodHistory history = FoodHistory.get(player);
+		FoodQueue queue = history.getHistory();
+		// If we eat one more item, are we set to count history?
+		// Note that the FoodQueue is of fixed size but this doesn't matter if the + 1
+		// exceeds the normal size; we're fine regardless
+		if(history.totalFoodsEatenAllTime + 1 >= squeek.spiceoflife.ModConfig.FOOD_EATEN_THRESHOLD && queue.size() + 1 >= this.requiredAmount) {
+			long newCount;
+			long oldPenalty;
+			List<squeek.spiceoflife.foodtracker.FoodEaten> simulatedOldHistory = queue.subList(1, queue.size());
+			if(this.usingFoodGroups) {
+				HashSet<FoodGroup> oldGroups = simulatedOldHistory.stream().filter((f) -> f.itemStack != ItemStack.EMPTY).collect(HashSet<FoodGroup>::new, (s, f) -> s.addAll(f.getFoodGroups()), Set<FoodGroup>::addAll);
+				Set<FoodGroup> newGroups = FoodGroupRegistry.getFoodGroupsForFood(stack);
+				newCount = Sets.union(newGroups, oldGroups).size();
+				oldPenalty = this.getPenaltyWithFoodGroups(history);
+			}
+			else {
+				long prevCount = simulatedOldHistory.stream().map((f) -> f.itemStack.getItem()).distinct().count();
+				boolean containsNewFoodItem = simulatedOldHistory.stream().map((f) -> f.itemStack).filter(stack::isItemEqual).count() == 0;
+				newCount = prevCount + (containsNewFoodItem ? 1 : 0);
+				oldPenalty = this.getPenaltyWithoutFoodGroups(queue);
+			}
+			long newPenalty = (long) MathHelper.clamp(newCount - this.requiredAmount, Integer.MIN_VALUE, 0);
+			if(newPenalty > oldPenalty) {
+				return TooltipType.GOOD;
+			}
+			else if(newPenalty < oldPenalty) {
+				return TooltipType.BAD;
 			}
 		}
 		return TooltipType.NEUTRAL;

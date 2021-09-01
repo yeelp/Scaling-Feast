@@ -1,4 +1,4 @@
-package yeelp.scalingfeast;
+package yeelp.scalingfeast.config;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
@@ -8,8 +8,7 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.config.SFCompatConfigCategory;
-import yeelp.scalingfeast.config.SFGeneralConfigCategory;
+import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.features.SFFeatureConfigCategory;
 import yeelp.scalingfeast.config.items.SFItemConfigCategory;
 import yeelp.scalingfeast.config.modules.SFModuleConfigCategory;

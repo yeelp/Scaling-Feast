@@ -8,7 +8,11 @@
   "url": "",
   "updateUrl": "",
   "authorList": ["Yeelp"],
-  "credits": "SilentChaos512 for inspiration, Z-Tunic(just_some_user) for textures, James103 for contributions, and the wonderful team behind AppleCore",
+  "credits":  "SilentChaos512 for inspiration, 
+               Z-Tunic(just_some_user) for HUD textures, 
+               James103 for contributions,
+               void ghost for Exhausting Ore and Exhausting Block textures, 
+               and the wonderful team behind AppleCore",
   "logoFile": "assets/scalingfeast/images/banner.png",
   "screenshots": [],
   "dependencies": []
