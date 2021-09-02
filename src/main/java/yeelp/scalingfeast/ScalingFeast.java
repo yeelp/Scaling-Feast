@@ -28,6 +28,7 @@ import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFAttributes;
 import yeelp.scalingfeast.init.SFEnchantments;
+import yeelp.scalingfeast.init.SFOreDict;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.init.SFRecipes;
 import yeelp.scalingfeast.integration.ModIntegrationKernel;
@@ -55,6 +56,7 @@ public class ScalingFeast {
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
 		ScalingFeastAPI.init();
+		ModIntegrationKernel.load();
 		proxy.preInit();
 		new SFAttributes().register();
 		SFEnchantments.init();
@@ -63,6 +65,7 @@ public class ScalingFeast {
 		IBloatedHunger.register();
 		IStarveExhaustionTracker.register();		
 		PacketHandler.init();
+		ModIntegrationKernel.preInit(event);
 		info("Scaling Feast pre-initialization complete!");	
 	}
 
@@ -83,16 +86,16 @@ public class ScalingFeast {
 		new BloatedHandler().register();
 		new ExhaustionIncreasingBlock.ExhaustionHandler().register();
 		SFFeatures.init();
-		ModIntegrationKernel.load();
+		SFOreDict.init();
 		if(Loader.isModLoaded(ModConsts.APPLESKIN_ID)) {
 			try {
 				AppleSkinHelper.init();
 			}
 			catch(ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		ModIntegrationKernel.init(event);
 		info("Scaling Feast initialization complete!");
 	}
 
@@ -113,6 +116,7 @@ public class ScalingFeast {
 				err(Arrays.toString(e.getStackTrace()));
 			}
 		}
+		ModIntegrationKernel.postInit(event);
 		info("Scaling Feast post-initialization complete!");
 	}
 

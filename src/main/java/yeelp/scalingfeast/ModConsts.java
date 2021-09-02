@@ -14,5 +14,6 @@ public class ModConsts {
 
 	public static final String APPLESKIN_ID = "appleskin";
 	public static final String SPICEOFLIFE_ID = "spiceoflife";
+	public static final String TCONSTRUCT_ID = "tconstruct";
 	public static final String SOLCARROT_ID = "solcarrot";
 }

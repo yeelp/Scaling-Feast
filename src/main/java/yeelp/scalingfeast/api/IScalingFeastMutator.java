@@ -45,4 +45,12 @@ public abstract interface IScalingFeastMutator {
 	 * @param amount amount of hunger/saturation to reduce.
 	 */
 	void deductFoodStats(EntityPlayer player, float amount);
+	
+	/**
+	 * Directly add hunger/saturation to a player's foodstats. First add to hunger, then any remaining
+	 * amount will overflow and add to saturation.
+	 * @param player player to target
+	 * @param amount amount of hunger/saturation to add
+	 */
+	void addFoodStatsWithOverflow(EntityPlayer player, float amount);
 }

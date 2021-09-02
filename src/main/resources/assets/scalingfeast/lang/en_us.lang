@@ -1,3 +1,7 @@
+####################
+# CONSOLE COMMANDS #
+####################
+
 commands.scalingfeast.usage=/scalingfeast <setMax|setSaturation> <player> <amount>
 commands.scalingfeast.command.usage=Usage: /scalingfeast %s <player> <amount>
 commands.scalingfeast.command.existence=Player %s doesn't exist!
@@ -5,35 +9,66 @@ commands.scalingfeast.command.emptytarget=Target selector %s found nothing.
 commands.scalingfeast.command.numerr=Amount must be in range (0, %s]
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
+#################
+# DEATH MESSAGE #
+#################
+
 message.scalingfeast.starvationDeath=%s wasted away from starvation.
 
+############
+# TOOLTIPS #
+############
+
+# Hearty Shank #
 tooltips.scalingfeast.heartyshank.info1=Delicious!
 tooltips.scalingfeast.heartyshank.info2=Eat this to increase your max hunger by %s shank(s)!
 tooltips.scalingfeast.heartyshank.info3=You can gain max hunger by eating this %s more times.
 tooltips.scalingfeast.heartyshank.nobonus=You can't gain any more max hunger from eating this...
 tooltips.scalingfeast.heartyshank.atmax=Your max hunger is already at the maximum allowed level!
+
+# Hearty Feast #
 tooltips.scalingfeast.heartyfeast.splash=Like an all you can eat buffet!
 tooltips.scalingfeast.heartyfeast.info=Restores one seventh of your max hunger (half of that for saturation) per slice!
 tooltips.scalingfeast.heartyfeast.cap=This effect is capped at %s per slice.
 tooltips.scalingfeast.heartyfeast.statincrease=So for you %s, that's %s hunger and %s saturation!
 tooltips.scalingfeast.heartyfeast.effect=Eating this grants Iron Stomach I (%s)
+
+# Iron Apple (Normal) #
 tooltips.scalingfeast.ironapple.splash=A suitable iron supplement!
 tooltips.scalingfeast.ironapple.info=The cousin of the Golden Apple; eat it to restore 4 health and recover hunger over time.
+
+# Iron Apple (Enchanted) #
 tooltips.scalingfeast.enchantedironapple.splash=Now THAT'S metal!
 tooltips.scalingfeast.enchantedironapple.info1=The cousin of the Enchanted Golden Apple; eat it to restore 4 health and recover hunger quickly.
 tooltips.scalingfeast.enchantedironapple.info2=Also makes it take more effort to decrease your hunger for a fair while.
+
+# Exhausting Ore #
 tooltips.scalingfeast.exhaustingore.info1=Mining this is exhausting work...
 tooltips.scalingfeast.exhaustingore.info2=You receive 50%% more exhaustion while you're standing on this!
+
+# Exhausting Block #
 tooltips.scalingfeast.exhaustingblock.info1=Can be used as a beacon base.
 tooltips.scalingfeast.exhaustingblock.info2=You receive 100%% more exhaustion while you're standing on this!
+
+# Exhausting Apple #
 tooltips.scalingfeast.exhaustingapple.splash=The Forbidden Fruit
 tooltips.scalingfeast.exhaustingapple.info=Eating this will refill your hunger and saturation bar completely... and lowers your max hunger by the same amount of a Hearty Shank...
+
+# Exhausting Ingot #
 tooltips.scalingfeast.exhaustingingot.info=Can be used as beacon payment
 
+###########
+# MODULES #
+###########
+
+# Spice of Life: Carrot Edition #
+
+#messages
 modules.scalingfeast.sol.reward=You've gained %s max hunger!
 modules.scalingfeast.sol.efficiencyReward=You've gained %s food efficiency!
 modules.scalingfeast.sol.reachedAllMilestones=What a feast! You've satisfied your lust for hunger!
 
+#splash
 modules.scalingfeast.sol.splash0=Scrumptious!
 modules.scalingfeast.sol.splash1=What unique flavour!
 modules.scalingfeast.sol.splash2=Deeee-lish!
@@ -43,11 +78,15 @@ modules.scalingfeast.sol.splash5=How savoury!
 modules.scalingfeast.sol.splash6=Succulent!
 modules.scalingfeast.sol.splash7=Tasty!
 
+# Spice of Life #
 modules.scalingfeast.spiceoflife.tooltip.punish=Eating this food item will temporarily decrease your max hunger!
 modules.scalingfeast.spiceoflife.tooltip.restore=Eating this food item will restore some of your lost max hunger!
 
+################
+# ENCHANTMENTS #
+################
 
-
+#names
 enchantment.scalingfeast.fasting=Fasting
 enchantment.scalingfeast.gluttony=Gluttony
 enchantment.scalingfeast.famine=Famine
@@ -56,6 +95,7 @@ enchantment.scalingfeast.sensitivitycurse=Curse of Sensitivity
 enchantment.scalingfeast.lazinesscurse=Curse of Laziness
 enchantment.scalingfeast.deprivationcurse=Curse of Deprivation
 
+#desc
 enchantment.scalingfeast.fasting.desc=Reduces exhaustion by 10%% per level.
 enchantment.scalingfeast.gluttony.desc=Increases food values by 50%% per level. Iron Apples heal 50%% more health per level too!
 enchantment.scalingfeast.famine.desc=Severely drains hunger from a player struck with this enchantment or applies a weakness debuff to non player entities struck with this enchantment. The strength of these effects depend on the enchantment level.
@@ -64,6 +104,10 @@ enchantment.scalingfeast.sensitivitycurse.desc=Overeating gives you a Soft Stoma
 enchantment.scalingfeast.lazinesscurse.desc=Halves your max exhaustion.
 enchantment.scalingfeast.deprivationcurse.desc=Causes you to starve twice as fast.
 
+#########
+# ITEMS #
+#########
+
 item.scalingfeast.heartyshank.name=Hearty Shank
 item.scalingfeast.ironapple.name=§bIron Apple§f
 item.scalingfeast.enchantedironapple.name=§dIron Apple§f
@@ -71,13 +115,30 @@ item.scalingfeast.exhaustingingot.name=Exhausting Ingot
 item.scalingfeast.exhaustingnugget.name=Exhausting Nugget
 item.scalingfeast.exhaustingapple.name=§cExhausting Apple§f
 
+##########
+# BLOCKS #
+##########
+
 tile.scalingfeast.heartyfeast.name=Hearty Feast
 tile.scalingfeast.exhaustingore.stone.name=Exhausting Stone
 tile.scalingfeast.exhaustingore.netherrack.name=Exhausting Netherrack
 tile.scalingfeast.exhaustingblock.name=Exhausting Block
 
+##############
+# ATTRIBUTES #
+##############
+
 attribute.name.scalingfeast.maxHungerMod=Max Hunger
 attribute.name.scalingfeast.foodEfficiency=Food Efficiency
+
+###########
+# POTIONS #
+###########
+## effect name
+## regulars
+## splashes
+## lingerings
+## tipped arrows
 
 effect.metabolism=Metabolism
 
@@ -179,3 +240,14 @@ lingering_potion.effect.deficiency=Lingering Potion of Deficiency
 lingering_potion.effect.deficiency_strong=Lingering Potion of Deficiency
 tipped_arrow.effect.deficiency=Arrow of Deficiency
 tipped_arrow.effect.deficiency_strong=Arrow of Deficiency
+
+###########
+# TINKERS #
+###########
+
+material.exhaustium.name=Exhausting
+modifier.exhausting.name=Exhausting
+modifier.exhausting.desc=§oRequires extra effort!§r\nYour tool tires you out faster when you break blocks...\nand can REALLY tire out other mobs you hit, especially players!
+modifier.feasting.name=Feasting
+modifier.feasting.desc=§oWe dine at sundown!§r\nRegain 6 hunger/saturation (that's 3 whole hunger shanks) when you kill a mob!
+fluid.tconstruct.exhaustion_fluid.name=Molten Exhaustion

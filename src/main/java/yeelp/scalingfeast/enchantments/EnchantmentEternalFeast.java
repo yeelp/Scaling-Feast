@@ -10,6 +10,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
@@ -62,7 +63,7 @@ public class EnchantmentEternalFeast extends SFEnchantmentBase {
 					EntityPlayer player = (EntityPlayer) entity;
 					int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.eternalfeast, player);
 					if(level != 0) {
-						player.getFoodStats().addStats(2 * level, 0);
+						ScalingFeastAPI.mutator.addFoodStatsWithOverflow(player, 2 * level);
 					}
 				}
 			}

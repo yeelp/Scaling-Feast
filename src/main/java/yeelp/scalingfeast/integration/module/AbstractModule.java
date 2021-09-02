@@ -6,6 +6,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
@@ -51,7 +54,7 @@ public abstract class AbstractModule<Config> implements IIntegratable {
 	/**
 	 * Build a new module
 	 * 
-	 * @param config the config
+	 * @param config  the config
 	 * @param enabled starting enabled status of the module
 	 */
 	protected AbstractModule(Config config, boolean enabled) {
@@ -60,12 +63,22 @@ public abstract class AbstractModule<Config> implements IIntegratable {
 	}
 
 	@Override
-	public final boolean integrate() {
+	public boolean preIntegrate(FMLPreInitializationEvent evt) {
+		return true;
+	}
+
+	@Override
+	public final boolean integrate(FMLInitializationEvent evt) {
 		this.getHandler().register();
 		this.new ModuleHandler().register();
 		if(this.enabled()) {
 			this.updateFromConfig();
 		}
+		return true;
+	}
+
+	@Override
+	public boolean postIntegrate(FMLPostInitializationEvent evt) {
 		return true;
 	}
 
@@ -78,9 +91,10 @@ public abstract class AbstractModule<Config> implements IIntegratable {
 	protected final boolean previouslyEnabled() {
 		return this.enabled;
 	}
-	
+
 	/**
 	 * Set if this module was previously enabled
+	 * 
 	 * @param status new status
 	 */
 	final void setPreviouslyEnabled(boolean status) {
@@ -98,24 +112,29 @@ public abstract class AbstractModule<Config> implements IIntegratable {
 
 	/**
 	 * Get the handler for this module
+	 * 
 	 * @return the handler
 	 */
 	protected abstract Handler getHandler();
 
 	/**
-	 * Callback for when this module is enabled, the config updates or when the player joins the world
+	 * Callback for when this module is enabled, the config updates or when the
+	 * player joins the world
+	 * 
 	 * @param player player to execute the callback on.
 	 */
 	protected abstract void processPlayerUpdate(EntityPlayerMP player);
 
 	/**
 	 * Callback for when this module is disabled
+	 * 
 	 * @param player player to execute the callback on.
 	 */
 	protected abstract void processPlayerDisable(EntityPlayerMP player);
-	
+
 	/**
 	 * Update this module with information from configs, if needed.
+	 * 
 	 * @return true if data changed from the update
 	 */
 	protected abstract boolean updateFromConfig();

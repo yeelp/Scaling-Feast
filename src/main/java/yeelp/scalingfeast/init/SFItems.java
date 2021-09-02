@@ -46,8 +46,7 @@ public class SFItems {
 		ForgeRegistries.ITEMS.register(exhaustingBlock);
 		ForgeRegistries.ITEMS.register(exhaustingIngot);
 		ForgeRegistries.ITEMS.register(exhaustingNugget);
-		ForgeRegistries.ITEMS.register(exhaustingapple);
-		
+		ForgeRegistries.ITEMS.register(exhaustingapple);		
 	}
 
 	public static void registerRenders() {

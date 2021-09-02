@@ -83,4 +83,18 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		AppleCoreAPI.mutator.setSaturation(player, Math.max(currSat - amount, 0));
 		AppleCoreAPI.mutator.setHunger(player, Math.max(currHunger - rem, 0));
 	}
+
+	@Override
+	public void addFoodStatsWithOverflow(EntityPlayer player, float amount) {
+		int max = AppleCoreAPI.accessor.getMaxHunger(player);
+		int hunger = player.getFoodStats().getFoodLevel();
+		float sat = player.getFoodStats().getSaturationLevel();
+		float overflow = Math.max(0, hunger + amount - max);
+		if(hunger < max) {
+			AppleCoreAPI.mutator.setHunger(player, (int) Math.min(max, hunger + amount));
+		}
+		if(overflow != 0) {
+			AppleCoreAPI.mutator.setSaturation(player, Math.min(this.getPlayerSaturationCap(player), sat + overflow));
+		}
+	}
 }
