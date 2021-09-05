@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import com.cazsius.solcarrot.SOLCarrotConfig;
 import com.cazsius.solcarrot.tracking.FoodList;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,8 +73,8 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 						Deque<ITextComponent> msgs = new LinkedList<ITextComponent>();
 						Optional<MaxHungerMilestone> lastRegMilestone = SOLCarrotModule.this.getLastReachedRegularMilestone(evt.player);
 						Optional<FoodEfficiencyMilestone> lastEfficiencyMilestone = SOLCarrotModule.this.getLastReachedEfficiencyMilestone(evt.player);
-						lastRegMilestone.map((m) -> this.buildNewRewardText(new TextComponentTranslation("modules.scalingfeast.sol.reward", m.getReward()))).ifPresent(msgs::add);
-						lastEfficiencyMilestone.map((m) -> this.buildNewRewardText(new TextComponentTranslation("modules.scalingfeast.sol.efficiencyReward", SOLCarrotModule.PERCENT.format(m.getReward())))).ifPresent(msgs::add);
+						lastRegMilestone.map((m) -> this.buildNewRewardText(new TextComponentTranslation("modules.scalingfeast.sol.reward", m.getReward())).setStyle(SOLCarrotModule.GREEN_STYLE)).ifPresent(msgs::add);
+						lastEfficiencyMilestone.map((m) -> this.buildNewRewardText(new TextComponentTranslation("modules.scalingfeast.sol.efficiencyReward", SOLCarrotModule.PERCENT.format(m.getReward()))).setStyle(SOLCarrotModule.GREEN_STYLE)).ifPresent(msgs::add);
 						if(SOLCarrotModule.this.reachedAllMilestones(evt.player)) {
 							msgs.add(new TextComponentTranslation("modules.scalingfeast.sol.reachedAllMilestones"));
 						}
@@ -87,15 +88,17 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 			}
 			
 			@Method(modid = ModConsts.SOLCARROT_ID)
-			@SubscribeEvent(priority = EventPriority.LOWEST)
+			@SubscribeEvent(priority = EventPriority.HIGHEST)
 			public final void onDeath(PlayerEvent.Clone evt) {
-				if(evt.isWasDeath() && SOLCarrotModule.this.enabled()) {
-					SOLCarrotModule.this.updatePlayer(evt.getEntityPlayer());
+				if(SOLCarrotModule.this.enabled() && !(evt.isWasDeath() && SOLCarrotConfig.shouldResetOnDeath)) {
+					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.getEntityPlayer());
+					sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.SPICE_OF_LIFE_CARROT_EDITION.createModifier(SFBuiltInModifiers.MaxHungerModifiers.SPICE_OF_LIFE_CARROT_EDITION.getModifierValueForPlayer(evt.getOriginal())));
+					sfstats.applyFoodEfficiencyModifier(SFBuiltInModifiers.FoodEfficiencyModifiers.SPICE_OF_LIFE_CARROT_EDITION.createModifier(SFBuiltInModifiers.FoodEfficiencyModifiers.SPICE_OF_LIFE_CARROT_EDITION.getModifierValueForPlayer(evt.getOriginal())));
 				}
 			}
 
 			private ITextComponent buildNewRewardText(ITextComponent comp) {
-				return new TextComponentString(this.getNewSplashText() + " " + comp.getFormattedText()).setStyle(SOLCarrotModule.GREEN_STYLE);
+				return new TextComponentString(this.getNewSplashText().getFormattedText() + " " + comp.getFormattedText()).setStyle(SOLCarrotModule.GREEN_STYLE);
 			}
 
 			private ITextComponent getNewSplashText() {

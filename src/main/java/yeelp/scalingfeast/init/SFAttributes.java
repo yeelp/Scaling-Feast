@@ -1,25 +1,21 @@
 package yeelp.scalingfeast.init;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
 
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.player.PlayerEvent.Clone;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
-import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
 
 public final class SFAttributes extends Handler {
 	public static final IAttribute FOOD_EFFICIENCY = new RangedAttribute((IAttribute) null, "scalingfeast.foodEfficiency", 1.0, -2048.0, 2048.0).setShouldWatch(true);
@@ -36,21 +32,11 @@ public final class SFAttributes extends Handler {
 	}
 	
 	@SuppressWarnings("static-method")
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onPlayerClone(Clone evt) {
-		ImmutableList.of(FOOD_EFFICIENCY, MAX_HUNGER_MOD).stream().map((a) -> getAllBuiltInModifiers(a, evt.getOriginal())).forEach(evt.getEntityPlayer().getAttributeMap()::applyAttributeModifiers);
-	}
-	
-	private static Multimap<String, AttributeModifier> getAllBuiltInModifiers(IAttribute attribute, EntityPlayer player) {
-		Collection<BuiltInModifier> modsToGet = null;
-		if(attribute == FOOD_EFFICIENCY) {
-			modsToGet = SFBuiltInModifiers.FoodEfficiencyModifiers.ALL;
+		SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.getEntityPlayer());
+		for(SFBuiltInModifiers.BuiltInModifier mod : ImmutableList.of(SFBuiltInModifiers.MaxHungerModifiers.SHANK, SFBuiltInModifiers.MaxHungerModifiers.PENALTY, SFBuiltInModifiers.MaxHungerModifiers.DEATH)) {
+			sfstats.applyMaxHungerModifier(mod.createModifier(mod.getModifierValueForPlayer(evt.getOriginal())));
 		}
-		else {
-			modsToGet = SFBuiltInModifiers.MaxHungerModifiers.ALL;
-		}
-		Multimap<String, AttributeModifier> mods = HashMultimap.<String, AttributeModifier>create();
-		mods.putAll(attribute.getName(), modsToGet.stream().map((m) -> m.createModifier(m.getModifierValueForPlayer(player))).collect(Collectors.toList()));
-		return mods;
 	}
 }

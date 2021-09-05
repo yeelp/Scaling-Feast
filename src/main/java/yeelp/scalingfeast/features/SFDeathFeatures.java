@@ -1,7 +1,6 @@
 package yeelp.scalingfeast.features;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,7 +19,7 @@ public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
 		return new Handler() {
 
 			@SubscribeEvent
-			public void onDeath(PlayerEvent.Clone evt) {
+			public final void onDeath(PlayerEvent.Clone evt) {
 				if(evt.isWasDeath()) {
 					EntityPlayer player = evt.getEntityPlayer();
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
@@ -29,16 +28,11 @@ public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
 					// Death Penalties
 					if(maxHunger > config.maxLossLowerBound && config.maxLossAmount > 0) {
 						double currDeathPenalty = SFBuiltInModifiers.MaxHungerModifiers.DEATH.getModifierValueForPlayer(player);
-						sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(MathHelper.clamp(currDeathPenalty - config.maxLossAmount, config.maxLossLowerBound - maxHunger + currDeathPenalty, 0)));
+						sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(currDeathPenalty + MathHelper.clamp(-config.maxLossAmount, config.maxLossLowerBound - maxHunger, 0)));
 					}
 					// Stat Persistance
-					int respawningHunger = maxHunger;
-					float respawningSat = Math.min(5.0f, maxHunger);
-					if(getConfig().persistStats) {
-						FoodStats fs = evt.getOriginal().getFoodStats();
-						respawningHunger = fs.getFoodLevel();
-						respawningSat = fs.getSaturationLevel();
-					}
+					int respawningHunger = getConfig().respawningStats.getRespawningHunger(evt.getOriginal(), evt.getEntityPlayer());
+					float respawningSat = getConfig().respawningStats.getRespawningSaturation(evt.getOriginal(), evt.getEntityPlayer());
 					AppleCoreAPI.mutator.setHunger(player, respawningHunger);
 					AppleCoreAPI.mutator.setSaturation(player, respawningSat);
 					// Hunger Penalties

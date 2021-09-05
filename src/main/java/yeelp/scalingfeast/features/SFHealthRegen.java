@@ -15,12 +15,16 @@ public final class SFHealthRegen extends FeatureBase<SFConfigHealthRegen> {
 			
 			@SubscribeEvent
 			public final void onHungerRegen(AllowRegen evt) {
-				evt.setResult(SFHealthRegen.this.getConfig().hungerRegen.determineResult(evt.player, evt.getResult()));
+				if(evt.player.shouldHeal()) {
+					evt.setResult(SFHealthRegen.this.getConfig().hungerRegen.determineResult(evt.player, evt.getResult()));
+				}
 			}
 			
 			@SubscribeEvent
 			public final void onSaturatedRegen(AllowSaturatedRegen evt) {
-				evt.setResult(SFHealthRegen.this.getConfig().satRegen.determineResult(evt.player, evt.getResult()));
+				if(evt.player.shouldHeal()) {
+					evt.setResult(SFHealthRegen.this.getConfig().satRegen.determineResult(evt.player, evt.getResult()));
+				}
 			}
 		};
 	}

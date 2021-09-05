@@ -39,6 +39,10 @@ public class ModConfig {
 	@Name("Features")
 	@Comment("Configure various features provided by Scaling Feast.")
 	public static final SFFeatureConfigCategory features = new SFFeatureConfigCategory();
+	
+	@Name("Debug")
+	@Comment("Set to true to enable debug mode. Console log may be filled with debug messages if Scaling Feast sends any debug messages.")
+	public static boolean debug = false;
 
 	public static class HUDCategory {
 		public enum DisplayStyle {

@@ -1,11 +1,8 @@
 package yeelp.scalingfeast.lib;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
-
-import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -23,15 +20,11 @@ public final class SFBuiltInModifiers {
 		public static final BuiltInModifier XP = new BuiltInModifier("157f01fc-05b7-4443-8654-1cbc1251f7ed", "XP Bonus", Operation.ADD, Attribute.MAX_HUNGER);
 		public static final BuiltInModifier SPICE_OF_LIFE_CARROT_EDITION = new BuiltInModifier("e5e6cab3-44df-4781-8dcb-9585a0de4eb7", "Spice of Life: Carrot Edition Bonus", Operation.ADD, Attribute.MAX_HUNGER);
 		public static final BuiltInModifier SPICE_OF_LIFE = new BuiltInModifier("de1e2c2a-574f-40db-a010-1fa2a12f744a", "Spice of Life Penalty", Operation.ADD, Attribute.MAX_HUNGER);
-		
-		public static final Collection<BuiltInModifier> ALL = ImmutableList.of(SHANK, PENALTY, DEATH, XP, SPICE_OF_LIFE_CARROT_EDITION, SPICE_OF_LIFE);
 	}
 	
 	public static final class FoodEfficiencyModifiers {
 		public static final BuiltInModifier XP = new BuiltInModifier("24bd97f0-392d-4c7f-8738-bfbaf34340f4", "XP Bonus", Operation.PERCENT_MULTIPLY, Attribute.FOOD_EFFICIENCY);
 		public static final BuiltInModifier SPICE_OF_LIFE_CARROT_EDITION = new BuiltInModifier("1736a445-1a35-4230-8e3a-7aedda394df2", "Spice of Life: Carrot Edition Bonus", Operation.PERCENT_MULTIPLY, Attribute.FOOD_EFFICIENCY);
-	
-		public static final Collection<BuiltInModifier> ALL = ImmutableList.of(XP, SPICE_OF_LIFE_CARROT_EDITION);
 	}
 	
 	public static final class BuiltInModifier {

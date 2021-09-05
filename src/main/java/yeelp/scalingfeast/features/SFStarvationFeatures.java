@@ -48,6 +48,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 				if(!evt.player.isDead) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
 					int bonusDynamicDamage = getBonusDynamicDamage(sfstats);
+					sfstats.countStarvation(bonusDynamicDamage);
 					float scaledDamage = getConfig().counter.starveScaling.compute(sfstats.getStarvationCountAllTime());
 					float unblockableDmg = 0;
 					if(getConfig().dynamic.dynamicStarvationUnblockable) {
@@ -64,9 +65,6 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 					}
 					if(unblockableDmg != 0) {
 						evt.player.attackEntityFrom(PiercingStarvation.INSTANCE, unblockableDmg);
-					}
-					if(getConfig().tracker.starveLoss != 0) {
-						sfstats.tickStarvation(bonusDynamicDamage + 1);
 					}
 					sfstats.resetStarvationExhaustionTracker();
 				}

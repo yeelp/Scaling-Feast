@@ -32,7 +32,7 @@ public final class TraitExhausting extends AbstractTraitLeveled {
 	public void afterBlockBreak(ItemStack tool, World world, IBlockState state, BlockPos pos, EntityLivingBase player, boolean wasEffective) {
 		if(player instanceof EntityPlayer && !player.getEntityWorld().isRemote) {
 			EntityPlayer entityPlayer = (EntityPlayer) player;
-			entityPlayer.getFoodStats().addExhaustion(6.0f * getLevel(tool));
+			entityPlayer.getFoodStats().addExhaustion(3.0f * getLevel(tool));
 		}
 		super.afterBlockBreak(tool, world, state, pos, player, wasEffective);
 	}

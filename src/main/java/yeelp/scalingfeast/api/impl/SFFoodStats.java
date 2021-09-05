@@ -114,34 +114,25 @@ public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, I
 		bloat.reset();
 		bloat.sync(this.player);
 	}
-	
+
 	@Override
-	public void tickStarvation(int amount) {
-		int hunger = this.player.getFoodStats().getFoodLevel();
-		int threshold = ModConfig.features.starve.tracker.lossFreq;
-		int lowerBound = ModConfig.features.starve.tracker.starveLowerCap;
-		int lossAmount = ModConfig.features.starve.tracker.starveLoss;
-		if(hunger == 0 || threshold == 0) {
-			return;
-		}
-		ICountable tracker = this.caps.getStarvationStatsCapability().getTracker();
-		ICountable counter = this.caps.getStarvationStatsCapability().getCounter();
-		counter.inc((short) 1);
-		for(int i = 0; i < amount; i++) {
-			tracker.inc((short) 1);
+	public void countStarvation(int bonusTrackerTicks) {
+		this.caps.getStarvationStatsCapability().getCounter().inc();
+		final int lossAmount = ModConfig.features.starve.tracker.starveLoss;
+		if(lossAmount != 0 && this.player.getFoodStats().getFoodLevel() == 0) {
+			final int threshold = ModConfig.features.starve.tracker.lossFreq;
+			final int lowerBound = ModConfig.features.starve.tracker.starveLowerCap;
+			final short decAmountOnOverflow = (short) (ModConfig.features.starve.tracker.doesFreqResetOnStarve ? threshold : 1);
+			ICountable tracker = this.caps.getStarvationStatsCapability().getTracker();
+			//The +1 is to account for the original tick, then tick additional times for the added dynamic damage.
+			tracker.inc((short) (bonusTrackerTicks + 1));
+			int numberOfPenalties = 0;
+			for(; tracker.get() >= threshold; numberOfPenalties++, tracker.dec(decAmountOnOverflow));
 			int maxHunger = AppleCoreAPI.accessor.getMaxHunger(this.player);
-			if(tracker.get() >= threshold) { 
-				if(maxHunger > lowerBound) {
-					double base = SFBuiltInModifiers.MaxHungerModifiers.PENALTY.getModifierValueForPlayer(this.player);
-					double penalty = MathHelper.clamp(base - lossAmount, maxHunger - base - lowerBound, 0.0);
-					this.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.PENALTY.createModifier(penalty));
-				}
-				if(ModConfig.features.starve.tracker.doesFreqResetOnStarve) {
-					tracker.reset();
-				}
-				else {
-					tracker.set((short) (threshold - 1));
-				}
+			if(numberOfPenalties > 0 && ScalingFeastAPI.accessor.canPlayerLoseMaxHunger(this.player)) {
+				double base = SFBuiltInModifiers.MaxHungerModifiers.PENALTY.getModifierValueForPlayer(this.player);
+				double penalty = MathHelper.clamp(-lossAmount * numberOfPenalties, lowerBound - maxHunger, 0.0);
+				this.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.PENALTY.createModifier(base + penalty));
 			}
 		}
 		this.caps.getStarvationStatsCapability().sync(this.player);

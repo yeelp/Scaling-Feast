@@ -44,7 +44,7 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 
 	@Override
 	public boolean canPlayerLoseMaxHunger(EntityPlayer player) {
-		return AppleCoreAPI.accessor.getMaxHunger(player) < ModConfig.features.starve.tracker.starveLowerCap;
+		return AppleCoreAPI.accessor.getMaxHunger(player) > ModConfig.features.starve.tracker.starveLowerCap;
 	}
 
 	/*****************************/

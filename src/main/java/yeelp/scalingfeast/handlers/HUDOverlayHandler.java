@@ -153,8 +153,10 @@ public class HUDOverlayHandler extends Handler {
 				this.offset = GuiIngameForge.right_height;
 				int bloatedAmount = ScalingFeastAPI.accessor.getSFFoodStats(player).getBloatedHungerAmount();
 				if(bloatedAmount > 0) {
+					int[] bloatedJitter = new int[10];
+					System.arraycopy(jitterAmount, 10, bloatedJitter, 0, 10);
 					top = res.getScaledHeight() - this.offset;
-					drawBloatedAmount(jitterAmount, mc, player, bloatedAmount, left, top);
+					drawBloatedAmount(bloatedJitter, mc, player, bloatedAmount, left, top);
 					GuiIngameForge.right_height += 10;
 				}
 				if(ModConfig.compat.shouldFirePost) {
@@ -411,16 +413,17 @@ public class HUDOverlayHandler extends Handler {
 	}
 
 	private static int[] getJitterAmount(int updateCounter, EntityPlayer player) {
+		final int size = 20;
 		rand.setSeed(updateCounter * 70643);
 		int foodLevel = player.getFoodStats().getFoodLevel();
 		float satLevel = player.getFoodStats().getSaturationLevel();
-		int[] jitterAmount = new int[10];
+		int[] jitterAmount = new int[size];
 		int regen = -1;
 		if(player.isPotionActive(SFPotion.metabolism)) {
 			regen = updateCounter % 25;
 		}
 		if(satLevel == 0 || regen != -1) {
-			for(int i = 0; i < 10; i++) {
+			for(int i = 0; i < size; i++) {
 				if(updateCounter % (foodLevel * 3 + 1) == 0 && satLevel == 0) {
 					jitterAmount[i] += rand.nextInt(3) - 1;
 				}

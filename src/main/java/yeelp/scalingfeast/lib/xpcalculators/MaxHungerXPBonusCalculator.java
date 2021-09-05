@@ -12,6 +12,7 @@ public class MaxHungerXPBonusCalculator extends AbstractXPBonusCalculator {
 	
 	public MaxHungerXPBonusCalculator() {
 		super(SFBuiltInModifiers.MaxHungerModifiers.XP, ModConfig.features.xpBonuses.maxHungerXPBonus);
+		this.setMilestoneList(XPBonusCalculator.createNewListOfMilestones(ModConfig.features.xpBonuses.maxHungerRewards));
 	}
 
 	@Override

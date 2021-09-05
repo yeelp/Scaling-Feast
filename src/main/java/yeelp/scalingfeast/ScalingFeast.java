@@ -19,6 +19,7 @@ import yeelp.scalingfeast.capability.IBloatedHunger;
 import yeelp.scalingfeast.capability.IStarvationStats;
 import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.command.SFCommand;
+import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.features.SFFeatures;
 import yeelp.scalingfeast.handlers.BloatedHandler;
 import yeelp.scalingfeast.handlers.CapabilityHandler;
@@ -43,7 +44,6 @@ public class ScalingFeast {
 	public static boolean hasAppleSkin;
 	public static boolean hasSolCarrot;
 	public static boolean hasSpiceOfLife;
-	private static final boolean debug = false;
 	@SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
 	public static Proxy proxy;
 
@@ -132,8 +132,8 @@ public class ScalingFeast {
 	 * @param msg message to log
 	 */
 	public static void debug(String msg) {
-		if(debug) {
-			info(msg);
+		if(ModConfig.debug) {
+			logger.info("[SCALING FEAST (DEBUG)] " + msg);
 		}
 	}
 

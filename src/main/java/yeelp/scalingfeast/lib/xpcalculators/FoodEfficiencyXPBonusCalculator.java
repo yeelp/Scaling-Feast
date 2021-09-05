@@ -12,6 +12,7 @@ public class FoodEfficiencyXPBonusCalculator extends AbstractXPBonusCalculator {
 	
 	public FoodEfficiencyXPBonusCalculator() {
 		super(SFBuiltInModifiers.FoodEfficiencyModifiers.XP, ModConfig.features.xpBonuses.efficiencyXPBonus);
+		this.setMilestoneList(XPBonusCalculator.createNewListOfMilestones(ModConfig.features.xpBonuses.efficiencyRewards));
 	}
 
 	@Override

@@ -25,6 +25,14 @@ public interface IStarvationStats extends SFCapabilityBase<NBTTagCompound> {
 		}
 		
 		/**
+		 * Decrement the counter by an amount. Just calls {@link ICountable#inc(short)} with a sign swapped argument.
+		 * @param amount amount to decrement
+		 */
+		default void dec(short amount) {
+			this.inc((short) -amount);
+		}
+		
+		/**
 		 * Increment.
 		 * @param amount amount of times to increment.
 		 */
