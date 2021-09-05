@@ -71,7 +71,6 @@ public class SFTinkerIntegration implements IIntegratable {
 		exhaustium.addTrait(exhausting2, MaterialTypes.HEAD);
 		exhaustium.addTrait(feasting, MaterialTypes.HEAD);
 		exhaustium.addTrait(exhausting1);
-//		exhaustium.setRenderInfo(new MaterialRenderInfo.Metal(0xC69174));
 		exhaustium.addCommonItems("Exhausting");
 		exhaustium.setRepresentativeItem(SFItems.exhaustingIngot);
 		return true;

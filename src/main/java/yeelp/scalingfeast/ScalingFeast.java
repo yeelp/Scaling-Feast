@@ -32,6 +32,7 @@ import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFOreDict;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.init.SFRecipes;
+import yeelp.scalingfeast.init.SFSounds;
 import yeelp.scalingfeast.integration.ModIntegrationKernel;
 import yeelp.scalingfeast.items.IItemDescribable;
 import yeelp.scalingfeast.lib.worldgen.OreGenerator;
@@ -61,6 +62,7 @@ public class ScalingFeast {
 		new SFAttributes().register();
 		SFEnchantments.init();
 		SFPotion.init();
+		SFSounds.init();
 		IStarvationStats.register();
 		IBloatedHunger.register();
 		IStarveExhaustionTracker.register();		

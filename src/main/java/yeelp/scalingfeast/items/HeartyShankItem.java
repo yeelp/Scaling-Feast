@@ -9,10 +9,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -22,6 +20,7 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.init.SFSounds;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
 
@@ -75,7 +74,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 					newMods.add(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(newDeathPenalty));
 				}
 				newMods.forEach(sfstats::applyMaxHungerModifier);
-				worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 1.0f, 1.0f);
+				SFSounds.playSound(player, SFSounds.HUNGER_INCREASE, 1.0f, 1.0f);
 			}
 			if(ModConfig.features.starve.tracker.shankResetsCounter) {
 				sfstats.resetStarvationTracker();
@@ -103,7 +102,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 		return tooltips;
 	}
 
-	private static boolean canConsumeForMaxHunger(EntityPlayer player) {
+	public static boolean canConsumeForMaxHunger(EntityPlayer player) {
 		return ModConfig.items.shank.heartyShankCap == -1 || getUsesLeft(player) > 0;
 	}
 

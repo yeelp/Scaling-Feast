@@ -5,6 +5,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.network.BloatedHungerMessage;
 import yeelp.scalingfeast.network.SatSyncMessage;
+import yeelp.scalingfeast.network.SoundMessage;
 import yeelp.scalingfeast.network.StarvationStatsMessage;
 import yeelp.scalingfeast.network.StarveExhaustMessage;
 
@@ -17,5 +18,6 @@ public final class PacketHandler {
 		INSTANCE.registerMessage(SatSyncMessage.Handler.class, SatSyncMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(BloatedHungerMessage.getMessageHandler(), BloatedHungerMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(StarveExhaustMessage.getMessageHandler(), StarveExhaustMessage.class, id++, Side.CLIENT);
+		INSTANCE.registerMessage(SoundMessage.class, SoundMessage.class, id++, Side.CLIENT);
 	}
 }

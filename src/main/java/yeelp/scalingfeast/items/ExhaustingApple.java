@@ -19,6 +19,7 @@ import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.init.SFSounds;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
 public final class ExhaustingApple extends ItemFood {
@@ -55,6 +56,7 @@ public final class ExhaustingApple extends ItemFood {
 			int max = AppleCoreAPI.accessor.getMaxHunger(player);
 			AppleCoreAPI.mutator.setHunger(player, max);
 			AppleCoreAPI.mutator.setSaturation(player, Math.min(max, ScalingFeastAPI.accessor.getPlayerSaturationCap(player)));
+			SFSounds.playSound(player, SFSounds.HUNGER_DECREASE, 1.0f, 1.0f);
 		}
 		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}

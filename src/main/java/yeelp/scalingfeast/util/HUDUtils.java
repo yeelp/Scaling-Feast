@@ -99,7 +99,7 @@ public class HUDUtils {
 				}
 				int deltaMaxH = 0;
 				float deltaMaxS = 0.0f;
-				if(food.getItem() instanceof HeartyShankItem) {
+				if(food.getItem() instanceof HeartyShankItem && HeartyShankItem.canConsumeForMaxHunger(player)) {
 					deltaMaxH = ModConfig.items.shank.inc;
 					short hardHungerCap = ScalingFeastAPI.accessor.getHungerHardCap();
 					if(max + deltaMaxH > hardHungerCap) {

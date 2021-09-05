@@ -154,7 +154,7 @@ public class HUDOverlayHandler extends Handler {
 				int bloatedAmount = ScalingFeastAPI.accessor.getSFFoodStats(player).getBloatedHungerAmount();
 				if(bloatedAmount > 0) {
 					int[] bloatedJitter = new int[10];
-					System.arraycopy(jitterAmount, 10, bloatedJitter, 0, 10);
+					System.arraycopy(jitterAmount, (int) Math.min(Math.ceil(AppleCoreAPI.accessor.getMaxHunger(player)/2.0f), 10), bloatedJitter, 0, 10);
 					top = res.getScaledHeight() - this.offset;
 					drawBloatedAmount(bloatedJitter, mc, player, bloatedAmount, left, top);
 					GuiIngameForge.right_height += 10;
