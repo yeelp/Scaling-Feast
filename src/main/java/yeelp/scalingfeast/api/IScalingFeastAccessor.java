@@ -1,161 +1,61 @@
 package yeelp.scalingfeast.api;
 
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import yeelp.scalingfeast.util.FoodEfficiencyXPBonus;
-import yeelp.scalingfeast.util.IBloatedHunger;
-import yeelp.scalingfeast.util.IFoodCap;
-import yeelp.scalingfeast.util.IFoodCapModifier;
-import yeelp.scalingfeast.util.IHeartyShankUsageTicker;
-import yeelp.scalingfeast.util.IStarvationTracker;
-import yeelp.scalingfeast.util.IStarveExhaustionTracker;
-import yeelp.scalingfeast.util.MaxHungerXPBonus;
-import yeelp.scalingfeast.util.SaturationScaling;
+import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.lib.SaturationScaling;
 
 /**
  * Collection of ways to get various properties from Scaling Feast
+ * 
  * @author Yeelp
  *
  */
-public abstract interface IScalingFeastAccessor
-{
-	/**
-	 * Get a player's food cap - an instance of {@link #IFoodCap}
-	 * @param player
-	 * @return That player's food cap.
-	 */
-	IFoodCap getFoodCap(EntityPlayer player);
-	
-	/**
-	 * Get a player's food cap modifier - an instance of {@link #IFoodCapModifier}
-	 * @param player
-	 * @return That player's food cap modifier
-	 */
-	IFoodCapModifier getFoodCapModifier(EntityPlayer player);
-
-	/**
-	 * Get a player's starvation tracker - an instance of {@link #IStarvationTracker}
-	 * @param player
-	 * @return that player's starvation tracker
-	 */
-	IStarvationTracker getStarvationTracker(EntityPlayer player);
-	
-	/**
-	 * Get a player's bloated hunger - an instance of {@link #IBloatedHunger}
-	 * @param player
-	 * @return that player's bloated hunger
-	 */
-	IBloatedHunger getBloatedHunger(EntityPlayer player);
-	
-	/**
-	 * Get a player's exhaustion tracker for tracking exhaustion at zero hunger - an instance of {@link #IStarveExhaustionTracker}
-	 * @param player
-	 * @return that player's exhaustion tracker for zero hunger.
-	 */
-	IStarveExhaustionTracker getStarveExhaustionTracker(EntityPlayer player);
-	
-	/**
-	 * Gets the Hearty Shank usage counter for the player
-	 * @param player
-	 * @return the usage counter.
-	 */
-	IHeartyShankUsageTicker getShankUsageTicker(EntityPlayer player);
-	
-	/**
-	 * Gets the amount of time a player has used a Hearty Shank.
-	 * @param player
-	 * @return the number of times that player used a Hearty Shank.
-	 */
-	default int getShankUsageCount(EntityPlayer player)
-	{
-		return getShankUsageTicker(player).getCount();
-	}
-	
-	/**
-	 * Get a player's bloated hunger amount. This just calls {@link IBloatedHunger#getBloatedAmount()} but is included for convenience.
-	 * @param player
-	 * @return that player's bloated hunger amount
-	 */
-	default short getBloatedHungerAmount(EntityPlayer player)
-	{
-		return getBloatedHunger(player).getBloatedAmount();
-	}
-	
-	/**
-	 * Get a player's modified food cap. This just calls {@link IFoodCap#getMaxFoodLevel(IFoodCapModifier)} but is included for convenience.
-	 * @param player
-	 * @return this player's modified food cap.
-	 */
-	default short getModifiedFoodCap(EntityPlayer player) 
-	{
-		return getFoodCap(player).getMaxFoodLevel(getFoodCapModifier(player));
-	}
-	
-	/**
-	 * Get the bonus damage to deal to the player on starvation.
-	 * @param player
-	 * @return the amount of extra damage to do from exhaustion.
-	 */
-	default int getBonusExhaustionDamage(EntityPlayer player)
-	{
-		return getStarveExhaustionTracker(player).getTotalDamage(player);
-	}
+public interface IScalingFeastAccessor {
 	
 	/**
 	 * Get the currently loaded saturation scaling
+	 * 
 	 * @return the current SaturationScaling
 	 */
 	SaturationScaling getSaturationScaling();
-	
-	/**
-	 * Gets the current loaded food efficiency XP bonus
-	 * @return the current FoodEfficiencyXPBonus
-	 */
-	FoodEfficiencyXPBonus getFoodEfficiencyXPBonus();
-	
-	/**
-	 * Gets the currently loaded max hunger XP bonus
-	 * @return the current MaxHungerXPBonus
-	 */
-	MaxHungerXPBonus getMaxHungerXPBonus();
-	
+
 	/**
 	 * Get the current hunger hard cap.
-	 * @return the current hunger hard cap, or {@link Short#MAX_VALUE} if none was set.
+	 * 
+	 * @return the current hunger hard cap, or {@link Short#MAX_VALUE} if none was
+	 *         set.
 	 */
 	short getHungerHardCap();
-	
+
 	/**
 	 * Get the current saturation hard cap
+	 * 
 	 * @return the saturation hard cap, or {@link Float#MAX_VALUE} if none was set.
 	 */
 	float getSaturationHardCap();
-	
+
 	/**
-	 * Get the saturation cap for a specific player. That is, The highest amount of saturation they can ever have.
+	 * Get the saturation cap for a specific player. That is, The highest amount of
+	 * saturation they can ever have.
+	 * 
 	 * @return
 	 */
 	float getPlayerSaturationCap(EntityPlayer player);
-	
+
 	/**
 	 * Can a player lose max hunger by starving?
+	 * 
 	 * @param player player to check
 	 * @return true if that player can lose max hunger by starving
 	 */
 	boolean canPlayerLoseMaxHunger(EntityPlayer player);
 	
 	/**
-	 * Get the exhaustion rate attribute for this player.
-	 * @param player player to get this attribute for
-	 * @return The IAttribute with the exhaustion rate for this player.
+	 * Get SFFoodStats for a player. SFFoodStats contains information about the player's food related capabilities and attributes.
+	 * @param player
+	 * @return A lazy SFFoodStats container. The actual capabilities and attributes are only fetched when needed and stored in this instance. All changes to this instance are synced to the server when needed.
 	 */
-	IAttributeInstance getFoodEfficiency(EntityPlayer player);
-	
-	/**
-	 * Get the max hunger modifier from attributes for a player.
-	 * @param player player to target
-	 * @return the IAttribute with the modifier for max hunger for this player. This is NOT the actual max hunger of this player.
-	 * Use {@link #getFoodCap(EntityPlayer)} to get the actual capability. This is just the modifiers for max hunger from attributes.
-	 */
-	IAttributeInstance getMaxHungerAttributeModifier(EntityPlayer player);
+	default SFFoodStats getSFFoodStats(EntityPlayer player) {
+		return new SFFoodStats(player);
+	}
 }

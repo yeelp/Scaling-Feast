@@ -1,119 +1,141 @@
 package yeelp.scalingfeast.items;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import yeelp.scalingfeast.ModConfig;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
-import yeelp.scalingfeast.handlers.CapabilityHandler;
-import yeelp.scalingfeast.util.FoodCapProvider;
-import yeelp.scalingfeast.util.IFoodCap;
-import yeelp.scalingfeast.util.StarvationTrackerProvider;
+import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.config.ModConfig;
+import yeelp.scalingfeast.init.SFSounds;
+import yeelp.scalingfeast.lib.SFBuiltInModifiers;
+import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
 
 /**
  * Hearty Shank food item. Eating it increases max hunger
+ * 
  * @author Yeelp
  *
  */
-public class HeartyShankItem extends ItemFood
-{
-	private static final HeartyShankItem INSTANCE = new HeartyShankItem(ModConfig.items.heartyShankFoodLevel, (float)ModConfig.items.heartyShankSatLevel);
-	
+public class HeartyShankItem extends ItemFood implements IItemDescribable {
 	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info1").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
 	private static final String AT_MAX_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.atmax").setStyle(new Style().setColor(TextFormatting.RED).setBold(true)).getFormattedText();
 	private static final String NO_BONUS_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.nobonus").setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText();
 	private static final DecimalFormat formatter = new DecimalFormat("##.#");
-	
-	public HeartyShankItem(int food, float sat)
-	{
+
+	public HeartyShankItem(int food, float sat) {
 		super(food, sat, false);
 		this.setAlwaysEdible();
 		this.setRegistryName("heartyshank");
-		this.setUnlocalizedName(ModConsts.MOD_ID+".heartyshank");
+		this.setUnlocalizedName(ModConsts.MOD_ID + ".heartyshank");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
-	
-	public int getMaxItemUseDuration(ItemStack stack)
-	{
+
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 64;
 	}
-	
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
-	{
-		if(entityLiving instanceof EntityPlayer && !ModConfig.modules.isShankDisabled)
-		{
-			EntityPlayer player = (EntityPlayer)entityLiving;
-			IFoodCap currCap = player.getCapability(FoodCapProvider.capFoodStat, null);
-			if((ModConfig.foodCap.globalCap == -1 || ModConfig.foodCap.globalCap > currCap.getUnmodifiedMaxFoodLevel()) && canConsumeForMaxHunger(player))
-			{
-				if(currCap.getUnmodifiedMaxFoodLevel() + ModConfig.foodCap.inc > ModConfig.foodCap.globalCap && ModConfig.foodCap.globalCap != -1)
-				{
-					currCap.setMax((short) ModConfig.foodCap.globalCap);
+
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+		if(entityLiving instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) entityLiving;
+			SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
+			if(canConsumeForMaxHunger(player)) {
+				double currentShankBonus = getCurrentShankBonus(player);
+				double currentStarvePenalty = getCurrentStarvePenalty(player);
+				double currentDeathPenalty = getCurrentDeathPenalty(player);
+				List<AttributeModifier> newMods = new LinkedList<AttributeModifier>();
+				double overflow = currentStarvePenalty + ModConfig.items.shank.inc;
+				double newStarvePenalty = Math.min(overflow, 0.0);
+				overflow = currentDeathPenalty + Math.max(overflow, 0);
+				double newDeathPenalty = Math.min(overflow, 0.0);
+				double newShankBonus = Math.min(currentShankBonus + Math.max(overflow, 0), getShankUsageCap());
+				if(newShankBonus != currentShankBonus) {
+					newMods.add(SFBuiltInModifiers.MaxHungerModifiers.SHANK.createModifier(newShankBonus));
 				}
-				else
-				{
-					currCap.increaseMax((short)ModConfig.foodCap.inc);
-					worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 1.0f, 1.0f);
+				if(newStarvePenalty != currentStarvePenalty) {
+					newMods.add(SFBuiltInModifiers.MaxHungerModifiers.PENALTY.createModifier(newStarvePenalty));
 				}
+				if(newDeathPenalty != currentDeathPenalty) {
+					newMods.add(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(newDeathPenalty));
+				}
+				newMods.forEach(sfstats::applyMaxHungerModifier);
+				SFSounds.playSound(player, SFSounds.HUNGER_INCREASE, 1.0f, 1.0f);
 			}
-			if(ModConfig.foodCap.starve.shankResetsCounter)
-			{
-				player.getCapability(StarvationTrackerProvider.starvationTracker, null).reset();
-			}
-			ScalingFeastAPI.mutator.tickPlayerShankUsageTicker(player);
-			//A quick guarantee that things should work as intended.
-			//We may not need to do this, but I'm not sure yet.
-			//At the very least, syncing on multiplayer still works.
-			//So, if it's multiplayer, sync it. Otherwise, it shouldn't matter?
-			if(!worldIn.isRemote)
-			{
-				CapabilityHandler.sync((EntityPlayer)entityLiving);
+			if(ModConfig.features.starve.tracker.shankResetsCounter) {
+				sfstats.resetStarvationTracker();
 			}
 		}
 		return super.onItemUseFinish(stack, worldIn, entityLiving);
 	}
-	
-	private boolean canConsumeForMaxHunger(EntityPlayer player)
-	{
-		return ModConfig.foodCap.heartyShankCap == -1 || ScalingFeastAPI.accessor.getShankUsageCount(player) < ModConfig.foodCap.heartyShankCap;
-	}
-	
-	public static List<String> buildTooltips(EntityPlayer player)
-	{
+
+	@Override
+	public Collection<String> getDescription(EntityPlayer player) {
 		List<String> tooltips = new LinkedList<String>();
 		tooltips.add(TEXT_SPLASH);
-		if(INSTANCE.canConsumeForMaxHunger(player))
-		{
-			if(ModConfig.foodCap.globalCap == -1 || ScalingFeastAPI.accessor.getFoodCap(player).getUnmodifiedMaxFoodLevel() < ModConfig.foodCap.globalCap)
-			{
-				tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info2", formatter.format(ModConfig.foodCap.inc/2.0f)).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());
-				if(ModConfig.foodCap.heartyShankCap != -1)
-				{
-					tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info3", ModConfig.foodCap.heartyShankCap - ScalingFeastAPI.accessor.getShankUsageCount(player)).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());
-				}
-			}
-			else
-			{
-				tooltips.add(AT_MAX_SPLASH);
+		if(canConsumeForMaxHunger(player)) {
+			tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info2", formatter.format(getUseBonus(player) / 2.0f)).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());
+			if(ModConfig.items.shank.heartyShankCap != -1) {
+				tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info3", getUsesLeft(player)).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());
 			}
 		}
-		else
-		{
+		else if(atMaxUses(player)) {
+			tooltips.add(AT_MAX_SPLASH);
+		}
+		else {
 			tooltips.add(NO_BONUS_SPLASH);
 		}
 		return tooltips;
+	}
+
+	public static boolean canConsumeForMaxHunger(EntityPlayer player) {
+		return ModConfig.items.shank.heartyShankCap == -1 || getUsesLeft(player) > 0;
+	}
+
+	private static boolean atMaxUses(EntityPlayer player) {
+		return ModConfig.items.shank.heartyShankCap != -1 && getUsesLeft(player) == 0;
+	}
+
+	private static int getUsesLeft(EntityPlayer player) {
+		// penalties are negative, so we use subtraction to 'add' them to the cap total.
+		return (int) Math.ceil((getShankUsageCap() - getCurrentStarvePenalty(player) - getCurrentDeathPenalty(player) - getCurrentShankBonus(player)) / ModConfig.items.shank.inc);
+	}
+
+	private static int getUseBonus(EntityPlayer player) {
+		return (int) MathHelper.clamp(getShankUsageCap() - getCurrentStarvePenalty(player) - getCurrentDeathPenalty(player) - getCurrentShankBonus(player), 0, ModConfig.items.shank.inc);
+	}
+
+	private static double getCurrentShankBonus(EntityPlayer player) {
+		return getAttributeValue(player, SFBuiltInModifiers.MaxHungerModifiers.SHANK);
+	}
+
+	private static double getCurrentStarvePenalty(EntityPlayer player) {
+		return getAttributeValue(player, SFBuiltInModifiers.MaxHungerModifiers.PENALTY);
+	}
+
+	private static double getCurrentDeathPenalty(EntityPlayer player) {
+		return getAttributeValue(player, SFBuiltInModifiers.MaxHungerModifiers.DEATH);
+	}
+
+	private static double getAttributeValue(EntityPlayer player, BuiltInModifier mod) {
+		return ScalingFeastAPI.accessor.getSFFoodStats(player).getMaxHungerModifier(mod.getUUID()).map(AttributeModifier::getAmount).orElse(0.0);
+	}
+	
+	private static int getShankUsageCap() {
+		return ModConfig.items.shank.heartyShankCap < 0 ? Integer.MAX_VALUE : ModConfig.items.shank.heartyShankCap;
 	}
 }

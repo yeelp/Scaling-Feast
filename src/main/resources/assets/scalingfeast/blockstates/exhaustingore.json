@@ -1,0 +1,24 @@
+{ 
+    "forge_marker": 1,
+    "defaults": { 
+        "transform": "forge:default-block",
+        "model": "scalingfeast:cube_overlay",
+        "textures": { 
+            "overlay": "scalingfeast:blocks/exhausting_ore" 
+        }
+    },
+    "variants": { 
+        "type":{ 
+            "stone": { 
+                "textures": { 
+                    "all": "minecraft:blocks/stone" 
+                }
+            },
+            "netherrack": { 
+                "textures": { 
+                    "all": "minecraft:blocks/netherrack" 
+                }
+            }
+        }
+    }
+}

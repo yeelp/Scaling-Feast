@@ -1,0 +1,72 @@
+package yeelp.scalingfeast.lib;
+
+import net.minecraft.entity.player.EntityPlayer;
+import squeek.applecore.api.AppleCoreAPI;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.config.ModConfig;
+
+public enum RespawningStats {
+	MAX_BOTH {
+		@Override
+		public int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return AppleCoreAPI.accessor.getMaxHunger(newPlayer);
+		}
+
+		@Override
+		protected float getRespawningSaturationCandidate(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return AppleCoreAPI.accessor.getMaxHunger(newPlayer);
+		}
+	},
+	MAX_HUNGER {
+		@Override
+		public int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return AppleCoreAPI.accessor.getMaxHunger(newPlayer);
+		}
+
+		@Override
+		protected float getRespawningSaturationCandidate(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return 5.0f;
+		}
+	},
+	PERSIST {
+		@Override
+		public int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return oldPlayer.getFoodStats().getFoodLevel();
+		}
+
+		@Override
+		protected float getRespawningSaturationCandidate(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return oldPlayer.getFoodStats().getSaturationLevel();
+		}
+	},
+	VANILLA {
+		@Override
+		public int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return 20;
+		}
+
+		@Override
+		protected float getRespawningSaturationCandidate(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return 5.0f;
+		}
+	},
+	STARTING_AMOUNT {
+		@Override
+		public int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return ModConfig.general.startingHunger;
+		}
+
+		@Override
+		protected float getRespawningSaturationCandidate(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+			return Math.min(ModConfig.general.startingHunger, 5.0f);
+		}
+	};
+	
+	public abstract int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer);
+	
+	protected abstract float getRespawningSaturationCandidate(EntityPlayer oldPlayer, EntityPlayer newPlayer);
+	
+	public final float getRespawningSaturation(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
+		return Math.min(ScalingFeastAPI.accessor.getPlayerSaturationCap(newPlayer), this.getRespawningSaturationCandidate(oldPlayer, newPlayer));
+	}
+}

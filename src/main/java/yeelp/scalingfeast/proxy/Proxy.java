@@ -1,31 +1,22 @@
 package yeelp.scalingfeast.proxy;
 
-import net.minecraftforge.common.MinecraftForge;
-import yeelp.scalingfeast.ModConfig;
-import yeelp.scalingfeast.ScalingFeast;
-import yeelp.scalingfeast.handlers.CapabilityHandler;
-import yeelp.scalingfeast.handlers.EnchantmentHandler;
-import yeelp.scalingfeast.handlers.FoodHandler;
-import yeelp.scalingfeast.handlers.LootTableInjector;
 import yeelp.scalingfeast.init.SFBlocks;
-import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.init.SFFood;
-import yeelp.scalingfeast.init.SFPotion;
-import yeelp.scalingfeast.util.FoodCapProvider;
+import yeelp.scalingfeast.init.SFItems;
 
-public class Proxy 
-{
-	public void preInit()
-	{
+public class Proxy {
+	@SuppressWarnings("static-method")
+	public void preInit() {
 		SFBlocks.init();
-		SFFood.init();
+		SFItems.init();
 	}
-	public void init()
-	{
-	
+
+	@SuppressWarnings("static-method")
+	public void init() {
+		return;
 	}
-	public void postInit()
-	{
-		
+
+	@SuppressWarnings("static-method")
+	public void postInit() {
+		return;
 	}
 }

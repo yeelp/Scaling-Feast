@@ -1,22 +1,23 @@
 package yeelp.scalingfeast.proxy;
 
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
-import yeelp.scalingfeast.init.SFFood;
+import yeelp.scalingfeast.init.SFItems;
 
-public class ClientProxy extends Proxy 
-{
-	public void preInit()
-	{
+public class ClientProxy extends Proxy {
+	@Override
+	public void preInit() {
 		super.preInit();
-		SFFood.registerRenders();
+		SFItems.registerRenders();
 	}
-	public void init() 
-	{
+
+	@Override
+	public void init() {
 		super.init();
 		new HUDOverlayHandler().register();
 	}
-	public void postInit()
-	{
+
+	@Override
+	public void postInit() {
 		super.postInit();
 	}
 }

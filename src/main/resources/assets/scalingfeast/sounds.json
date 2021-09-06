@@ -1,0 +1,16 @@
+{ 
+    "hunger_increase": { 
+        "category": "player",
+        "subtitile": "scalingfeast.subtitle.hunger_increase",
+        "sounds": [ 
+            "scalingfeast:hunger_increase"
+        ]
+    },
+    "hunger_decrease": { 
+        "category": "player",
+        "subtitile": "scalingfeast.subtitle.hunger_decrease",
+        "sounds": [ 
+            "scalingfeast:hunger_decrease"
+        ]
+    }
+}
