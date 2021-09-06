@@ -416,6 +416,7 @@ public class HUDOverlayHandler extends Handler {
 		final int size = 20;
 		rand.setSeed(updateCounter * 70643);
 		int foodLevel = player.getFoodStats().getFoodLevel();
+		short bloatLevel = ScalingFeastAPI.accessor.getSFFoodStats(player).getBloatedHungerAmount();
 		float satLevel = player.getFoodStats().getSaturationLevel();
 		int[] jitterAmount = new int[size];
 		int regen = -1;
@@ -424,7 +425,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 		if(satLevel == 0 || regen != -1) {
 			for(int i = 0; i < size; i++) {
-				if(updateCounter % (foodLevel * 3 + 1) == 0 && satLevel == 0) {
+				if(updateCounter % ((foodLevel + bloatLevel) * 3 + 1) == 0 && satLevel == 0) {
 					jitterAmount[i] += rand.nextInt(3) - 1;
 				}
 				if(i == regen) {

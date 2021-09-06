@@ -57,4 +57,9 @@ public class CurseLaziness extends SFEnchantmentBase {
 	public boolean enabled() {
 		return ModConfig.items.enchants.enableLaziness;
 	}
+
+	@Override
+	public boolean shouldRegisterHandlerAnyway() {
+		return false;
+	}
 }

@@ -74,4 +74,9 @@ public class EnchantmentEternalFeast extends SFEnchantmentBase {
 	public boolean enabled() {
 		return ModConfig.items.enchants.enableEternalFeast;
 	}
+
+	@Override
+	public boolean shouldRegisterHandlerAnyway() {
+		return false;
+	}
 }

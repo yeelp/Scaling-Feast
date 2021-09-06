@@ -14,7 +14,7 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
 
 /**
- * A skeleton implementation of and IModule
+ * A skeleton implementation of a module for toggleable integration
  * 
  * @author Yeelp
  * @param <Config> the config entry class this module uses.

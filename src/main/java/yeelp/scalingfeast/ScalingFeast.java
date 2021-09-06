@@ -1,7 +1,5 @@
 package yeelp.scalingfeast;
 
-import java.util.Arrays;
-
 import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.fml.common.Loader;
@@ -109,16 +107,8 @@ public class ScalingFeast {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		SFRecipes.init();
-		if(hasAppleSkin) {
-			try {
-				AppleSkinHelper.init();
-			}
-			catch(ClassNotFoundException e) {
-				err("Couldn't load AppleSkin compatibility! Encountered a ClassNotFoundException.");
-				err(Arrays.toString(e.getStackTrace()));
-			}
-		}
 		ModIntegrationKernel.postInit(event);
+		
 		info("Scaling Feast post-initialization complete!");
 	}
 

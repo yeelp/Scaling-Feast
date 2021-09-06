@@ -9,6 +9,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.hunger.ExhaustionEvent;
@@ -68,13 +69,15 @@ public class GenericHandler extends Handler {
 	}
 
 	@SuppressWarnings("static-method")
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onPlayerUpdate(PlayerTickEvent evt) {
-		if(evt.player.getFoodStats().getFoodLevel() > AppleCoreAPI.accessor.getMaxHunger(evt.player)) {
-			AppleCoreAPI.mutator.setHunger(evt.player, AppleCoreAPI.accessor.getMaxHunger(evt.player));
+		if(evt.phase == Phase.END) {
+			if(evt.player.getFoodStats().getFoodLevel() > AppleCoreAPI.accessor.getMaxHunger(evt.player)) {
+				AppleCoreAPI.mutator.setHunger(evt.player, AppleCoreAPI.accessor.getMaxHunger(evt.player));
+			}
+			ScalingFeastAPI.mutator.capPlayerHunger(evt.player);
+			ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
 		}
-		ScalingFeastAPI.mutator.capPlayerHunger(evt.player);
-		ScalingFeastAPI.mutator.capPlayerSaturation(evt.player);
 	}
 
 	@SuppressWarnings("static-method")

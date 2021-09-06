@@ -57,4 +57,9 @@ public class CurseDeprivation extends SFEnchantmentBase {
 	public boolean enabled() {
 		return ModConfig.items.enchants.enableDeprivation;
 	}
+
+	@Override
+	public boolean shouldRegisterHandlerAnyway() {
+		return false;
+	}
 }
