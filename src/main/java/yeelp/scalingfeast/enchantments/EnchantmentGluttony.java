@@ -6,6 +6,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
@@ -78,5 +79,10 @@ public class EnchantmentGluttony extends SFEnchantmentBase {
 	@Override
 	public boolean enabled() {
 		return ModConfig.items.enchants.enableGluttony;
+	}
+
+	@Override
+	public boolean shouldRegisterHandlerAnyway() {
+		return Loader.isModLoaded(ModConsts.CONARM_ID);
 	}
 }

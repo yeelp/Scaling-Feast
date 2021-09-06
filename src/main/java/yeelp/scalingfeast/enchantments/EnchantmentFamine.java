@@ -102,4 +102,9 @@ public class EnchantmentFamine extends SFEnchantmentBase {
 	public boolean enabled() {
 		return ModConfig.items.enchants.enableFamine;
 	}
+
+	@Override
+	public boolean shouldRegisterHandlerAnyway() {
+		return false;
+	}
 }

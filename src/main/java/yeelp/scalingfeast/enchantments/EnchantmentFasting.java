@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
@@ -86,5 +87,10 @@ public class EnchantmentFasting extends SFEnchantmentBase {
 	@Override
 	public boolean enabled() {
 		return ModConfig.items.enchants.enableFasting;
+	}
+
+	@Override
+	public boolean shouldRegisterHandlerAnyway() {
+		return Loader.isModLoaded(ModConsts.CONARM_ID);
 	}
 }

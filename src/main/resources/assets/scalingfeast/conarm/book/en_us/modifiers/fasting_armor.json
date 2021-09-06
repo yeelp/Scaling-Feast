@@ -1,0 +1,15 @@
+{ 
+    "armormodifier": "fasting_armor",
+    "text": [ 
+        { 
+            "text": "Exposing your chestplate to an Exhausting Apple has made your armor want to be food efficient."
+        }
+    ],
+    "effects": [ 
+        "Reduces incoming exhaustion by 20%",
+        "Stacks independently of potion effects",
+        "Can only be applied to chestplates",
+        "Incompatible with Gluttony",
+        "Single use"
+    ]
+}

@@ -19,22 +19,15 @@ import yeelp.scalingfeast.enchantments.SFEnchantmentBase;
  *
  */
 public class SFEnchantments {
-	public static SFEnchantmentBase fasting;
-	public static SFEnchantmentBase gluttony;
-	public static SFEnchantmentBase famine;
-	public static SFEnchantmentBase eternalfeast;
-	public static SFEnchantmentBase sensitivityCurse;
-	public static SFEnchantmentBase lazinessCurse;
-	public static SFEnchantmentBase deprivationCurse;
+	public static SFEnchantmentBase fasting = new EnchantmentFasting();
+	public static SFEnchantmentBase gluttony = new EnchantmentGluttony();
+	public static SFEnchantmentBase famine = new EnchantmentFamine();
+	public static SFEnchantmentBase eternalfeast = new EnchantmentEternalFeast();
+	public static SFEnchantmentBase sensitivityCurse = new CurseSensitivity();
+	public static SFEnchantmentBase lazinessCurse = new CurseLaziness();
+	public static SFEnchantmentBase deprivationCurse = new CurseDeprivation();
 
 	public static void init() {
-		fasting = new EnchantmentFasting();
-		gluttony = new EnchantmentGluttony();
-		famine = new EnchantmentFamine();
-		eternalfeast = new EnchantmentEternalFeast();
-		sensitivityCurse = new CurseSensitivity();
-		lazinessCurse = new CurseLaziness();
-		deprivationCurse = new CurseDeprivation();
 		ImmutableList.of(fasting, gluttony, famine, eternalfeast, sensitivityCurse, lazinessCurse, deprivationCurse).forEach(SFEnchantments::tryRegisterEnchantment);
 	}
 	

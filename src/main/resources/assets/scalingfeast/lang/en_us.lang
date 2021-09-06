@@ -251,3 +251,16 @@ modifier.exhausting.desc=§oRequires extra effort!§r\nYour tool tires you out f
 modifier.feasting.name=Feasting
 modifier.feasting.desc=§oWe dine at sundown!§r\nRegain 6 hunger/saturation (that's 3 whole hunger shanks) when you kill a mob!
 fluid.tconstruct.exhaustion_fluid.name=Molten Exhaustion
+
+##########
+# CONARM #
+##########
+
+modifier.torporic_armor.name=Torporic
+modifier.torporic_armor.desc=§oHomeothermic!§r\nYour armor can sometimes help you out when you're going to starve. Only sometimes though. It's a little selfish...
+modifier.nourishing_armor.name=Nourishing
+modifier.nourishing_armor.desc=§oDefinitely not tapeworm!§r\nSomehow, you feel like you can eat more.
+modifier.fasting_armor.name=Fasting
+modifier.fasting_armor.desc=§oIt's survival of the fittest!§r\nYour armor helps you use your food reserves more effeciently. As a result, your hunger and saturation last longer!
+modifier.gluttony_armor.name=Gluttony
+modifier.gluttony_armor.desc=§oRavenous!§r\nEvery bite of food feels more filling!

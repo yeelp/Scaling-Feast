@@ -39,6 +39,9 @@ public class CapabilityHandler extends Handler {
 				starveStats.getTracker().reset();
 			}
 		}
+		else {
+			oldPlayer.getCapability(BloatedHunger.cap, null).sync(newPlayer);
+		}
 		if(starveStats.getCounter().get() != 0 || starveStats.getTracker().get() != 0) {
 			starveStats.sync(newPlayer);			
 		}

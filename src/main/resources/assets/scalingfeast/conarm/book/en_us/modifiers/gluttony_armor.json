@@ -1,0 +1,18 @@
+{
+    "armormodifier": "gluttony_armor",
+    "text": [ 
+        {
+            "text": "Smearing a Hearty Feast on your chestplate has given it a ravenous appetite! It craves... food!"
+        }
+    ],
+    "effects": [ 
+        "Doubles the food values restored from food items",
+        "Doubles health restored from Iron Apples",
+        "Can only be applied to chestplates",
+        "Incompatible with Fasting",
+        "Single use"
+    ],
+    "demoArmor": [ 
+        "conarm:chestplate"
+    ]
+}

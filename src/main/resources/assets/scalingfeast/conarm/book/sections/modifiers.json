@@ -1,0 +1,10 @@
+[ 
+    {
+        "type": "armormodifier",
+        "data": "modifiers/gluttony_armor.json"
+    },
+    {
+        "type": "armormodifier",
+        "data": "modifiers/fasting_armor.json" 
+    }
+]

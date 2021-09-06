@@ -27,13 +27,10 @@ public abstract class SFEnchantmentBase extends Enchantment {
 	}
 	
 	/**
-	 * Should the enchantment handler be registered anyway? Only used for the sensitivity curse and global sensitivity
+	 * Should the enchantment handler be registered anyway?
 	 * @return {@code false} by default
 	 */
-	@SuppressWarnings("static-method")
-	public boolean shouldRegisterHandlerAnyway() {
-		return false;
-	}
+	public abstract boolean shouldRegisterHandlerAnyway();
 	
 	/**
 	 * Is this enchantment enabled?
