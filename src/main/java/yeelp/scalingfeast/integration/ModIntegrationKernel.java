@@ -22,7 +22,6 @@ import yeelp.scalingfeast.integration.tinkers.SFTinkerIntegration;
 public final class ModIntegrationKernel {
 	private static final Map<String, Supplier<IIntegratable>> integratableMods = new HashMap<String, Supplier<IIntegratable>>();
 	private static final List<IIntegratable> loadedIntegrations = new LinkedList<IIntegratable>();
-
 	static {
 		integratableMods.put(ModConsts.SOLCARROT_ID, () -> new SOLCarrotModule());
 		integratableMods.put(ModConsts.SPICEOFLIFE_ID, () -> new SpiceOfLifeModule());

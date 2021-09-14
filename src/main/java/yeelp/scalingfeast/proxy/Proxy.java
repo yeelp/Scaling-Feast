@@ -3,19 +3,19 @@ package yeelp.scalingfeast.proxy;
 import yeelp.scalingfeast.init.SFBlocks;
 import yeelp.scalingfeast.init.SFItems;
 
-public class Proxy {
-	@SuppressWarnings("static-method")
+public class Proxy extends AbstractProxy {
+	@Override
 	public void preInit() {
 		SFBlocks.init();
 		SFItems.init();
 	}
 
-	@SuppressWarnings("static-method")
+	@Override
 	public void init() {
 		return;
 	}
 
-	@SuppressWarnings("static-method")
+	@Override
 	public void postInit() {
 		return;
 	}

@@ -192,12 +192,12 @@ public class HUDOverlayHandler extends Handler {
 			}
 		}
 		GL11.glPushMatrix();
-		GL11.glScalef(0.6f, 0.6f, 1.0f);
+		GL11.glScalef(0.5f, 0.5f, 1.0f);
 		if(ModConfig.hud.infoStyle == InfoStyle.SIMPLE) {
 			mc.fontRenderer.drawStringWithShadow("x" + (i + 1), left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, 0xffffff);
 		}
 		else {
-			mc.fontRenderer.drawStringWithShadow("" + bloatedAmount, left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, 0xffffff);
+			mc.fontRenderer.drawStringWithShadow("" + bloatedAmount, left / 0.5f + 1 / 0.5f, top / 0.5f + 4.5f / 0.5f, 0xffffff);
 		}
 		GL11.glPopMatrix();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -291,7 +291,7 @@ public class HUDOverlayHandler extends Handler {
 
 	private static void drawSimpleInfo(int i, Minecraft mc, int left, int top, int hunger, int max) {
 		GL11.glPushMatrix();
-		GL11.glScalef(0.6f, 0.6f, 1.0f);
+		GL11.glScalef(0.5f, 0.5f, 1.0f);
 		mc.fontRenderer.drawStringWithShadow("x" + i + "/" + (int) Math.ceil((float) max / ModConsts.VANILLA_MAX_HUNGER), left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();

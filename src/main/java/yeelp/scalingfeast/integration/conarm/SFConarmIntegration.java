@@ -50,5 +50,4 @@ public final class SFConarmIntegration implements IIntegratable {
 	public boolean enabled() {
 		return true;
 	}
-
 }
