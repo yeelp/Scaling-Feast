@@ -1,10 +1,11 @@
 package yeelp.scalingfeast.integration.tinkers;
 
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import slimeknights.tconstruct.library.MaterialIntegration;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.BowMaterialStats;
@@ -16,9 +17,9 @@ import slimeknights.tconstruct.library.materials.MaterialTypes;
 import slimeknights.tconstruct.library.traits.AbstractTrait;
 import slimeknights.tconstruct.library.utils.HarvestLevels;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFItems;
 import yeelp.scalingfeast.integration.module.IIntegratable;
+import yeelp.scalingfeast.integration.tinkers.proxy.TiCClientProxy;
 import yeelp.scalingfeast.integration.tinkers.proxy.TiCProxy;
 
 public class SFTinkerIntegration implements IIntegratable {
@@ -30,10 +31,7 @@ public class SFTinkerIntegration implements IIntegratable {
 	public static MoltenExhaustium moltenExhaustion = new MoltenExhaustium();
 	public static BlockMolten moltenBlock;
 
-	private static final String PROXY_ROOT = "yeelp.scalingfeast.integration.tinkers.proxy.";
-
-	@SidedProxy(modId = ModConsts.MOD_ID, clientSide = PROXY_ROOT + "TiCClientProxy", serverSide = PROXY_ROOT + "TiCProxy")
-	private static TiCProxy proxy;
+	private static TiCProxy proxy = getSidedProxy(FMLCommonHandler.instance().getSide());
 
 	static {
 		FluidRegistry.registerFluid(moltenExhaustion);
@@ -70,5 +68,14 @@ public class SFTinkerIntegration implements IIntegratable {
 	@Override
 	public boolean enabled() {
 		return true;
+	}
+
+	private static TiCProxy getSidedProxy(Side side) {
+		switch(side) {
+			case CLIENT:
+				return new TiCClientProxy();
+			default:
+				return new TiCProxy();
+		}
 	}
 }

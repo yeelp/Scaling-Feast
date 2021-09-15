@@ -37,19 +37,19 @@ public final class ModIntegrationKernel {
 			}
 		});
 	}
-	
+
 	public static void preInit(FMLPreInitializationEvent evt) {
 		process((i) -> i.preIntegrate(evt));
 	}
-	
+
 	public static void init(FMLInitializationEvent evt) {
 		process((i) -> i.integrate(evt));
 	}
-	
+
 	public static void postInit(FMLPostInitializationEvent evt) {
 		process((i) -> i.postIntegrate(evt));
 	}
-	
+
 	private static void process(Predicate<IIntegratable> p) {
 		loadedIntegrations.removeIf(p.negate());
 	}

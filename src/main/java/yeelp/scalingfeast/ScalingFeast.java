@@ -40,9 +40,6 @@ import yeelp.scalingfeast.proxy.Proxy;
 @Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies = "required-after:applecore@[3.4.0,)")
 public class ScalingFeast {
 	public static Logger logger;
-	public static boolean hasAppleSkin;
-	public static boolean hasSolCarrot;
-	public static boolean hasSpiceOfLife;
 	@SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
 	public static Proxy proxy;
 
