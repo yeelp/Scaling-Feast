@@ -1,0 +1,267 @@
+####################
+# CONSOLE COMMANDS #
+####################
+
+commands.scalingfeast.usage=/scalingfeast <setMax|setSaturation> <player> <amount>
+commands.scalingfeast.command.usage=用法: /scalingfeast %s <player> <amount>
+commands.scalingfeast.command.existence=玩家 %s 不存在!
+commands.scalingfeast.command.emptytarget=目标选择器 %s 未找到.
+commands.scalingfeast.command.numerr=数量应该在这个范围内 (0, %s]
+commands.scalingfeast.command.success=成功! Set %s for player %s to %s.
+
+#################
+# DEATH MESSAGE #
+#################
+
+message.scalingfeast.starvationDeath=%s 因饥饿而消瘦
+
+############
+# TOOLTIPS #
+############
+
+# Hearty Shank #
+tooltips.scalingfeast.heartyshank.info1=真美味!
+tooltips.scalingfeast.heartyshank.info2=食用以增加你的最大饥饿值 %s 点！
+//tooltips.scalingfeast.heartyshank.info3=You can gain max hunger by eating this %s more times.
+tooltips.scalingfeast.heartyshank.info3=多次食用 %s 以提高你的最大饥饿值
+tooltips.scalingfeast.heartyshank.nobonus=你不能通过食用它获得更多饥饿值了...
+tooltips.scalingfeast.heartyshank.atmax=你的最大饥饿值已经达到准许的最大值了！
+
+# Hearty Feast #
+tooltips.scalingfeast.heartyfeast.splash=就像吃自助餐一样！
+tooltips.scalingfeast.heartyfeast.info=每片恢复你最大饥饿的七分之一(饱和度的一半)！
+tooltips.scalingfeast.heartyfeast.cap=此效果的每个切片上限为%s。
+tooltips.scalingfeast.heartyfeast.statincrease=因此，对于您%s来说，这就是%s饥饿值和%s饱和度！
+tooltips.scalingfeast.heartyfeast.effect=食用它可获得铁胃I（%s）
+
+# Iron Apple (Normal) #
+tooltips.scalingfeast.ironapple.splash=合适的补铁剂！
+tooltips.scalingfeast.ironapple.info=金苹果的表弟；食用可恢复健康，并随着时间的推移恢复饥饿值。
+
+# Iron Apple (Enchanted) #
+tooltips.scalingfeast.enchantedironapple.splash=现在！它！是！金属！
+tooltips.scalingfeast.enchantedironapple.info1=附魔金苹果的表弟；食用可恢复健康，并快速恢复饥饿。
+tooltips.scalingfeast.enchantedironapple.info2=这也会让你饥饿得更慢了。
+
+# Exhausting Ore #
+tooltips.scalingfeast.exhaustingore.info1=挖掘它让你疲惫不堪...
+tooltips.scalingfeast.exhaustingore.info2=当你站在上面时，你会感到50%的疲惫！
+
+# Exhausting Block #
+tooltips.scalingfeast.exhaustingblock.info1=可用于建造信标基座
+tooltips.scalingfeast.exhaustingblock.info2=当你站在上面时，你会感到100%的疲惫！
+
+# Exhausting Apple #
+tooltips.scalingfeast.exhaustingapple.splash=禁止的水果
+tooltips.scalingfeast.exhaustingapple.info=食用它会让你的饥饿值和饱腹感完全恢复...并将你的最大饥饿值降低到与饱食度相同的程度...
+
+# Exhausting Ingot #
+tooltips.scalingfeast.exhaustingingot.info=可用于信标激活消耗
+
+###########
+# MODULES #
+###########
+
+# Spice of Life: Carrot Edition #
+
+#messages
+modules.scalingfeast.sol.reward=你已经获得了最大生命值 %s！
+modules.scalingfeast.sol.efficiencyReward=你已经获得了 %s 食物效率！
+modules.scalingfeast.sol.reachedAllMilestones=真是一场盛宴！你满足了饥饿的欲望！
+
+#splash
+modules.scalingfeast.sol.splash0=美味！\nScrumptious!
+modules.scalingfeast.sol.splash1=多么独特的味道！\nWhat unique flavour!
+modules.scalingfeast.sol.splash2=美美美美美~味！\nDeeee-lish!
+modules.scalingfeast.sol.splash3=可口！\nDelectable!
+modules.scalingfeast.sol.splash4=好吃！\nYummy!
+modules.scalingfeast.sol.splash5=多么美味啊！\nHow savoury!
+modules.scalingfeast.sol.splash6=味美汁多！\nSucculent!
+modules.scalingfeast.sol.splash7=味道好极了！\nTasty!
+
+# Spice of Life #
+modules.scalingfeast.spiceoflife.tooltip.punish=食用这种食物会暂时减少你的最大饥饿值！
+modules.scalingfeast.spiceoflife.tooltip.restore=食用这种食物会恢复你失去的最大饥饿值！
+
+################
+# ENCHANTMENTS #
+################
+
+#names
+enchantment.scalingfeast.fasting=禁食 Fasting
+enchantment.scalingfeast.gluttony=暴食 Gluttony
+enchantment.scalingfeast.famine=饥荒 Famine
+enchantment.scalingfeast.eternalfeast=永恒盛宴 Eternal Feast
+enchantment.scalingfeast.sensitivitycurse=敏感诅咒 Curse of Sensitivity
+enchantment.scalingfeast.lazinesscurse=懒惰诅咒 Curse of Laziness
+enchantment.scalingfeast.deprivationcurse=饥饿诅咒 Curse of Deprivation
+
+#desc
+enchantment.scalingfeast.fasting.desc=每级减少10%的疲惫
+enchantment.scalingfeast.gluttony.desc=每级增加50%的食物价值。铁苹果每级也能治愈50%的生命值！
+enchantment.scalingfeast.famine.desc=大幅消耗被此附魔击中玩家的饥饿值，或对被此附魔击中的非玩家实体施加弱点减值。效果强度取决于附魔等级
+enchantment.scalingfeast.eternalfeast.desc=杀死实体会补充你的食物等级，这取决于附魔等级。
+enchantment.scalingfeast.sensitivitycurse.desc=暴食会给予你持续20秒的软胃(Soft Stomach)负面效果，强度等于过食数
+enchantment.scalingfeast.lazinesscurse.desc=最大消耗量减半
+enchantment.scalingfeast.deprivationcurse.desc=使你饿得快两倍
+
+#########
+# ITEMS #
+#########
+
+item.scalingfeast.heartyshank.name=丰腴小腿
+item.scalingfeast.ironapple.name=§b铁苹果§f
+item.scalingfeast.enchantedironapple.name=§d铁苹果§f
+item.scalingfeast.exhaustingingot.name=疲惫锭
+item.scalingfeast.exhaustingnugget.name=疲惫粒
+item.scalingfeast.exhaustingapple.name=§c疲惫苹果§f
+
+##########
+# BLOCKS #
+##########
+
+tile.scalingfeast.heartyfeast.name=丰腴盛宴
+tile.scalingfeast.exhaustingore.stone.name=疲惫矿石
+tile.scalingfeast.exhaustingore.netherrack.name=疲惫下界岩
+tile.scalingfeast.exhaustingblock.name=疲惫块
+
+##############
+# ATTRIBUTES #
+##############
+
+attribute.name.scalingfeast.maxHungerMod=最大饥饿值
+attribute.name.scalingfeast.foodEfficiency=食物效率
+
+###########
+# POTIONS #
+###########
+## effect name
+## regulars
+## splashes
+## lingerings
+## tipped arrows
+
+effect.metabolism=新陈代谢
+
+potion.effect.metabolism=新陈代谢药水
+potion.effect.metabolism_strong=新陈代谢药水
+potion.effect.metabolism_extended=新陈代谢药水
+splash_potion.effect.metabolism=喷溅型新陈代谢药水
+splash_potion.effect.metabolism_strong=喷溅型新陈代谢药水
+splash_potion.effect.metabolism_extended=喷溅型新陈代谢药水
+lingering_potion.effect.metabolism=滞留型新陈代谢药水
+lingering_potion.effect.metabolism_strong=滞留型新陈代谢药水
+lingering_potion.effect.metabolism_extended=滞留型新陈代谢药水
+tipped_arrow.effect.metabolism=新陈代谢箭矢
+tipped_arrow.effect.metabolism_strong=新陈代谢箭矢
+tipped_arrow.effect.metabolism_extended=新陈代谢箭矢
+
+effect.ironstomach=铁胃
+
+potion.effect.ironstomach=活力药水
+potion.effect.ironstomach_strong=活力药水
+potion.effect.ironstomach_extended=活力药水
+splash_potion.effect.ironstomach=喷溅型活力药水
+splash_potion.effect.ironstomach_strong=喷溅型活力药水
+splash_potion.effect.ironstomach_extended=喷溅型活力药水
+lingering_potion.effect.ironstomach=滞留型活力药水
+lingering_potion.effect.ironstomach_strong=滞留型活力药水
+lingering_potion.effect.ironstomach_extended=滞留型活力药水
+tipped_arrow.effect.ironstomach=活力箭矢
+tipped_arrow.effect.ironstomach_strong=活力箭矢
+tipped_arrow.effect.ironstomach_extended=活力箭矢
+
+effect.bloated=饥饿吸收
+
+potion.effect.bloated=饥饿吸收药水
+potion.effect.bloated_strong=饥饿吸收药水
+potion.effect.bloated_extended=饥饿吸收药水
+splash_potion.effect.bloated=喷溅型饥饿吸收药水
+splash_potion.effect.bloated_strong=喷溅型饥饿吸收药水
+splash_potion.effect.bloated_extended=喷溅型饥饿吸收药水
+lingering_potion.effect.bloated=滞留型饥饿吸收药水
+lingering_potion.effect.bloated_strong=滞留型饥饿吸收药水
+lingering_potion.effect.bloated_extended=滞留型饥饿吸收药水
+tipped_arrow.effect.bloated=饥饿吸收箭矢
+tipped_arrow.effect.bloated_strong=饥饿吸收箭矢
+tipped_arrow.effect.bloated_extended=饥饿吸收箭矢
+
+effect.hungerplus=饥饿提升
+
+potion.effect.hungerplus=饥饿提升药水
+potion.effect.hungerplus_strong=饥饿提升药水
+potion.effect.hungerplus_extended=饥饿提升药水
+splash_potion.effect.hungerplus=喷溅型饥饿提升药水
+splash_potion.effect.hungerplus_strong=喷溅型饥饿提升药水
+splash_potion.effect.hungerplus_extended=喷溅型饥饿提升药水
+lingering_potion.effect.hungerplus=滞留型饥饿提升药水
+lingering_potion.effect.hungerplus_strong=滞留型饥饿提升药水
+lingering_potion.effect.hungerplus_extended=滞留型饥饿提升药水
+tipped_arrow.effect.hungerplus=饥饿提升箭矢
+tipped_arrow.effect.hungerplus_strong=饥饿提升箭矢
+tipped_arrow.effect.hungerplus_extended=饥饿提升箭矢
+
+effect.hungerminus=饥饿降低
+
+potion.effect.hungerminus=饥饿降低药水
+potion.effect.hungerminus_strong=饥饿降低药水
+potion.effect.hungerminus_extended=饥饿降低药水
+splash_potion.effect.hungerminus=喷溅型饥饿降低药水
+splash_potion.effect.hungerminus_strong=喷溅型饥饿降低药水
+splash_potion.effect.hungerminus_extended=喷溅型饥饿降低药水
+lingering_potion.effect.hungerminus=滞留型饥饿降低药水
+lingering_potion.effect.hungerminus_strong=滞留型饥饿降低药水
+lingering_potion.effect.hungerminus_extended=滞留型饥饿降低药水
+tipped_arrow.effect.hungerminus=饥饿降低箭矢
+tipped_arrow.effect.hungerminus_strong=饥饿降低箭矢
+tipped_arrow.effect.hungerminus_extended=饥饿降低箭矢
+
+effect.softstomach=软胃
+
+potion.effect.softstomach=软胃药水
+potion.effect.softstomach_strong=软胃药水
+potion.effect.softstomach_extended=软胃药水
+splash_potion.effect.softstomach=喷溅型软胃药水
+splash_potion.effect.softstomach_strong=喷溅型软胃药水
+splash_potion.effect.softstomach_extended=喷溅型软胃药水
+lingering_potion.effect.softstomach=滞留型软胃药水
+lingering_potion.effect.softstomach_strong=滞留型软胃药水
+lingering_potion.effect.softstomach_extended=滞留型软胃药水
+tipped_arrow.effect.softstomach=软胃箭矢
+tipped_arrow.effect.softstomach_strong=软胃箭矢
+tipped_arrow.effect.softstomach_extended=软胃箭矢
+
+effect.deficiency=效率底下Deficiency
+
+potion.effect.deficiency=效率底下Potion of Deficiency
+potion.effect.deficiency_strong=效率底下Potion of Deficiency
+splash_potion.effect.deficiency=效率底下Splash Potion of Deficiency
+splash_potion.effect.deficiency_strong=效率底下Splash Potion of Deficiency
+lingering_potion.effect.deficiency=效率底下Lingering Potion of Deficiency
+lingering_potion.effect.deficiency_strong=效率底下Lingering Potion of Deficiency
+tipped_arrow.effect.deficiency=效率底下箭矢Arrow of Deficiency
+tipped_arrow.effect.deficiency_strong=效率底下箭矢Arrow of Deficiency
+
+###########
+# TINKERS #
+###########
+
+material.exhaustium.name=疲惫Exhausting
+modifier.exhausting.name=精疲力尽Exhausting
+modifier.exhausting.desc=§o事倍功半！§r\n当你打破方块时，你的工具会让你更快地疲惫...\n同时，他也会让被攻击者疲惫，特别是玩家！
+modifier.feasting.name=盛宴Feasting
+modifier.feasting.desc=§o我们在日落时分进食！§r\n当你杀死一个生物，获得6点饥饿/饱和度（即3次完整的饥饿值）！
+fluid.tconstruct.exhaustion_fluid.name=熔融疲惫
+
+##########
+# CONARM #
+##########
+
+modifier.torporic_armor.name=Torporic
+modifier.torporic_armor.desc=§o恒温Homeothermic!§r\n当你快要饿死时，你的盔甲有时能帮你摆脱困境。只是有时候...这有点自私...
+modifier.nourishing_armor.name=营养Nourishing
+modifier.nourishing_armor.desc=§o绝对不是绦虫！§r\n有时候，你觉得自己可以吃得更多。
+modifier.fasting_armor.name=禁食Fasting
+modifier.fasting_armor.desc=§o这是适者生存！§r\n您的盔甲有助于更有效地使用您的食物储备。因此，你的饥饿感和饱和感会持续更长时间！
+modifier.gluttony_armor.name=暴食Gluttony
+modifier.gluttony_armor.desc=§o贪婪！§r\n每一口咬在食物上都有饱腹感！
