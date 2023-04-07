@@ -45,11 +45,11 @@ tooltips.scalingfeast.enchantedironapple.info2=这也会让你饥饿得更慢了
 
 # Exhausting Ore #
 tooltips.scalingfeast.exhaustingore.info1=挖掘它让你疲惫不堪...
-tooltips.scalingfeast.exhaustingore.info2=当你站在上面时，你会感到50%的疲惫！
+tooltips.scalingfeast.exhaustingore.info2=当你站在上面时，你会感到50%%的疲惫！
 
 # Exhausting Block #
 tooltips.scalingfeast.exhaustingblock.info1=可用于建造信标基座
-tooltips.scalingfeast.exhaustingblock.info2=当你站在上面时，你会感到100%的疲惫！
+tooltips.scalingfeast.exhaustingblock.info2=当你站在上面时，你会感到100%%的疲惫！
 
 # Exhausting Apple #
 tooltips.scalingfeast.exhaustingapple.splash=禁止的水果
@@ -97,8 +97,8 @@ enchantment.scalingfeast.lazinesscurse=懒惰诅咒 Curse of Laziness
 enchantment.scalingfeast.deprivationcurse=饥饿诅咒 Curse of Deprivation
 
 #desc
-enchantment.scalingfeast.fasting.desc=每级减少10%的疲惫
-enchantment.scalingfeast.gluttony.desc=每级增加50%的食物价值。铁苹果每级也能治愈50%的生命值！
+enchantment.scalingfeast.fasting.desc=每级减少10%%的疲惫
+enchantment.scalingfeast.gluttony.desc=每级增加50%%的食物价值。铁苹果每级也能治愈50%%的生命值！
 enchantment.scalingfeast.famine.desc=大幅消耗被此附魔击中玩家的饥饿值，或对被此附魔击中的非玩家实体施加弱点减值。效果强度取决于附魔等级
 enchantment.scalingfeast.eternalfeast.desc=杀死实体会补充你的食物等级，这取决于附魔等级。
 enchantment.scalingfeast.sensitivitycurse.desc=暴食会给予你持续20秒的软胃(Soft Stomach)负面效果，强度等于过食数
