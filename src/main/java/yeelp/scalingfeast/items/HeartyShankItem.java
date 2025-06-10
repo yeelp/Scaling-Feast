@@ -40,7 +40,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 		super(food, sat, false);
 		this.setAlwaysEdible();
 		this.setRegistryName("heartyshank");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".heartyshank");
+		this.setTranslationKey(ModConsts.MOD_ID + ".heartyshank");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 

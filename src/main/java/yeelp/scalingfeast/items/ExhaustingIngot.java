@@ -16,7 +16,7 @@ public final class ExhaustingIngot extends Item {
 	
 	public ExhaustingIngot() {
 		this.setRegistryName("exhaustingingot");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".exhaustingingot");
+		this.setTranslationKey(ModConsts.MOD_ID + ".exhaustingingot");
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
 

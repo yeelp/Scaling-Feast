@@ -1,4 +1,4 @@
-buildscript {
+/*buildscript {
     repositories {
         jcenter()
         maven { url = "https://files.minecraftforge.net/maven" }
@@ -7,84 +7,182 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: "com.wynprice.cursemaven"
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-
-
-version = "1.8.2"
+version = "${mod_version}"
 group = "yeelp.scalingfeast" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "scalingfeast"
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    version = "1.12.2-14.23.5.2847"
-    runDir = "run"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171003"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    mappings channel: mappings_channel, version: mappings_version
 }
+
+sourceSets.main.java.srcDirs += "java"
+
 repositories {
+    mavenCentral()
+    maven {
+        url "https://cursemaven.com"
+    }
 	maven {
 		url "https://www.ryanliptak.com/maven/"
 	}
 	maven {
         name = "CraftTweaker/ContentTweaker"
-        url = "http://maven.blamejared.com"
+        url = "https://maven.blamejared.com"
     }
     maven {
         name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven'
+        url 'https://dvs1.progwml6.com/files/maven'
     }
 }
 dependencies {
-deobfCompile "applecore:AppleCore:1.12.2-3.4.0+356.64453:api"
-deobfProvided "curse.maven:spiceoflife:2571951"
-deobfProvided "curse.maven:spiceoflifecarrotedition:2731062"
-deobfProvided "curse.maven:conarm:3174535"
-deobfProvided "slimeknights.mantle:Mantle:1.12-1.3.3.49"
-deobfProvided "slimeknights:TConstruct:1.12.2-2.13.0.171"
-deobfProvided "CraftTweaker2:CraftTweaker2-API:4.1.20.564"
-deobfProvided "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.564"
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation fg.deobf("applecore:AppleCore:1.12.2-3.4.0+356.64453:api")
+    implementation fg.deobf("curse.maven:spiceoflife-220811:2571951")
+    implementation fg.deobf("curse.maven:spiceoflifecarrotedition-277616:2731062")
+    implementation fg.deobf("curse.maven:conarm-287683:3174535")
+    implementation fg.deobf("slimeknights.mantle:Mantle:1.12-1.3.3.55")
+    implementation fg.deobf("slimeknights:TConstruct:1.12.2-2.13.0.183")
+    implementation fg.deobf("CraftTweaker2:CraftTweaker2-API:4.1.20.674")
+    implementation fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.674")
+    implementation fg.deobf("CraftTweaker2:ZenScript:4.1.20.674")
 }
+
+import org.apache.tools.ant.filters.ReplaceTokens
 
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+    inputs.property "mcversion", minecraft_version
+    
+    filesMatching('mcmod.info') {
+        expand 'mod_id': mod_id, 'mod_name': mod_name, 'mod_version': project.version,
+                'mcversion': minecraft_version, 'mod_description': mod_description,
+                'mod_author': mod_author
     }
 }
+
+task processSources(type: Sync) {
+    from sourceSets.main.java
+    inputs.property 'version', project.version
+    filter(ReplaceTokens, tokens:[version: version.toString()])
+    into 'build/src'
+}
+
+compileJava {
+    source = processSources.outputs
+}
+
+java {
+    withSourcesJar()
+}
+*/
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version "${forge_gradle_version}"
+}
+
+version = mod_version
+group = mod_id
+base.archivesName = mod_id
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+minecraft {
+    mappings channel: mappings_channel, version: mappings_version
+
+    runs {
+        client {
+            args "--username=InDev"
+
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        server {
+
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+repositories {
+    flatDir { dirs 'libs' }
+    maven { url = 'https://www.cursemaven.com' }
+    mavenCentral()
+    maven {
+        url "https://www.ryanliptak.com/maven/"
+    }
+    maven {
+        name = "CraftTweaker/ContentTweaker"
+        url = "https://maven.blamejared.com"
+    }
+    maven {
+        name 'DVS1 Maven FS'
+        url 'https://dvs1.progwml6.com/files/maven'
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    implementation fg.deobf("applecore:AppleCore:1.12.2-3.4.0+356.64453:api")
+    implementation fg.deobf("curse.maven:spiceoflife-220811:2571951")
+    implementation fg.deobf("curse.maven:spiceoflifecarrotedition-277616:2731062")
+    implementation fg.deobf("curse.maven:conarm-287683:3174535")
+    implementation fg.deobf("slimeknights.mantle:Mantle:1.12-1.3.3.55")
+    implementation fg.deobf("slimeknights:TConstruct:1.12.2-2.13.0.183")
+    implementation fg.deobf("CraftTweaker2:CraftTweaker2-API:4.1.20.674")
+    implementation fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.674")
+    implementation fg.deobf("CraftTweaker2:ZenScript:4.1.20.674")
+}
+
+processResources {
+    var replaceProperties = [
+            'mod_id': mod_id,
+            'mod_name': mod_name,
+            'version': mod_version,
+            'mcversion': minecraft_version,
+            'mod_description': mod_description,
+            'mod_author': mod_author
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching('mcmod.info') {
+        expand replaceProperties
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : mod_name,
+                'Implementation-Vendor'   : mod_author,
+                'Implementation-Version'  : mod_version,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+java {
+    withSourcesJar()
+}
+
+jar.finalizedBy('reobfJar')

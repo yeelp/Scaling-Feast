@@ -13,7 +13,7 @@ public class ExhaustingBlock extends ExhaustionIncreasingBlock {
 	public ExhaustingBlock() {
 		super(Material.IRON);
 		this.setRegistryName("exhaustingblock");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".exhaustingblock");
+		this.setTranslationKey(ModConsts.MOD_ID + ".exhaustingblock");
 		this.setHardness(6f);
 		this.setHarvestLevel("pickaxe", 1);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);

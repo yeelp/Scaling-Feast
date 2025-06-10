@@ -30,7 +30,7 @@ public final class ExhaustingApple extends ItemFood {
 	public ExhaustingApple() {
 		super(0, 0, false);
 		this.setRegistryName("exhaustingapple");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".exhaustingapple");
+		this.setTranslationKey(ModConsts.MOD_ID + ".exhaustingapple");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 

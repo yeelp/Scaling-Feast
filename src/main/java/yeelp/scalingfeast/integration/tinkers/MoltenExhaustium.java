@@ -18,8 +18,10 @@ public final class MoltenExhaustium extends FluidMolten {
 
 	BlockMolten getBlockMolten() {
 		BlockMolten molten = new BlockMolten(this);
-		molten.setUnlocalizedName("molten_" + this.getName());
+		molten.setTranslationKey("molten_" + this.getName());
 		molten.setRegistryName(ModConsts.MOD_ID, "molten_" + this.getName());
 		return molten;
 	}
 }
+//setUnlocalizedName\(([^U])
+//setTranslationKey\(\1

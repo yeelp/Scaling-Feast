@@ -38,7 +38,7 @@ public class EnchantedIronAppleItem extends ItemFood {
 		super(0, 0.0f, false);
 		this.setAlwaysEdible();
 		this.setRegistryName("enchantedironapple");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".enchantedironapple");
+		this.setTranslationKey(ModConsts.MOD_ID + ".enchantedironapple");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 

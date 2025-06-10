@@ -20,8 +20,8 @@ public abstract class ExhaustingItemBlockBase extends ItemBlock {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		return super.getUnlocalizedName(stack) + this.getUnlocalizedMetadataNameFromState(this.block.getStateFromMeta(stack.getMetadata())).map((s) -> "." + s).orElse("");
+	public String getTranslationKey(ItemStack stack) {
+		return super.getTranslationKey(stack) + this.getUnlocalizedMetadataNameFromState(this.block.getStateFromMeta(stack.getMetadata())).map((s) -> "." + s).orElse("");
 	}
 
 	@Override

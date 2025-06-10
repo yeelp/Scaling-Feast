@@ -54,6 +54,7 @@ public class HUDOverlayHandler extends Handler {
 		loadTextColours();
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	public static void setIcons() {
 		switch(ModConfig.hud.overlayStyle) {
 			case DEFAULT:
@@ -179,7 +180,7 @@ public class HUDOverlayHandler extends Handler {
 			if(i == 0) {
 				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 27, false, false, false, false, null);
 			}
-			mc.mcProfiler.startSection("Bloated Bar: " + (i + 1));
+			mc.profiler.startSection("Bloated Bar: " + (i + 1));
 			drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 18, false, false, false, isHungerEffectActive, bloatedColours.get((colourIndex++) % bloatedColours.size()));
 		}
 		if(remainingShanks > 0) {
@@ -203,6 +204,7 @@ public class HUDOverlayHandler extends Handler {
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private static void drawStatsOverlay(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top) {
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
 		int hunger = player.getFoodStats().getFoodLevel();
@@ -219,12 +221,12 @@ public class HUDOverlayHandler extends Handler {
 		int i = 0;
 		int colourIndex = 0;
 		for(i = 0; i < numBars; i++) {
-			mc.mcProfiler.startSection("Food Bar: " + (i + 1));
+			mc.profiler.startSection("Food Bar: " + (i + 1));
 			if(i == 0) {
 				mc.getTextureManager().bindTexture(Gui.ICONS);
 				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0), 27, true, false, false, isHungerEffectActive, null);
 				if(ModConfig.hud.replaceVanilla) {
-					mc.mcProfiler.endStartSection("Vanilla Override");
+					mc.profiler.endStartSection("Vanilla Override");
 					mc.getTextureManager().bindTexture(icons);
 					drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 0, false, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
 				}
@@ -233,20 +235,20 @@ public class HUDOverlayHandler extends Handler {
 				mc.getTextureManager().bindTexture(icons);
 				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_HUNGER, 0, 0, false, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
 			}
-			mc.mcProfiler.endSection();
+			mc.profiler.endSection();
 		}
 		if(remainingShanks > 0) {
-			mc.mcProfiler.startSection("Food Bar: " + (i + 1));
+			mc.profiler.startSection("Food Bar: " + (i + 1));
 			mc.getTextureManager().bindTexture((hunger < ModConsts.VANILLA_MAX_HUNGER ? Gui.ICONS : icons));
 			int u = (hunger < ModConsts.VANILLA_MAX_HUNGER ? 52 + (player.isPotionActive(MobEffects.HUNGER) ? 36 : 0) : 0);
 			int v = (hunger < ModConsts.VANILLA_MAX_HUNGER ? 27 : 0);
 			drawStatBar(jitterAmount, mc, left, top, remainingShanks, u, v, hunger < ModConsts.VANILLA_MAX_HUNGER, false, false, isHungerEffectActive, colours.get((colourIndex++) % colours.size()));
 			if(ModConfig.hud.replaceVanilla && hunger < ModConsts.VANILLA_MAX_HUNGER) {
-				mc.mcProfiler.endStartSection("Vanilla Leftovers Override");
+				mc.profiler.endStartSection("Vanilla Leftovers Override");
 				mc.getTextureManager().bindTexture(icons);
 				drawStatBar(jitterAmount, mc, left, top, remainingShanks, 0, 0, false, true, false, isHungerEffectActive, colours.get(0));
 			}
-			mc.mcProfiler.endSection();
+			mc.profiler.endSection();
 		}
 		if(ModConfig.hud.drawSaturation && ModConfig.hud.style == DisplayStyle.OVERLAY) {
 			colourIndex = 0;
@@ -254,17 +256,17 @@ public class HUDOverlayHandler extends Handler {
 			float remainingSat = sat % ModConsts.VANILLA_MAX_SAT;
 			mc.getTextureManager().bindTexture(icons);
 			for(i = 0; i < numBars; i++) {
-				mc.mcProfiler.startSection("Sat: " + (i + 1));
+				mc.profiler.startSection("Sat: " + (i + 1));
 				drawStatBar(jitterAmount, mc, left, top, ModConsts.VANILLA_MAX_SAT, 0, 9, false, false, true, false, satColours.get((colourIndex++) % satColours.size()));
-				mc.mcProfiler.endSection();
+				mc.profiler.endSection();
 			}
 			if(remainingSat > 0) {
-				mc.mcProfiler.startSection("Sat: " + (i + 1));
+				mc.profiler.startSection("Sat: " + (i + 1));
 				drawStatBar(jitterAmount, mc, left, top, remainingSat, 0, 9, false, false, true, false, satColours.get((colourIndex++) % satColours.size()));
-				mc.mcProfiler.endSection();
+				mc.profiler.endSection();
 			}
 		}
-		mc.mcProfiler.endStartSection("Max");
+		mc.profiler.endStartSection("Max");
 		if(max % 20 != 0) {
 			drawMax(max % 20, ticks, mc, left, top, jitterAmount[(int) Math.ceil((max % 20) / 2.0f) - 1]);
 		}
@@ -272,7 +274,7 @@ public class HUDOverlayHandler extends Handler {
 			drawMax(19, ticks, mc, left, top, jitterAmount[9]);
 		}
 		if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.features.starve.tracker.lossFreq > 1 && hunger <= 0) {
-			mc.mcProfiler.endStartSection("Tracker");
+			mc.profiler.endStartSection("Tracker");
 			mc.getTextureManager().bindTexture(icons);
 			drawStatBar(jitterAmount, mc, left, top, ((max < 20.0f ? max : 20.0f) / (ModConfig.features.starve.tracker.lossFreq - 1)) * ticks, 0, 9, false, false, true, false, new Colour("aa0000"));
 		}
@@ -291,6 +293,7 @@ public class HUDOverlayHandler extends Handler {
 
 	private static void drawSimpleInfo(int i, Minecraft mc, int left, int top, int hunger, int max) {
 		GL11.glPushMatrix();
+		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
 		GL11.glScalef(0.5f, 0.5f, 1.0f);
 		mc.fontRenderer.drawStringWithShadow("x" + i + "/" + (int) Math.ceil((float) max / ModConsts.VANILLA_MAX_HUNGER), left / 0.6f + 1 / 0.6f, top / 0.6f + 4.5f / 0.6f, getColour(hunger, max));
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -377,15 +380,16 @@ public class HUDOverlayHandler extends Handler {
 
 	private static void drawMax(int max, int ticks, Minecraft mc, int left, int top, int jitter) {
 		mc.getTextureManager().bindTexture(icons);
-		mc.mcProfiler.startSection("extendedMax");
+		mc.profiler.startSection("extendedMax");
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		int x = 0;
 		int y = top + jitter;
-		for(int i = 0; i < max / 2.0f; i++) {
+		/*for(int i = 0; i < max / 2.0f; i++) {
 			x = left - i * 8 - 9;
-		}
+		}*/
+		x = left - (int)((max - 1)/2.0f) * 8 - 9;
 		int hunger = mc.player.getFoodStats().getFoodLevel();
 		int foodMax = AppleCoreAPI.accessor.getMaxHunger(mc.player);
 		float alpha = (hunger < 20 * Math.floor(foodMax / 20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER ? (float) ModConfig.hud.maxOutlineTransparency : 1.0f);
@@ -408,7 +412,7 @@ public class HUDOverlayHandler extends Handler {
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GlStateManager.disableAlpha();
 		GlStateManager.disableBlend();
-		mc.mcProfiler.endSection();
+		mc.profiler.endSection();
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 

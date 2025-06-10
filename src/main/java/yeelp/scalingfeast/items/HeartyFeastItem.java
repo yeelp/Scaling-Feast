@@ -38,7 +38,7 @@ public class HeartyFeastItem extends ItemBlock implements IItemDescribable {
 	public HeartyFeastItem(Block block) {
 		super(block);
 		this.setRegistryName("heartyfeastitem");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".heartyfeast");
+		this.setTranslationKey(ModConsts.MOD_ID + ".heartyfeast");
 		this.setCreativeTab(CreativeTabs.FOOD);
 		this.setMaxStackSize(1);
 	}

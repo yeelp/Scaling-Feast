@@ -69,7 +69,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 	public HeartyFeastBlock() {
 		this.blockSoundType = SoundType.CLOTH;
 		this.setRegistryName("heartyfeast");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".heartyfeast");
+		this.setTranslationKey(ModConsts.MOD_ID + ".heartyfeast");
 		this.setHardness(0.5f);
 	}
 
@@ -87,6 +87,10 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 	@Override
 	public void setEdibleAtMaxHunger(boolean value) {
 		this.alwaysEdible = value;
+	}
+	
+	public boolean isEdibleAtMaxHunger() {
+		return this.alwaysEdible;
 	}
 
 	@Override

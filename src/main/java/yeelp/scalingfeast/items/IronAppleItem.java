@@ -36,7 +36,7 @@ public class IronAppleItem extends ItemFood {
 		super(0, 0, false);
 		this.setAlwaysEdible();
 		this.setRegistryName("ironapple");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".ironapple");
+		this.setTranslationKey(ModConsts.MOD_ID + ".ironapple");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
 

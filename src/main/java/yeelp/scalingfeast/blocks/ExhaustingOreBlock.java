@@ -31,14 +31,14 @@ public final class ExhaustingOreBlock extends ExhaustionIncreasingBlock {
 	public ExhaustingOreBlock() {
 		super(Material.ROCK);
 		this.setRegistryName("exhaustingore");
-		this.setUnlocalizedName(ModConsts.MOD_ID + ".exhaustingore");
+		this.setTranslationKey(ModConsts.MOD_ID + ".exhaustingore");
 		this.setHardness(8f);
 		this.setHarvestLevel("pickaxe", 2);
 		this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
