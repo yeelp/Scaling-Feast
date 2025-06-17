@@ -78,6 +78,9 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 						if(SOLCarrotModule.this.reachedAllMilestones(evt.player)) {
 							msgs.add(new TextComponentTranslation("modules.scalingfeast.sol.reachedAllMilestones"));
 						}
+						if(msgs.isEmpty()) {
+							return; //fail safe if empty, just don't send messages.
+						}
 						ITextComponent last = msgs.removeLast();
 						boolean actionBar = SOLCarrotModule.this.getConfig().rewardMsgAboveHotbar;
 						msgs.forEach((c) -> evt.player.sendStatusMessage(c.setStyle(SOLCarrotModule.GREEN_STYLE), false));
