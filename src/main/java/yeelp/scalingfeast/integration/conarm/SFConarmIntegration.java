@@ -25,7 +25,6 @@ public final class SFConarmIntegration implements IIntegratable {
 	
 	@Override
 	public boolean preIntegrate(FMLPreInitializationEvent evt) {
-		TinkerRegistry.addMaterialStats(SFTinkerIntegration.exhaustium, new CoreMaterialStats(20, 10), new TrimMaterialStats(7), new PlatesMaterialStats(1.35f, 3, 3));
 		if(evt.getSide() == Side.CLIENT) {
 			ArmoryBook.INSTANCE.addRepository(new FileRepository("scalingfeast:conarm/book"));
 			ArmoryBook.INSTANCE.addTransformer(new ScalingFeastBookTransformer());
@@ -35,6 +34,7 @@ public final class SFConarmIntegration implements IIntegratable {
 
 	@Override
 	public boolean integrate(FMLInitializationEvent evt) {
+		TinkerRegistry.addMaterialStats(SFTinkerIntegration.exhaustium, new CoreMaterialStats(20, 10), new TrimMaterialStats(7), new PlatesMaterialStats(1.35f, 3, 3));
 		ArmorMaterials.addArmorTrait(SFTinkerIntegration.exhaustium, torporic, nourishing);
 		RecipeMatchHolder.addItem(gluttony, SFItems.heartyfeastitem, 1, 1);
 		RecipeMatchHolder.addItem(fasting, SFItems.exhaustingapple, 1, 1);

@@ -43,14 +43,14 @@ public class SFTinkerIntegration implements IIntegratable {
 	public boolean preIntegrate(FMLPreInitializationEvent evt) {
 		TinkerRegistry.integrate(new MaterialIntegration(exhaustium, moltenExhaustion, "Exhausting")).toolforge().preInit();
 		proxy.preInit();
-		TinkerRegistry.addMaterialStats(exhaustium, new HeadMaterialStats(350, 9, 6.5f, HarvestLevels.DIAMOND), new HandleMaterialStats(1.35f, 3), new ExtraMaterialStats(380));
-		TinkerRegistry.addMaterialStats(exhaustium, new BowMaterialStats(3.14f, 2.71f, 3));
 		return true;
 	}
 
 	@Override
 	public boolean integrate(FMLInitializationEvent evt) {
 		proxy.init();
+		TinkerRegistry.addMaterialStats(exhaustium, new HeadMaterialStats(350, 9, 6.5f, HarvestLevels.DIAMOND), new HandleMaterialStats(1.35f, 3), new ExtraMaterialStats(380));
+		TinkerRegistry.addMaterialStats(exhaustium, new BowMaterialStats(3.14f, 2.71f, 3));
 		exhaustium.addTrait(exhausting2, MaterialTypes.HEAD);
 		exhaustium.addTrait(feasting, MaterialTypes.HEAD);
 		exhaustium.addTrait(exhausting1);
