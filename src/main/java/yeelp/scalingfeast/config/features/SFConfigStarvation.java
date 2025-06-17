@@ -30,7 +30,7 @@ public final class SFConfigStarvation {
 		public int starveLoss = 2;
 
 		@Name("Starvation Loss Lower Bound")
-		@Comment("When losing hunger due to starvation, a player's max hunger will never get set below this value. If a player's max hunger is already below this value, starving will not punish the player")
+		@Comment("When losing max hunger due to starvation, a player's max hunger will never get set below this value. If a player's max hunger is already below this value, starving will not punish the player")
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
 		public int starveLowerCap = 1;
 

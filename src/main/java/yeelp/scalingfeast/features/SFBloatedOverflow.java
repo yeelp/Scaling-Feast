@@ -19,6 +19,9 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 
 			@SubscribeEvent
 			public final void onFoodStatsAddition(FoodStatsAddition evt) {
+				if(!SFBloatedOverflow.this.getConfig().doBloatedOverflow) {
+					return;
+				}
 				FoodValues fVals = evt.foodValuesToBeAdded;
 				EntityPlayer player = evt.player;
 				int overflow = player.getFoodStats().getFoodLevel() + fVals.hunger - AppleCoreAPI.accessor.getMaxHunger(player);
