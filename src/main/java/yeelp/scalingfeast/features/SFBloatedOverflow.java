@@ -2,6 +2,7 @@ package yeelp.scalingfeast.features;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
@@ -24,6 +25,9 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 				}
 				FoodValues fVals = evt.foodValuesToBeAdded;
 				EntityPlayer player = evt.player;
+				if(player.world.isRemote || player instanceof FakePlayer) {
+					return;
+				}
 				int overflow = player.getFoodStats().getFoodLevel() + fVals.hunger - AppleCoreAPI.accessor.getMaxHunger(player);
 				int level = overflow / 4 - 1;
 
