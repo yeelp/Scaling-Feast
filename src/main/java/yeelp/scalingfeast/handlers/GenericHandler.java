@@ -27,6 +27,7 @@ public class GenericHandler extends Handler {
 	@SubscribeEvent
 	public void onGetMaxHunger(HungerEvent.GetMaxHunger evt) {
 		evt.maxHunger += evt.player.getEntityAttribute(SFAttributes.MAX_HUNGER_MOD).getAttributeValue();
+		evt.maxHunger = Math.max(1, evt.maxHunger);
 	}
 	
 	@SuppressWarnings("static-method")
