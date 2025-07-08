@@ -95,9 +95,7 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 
 	@Override
 	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		FoodValues fv = getFoodValuesFor(player);
-		this.food = fv.hunger;
-		users.put(player.getUniqueID(), fv);
+		users.put(player.getUniqueID(), this.setFoodValuesForPlayer(player));
 		return this.eat(world, pos, state, player);
 	}
 
@@ -123,6 +121,12 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 			player.addPotionEffect(new PotionEffect(SFPotion.ironstomach, dur));
 		}
 		users.remove(player.getUniqueID());
+	}
+	
+	public FoodValues setFoodValuesForPlayer(EntityPlayer player) {
+		FoodValues fv = getFoodValuesFor(player);
+		this.food = fv.hunger;
+		return fv;
 	}
 
 	public static int getCap() {

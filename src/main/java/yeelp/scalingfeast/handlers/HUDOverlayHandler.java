@@ -1,9 +1,15 @@
 package yeelp.scalingfeast.handlers;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.Stream.Builder;
 
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -29,7 +35,24 @@ import yeelp.scalingfeast.config.ModConfig.HUDCategory.DisplayStyle;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.MaxColourStyle;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.TrackerStyle;
-import yeelp.scalingfeast.helpers.AppleSkinHelper;
+import yeelp.scalingfeast.hud.BloatedContainersDrawable;
+import yeelp.scalingfeast.hud.BloatedInfoStringDrawables;
+import yeelp.scalingfeast.hud.DrawUtils;
+import yeelp.scalingfeast.hud.ExhaustionDrawable;
+import yeelp.scalingfeast.hud.HungerContainersDrawable;
+import yeelp.scalingfeast.hud.IDrawable;
+import yeelp.scalingfeast.hud.InfoStringsDrawables;
+import yeelp.scalingfeast.hud.ScalingFeastBloatedBarMeatDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastLowerBloatedBarDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastLowerHungerBarDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastLowerSaturationBarDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastMaxDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastStarvationTrackerDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastUpperBloatedBarDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastUpperHungerBarDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastUpperSaturationBarDrawable;
+import yeelp.scalingfeast.hud.ScalingFeastVanillaHungerOverrideDrawable;
+import yeelp.scalingfeast.hud.VanillaHungerDrawable;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.Colour;
 import yeelp.scalingfeast.util.HUDUtils;
@@ -44,16 +67,34 @@ public class HUDOverlayHandler extends Handler {
 	private static ArrayList<Colour> satColours = new ArrayList<Colour>();
 	private static ArrayList<Colour> bloatedColours = new ArrayList<Colour>();
 	private static Random rand = new Random();
-	private boolean appleSkinErr = false;
 	private static int satColour = 0xffff55;
 	private static int satColourEmpty = 0x555555;
-
+	private static final IDrawable EXHAUSTION_UNDERLAY = new ExhaustionDrawable();
+	private static final IDrawable MAX_DRAWABLE = new ScalingFeastMaxDrawable();
+	private static final IDrawable STARVATION_DRAWABLE = new ScalingFeastStarvationTrackerDrawable();
+	private static final List<IDrawable> VANILLA_DRAWABLES = Lists.newArrayList(new HungerContainersDrawable(), new VanillaHungerDrawable());
+	private static final List<IDrawable> HUNGER_DRAWABLES = Lists.newArrayList(new ScalingFeastVanillaHungerOverrideDrawable(), new ScalingFeastLowerHungerBarDrawable(), new ScalingFeastUpperHungerBarDrawable());
+	private static final List<IDrawable> SATURATION_DRAWABLES = Lists.newArrayList(new ScalingFeastLowerSaturationBarDrawable(), new ScalingFeastUpperSaturationBarDrawable());
+	private static final List<IDrawable> BLOATED_DRAWABLES = Lists.newArrayList(new BloatedContainersDrawable(), new ScalingFeastBloatedBarMeatDrawable(), new ScalingFeastLowerBloatedBarDrawable(), new ScalingFeastUpperBloatedBarDrawable());
+	private static final List<IDrawable> ALWAYS_DRAWN_DRAWABLES;
+	
+	static {
+		Builder<IDrawable> builder = Stream.builder();
+		builder.add(EXHAUSTION_UNDERLAY);
+		VANILLA_DRAWABLES.forEach(builder::add);
+		HUNGER_DRAWABLES.forEach(builder::add);
+		ALWAYS_DRAWN_DRAWABLES = builder.build().collect(Collectors.toList());
+	}
+	
 	public HUDOverlayHandler() {
 		setIcons();
 		loadColours();
 		loadTextColours();
+		DrawUtils.updateColours();
+		DrawUtils.updateTextColours();
 	}
 
+	@Deprecated
 	@SuppressWarnings("incomplete-switch")
 	public static void setIcons() {
 		switch(ModConfig.hud.overlayStyle) {
@@ -66,6 +107,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	public static void loadColours() {
 		if(HUDUtils.isEmpty(ModConfig.hud.Hcolours)) {
 			colours.add(new Colour("ff9d00"));
@@ -107,6 +149,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	public static void loadTextColours() {
 		try {
 			satColour = Integer.decode("0x" + ModConfig.hud.satTextColour);
@@ -138,28 +181,40 @@ public class HUDOverlayHandler extends Handler {
 
 				this.offset = GuiIngameForge.right_height;
 
-				int left = res.getScaledWidth() / 2 + 91;
-				int top = res.getScaledHeight() - this.offset;
-				// If we have AppleSkin, we need to redraw the whole exhaustion bar.
-				if(AppleSkinHelper.isLoaded() && !this.appleSkinErr) {
-					this.appleSkinErr = !AppleSkinHelper.drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 0);
-				}
+				final int left = res.getScaledWidth() / 2 + 91;
+				final int top = res.getScaledHeight() - this.offset;
 				// Calculate the random jitter amount beforehand and pass it to the draw methods
-				int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
-				drawStatsOverlay(jitterAmount, mc, player, left, top);
+				DrawUtils.calculateJitterAmount(mc.ingameGUI.getUpdateCounter(), player);
+				// If we have AppleSkin, we need to redraw the whole exhaustion bar.
+				drawDrawables(ALWAYS_DRAWN_DRAWABLES, mc, player, left, top);
+				if(ModConfig.hud.drawSaturation) {
+					drawDrawables(SATURATION_DRAWABLES, mc, player, left, top);
+				}
+				MAX_DRAWABLE.draw(mc, player, left, top);
+				if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.features.starve.tracker.lossFreq > 1) {
+					STARVATION_DRAWABLE.draw(mc, player, left, top);
+				}
+				InfoStringsDrawables.getInfoDrawable().draw(mc, player, left, top);
+				
+				
+				//int[] jitterAmount = getJitterAmount(Minecraft.getMinecraft().ingameGUI.getUpdateCounter(), player);
+				//drawStatsOverlay(jitterAmount, mc, player, left, top);
+				
+				int bloatedAmount = ScalingFeastAPI.accessor.getSFFoodStats(player).getBloatedHungerAmount();
+				if(bloatedAmount > 0) {
+					GuiIngameForge.right_height += 10;
+					// reset offset value to reflect change to right_height.
+					this.offset = GuiIngameForge.right_height;
+					int newTop = res.getScaledHeight() - this.offset;
+					drawDrawables(BLOATED_DRAWABLES, mc, player, left, newTop);
+					BloatedInfoStringDrawables.getInfoDrawable().draw(mc, player, left, newTop);
+					//int[] bloatedJitter = new int[10];
+					//System.arraycopy(jitterAmount, (int) Math.min(Math.ceil(AppleCoreAPI.accessor.getMaxHunger(player)/2.0f), 10), bloatedJitter, 0, 10);
+					//drawBloatedAmount(bloatedJitter, mc, player, bloatedAmount, left, top);
+				}
 				// air meter expects this to be done before it runs so it doesn't draw on top of
 				// hunger.
 				GuiIngameForge.right_height += 10;
-				// reset offset value to reflect change to right_height.
-				this.offset = GuiIngameForge.right_height;
-				int bloatedAmount = ScalingFeastAPI.accessor.getSFFoodStats(player).getBloatedHungerAmount();
-				if(bloatedAmount > 0) {
-					int[] bloatedJitter = new int[10];
-					System.arraycopy(jitterAmount, (int) Math.min(Math.ceil(AppleCoreAPI.accessor.getMaxHunger(player)/2.0f), 10), bloatedJitter, 0, 10);
-					top = res.getScaledHeight() - this.offset;
-					drawBloatedAmount(bloatedJitter, mc, player, bloatedAmount, left, top);
-					GuiIngameForge.right_height += 10;
-				}
 				if(ModConfig.compat.shouldFirePost) {
 					MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(evt, RenderGameOverlayEvent.ElementType.FOOD));
 				}
@@ -167,6 +222,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	private static void drawBloatedAmount(int[] jitterAmount, Minecraft mc, EntityPlayer player, int bloatedAmount, int left, int top) {
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
 		mc.getTextureManager().bindTexture(Gui.ICONS);
@@ -204,6 +260,7 @@ public class HUDOverlayHandler extends Handler {
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
+	@Deprecated
 	@SuppressWarnings("incomplete-switch")
 	private static void drawStatsOverlay(int[] jitterAmount, Minecraft mc, EntityPlayer player, int left, int top) {
 		boolean isHungerEffectActive = player.isPotionActive(MobEffects.HUNGER);
@@ -291,6 +348,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	private static void drawSimpleInfo(int i, Minecraft mc, int left, int top, int hunger, int max) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(ModConfig.hud.infoXOffset, ModConfig.hud.infoYOffset, 0);
@@ -301,6 +359,7 @@ public class HUDOverlayHandler extends Handler {
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
+	@Deprecated
 	private static void drawAdvancedInfo(Minecraft mc, EntityPlayer player, int left, int top) {
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
@@ -339,6 +398,7 @@ public class HUDOverlayHandler extends Handler {
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
+	@Deprecated
 	private static void drawStatBar(int[] jitterAmount, Minecraft mc, int left, int top, float amount, int u, int v, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour) {
 		GlStateManager.enableBlend();
 		// this is a one indexed value, the variable currShank will be a zero indexed
@@ -353,6 +413,7 @@ public class HUDOverlayHandler extends Handler {
 		GlStateManager.disableBlend();
 	}
 
+	@Deprecated
 	private static void drawIcon(Minecraft mc, int x, int y, int u, int v, int currShank, float shanksNeeded, boolean vanilla, boolean vanillaOverride, boolean sat, boolean hungerEffectActive, Colour colour) {
 		float leftover = shanksNeeded - currShank;
 		if(colour != null && !vanilla) {
@@ -378,6 +439,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	private static void drawMax(int max, int ticks, Minecraft mc, int left, int top, int jitter) {
 		mc.getTextureManager().bindTexture(icons);
 		mc.profiler.startSection("extendedMax");
@@ -386,13 +448,10 @@ public class HUDOverlayHandler extends Handler {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		int x = 0;
 		int y = top + jitter;
-		/*for(int i = 0; i < max / 2.0f; i++) {
-			x = left - i * 8 - 9;
-		}*/
 		x = left - (int)((max - 1)/2.0f) * 8 - 9;
 		int hunger = mc.player.getFoodStats().getFoodLevel();
 		int foodMax = AppleCoreAPI.accessor.getMaxHunger(mc.player);
-		float alpha = (hunger < 20 * Math.floor(foodMax / 20.0f) && hunger > 0 && foodMax > ModConsts.VANILLA_MAX_HUNGER ? (float) ModConfig.hud.maxOutlineTransparency : 1.0f);
+		float alpha = hunger > 20 * (Math.ceil(foodMax / 20.0f) - 1) || hunger == 0 ? 1.0f : (float) ModConfig.hud.maxOutlineTransparency;
 		Colour maxColour = getMaxColour(ticks, ModConfig.features.starve.tracker.lossFreq);
 		GL11.glColor4f(1.0f / 255 * maxColour.getR(), 1.0f / 255 * maxColour.getG(), 1.0f / 255 * maxColour.getB(), alpha);
 
@@ -416,6 +475,7 @@ public class HUDOverlayHandler extends Handler {
 		mc.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
+	@Deprecated
 	private static int[] getJitterAmount(int updateCounter, EntityPlayer player) {
 		final int size = 20;
 		rand.setSeed(updateCounter * 70643);
@@ -440,6 +500,7 @@ public class HUDOverlayHandler extends Handler {
 		return jitterAmount;
 	}
 
+	@Deprecated
 	private static int getColour(int hunger, int max) {
 		if(hunger == max) {
 			return 0x55ff55;
@@ -461,6 +522,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	private static Colour getMaxColour(int ticks, int maxTicks) {
 		switch(ModConfig.hud.trackerStyle) {
 			case MAX_COLOUR:
@@ -501,6 +563,7 @@ public class HUDOverlayHandler extends Handler {
 		}
 	}
 
+	@Deprecated
 	private static ArrayList<Colour> colourize(String[] arr) {
 		ArrayList<Colour> lst = new ArrayList<Colour>();
 		for(String hex : arr) {
@@ -510,5 +573,13 @@ public class HUDOverlayHandler extends Handler {
 			lst.add(new Colour(hex));
 		}
 		return lst;
+	}
+	
+	private static void drawDrawables(Iterable<IDrawable> drawables, Minecraft mc, EntityPlayer player, int left, int top) {
+		drawables.forEach((d) -> {
+			if(d.shouldDraw(player)) {
+				d.draw(mc, player, left, top);				
+			}
+		});
 	}
 }

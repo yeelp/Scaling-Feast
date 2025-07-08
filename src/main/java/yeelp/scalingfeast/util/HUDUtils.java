@@ -25,6 +25,7 @@ import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.food.IEdible;
 import squeek.applecore.api.food.IEdibleBlock;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.items.ExhaustingApple;
 import yeelp.scalingfeast.items.HeartyShankItem;
@@ -71,6 +72,7 @@ public class HUDUtils {
 	
 	private static final List<Class<?>> EDIBLE_CLASSES = Lists.newArrayList(ItemFood.class, IEdible.class);
 
+	@Deprecated
 	public static boolean isEmpty(String[] arr) {
 		for(String str : arr) {
 			if(str != null) {
@@ -186,7 +188,10 @@ public class HUDUtils {
 			Block block = player.getEntityWorld().getBlockState(pos).getBlock();
 			if(block instanceof IEdibleBlock) {
 				if(hunger < max) {
-					return ((IEdibleBlock) block).getFoodValues(new ItemStack(AppleCoreAPI.registry.getItemFromEdibleBlock(block)));					
+					if(block instanceof HeartyFeastBlock) {
+						((HeartyFeastBlock) block).setFoodValuesForPlayer(player);
+					}
+					return AppleCoreAPI.accessor.getFoodValuesForPlayer(new ItemStack(AppleCoreAPI.registry.getItemFromEdibleBlock(block)), player);					
 				}
 			}
 		}
