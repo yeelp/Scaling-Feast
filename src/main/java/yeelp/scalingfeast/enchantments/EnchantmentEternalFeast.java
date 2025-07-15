@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
@@ -27,10 +26,8 @@ public class EnchantmentEternalFeast extends SFEnchantmentBase {
 	 * every time the user kills an entity.
 	 */
 	public EnchantmentEternalFeast() {
-		super(Rarity.RARE, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {
+		super("eternalfeast", Rarity.RARE, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.MAINHAND});
-		this.setRegistryName("eternalfeast");
-		this.setName(ModConsts.MOD_ID + ".eternalfeast");
 	}
 
 	@Override

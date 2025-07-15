@@ -17,7 +17,6 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
@@ -35,10 +34,8 @@ public class EnchantmentFamine extends SFEnchantmentBase {
 	 * Create a new Fasting Enchantment
 	 */
 	public EnchantmentFamine() {
-		super(Rarity.UNCOMMON, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {
+		super("famine", Rarity.UNCOMMON, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.MAINHAND});
-		this.setRegistryName("famine");
-		this.setName(ModConsts.MOD_ID + ".famine");
 	}
 
 	@Override

@@ -5,12 +5,18 @@ import java.util.Optional;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
 
 public abstract class SFEnchantmentBase extends Enchantment {
 	
-	public SFEnchantmentBase(Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot[] slots) {
+	private final String simpleName;
+	
+	public SFEnchantmentBase(String name, Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot[] slots) {
 		super(rarityIn, typeIn, slots);
+		this.simpleName = name;
+		this.setRegistryName(ModConsts.MOD_ID, this.simpleName);
+		this.setName(String.format("%s.%s", ModConsts.MOD_ID, this.simpleName));
 	}
 	
 	/**
@@ -37,4 +43,8 @@ public abstract class SFEnchantmentBase extends Enchantment {
 	 * @return True if enabled, false if not
 	 */
 	public abstract boolean enabled();
+	
+	public String getSimpleName() {
+		return this.simpleName;
+	}
 }

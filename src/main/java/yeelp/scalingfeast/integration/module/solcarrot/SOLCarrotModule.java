@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent.FoodEaten;
-import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.ModConsts.IntegrationIds;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.config.ModConfig;
@@ -65,7 +65,7 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 	@Override
 	protected Handler getHandler() {
 		return new Handler() {
-			@Method(modid = ModConsts.SOLCARROT_ID)
+			@Method(modid = IntegrationIds.SOLCARROT_ID)
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onFoodEaten(FoodEaten evt) {
 				if(SOLCarrotModule.this.enabled()) {
@@ -90,7 +90,7 @@ public final class SOLCarrotModule extends AbstractModule<SFSOLCarrotConfigCateg
 				}
 			}
 			
-			@Method(modid = ModConsts.SOLCARROT_ID)
+			@Method(modid = IntegrationIds.SOLCARROT_ID)
 			@SubscribeEvent(priority = EventPriority.HIGHEST)
 			public final void onDeath(PlayerEvent.Clone evt) {
 				if(SOLCarrotModule.this.enabled() && !(evt.isWasDeath() && SOLCarrotConfig.shouldResetOnDeath)) {

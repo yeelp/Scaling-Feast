@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.conarm;
+package yeelp.scalingfeast.integration.tic.conarm;
 
 import java.util.Set;
 
@@ -10,12 +10,12 @@ import yeelp.scalingfeast.init.SFEnchantments;
 public final class ModifierFasting extends AbstractSFArmorModifier {
 
 	public ModifierFasting() {
-		super("fasting", 0xfcf3eb, SFEnchantments.fasting, 2);
+		super(0xfcf3eb, SFEnchantments.fasting, 2);
 	}
 
 	@Override
 	public Set<IToolMod> getIncompatibilities() {
-		return ImmutableSet.of(SFConarmIntegration.gluttony);
+		return ImmutableSet.of(SFConarmIntegration.GLUTTONY);
 	}
 
 }

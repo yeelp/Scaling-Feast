@@ -7,17 +7,14 @@ import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.hunger.ExhaustionEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 
 public class CurseLaziness extends SFEnchantmentBase {
 	public CurseLaziness() {
-		super(Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
+		super("lazinesscurse", Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});
-		this.setRegistryName("lazinesscurse");
-		this.setName(ModConsts.MOD_ID + ".lazinesscurse");
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.conarm;
+package yeelp.scalingfeast.integration.tic.conarm;
 
 import java.util.UUID;
 
@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
+import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class TraitNourishing extends AbstractArmorTrait {
 	
@@ -21,7 +22,7 @@ public final class TraitNourishing extends AbstractArmorTrait {
 	private static final double AMOUNT_PER_LEVEL = 4.0;
 	
 	public TraitNourishing() {
-		super("nourishing", 0xC69174);
+		super("nourishing", TiCConsts.EXHAUSTING_COLOUR);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	

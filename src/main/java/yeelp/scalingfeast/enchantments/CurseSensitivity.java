@@ -10,7 +10,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
@@ -19,10 +18,8 @@ import yeelp.scalingfeast.init.SFPotion;
 
 public class CurseSensitivity extends SFEnchantmentBase {
 	public CurseSensitivity() {
-		super(Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
+		super("sensitivitycurse", Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});
-		this.setRegistryName("sensitivitycurse");
-		this.setName(ModConsts.MOD_ID + ".sensitivitycurse");
 	}
 
 	@Override

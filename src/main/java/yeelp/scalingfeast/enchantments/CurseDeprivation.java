@@ -7,17 +7,14 @@ import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 
 public class CurseDeprivation extends SFEnchantmentBase {
 	public CurseDeprivation() {
-		super(Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
+		super("deprivationcurse", Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});
-		this.setName(ModConsts.MOD_ID + ".deprivationcurse");
-		this.setRegistryName("deprivationcurse");
 	}
 
 	@Override

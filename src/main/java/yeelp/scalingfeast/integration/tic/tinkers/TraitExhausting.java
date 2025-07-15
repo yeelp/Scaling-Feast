@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.tinkers;
+package yeelp.scalingfeast.integration.tic.tinkers;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,6 +17,7 @@ import slimeknights.tconstruct.library.modifiers.ModifierNBT;
 import slimeknights.tconstruct.library.traits.AbstractTraitLeveled;
 import slimeknights.tconstruct.library.utils.TinkerUtil;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class TraitExhausting extends AbstractTraitLeveled {
 
@@ -25,7 +26,7 @@ public final class TraitExhausting extends AbstractTraitLeveled {
 			MobEffects.SLOWNESS});
 
 	public TraitExhausting(int level) {
-		super("exhausting", 0xC69174, 3, level);
+		super("exhausting", TiCConsts.EXHAUSTING_COLOUR, 3, level);
 	}
 
 	@Override

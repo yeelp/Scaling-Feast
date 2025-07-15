@@ -1,14 +1,15 @@
-package yeelp.scalingfeast.integration.tinkers;
+package yeelp.scalingfeast.integration.tic.tinkers;
 
 import slimeknights.tconstruct.library.Util;
 import slimeknights.tconstruct.library.fluid.FluidMolten;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class MoltenExhaustium extends FluidMolten {
 
 	public MoltenExhaustium() {
-		super("exhaustion_fluid", 0xC69174, FluidMolten.ICON_MetalStill, FluidMolten.ICON_MetalFlowing);
+		super("exhaustion_fluid", TiCConsts.EXHAUSTING_COLOUR, FluidMolten.ICON_MetalStill, FluidMolten.ICON_MetalFlowing);
 		this.setUnlocalizedName(Util.prefix(this.fluidName));
 		this.setTemperature(500);
 		this.setLuminosity(3);

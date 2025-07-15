@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import yeelp.scalingfeast.ModConsts.IntegrationIds;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.blocks.ExhaustionIncreasingBlock;
 import yeelp.scalingfeast.capability.IBloatedHunger;
@@ -54,6 +55,7 @@ public class ScalingFeast {
 		ScalingFeastAPI.init();
 		ModIntegrationKernel.load();
 		proxy.preInit();
+		SFOreDict.init();
 		new SFAttributes().register();
 		SFEnchantments.init();
 		SFPotion.init();
@@ -83,8 +85,7 @@ public class ScalingFeast {
 		new BloatedHandler().register();
 		new ExhaustionIncreasingBlock.ExhaustionHandler().register();
 		SFFeatures.init();
-		SFOreDict.init();
-		if(Loader.isModLoaded(ModConsts.APPLESKIN_ID)) {
+		if(Loader.isModLoaded(IntegrationIds.APPLESKIN_ID)) {
 			try {
 				AppleSkinHelper.init();
 			}

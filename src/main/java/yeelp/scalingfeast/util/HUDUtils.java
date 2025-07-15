@@ -72,16 +72,6 @@ public class HUDUtils {
 	
 	private static final List<Class<?>> EDIBLE_CLASSES = Lists.newArrayList(ItemFood.class, IEdible.class);
 
-	@Deprecated
-	public static boolean isEmpty(String[] arr) {
-		for(String str : arr) {
-			if(str != null) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public static AdvancedInfo getAdvancedInfoString(EntityPlayer player) {
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent;
 import squeek.applecore.api.food.FoodValues;
-import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.ModConsts.IntegrationIds;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
@@ -28,10 +28,8 @@ public class EnchantmentGluttony extends SFEnchantmentBase {
 	 * Create a new Gluttony Enchantment
 	 */
 	public EnchantmentGluttony() {
-		super(Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
+		super("gluttony", Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});
-		this.setRegistryName("gluttony");
-		this.setName(ModConsts.MOD_ID + ".gluttony");
 	}
 
 	@Override
@@ -83,6 +81,6 @@ public class EnchantmentGluttony extends SFEnchantmentBase {
 
 	@Override
 	public boolean shouldRegisterHandlerAnyway() {
-		return Loader.isModLoaded(ModConsts.CONARM_ID);
+		return Loader.isModLoaded(IntegrationIds.CONARM_ID);
 	}
 }

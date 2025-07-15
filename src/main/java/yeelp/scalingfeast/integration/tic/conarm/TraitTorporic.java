@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.conarm;
+package yeelp.scalingfeast.integration.tic.conarm;
 
 import c4.conarm.lib.traits.AbstractArmorTrait;
 import net.minecraft.entity.player.EntityPlayer;
@@ -6,13 +6,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class TraitTorporic extends AbstractArmorTrait {
 
 	private static final String KEY = "scalingfeast.conarm.torporic.activated";
 	
 	public TraitTorporic() {
-		super("torporic", 0xC69174);
+		super("torporic", TiCConsts.EXHAUSTING_COLOUR);
 	}
 
 	@Override

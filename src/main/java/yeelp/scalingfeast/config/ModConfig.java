@@ -12,7 +12,6 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.features.SFFeatureConfigCategory;
 import yeelp.scalingfeast.config.items.SFItemConfigCategory;
 import yeelp.scalingfeast.config.modules.SFModuleConfigCategory;
-import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.hud.DrawUtils;
 
 @Config(modid = ModConsts.MOD_ID)
@@ -198,9 +197,6 @@ public class ModConfig {
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 			if(event.getModID().equals(ModConsts.MOD_ID)) {
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
-				HUDOverlayHandler.loadColours();
-				HUDOverlayHandler.setIcons();
-				HUDOverlayHandler.loadTextColours();
 				DrawUtils.updateColours();
 				DrawUtils.updateTextColours();
 			}

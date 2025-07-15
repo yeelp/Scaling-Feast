@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.tinkers;
+package yeelp.scalingfeast.integration.tic.tinkers;
 
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -18,16 +18,18 @@ import slimeknights.tconstruct.library.traits.AbstractTrait;
 import slimeknights.tconstruct.library.utils.HarvestLevels;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
 import yeelp.scalingfeast.init.SFItems;
+import yeelp.scalingfeast.init.SFOreDict;
 import yeelp.scalingfeast.integration.module.IIntegratable;
-import yeelp.scalingfeast.integration.tinkers.proxy.TiCClientProxy;
-import yeelp.scalingfeast.integration.tinkers.proxy.TiCProxy;
+import yeelp.scalingfeast.integration.tic.TiCConsts;
+import yeelp.scalingfeast.integration.tic.tinkers.proxy.TiCClientProxy;
+import yeelp.scalingfeast.integration.tic.tinkers.proxy.TiCProxy;
 
 public class SFTinkerIntegration implements IIntegratable {
 
-	public static final AbstractTrait exhausting1 = new TraitExhausting(1), exhausting2 = new TraitExhausting(2);
-	public static final AbstractTrait feasting = new TraitFeasting();
+	public static final AbstractTrait EXHAUSTING_1 = new TraitExhausting(1), EXHAUSTING_2 = new TraitExhausting(2);
+	public static final AbstractTrait FEASTING = new TraitFeasting();
 
-	public static Material exhaustium = new Material("exhaustium", 0xC69174);
+	public static Material exhaustium = new Material("exhaustium", TiCConsts.EXHAUSTING_COLOUR);
 	public static MoltenExhaustium moltenExhaustion = new MoltenExhaustium();
 	public static BlockMolten moltenBlock;
 
@@ -41,7 +43,14 @@ public class SFTinkerIntegration implements IIntegratable {
 
 	@Override
 	public boolean preIntegrate(FMLPreInitializationEvent evt) {
-		TinkerRegistry.integrate(new MaterialIntegration(exhaustium, moltenExhaustion, "Exhausting")).toolforge().preInit();
+		TinkerRegistry.addMaterialStats(exhaustium, new HeadMaterialStats(350, 9, 6.5f, HarvestLevels.DIAMOND), new HandleMaterialStats(1.35f, 3), new ExtraMaterialStats(380));
+		TinkerRegistry.addMaterialStats(exhaustium, new BowMaterialStats(3.14f, 2.71f, 3));
+		exhaustium.addCommonItems(SFOreDict.SUFFIX);
+		exhaustium.addTrait(EXHAUSTING_2, MaterialTypes.HEAD);
+		exhaustium.addTrait(FEASTING, MaterialTypes.HEAD);
+		exhaustium.addTrait(EXHAUSTING_1);
+		exhaustium.setRepresentativeItem(SFItems.exhaustingIngot);
+		TinkerRegistry.integrate(new MaterialIntegration(exhaustium, moltenExhaustion, SFOreDict.SUFFIX)).toolforge().preInit();
 		proxy.preInit();
 		return true;
 	}
@@ -49,13 +58,6 @@ public class SFTinkerIntegration implements IIntegratable {
 	@Override
 	public boolean integrate(FMLInitializationEvent evt) {
 		proxy.init();
-		TinkerRegistry.addMaterialStats(exhaustium, new HeadMaterialStats(350, 9, 6.5f, HarvestLevels.DIAMOND), new HandleMaterialStats(1.35f, 3), new ExtraMaterialStats(380));
-		TinkerRegistry.addMaterialStats(exhaustium, new BowMaterialStats(3.14f, 2.71f, 3));
-		exhaustium.addTrait(exhausting2, MaterialTypes.HEAD);
-		exhaustium.addTrait(feasting, MaterialTypes.HEAD);
-		exhaustium.addTrait(exhausting1);
-		exhaustium.addCommonItems("Exhausting");
-		exhaustium.setRepresentativeItem(SFItems.exhaustingIngot);
 		return true;
 	}
 
