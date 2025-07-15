@@ -32,4 +32,8 @@ public final class SFFeatureConfigCategory {
 	@Name("Starvation Penalties")
 	@Comment("Configure penalties for starving")
 	public final SFConfigStarvation starve = new SFConfigStarvation();
+	
+	@Name("Exhaustion Scaling")
+	@Comment("Configure exhaustion scaling when breaking blocks")
+	public final SFConfigExhaustionScaling exhaustionScaling = new SFConfigExhaustionScaling();
 }

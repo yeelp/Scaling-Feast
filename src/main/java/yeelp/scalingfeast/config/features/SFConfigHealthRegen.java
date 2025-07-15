@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Config.Name;
 import yeelp.scalingfeast.lib.RegenCriterion.Hunger;
 import yeelp.scalingfeast.lib.RegenCriterion.Saturation;
 
-public class SFConfigHealthRegen {
+public final class SFConfigHealthRegen {
 
 	@Name("Hunger Regen Type")
 	@Comment({
