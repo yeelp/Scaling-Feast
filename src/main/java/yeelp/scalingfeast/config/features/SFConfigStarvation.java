@@ -17,7 +17,7 @@ public final class SFConfigStarvation {
 	@Name("Counter")
 	@Comment({
 			"Configure settings for Scaling Feast's Starvation Counter.",
-			"This counts how many times the player starves in a row, with the ability to inflict more and more damage every time they starve."})
+			"This counts how many times the player starves in a row, with the ability to inflict more and more damage faster and faster every time they starve."})
 	public CounterCategory counter = new CounterCategory();
 
 	@Name("Dynamic Starvation")
@@ -106,6 +106,15 @@ public final class SFConfigStarvation {
 		@Name("d")
 		@Comment("The constant d for Starvation Scaling")
 		public float d = 0;
+		
+		@Name("Base Starvation Period")
+		@Comment("Adjust the base rate at which players starve. The default is the vanilla starve rate.")
+		@RangeInt(min = 1)
+		public int baseStarveRate = 80;
+		
+		@Name("Starve Rate Change")
+		@Comment("The change in a player's starvation rate every time they starve. The starve rate is reset to the base starve rate when the player stops starving. 0 indicates no change.")
+		public int starveRateChange = 0;
 	}
 
 }

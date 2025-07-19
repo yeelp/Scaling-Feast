@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
 import squeek.applecore.api.hunger.ExhaustionEvent.ExhaustionAddition;
+import squeek.applecore.api.hunger.StarvationEvent.GetStarveTickPeriod;
 import squeek.applecore.api.hunger.StarvationEvent.Starve;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
@@ -43,21 +44,28 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 	public Handler getFeatureHandler() {
 		return new Handler() {
 			
+			@SubscribeEvent
+			public final void onGetStarveTickPeriod(GetStarveTickPeriod evt) {
+				SFConfigStarvation config = SFStarvationFeatures.this.getConfig();
+				evt.starveTickPeriod = config.counter.baseStarveRate + ScalingFeastAPI.accessor.getSFFoodStats(evt.player).getStarvationCountAllTime() * config.counter.starveRateChange;
+			}
+			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onStarve(Starve evt) {
 				if(!evt.player.isDead) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
 					int bonusDynamicDamage = getBonusDynamicDamage(sfstats);
 					sfstats.countStarvation(bonusDynamicDamage);
-					float scaledDamage = getConfig().counter.starveScaling.compute(sfstats.getStarvationCountAllTime());
+					SFConfigStarvation config = SFStarvationFeatures.this.getConfig();
+					float scaledDamage = config.counter.starveScaling.compute(sfstats.getStarvationCountAllTime());
 					float unblockableDmg = 0;
-					if(getConfig().dynamic.dynamicStarvationUnblockable) {
+					if(config.dynamic.dynamicStarvationUnblockable) {
 						unblockableDmg += bonusDynamicDamage;
 					}
 					else {
 						evt.starveDamage += bonusDynamicDamage;
 					}
-					if(getConfig().counter.starvationScalingUnblockable) {
+					if(config.counter.starvationScalingUnblockable) {
 						unblockableDmg += scaledDamage;
 					}
 					else {
@@ -75,7 +83,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 				if(evt.player.getFoodStats().getFoodLevel() == 0) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
 					sfstats.resetStarvationCountAllTime();
-					if(getConfig().tracker.doesFreqReset) {
+					if(SFStarvationFeatures.this.getConfig().tracker.doesFreqReset) {
 						sfstats.resetStarvationTracker();
 					}
 				}
@@ -89,7 +97,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			}
 
 			private int getBonusDynamicDamage(SFFoodStats sfstats) {
-				SFConfigStarvation config = getConfig();
+				SFConfigStarvation config = SFStarvationFeatures.this.getConfig();
 				return config.dynamic.doDynamicStarvation ? config.dynamic.bonusStarveDamageMult * sfstats.getTotalBonusDynamicStarvationDamage() : 0;
 			}
 		};

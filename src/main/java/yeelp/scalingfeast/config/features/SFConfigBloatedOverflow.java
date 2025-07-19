@@ -13,4 +13,8 @@ public final class SFConfigBloatedOverflow {
 	@Comment("If Bloated Overflow is enabled, this dictates how long the potion should last in ticks. Note, there are 20 ticks per second.")
 	@RangeInt(min = 1)
 	public int bloatedOverflowDuration = 1800;
+	
+	@Name("Bloated Overflow Level Cap")
+	@Comment("The highest level of Bloated the player can receive through bloated overflow. 0 corresponds to level 1 Bloated. Anything less than 0 will prevent the level from being capped at all.")
+	public int bloatedLevelCap = -1;
 }

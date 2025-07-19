@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "NNN",
+        "NPN",
+        "NNN"
+    ],
+    "key": {
+        "N": {
+            "item": "scalingfeast:exhaustingnugget"
+        },
+        "P": {
+            "item": ["minecraft:potato", "minecraft:poisonous_potato"]
+        }
+    },
+    "result": {
+        "item": "scalingfeast:exhaustingpotato"
+    }
+}
