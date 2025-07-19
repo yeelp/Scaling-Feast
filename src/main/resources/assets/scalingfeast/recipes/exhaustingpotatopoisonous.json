@@ -10,7 +10,7 @@
             "item": "scalingfeast:exhaustingnugget"
         },
         "P": {
-            "item": ["minecraft:potato", "minecraft:poisonous_potato"]
+            "item": "minecraft:poisonous_potato"
         }
     },
     "result": {
