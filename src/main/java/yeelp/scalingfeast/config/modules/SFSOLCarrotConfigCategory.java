@@ -2,6 +2,7 @@ package yeelp.scalingfeast.config.modules;
 
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
+import yeelp.scalingfeast.lib.SFBuiltInModifiers.FoodEfficiencyModifiers.FoodEfficiencyOperations;
 
 public final class SFSOLCarrotConfigCategory {
 
@@ -47,4 +48,10 @@ public final class SFSOLCarrotConfigCategory {
 	@Name("Reward Messages Above Hotbar?")
 	@Comment("If true, Scaling Feast will display its reward messages above a player's hotbar. Else, it will display it in chat. If multiple reward messages are sent, only the last one is displayed in the hotbar if this is true.")
 	public boolean rewardMsgAboveHotbar = false;
+	
+	@Name("Food Efficiency Milestone Reward Type")
+	@Comment({"Set the type of reward for Food Efficiency Milestones",
+		"STACK_ADDITVELY - Multiplies the base Food Efficiency by the sum of this milestone reward plus any other Food Efficieny attribute modifiers. So, it stacks with other modifiers additively",
+		"STACK_MULTIPLICATIVELY - Multiplies the base Food Efficiency by this milestone reward independently of other modifiers. So, it stacks with other modifiers multiplicatively."})
+	public FoodEfficiencyOperations foodEfficiencyMilestoneType = FoodEfficiencyOperations.STACK_MULTIPLICATIVELY;
 }

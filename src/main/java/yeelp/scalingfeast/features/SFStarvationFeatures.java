@@ -47,12 +47,12 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			@SubscribeEvent
 			public final void onGetStarveTickPeriod(GetStarveTickPeriod evt) {
 				SFConfigStarvation config = SFStarvationFeatures.this.getConfig();
-				evt.starveTickPeriod = config.counter.baseStarveRate + ScalingFeastAPI.accessor.getSFFoodStats(evt.player).getStarvationCountAllTime() * config.counter.starveRateChange;
+				evt.starveTickPeriod = Math.max(1, config.counter.baseStarveRate + ScalingFeastAPI.accessor.getSFFoodStats(evt.player).getStarvationCountAllTime() * config.counter.starveRateChange);
 			}
 			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onStarve(Starve evt) {
-				if(!evt.player.isDead) {
+				if(evt.player.isEntityAlive()) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
 					int bonusDynamicDamage = getBonusDynamicDamage(sfstats);
 					sfstats.countStarvation(bonusDynamicDamage);
@@ -91,7 +91,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onExhaution(ExhaustionAddition evt) {
-				if(!evt.player.isDead) {
+				if(evt.player.isEntityAlive()) {
 					ScalingFeastAPI.accessor.getSFFoodStats(evt.player).addExhaustionIfAtZeroHunger(evt.deltaExhaustion);
 				}
 			}
