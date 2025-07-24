@@ -57,6 +57,7 @@ public class SFTinkerIntegration implements IIntegratable {
 
 	@Override
 	public boolean integrate(FMLInitializationEvent evt) {
+		MoltenExhaustium.init();
 		proxy.init();
 		return true;
 	}
