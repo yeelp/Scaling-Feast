@@ -41,8 +41,8 @@ public class Colour {
 	 * 
 	 * @return the red component of this Colour
 	 */
-	public int getR() {
-		return (this.r < 0 ? this.r + 256 : this.r);
+	public byte getR() {
+		return (byte) (this.r < 0 ? this.r + 256 : this.r);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class Colour {
 	 * 
 	 * @return the green component of this Colour
 	 */
-	public int getG() {
-		return (this.g < 0 ? this.g + 256 : this.g);
+	public byte getG() {
+		return (byte) (this.g < 0 ? this.g + 256 : this.g);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Colour {
 	 * 
 	 * @return the blue component of this Colour
 	 */
-	public int getB() {
-		return (this.b < 0 ? this.b + 256 : this.b);
+	public byte getB() {
+		return (byte) (this.b < 0 ? this.b + 256 : this.b);
 	}
 }

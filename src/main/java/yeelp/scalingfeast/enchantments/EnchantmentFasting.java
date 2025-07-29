@@ -12,7 +12,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.ModConsts.IntegrationIds;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.config.ModConfig;
@@ -34,10 +34,8 @@ public class EnchantmentFasting extends SFEnchantmentBase {
 	 * Create a new Fasting Enchantment
 	 */
 	public EnchantmentFasting() {
-		super(Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
+		super("fasting", Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});
-		this.setRegistryName("fasting");
-		this.setName(ModConsts.MOD_ID + ".fasting");
 	}
 
 	@Override
@@ -91,6 +89,6 @@ public class EnchantmentFasting extends SFEnchantmentBase {
 
 	@Override
 	public boolean shouldRegisterHandlerAnyway() {
-		return Loader.isModLoaded(ModConsts.CONARM_ID);
+		return Loader.isModLoaded(IntegrationIds.CONARM_ID);
 	}
 }

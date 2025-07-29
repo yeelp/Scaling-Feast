@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.tinkers.proxy;
+package yeelp.scalingfeast.integration.tic.tinkers.proxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.integration.tinkers.SFTinkerIntegration;
+import yeelp.scalingfeast.integration.tic.tinkers.SFTinkerIntegration;
 
 public class TiCClientProxy extends TiCProxy {
 

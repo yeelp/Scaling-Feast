@@ -12,6 +12,7 @@ import yeelp.scalingfeast.items.ExhaustingBlockItem;
 import yeelp.scalingfeast.items.ExhaustingIngot;
 import yeelp.scalingfeast.items.ExhaustingNugget;
 import yeelp.scalingfeast.items.ExhaustingOreItemBlock;
+import yeelp.scalingfeast.items.ExhaustingPotato;
 import yeelp.scalingfeast.items.HeartyFeastItem;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.items.IronAppleItem;
@@ -21,6 +22,7 @@ public class SFItems {
 	public static ItemFood ironapple;
 	public static ItemFood enchantedironapple;
 	public static ItemFood exhaustingapple;
+	public static ItemFood exhaustingpotato;
 	public static Item heartyfeastitem;
 	public static ExhaustingOreItemBlock exhaustingOre;
 	public static Item exhaustingBlock;
@@ -37,6 +39,7 @@ public class SFItems {
 		exhaustingIngot = new ExhaustingIngot();
 		exhaustingNugget = new ExhaustingNugget();
 		exhaustingapple = new ExhaustingApple();
+		exhaustingpotato = new ExhaustingPotato();
 		
 		ForgeRegistries.ITEMS.register(heartyshank);
 		ForgeRegistries.ITEMS.register(ironapple);
@@ -46,7 +49,8 @@ public class SFItems {
 		ForgeRegistries.ITEMS.register(exhaustingBlock);
 		ForgeRegistries.ITEMS.register(exhaustingIngot);
 		ForgeRegistries.ITEMS.register(exhaustingNugget);
-		ForgeRegistries.ITEMS.register(exhaustingapple);		
+		ForgeRegistries.ITEMS.register(exhaustingapple);	
+		ForgeRegistries.ITEMS.register(exhaustingpotato);	
 	}
 
 	public static void registerRenders() {
@@ -57,6 +61,7 @@ public class SFItems {
 		registerRender(exhaustingNugget, "inventory");
 		registerRender(exhaustingIngot, "inventory");
 		registerRender(exhaustingapple, "inventory");
+		registerRender(exhaustingpotato, "inventory");
 		exhaustingOre.getMetadataModels().forEach((i, m) -> ModelLoader.setCustomModelResourceLocation(exhaustingOre, i, m));
 		registerRender(exhaustingBlock, "normal");
 	}

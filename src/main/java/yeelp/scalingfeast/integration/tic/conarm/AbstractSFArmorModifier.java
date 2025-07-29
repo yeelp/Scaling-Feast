@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.conarm;
+package yeelp.scalingfeast.integration.tic.conarm;
 
 import java.util.Set;
 
@@ -16,8 +16,8 @@ public abstract class AbstractSFArmorModifier extends ArmorModifierTrait {
 
 	private final int level;
 	private final Enchantment enchant;
-	protected AbstractSFArmorModifier(String identifier, int color, SFEnchantmentBase enchantment, int enchantmentLevel) {
-		super(identifier, color);
+	protected AbstractSFArmorModifier(int color, SFEnchantmentBase enchantment, int enchantmentLevel) {
+		super(enchantment.getSimpleName(), color);
 		this.enchant = enchantment;
 		this.level = enchantmentLevel;
 	}

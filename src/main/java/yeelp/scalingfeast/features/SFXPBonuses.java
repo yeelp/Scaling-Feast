@@ -37,4 +37,19 @@ public final class SFXPBonuses extends FeatureBase<SFConfigXPBonuses> {
 	protected SFConfigXPBonuses getConfig() {
 		return ModConfig.features.xpBonuses;
 	}
+	
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return null;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return null;
+	}
+
+	@Override
+	protected String getName() {
+		return "XP Bonuses";
+	}
 }

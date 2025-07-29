@@ -1,15 +1,16 @@
-package yeelp.scalingfeast.integration.tinkers;
+package yeelp.scalingfeast.integration.tic.tinkers;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import slimeknights.tconstruct.library.traits.AbstractTrait;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class TraitFeasting extends AbstractTrait {
 
 	public TraitFeasting() {
-		super("feasting", 0xC69174);
+		super("feasting", TiCConsts.EXHAUSTING_COLOUR);
 	}
 
 	@Override

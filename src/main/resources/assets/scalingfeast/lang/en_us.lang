@@ -57,6 +57,10 @@ tooltips.scalingfeast.exhaustingapple.info=Eating this will refill your hunger a
 # Exhausting Ingot #
 tooltips.scalingfeast.exhaustingingot.info=Can be used as beacon payment
 
+# Exhausting Potato #
+tooltips.scalingfeast.exhaustingpotato.splash=The Couch Potato
+tooltips.scalingfeast.exhaustingpotato.info=Reduces your hunger by 4 when eaten. That's literally it.
+
 ###########
 # MODULES #
 ###########
@@ -114,6 +118,7 @@ item.scalingfeast.enchantedironapple.name=§dIron Apple§f
 item.scalingfeast.exhaustingingot.name=Exhausting Ingot
 item.scalingfeast.exhaustingnugget.name=Exhausting Nugget
 item.scalingfeast.exhaustingapple.name=§cExhausting Apple§f
+item.scalingfeast.exhaustingpotato.name=Exhausting Potato
 
 ##########
 # BLOCKS #
@@ -251,6 +256,7 @@ modifier.exhausting.desc=§oRequires extra effort!§r\nYour tool tires you out f
 modifier.feasting.name=Feasting
 modifier.feasting.desc=§oWe dine at sundown!§r\nRegain 6 hunger/saturation (that's 3 whole hunger shanks) when you kill a mob!
 fluid.tconstruct.exhaustion_fluid.name=Molten Exhaustion
+tooltips.scalingfeast.exhaustion_fluid.desc=Swimming in this has negative effects on hunger!
 
 ##########
 # CONARM #

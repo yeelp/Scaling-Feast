@@ -4,7 +4,6 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 
 public final class SFFeatureConfigCategory {
-
 	@Name("Bloated Overflow")
 	@Comment({
 			"Configure behaviour for bloated overflow",
@@ -32,4 +31,8 @@ public final class SFFeatureConfigCategory {
 	@Name("Starvation Penalties")
 	@Comment("Configure penalties for starving")
 	public final SFConfigStarvation starve = new SFConfigStarvation();
+	
+	@Name("Exhaustion Scaling")
+	@Comment("Configure exhaustion scaling when breaking blocks")
+	public final SFConfigExhaustionScaling exhaustionScaling = new SFConfigExhaustionScaling();
 }

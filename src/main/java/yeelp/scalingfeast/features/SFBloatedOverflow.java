@@ -2,6 +2,7 @@ package yeelp.scalingfeast.features;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
@@ -19,13 +20,24 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 
 			@SubscribeEvent
 			public final void onFoodStatsAddition(FoodStatsAddition evt) {
-				FoodValues fVals = evt.foodValuesToBeAdded;
+				SFConfigBloatedOverflow config = SFBloatedOverflow.this.getConfig();
+				if(!config.doBloatedOverflow) {
+					return;
+				}
 				EntityPlayer player = evt.player;
+				if(!SFBloatedOverflow.this.isInValidDimension(player)) {
+					return;
+				}
+				FoodValues fVals = evt.foodValuesToBeAdded;
+				if(player.world.isRemote || player instanceof FakePlayer) {
+					return;
+				}
 				int overflow = player.getFoodStats().getFoodLevel() + fVals.hunger - AppleCoreAPI.accessor.getMaxHunger(player);
-				int level = overflow / 4 - 1;
+				int cap = config.bloatedLevelCap;
+				int level = Math.min(cap < 0 ? Integer.MAX_VALUE : cap, overflow / 4 - 1);
 
 				if(level >= 0) {
-					player.addPotionEffect(new PotionEffect(SFPotion.bloated, getConfig().bloatedOverflowDuration, level));
+					player.addPotionEffect(new PotionEffect(SFPotion.bloated, config.bloatedOverflowDuration, level));
 				}
 			}
 		};
@@ -34,5 +46,20 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 	@Override
 	public SFConfigBloatedOverflow getConfig() {
 		return ModConfig.features.bloatedOverflow;
+	}
+
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return this.getConfig().dimList;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return this.getConfig().listType;
+	}
+
+	@Override
+	protected String getName() {
+		return "Bloated Overflow";
 	}
 }

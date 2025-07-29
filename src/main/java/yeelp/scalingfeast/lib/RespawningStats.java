@@ -68,7 +68,7 @@ public enum RespawningStats {
 	
 	public final int getRespawningHunger(EntityPlayer oldPlayer, EntityPlayer newPlayer) {
 		int candidate = this.getRespawningHungerCandidate(oldPlayer, newPlayer);
-		if(candidate == 0) {
+		if(candidate <= 0) {
 			return RespawningStats.STARTING_AMOUNT.getRespawningHungerCandidate(oldPlayer, newPlayer);
 		}
 		return candidate;

@@ -12,7 +12,8 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.features.SFFeatureConfigCategory;
 import yeelp.scalingfeast.config.items.SFItemConfigCategory;
 import yeelp.scalingfeast.config.modules.SFModuleConfigCategory;
-import yeelp.scalingfeast.handlers.HUDOverlayHandler;
+import yeelp.scalingfeast.features.SFFeatures;
+import yeelp.scalingfeast.hud.DrawUtils;
 
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig {
@@ -123,12 +124,12 @@ public class ModConfig {
 		@Comment("When Max Outline Colour Style is CUSTOM and when the player is about to lose max hunger, this is the hex colour of the starvation tracker.")
 		public String maxColourEnd = "aa0000";
 
-		@Name("ADVANCED info text x offset")
-		@Comment("Shift the ADVANCED info text in the x direction. Can be positive or negative.")
+		@Name("Info text x offset")
+		@Comment("Shift the info text in the x direction. Can be positive or negative.")
 		public int infoXOffset = 0;
 
-		@Name("ADVANCED info text y offset")
-		@Comment("Shift the ADVANCED info text in the y direction. Can be positive or negative.")
+		@Name("Info text y offset")
+		@Comment("Shift the info text in the y direction. Can be positive or negative.")
 		public int infoYOffset = 0;
 
 		@Name("Draw Saturation?")
@@ -197,9 +198,9 @@ public class ModConfig {
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 			if(event.getModID().equals(ModConsts.MOD_ID)) {
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
-				HUDOverlayHandler.loadColours();
-				HUDOverlayHandler.setIcons();
-				HUDOverlayHandler.loadTextColours();
+				DrawUtils.updateColours();
+				DrawUtils.updateTextColours();
+				SFFeatures.update();
 			}
 		}
 	}

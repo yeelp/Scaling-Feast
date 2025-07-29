@@ -25,6 +25,7 @@ import squeek.applecore.api.food.FoodValues;
 import squeek.applecore.api.food.IEdible;
 import squeek.applecore.api.food.IEdibleBlock;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.items.ExhaustingApple;
 import yeelp.scalingfeast.items.HeartyShankItem;
@@ -68,17 +69,8 @@ public class HUDUtils {
 			}
 		}
 	}
-	
-	private static final List<Class<?>> EDIBLE_CLASSES = Lists.newArrayList(ItemFood.class, IEdible.class);
 
-	public static boolean isEmpty(String[] arr) {
-		for(String str : arr) {
-			if(str != null) {
-				return false;
-			}
-		}
-		return true;
-	}
+	private static final List<Class<?>> EDIBLE_CLASSES = Lists.newArrayList(ItemFood.class, IEdible.class);
 
 	public static AdvancedInfo getAdvancedInfoString(EntityPlayer player) {
 		int hunger = player.getFoodStats().getFoodLevel();
@@ -90,7 +82,7 @@ public class HUDUtils {
 		FoodValues foodVals = getFoodValuesForBlockBeingLookedAt(player, hunger, max);
 		boolean isHeartyShank = false, isExhaustingApple = false;
 		if(foodVals == null) {
-			EnumHand hand = getHandWithFood(player);			
+			EnumHand hand = getHandWithFood(player);
 			if(hand != null) {
 				ItemStack food = player.getHeldItem(hand);
 				if(AppleCoreAPI.accessor.canPlayerEatFood(food, player)) {
@@ -108,19 +100,20 @@ public class HUDUtils {
 		if(foodVals != null) {
 			// The hunger to be gained from eating the food. Either the full amount or the
 			// amount of hunger the player is missing.
-			int deltaHunger = Math.min(foodVals.hunger, max - hunger);
+			// for negative foods, the most they can reduce is the player's current hunger.
+			int deltaHunger = Math.min(Math.max(-hunger, foodVals.hunger), max - hunger);
 			if(deltaHunger < foodVals.hunger) {
 				hColour = 0xff0000;
 			}
-			if(deltaHunger > 0) {
+			if(deltaHunger != 0) {
 				foodAddition = String.format("%+d", deltaHunger);
 			}
 			float satCap = Math.min(hunger + deltaHunger, maxSat);
-			float deltaSat = Math.min(foodVals.getUnboundedSaturationIncrement(), satCap - sat);
+			float deltaSat = Math.min(Math.max(-sat, foodVals.getUnboundedSaturationIncrement()), satCap - sat);
 			if(deltaSat < foodVals.getUnboundedSaturationIncrement()) {
 				sColour = 0xff0000;
 			}
-			if(deltaSat > 0) {
+			if(deltaSat != 0) {
 				satAddition = String.format("%+.1f", deltaSat);
 			}
 			int deltaMaxH = 0;
@@ -140,7 +133,7 @@ public class HUDUtils {
 					maxSatAddition = "";
 				}
 			}
-			else if (isExhaustingApple) {
+			else if(isExhaustingApple) {
 				deltaMaxH = -ModConfig.items.shank.inc;
 				if(max + deltaMaxH < 1) {
 					deltaMaxH = 1 - max;
@@ -175,10 +168,10 @@ public class HUDUtils {
 	private static EnumHand getHandWithFood(EntityPlayer player) {
 		return Arrays.stream(EnumHand.values()).filter((hand) -> {
 			Item item = player.getHeldItem(hand).getItem();
-			return EDIBLE_CLASSES.stream().anyMatch((clazz) -> clazz.isInstance(item));			
+			return EDIBLE_CLASSES.stream().anyMatch((clazz) -> clazz.isInstance(item));
 		}).findFirst().orElse(null);
 	}
-	
+
 	private static FoodValues getFoodValuesForBlockBeingLookedAt(EntityPlayer player, int hunger, int max) {
 		RayTraceResult lookedAt = Minecraft.getMinecraft().objectMouseOver;
 		BlockPos pos;
@@ -186,7 +179,10 @@ public class HUDUtils {
 			Block block = player.getEntityWorld().getBlockState(pos).getBlock();
 			if(block instanceof IEdibleBlock) {
 				if(hunger < max) {
-					return ((IEdibleBlock) block).getFoodValues(new ItemStack(AppleCoreAPI.registry.getItemFromEdibleBlock(block)));					
+					if(block instanceof HeartyFeastBlock) {
+						((HeartyFeastBlock) block).setFoodValuesForPlayer(player);
+					}
+					return AppleCoreAPI.accessor.getFoodValuesForPlayer(new ItemStack(AppleCoreAPI.registry.getItemFromEdibleBlock(block)), player);
 				}
 			}
 		}

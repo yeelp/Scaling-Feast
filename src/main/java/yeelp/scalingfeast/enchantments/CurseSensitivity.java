@@ -10,8 +10,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent;
-import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
@@ -19,10 +17,8 @@ import yeelp.scalingfeast.init.SFPotion;
 
 public class CurseSensitivity extends SFEnchantmentBase {
 	public CurseSensitivity() {
-		super(Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
+		super("sensitivitycurse", Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});
-		this.setRegistryName("sensitivitycurse");
-		this.setName(ModConsts.MOD_ID + ".sensitivitycurse");
 	}
 
 	@Override
@@ -54,7 +50,6 @@ public class CurseSensitivity extends SFEnchantmentBase {
 				int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.sensitivityCurse, player);
 				if(level != 0 || ModConfig.items.enchants.globalSensitvity) {
 					int overflow = (evt.foodValuesToBeAdded.hunger + player.getFoodStats().getFoodLevel()) - AppleCoreAPI.accessor.getMaxHunger(player);
-					ScalingFeast.debug(Integer.toString(overflow));
 					if(overflow > 0) {
 						if(overflow > 256) {
 							overflow = 256; // fail safe in case potion amplifiers > 255 behave oddly.

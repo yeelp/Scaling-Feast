@@ -20,25 +20,26 @@ public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
 
 			@SubscribeEvent
 			public final void onDeath(PlayerEvent.Clone evt) {
-				if(evt.isWasDeath()) {
-					EntityPlayer player = evt.getEntityPlayer();
-					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
-					int maxHunger = AppleCoreAPI.accessor.getMaxHunger(player);
-					SFConfigDeath config = getConfig();
-					// Death Penalties
-					if(maxHunger > config.maxLossLowerBound && config.maxLossAmount > 0) {
-						double currDeathPenalty = SFBuiltInModifiers.MaxHungerModifiers.DEATH.getModifierValueForPlayer(player);
-						sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(currDeathPenalty + MathHelper.clamp(-config.maxLossAmount, config.maxLossLowerBound - maxHunger, 0)));
-					}
-					// Stat Persistance
-					int respawningHunger = getConfig().respawningStats.getRespawningHunger(evt.getOriginal(), evt.getEntityPlayer());
-					float respawningSat = getConfig().respawningStats.getRespawningSaturation(evt.getOriginal(), evt.getEntityPlayer());
-					AppleCoreAPI.mutator.setHunger(player, respawningHunger);
-					AppleCoreAPI.mutator.setSaturation(player, respawningSat);
-					// Hunger Penalties
-					if(config.hungerLossOnDeath > 0) {
-						ScalingFeastAPI.mutator.deductFoodStats(player, config.hungerLossOnDeath);
-					}
+				if(!evt.isWasDeath()) {
+					return;
+				}
+				EntityPlayer player = evt.getEntityPlayer();
+				SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);
+				int maxHunger = AppleCoreAPI.accessor.getMaxHunger(player);
+				SFConfigDeath config = getConfig();
+				// Death Penalties
+				if(maxHunger > config.maxLossLowerBound && config.maxLossAmount > 0) {
+					double currDeathPenalty = SFBuiltInModifiers.MaxHungerModifiers.DEATH.getModifierValueForPlayer(player);
+					sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(currDeathPenalty + MathHelper.clamp(-config.maxLossAmount, config.maxLossLowerBound - maxHunger, 0)));
+				}
+				// Stat Persistance
+				int respawningHunger = getConfig().respawningStats.getRespawningHunger(evt.getOriginal(), evt.getEntityPlayer());
+				float respawningSat = getConfig().respawningStats.getRespawningSaturation(evt.getOriginal(), evt.getEntityPlayer());
+				AppleCoreAPI.mutator.setHunger(player, respawningHunger);
+				AppleCoreAPI.mutator.setSaturation(player, respawningSat);
+				// Hunger Penalties
+				if(config.hungerLossOnDeath > 0) {
+					ScalingFeastAPI.mutator.deductFoodStats(player, config.hungerLossOnDeath);
 				}
 			}
 		};
@@ -47,6 +48,21 @@ public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
 	@Override
 	protected SFConfigDeath getConfig() {
 		return ModConfig.features.death;
+	}
+	
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return null;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return null;
+	}
+
+	@Override
+	protected String getName() {
+		return "Death Penalties";
 	}
 
 }

@@ -1,5 +1,10 @@
 package yeelp.scalingfeast.integration;
 
+import static yeelp.scalingfeast.ModConsts.IntegrationIds.CONARM_ID;
+import static yeelp.scalingfeast.ModConsts.IntegrationIds.SOLCARROT_ID;
+import static yeelp.scalingfeast.ModConsts.IntegrationIds.SPICEOFLIFE_ID;
+import static yeelp.scalingfeast.ModConsts.IntegrationIds.TCONSTRUCT_ID;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,22 +16,21 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
-import yeelp.scalingfeast.integration.conarm.SFConarmIntegration;
 import yeelp.scalingfeast.integration.module.IIntegratable;
 import yeelp.scalingfeast.integration.module.solcarrot.SOLCarrotModule;
 import yeelp.scalingfeast.integration.module.spiceoflife.SpiceOfLifeModule;
-import yeelp.scalingfeast.integration.tinkers.SFTinkerIntegration;
+import yeelp.scalingfeast.integration.tic.conarm.SFConarmIntegration;
+import yeelp.scalingfeast.integration.tic.tinkers.SFTinkerIntegration;
 
 public final class ModIntegrationKernel {
 	private static final Map<String, Supplier<IIntegratable>> integratableMods = new HashMap<String, Supplier<IIntegratable>>();
 	private static final List<IIntegratable> loadedIntegrations = new LinkedList<IIntegratable>();
 	static {
-		integratableMods.put(ModConsts.SOLCARROT_ID, () -> new SOLCarrotModule());
-		integratableMods.put(ModConsts.SPICEOFLIFE_ID, () -> new SpiceOfLifeModule());
-		integratableMods.put(ModConsts.TCONSTRUCT_ID, () -> new SFTinkerIntegration());
-		integratableMods.put(ModConsts.CONARM_ID, () -> new SFConarmIntegration());
+		integratableMods.put(SOLCARROT_ID, () -> new SOLCarrotModule());
+		integratableMods.put(SPICEOFLIFE_ID, () -> new SpiceOfLifeModule());
+		integratableMods.put(TCONSTRUCT_ID, () -> new SFTinkerIntegration());
+		integratableMods.put(CONARM_ID, () -> new SFConarmIntegration());
 	}
 
 	public static void load() {

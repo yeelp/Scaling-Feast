@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -26,7 +28,16 @@ public class GenericHandler extends Handler {
 	@SuppressWarnings("static-method")
 	@SubscribeEvent
 	public void onGetMaxHunger(HungerEvent.GetMaxHunger evt) {
-		evt.maxHunger += evt.player.getEntityAttribute(SFAttributes.MAX_HUNGER_MOD).getAttributeValue();
+		EntityPlayer player = evt.player;
+		IAttributeInstance maxHunger;
+		if(player == null) {
+			return;
+		}
+		else if((maxHunger = player.getEntityAttribute(SFAttributes.MAX_HUNGER_MOD)) == null) {
+			return;
+		}
+		evt.maxHunger += maxHunger.getAttributeValue();
+		evt.maxHunger = Math.max(1, evt.maxHunger);
 	}
 	
 	@SuppressWarnings("static-method")

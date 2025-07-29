@@ -22,7 +22,7 @@ public class SFGeneralConfigCategory {
 	@Name("Saturation Cap")
 	@Comment({
 			"A hard cap on a player's saturation. It can never go above this value.",
-			"Any player's with a saturation above this value will be set to this value.",
+			"Any players with a saturation above this value will be set to this value.",
 			"If set to -1, this cap is ignored.",
 			"Changes in game will be observed on the next player tick"})
 	@RangeDouble(min = -1.0)

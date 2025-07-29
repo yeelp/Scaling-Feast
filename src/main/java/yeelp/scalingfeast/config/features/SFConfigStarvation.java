@@ -3,6 +3,7 @@ package yeelp.scalingfeast.config.features;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
+import yeelp.scalingfeast.features.FilterListType;
 import yeelp.scalingfeast.lib.StarvationScaling;
 
 public final class SFConfigStarvation {
@@ -17,11 +18,23 @@ public final class SFConfigStarvation {
 	@Name("Counter")
 	@Comment({
 			"Configure settings for Scaling Feast's Starvation Counter.",
-			"This counts how many times the player starves in a row, with the ability to inflict more and more damage every time they starve."})
+			"This counts how many times the player starves in a row, with the ability to inflict more and more damage faster and faster every time they starve."})
 	public CounterCategory counter = new CounterCategory();
 
 	@Name("Dynamic Starvation")
+	@Comment("Configure dynamic starvation scaling")
 	public DynamicCategory dynamic = new DynamicCategory();
+	
+	@Name("Dimension List")
+	@Comment("The list of dimensions this feature should or should not apply in")
+	public String[] dimList = {};
+	
+	@Name("Dimension List Type")
+	@Comment({"The type of list for filtering the dimensions this feature applies in",
+		"BLACKLIST - Features doesn't apply in these dimensions",
+		"WHITELIST - Features apply in these dimensions"
+	})
+	public FilterListType listType = FilterListType.BLACKLIST;
 
 	public final class TrackerCategory {
 		@Name("Decrease Amount on Starvation")
@@ -30,7 +43,7 @@ public final class SFConfigStarvation {
 		public int starveLoss = 2;
 
 		@Name("Starvation Loss Lower Bound")
-		@Comment("When losing hunger due to starvation, a player's max hunger will never get set below this value. If a player's max hunger is already below this value, starving will not punish the player")
+		@Comment("When losing max hunger due to starvation, a player's max hunger will never get set below this value. If a player's max hunger is already below this value, starving will not punish the player")
 		@RangeInt(min = 1, max = Short.MAX_VALUE)
 		public int starveLowerCap = 1;
 
@@ -106,6 +119,14 @@ public final class SFConfigStarvation {
 		@Name("d")
 		@Comment("The constant d for Starvation Scaling")
 		public float d = 0;
+		
+		@Name("Base Starvation Period")
+		@Comment("Adjust the base rate at which players starve. The default is the vanilla starve rate.")
+		@RangeInt(min = 1)
+		public int baseStarveRate = 80;
+		
+		@Name("Starve Rate Change")
+		@Comment("The change in a player's starvation rate every time they starve. The starve rate is reset to the base starve rate when the player stops starving. 0 indicates no change.")
+		public int starveRateChange = 0;
 	}
-
 }

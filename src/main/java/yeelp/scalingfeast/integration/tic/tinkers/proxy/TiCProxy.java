@@ -1,8 +1,8 @@
-package yeelp.scalingfeast.integration.tinkers.proxy;
+package yeelp.scalingfeast.integration.tic.tinkers.proxy;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import yeelp.scalingfeast.integration.tinkers.SFTinkerIntegration;
+import yeelp.scalingfeast.integration.tic.tinkers.SFTinkerIntegration;
 import yeelp.scalingfeast.proxy.AbstractProxy;
 
 public class TiCProxy extends AbstractProxy {

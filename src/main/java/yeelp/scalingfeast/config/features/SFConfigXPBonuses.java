@@ -2,6 +2,7 @@ package yeelp.scalingfeast.config.features;
 
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
+import yeelp.scalingfeast.lib.SFBuiltInModifiers.FoodEfficiencyModifiers.FoodEfficiencyOperations;
 import yeelp.scalingfeast.lib.xpcalculators.XPBonusType;
 
 public final class SFConfigXPBonuses {
@@ -13,6 +14,12 @@ public final class SFConfigXPBonuses {
 			"LEVEL - Scaling Feast will compare a player's level (so a value of 2 in the rewards would correspond to level 2) against the entries in Food Efficiency XP Rewards when calculating the attribute value.",
 			"AMOUNT - Scaling Feast will compare a player's XP total (so a value of 34 corresponds to level 2) against the entries in Food Efficiency XP Rewards when calculating the attribute value."})
 	public XPBonusType efficiencyXPBonus = XPBonusType.NONE;
+	
+	@Name("Food Efficiency Bonus Type")
+	@Comment({"Set the type of bonus for Food Efficiency",
+		"STACK_ADDITIVELY - Multiplies the base Food Efficiency by the sum of this bonus plus any other Food Efficieny attribute modifiers. So, it stacks with other modifiers additively",
+		"STACK_MULTIPLICATIVELY - Multiplies the base Food Efficiency by this bonus independently of other modifiers. So, it stacks with other modifiers multiplicatively."})
+	public FoodEfficiencyOperations foodEfficiencyBonusType = FoodEfficiencyOperations.STACK_MULTIPLICATIVELY;
 
 	@Name("Max Hunger Bonus")
 	@Comment({
