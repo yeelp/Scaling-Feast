@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
 import squeek.applecore.api.food.FoodValues;
-import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigBloatedOverflow;
 import yeelp.scalingfeast.handlers.Handler;
@@ -26,7 +25,6 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 					return;
 				}
 				EntityPlayer player = evt.player;
-				ScalingFeast.debug("Bloated Overflow Player Dim: "+player.dimension);
 				if(!SFBloatedOverflow.this.isInValidDimension(player)) {
 					return;
 				}

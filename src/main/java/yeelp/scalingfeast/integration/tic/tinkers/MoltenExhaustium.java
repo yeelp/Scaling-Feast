@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.common.base.Functions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -32,7 +31,6 @@ import slimeknights.tconstruct.library.Util;
 import slimeknights.tconstruct.library.fluid.FluidMolten;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFPotion;
@@ -49,8 +47,6 @@ public final class MoltenExhaustium extends FluidMolten {
 		POTION_EFFECTS.put(MobEffects.HUNGER, 30);
 		POTION_EFFECTS.put(SFPotion.softstomach, 10);
 		POTION_EFFECTS.put(null, 40);
-		
-		POTION_EFFECTS.entrySet().stream().map(Functions.compose((k) -> k == null ? "null" : k.getRegistryName().toString(), Map.Entry::getKey)).forEach(ScalingFeast::debug);
 	}
 	
 	public MoltenExhaustium() {
