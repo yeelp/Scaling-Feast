@@ -4,7 +4,6 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 
 public final class SFFeatureConfigCategory {
-
 	@Name("Bloated Overflow")
 	@Comment({
 			"Configure behaviour for bloated overflow",

@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.AppleCoreAPI;
 import squeek.applecore.api.food.FoodEvent.FoodStatsAddition;
 import squeek.applecore.api.food.FoodValues;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigBloatedOverflow;
 import yeelp.scalingfeast.handlers.Handler;
@@ -24,8 +25,12 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 				if(!config.doBloatedOverflow) {
 					return;
 				}
-				FoodValues fVals = evt.foodValuesToBeAdded;
 				EntityPlayer player = evt.player;
+				ScalingFeast.debug("Bloated Overflow Player Dim: "+player.dimension);
+				if(!SFBloatedOverflow.this.isInValidDimension(player)) {
+					return;
+				}
+				FoodValues fVals = evt.foodValuesToBeAdded;
 				if(player.world.isRemote || player instanceof FakePlayer) {
 					return;
 				}
@@ -43,5 +48,20 @@ public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow
 	@Override
 	public SFConfigBloatedOverflow getConfig() {
 		return ModConfig.features.bloatedOverflow;
+	}
+
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return this.getConfig().dimList;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return this.getConfig().listType;
+	}
+
+	@Override
+	protected String getName() {
+		return "Bloated Overflow";
 	}
 }

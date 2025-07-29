@@ -256,6 +256,7 @@ modifier.exhausting.desc=§oRequires extra effort!§r\nYour tool tires you out f
 modifier.feasting.name=Feasting
 modifier.feasting.desc=§oWe dine at sundown!§r\nRegain 6 hunger/saturation (that's 3 whole hunger shanks) when you kill a mob!
 fluid.tconstruct.exhaustion_fluid.name=Molten Exhaustion
+tooltips.scalingfeast.exhaustion_fluid.desc=Swimming in this has negative effects on hunger!
 
 ##########
 # CONARM #

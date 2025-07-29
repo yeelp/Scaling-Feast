@@ -12,5 +12,10 @@ public final class SFFeatures {
 														 					  new SFExhaustionScaling());
 	public static final void init() {
 		FEATURES.forEach((f) -> f.getFeatureHandler().register());
+		update();
+	}
+	
+	public static final void update() {
+		FEATURES.forEach(FeatureBase::update);
 	}
 }

@@ -46,12 +46,18 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			
 			@SubscribeEvent
 			public final void onGetStarveTickPeriod(GetStarveTickPeriod evt) {
+				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
+					return;
+				}
 				SFConfigStarvation config = SFStarvationFeatures.this.getConfig();
 				evt.starveTickPeriod = Math.max(1, config.counter.baseStarveRate + ScalingFeastAPI.accessor.getSFFoodStats(evt.player).getStarvationCountAllTime() * config.counter.starveRateChange);
 			}
 			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onStarve(Starve evt) {
+				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
+					return;
+				}
 				if(evt.player.isEntityAlive()) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
 					int bonusDynamicDamage = getBonusDynamicDamage(sfstats);
@@ -80,6 +86,9 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			
 			@SubscribeEvent
 			public final void onFoodStatsAddition(FoodStatsAddition evt) {
+				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
+					return;
+				}
 				if(evt.player.getFoodStats().getFoodLevel() == 0) {
 					SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(evt.player);
 					sfstats.resetStarvationCountAllTime();
@@ -91,6 +100,9 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onExhaution(ExhaustionAddition evt) {
+				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
+					return;
+				}
 				if(evt.player.isEntityAlive()) {
 					ScalingFeastAPI.accessor.getSFFoodStats(evt.player).addExhaustionIfAtZeroHunger(evt.deltaExhaustion);
 				}
@@ -106,5 +118,20 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 	@Override
 	protected SFConfigStarvation getConfig() {
 		return ModConfig.features.starve;
+	}
+	
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return this.getConfig().dimList;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return this.getConfig().listType;
+	}
+	
+	@Override
+	protected String getName() {
+		return "Starvation Penalties";
 	}
 }

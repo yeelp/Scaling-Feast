@@ -3,6 +3,7 @@ package yeelp.scalingfeast.config.features;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
+import yeelp.scalingfeast.features.FilterListType;
 
 public final class SFConfigBloatedOverflow {
 	@Name("Allow Bloated Overflow Hunger")
@@ -17,4 +18,15 @@ public final class SFConfigBloatedOverflow {
 	@Name("Bloated Overflow Level Cap")
 	@Comment("The highest level of Bloated the player can receive through bloated overflow. 0 corresponds to level 1 Bloated. Anything less than 0 will prevent the level from being capped at all.")
 	public int bloatedLevelCap = -1;
+	
+	@Name("Dimension List")
+	@Comment("The list of dimensions this feature should or should not apply in")
+	public String[] dimList = {};
+	
+	@Name("Dimension List Type")
+	@Comment({"The type of list for filtering the dimensions this feature applies in",
+		"BLACKLIST - Features doesn't apply in these dimensions",
+		"WHITELIST - Features apply in these dimensions"
+	})
+	public FilterListType listType = FilterListType.BLACKLIST;
 }

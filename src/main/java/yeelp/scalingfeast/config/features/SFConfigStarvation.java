@@ -3,6 +3,7 @@ package yeelp.scalingfeast.config.features;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
+import yeelp.scalingfeast.features.FilterListType;
 import yeelp.scalingfeast.lib.StarvationScaling;
 
 public final class SFConfigStarvation {
@@ -21,7 +22,19 @@ public final class SFConfigStarvation {
 	public CounterCategory counter = new CounterCategory();
 
 	@Name("Dynamic Starvation")
+	@Comment("Configure dynamic starvation scaling")
 	public DynamicCategory dynamic = new DynamicCategory();
+	
+	@Name("Dimension List")
+	@Comment("The list of dimensions this feature should or should not apply in")
+	public String[] dimList = {};
+	
+	@Name("Dimension List Type")
+	@Comment({"The type of list for filtering the dimensions this feature applies in",
+		"BLACKLIST - Features doesn't apply in these dimensions",
+		"WHITELIST - Features apply in these dimensions"
+	})
+	public FilterListType listType = FilterListType.BLACKLIST;
 
 	public final class TrackerCategory {
 		@Name("Decrease Amount on Starvation")
@@ -116,5 +129,4 @@ public final class SFConfigStarvation {
 		@Comment("The change in a player's starvation rate every time they starve. The starve rate is reset to the base starve rate when the player stops starving. 0 indicates no change.")
 		public int starveRateChange = 0;
 	}
-
 }

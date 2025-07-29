@@ -3,6 +3,7 @@ package yeelp.scalingfeast.config.features;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeDouble;
+import yeelp.scalingfeast.features.FilterListType;
 
 public final class SFConfigExhaustionScaling {
 
@@ -16,4 +17,15 @@ public final class SFConfigExhaustionScaling {
 		"The default value results in receiving the same amount of exhaustion in vanilla when breaking a block, but ONLY when instaminned."})
 	@RangeDouble(min = 0.00001)
 	public float baseExhaustionRate = 0.1f;
+	
+	@Name("Dimension List")
+	@Comment("The list of dimensions this feature should or should not apply in")
+	public String[] dimList = {};
+	
+	@Name("Dimension List Type")
+	@Comment({"The type of list for filtering the dimensions this feature applies in",
+		"BLACKLIST - Features doesn't apply in these dimensions",
+		"WHITELIST - Features apply in these dimensions"
+	})
+	public FilterListType listType = FilterListType.BLACKLIST;
 }

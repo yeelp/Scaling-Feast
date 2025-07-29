@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.integration.tic.tinkers;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -11,25 +12,36 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fluids.UniversalBucket;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import slimeknights.tconstruct.library.Util;
 import slimeknights.tconstruct.library.fluid.FluidMolten;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class MoltenExhaustium extends FluidMolten {
 	private static final Map<Potion, Integer> POTION_EFFECTS = Maps.newHashMap();
 	private static final int POTION_DURATION = 200;
+	private static final ITextComponent DESC = new TextComponentTranslation("tooltips.scalingfeast.exhaustion_fluid.desc").setStyle(new Style().setColor(TextFormatting.RED));
 	static final Set<UUID> AFFECTED_PLAYERS = Sets.newHashSet();
 	
 	static void init() {
@@ -54,11 +66,44 @@ public final class MoltenExhaustium extends FluidMolten {
 		return this.new BlockMoltenExhaustium();
 	}
 	
+	static BucketTooltipHandler getTooltipHandler() {
+		return new BucketTooltipHandler();
+	}
+	
 	protected static final Optional<Potion> getPotionEffect(World world) {
 		Map.Entry<Potion, Integer> selected = null;
 		Iterator<Map.Entry<Potion, Integer>> it = POTION_EFFECTS.entrySet().iterator();
 		for(int i = world.rand.nextInt(100); i >= 0 && it.hasNext(); i -= (selected = it.next()).getValue());
 		return selected != null ? Optional.ofNullable(selected.getKey()) : Optional.empty();
+	}
+	
+	static final class BucketTooltipHandler extends Handler {
+		@SuppressWarnings("static-method")
+		@SubscribeEvent
+		public void onTooltip(ItemTooltipEvent evt) {
+			ItemStack stack = evt.getItemStack();
+			if(!(stack.getItem() instanceof UniversalBucket)) {
+				return;
+			}
+			if(!(((UniversalBucket) stack.getItem()).getFluid(stack).getFluid() instanceof MoltenExhaustium)) {
+				return;
+			}
+			addTooltipInfo(evt.getToolTip(), 1);
+		}
+	}
+	
+	protected static void addTooltipInfo(List<String> tooltip, int index) {
+		String text = DESC.getFormattedText();
+		if(index >= tooltip.size()) {
+			tooltip.add(text);
+		}
+		else {
+			tooltip.add(index, DESC.getFormattedText());			
+		}
+	}
+	
+	protected static void addTooltipInfo(List<String> tooltip) {
+		addTooltipInfo(tooltip, tooltip.size());
 	}
 	
 	public final class BlockMoltenExhaustium extends BlockMolten {
@@ -91,6 +136,12 @@ public final class MoltenExhaustium extends FluidMolten {
 				ScalingFeastAPI.mutator.damageFoodStats(player, 2);
 				MoltenExhaustium.AFFECTED_PLAYERS.add(player.getUniqueID());
 			});
+		}
+		
+		@Override
+		public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+			MoltenExhaustium.addTooltipInfo(tooltip);
+			super.addInformation(stack, worldIn, tooltip, flagIn);
 		}
 	}
 }

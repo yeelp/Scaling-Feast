@@ -22,6 +22,9 @@ public final class SFExhaustionScaling extends FeatureBase<SFConfigExhaustionSca
 		return new Handler() {
 			@SubscribeEvent(priority = EventPriority.LOWEST)
 			public final void onExhaustingAction(ExhaustingAction evt) {
+				if(!SFExhaustionScaling.this.isInValidDimension(evt.player)) {
+					return;
+				}
 				if(SFExhaustionScaling.this.getConfig().doExhaustionScaling && evt.source == ExhaustingActions.HARVEST_BLOCK) {
 					evt.deltaExhaustion = 0.0f;
 				}
@@ -30,9 +33,12 @@ public final class SFExhaustionScaling extends FeatureBase<SFConfigExhaustionSca
 			@SubscribeEvent
 			public final void onBlockBreak(BreakEvent evt) {
 				EntityPlayer player;
+				if(!SFExhaustionScaling.this.isInValidDimension((player = evt.getPlayer()))) {
+					return;
+				}
 				World world;
 				SFConfigExhaustionScaling config = SFExhaustionScaling.this.getConfig();
-				if(config.doExhaustionScaling && !((player = evt.getPlayer()) instanceof FakePlayer) && !(world = player.world).isRemote) {
+				if(config.doExhaustionScaling && !(player instanceof FakePlayer) && !(world = player.world).isRemote) {
 					float seconds = 1/(Math.min(ForgeHooks.blockStrength(evt.getState(), player, world, evt.getPos()), 1.0f) * TICKS_PER_SECOND);
 					player.addExhaustion(config.baseExhaustionRate * seconds);
 				}
@@ -45,4 +51,18 @@ public final class SFExhaustionScaling extends FeatureBase<SFConfigExhaustionSca
 		return ModConfig.features.exhaustionScaling;
 	}
 
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return this.getConfig().dimList;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return this.getConfig().listType;
+	}
+
+	@Override
+	protected String getName() {
+		return "Exhaustion Scaling";
+	}
 }

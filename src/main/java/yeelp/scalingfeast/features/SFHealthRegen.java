@@ -15,15 +15,27 @@ public final class SFHealthRegen extends FeatureBase<SFConfigHealthRegen> {
 			
 			@SubscribeEvent
 			public final void onHungerRegen(AllowRegen evt) {
-				if(evt.player.shouldHeal()) {
+				if(!evt.player.shouldHeal()) {
+					return;
+				}
+				if(SFHealthRegen.this.isInValidDimension(evt.player)) {
 					evt.setResult(SFHealthRegen.this.getConfig().hungerRegen.determineResult(evt.player, evt.getResult()));
+				}
+				else {
+					evt.setResult(SFHealthRegen.this.getConfig().filteredHungerRegen.determineResult(evt.player, evt.getResult()));
 				}
 			}
 			
 			@SubscribeEvent
 			public final void onSaturatedRegen(AllowSaturatedRegen evt) {
-				if(evt.player.shouldHeal()) {
+				if(!evt.player.shouldHeal()) {
+					return;
+				}
+				if(SFHealthRegen.this.isInValidDimension(evt.player)) {
 					evt.setResult(SFHealthRegen.this.getConfig().satRegen.determineResult(evt.player, evt.getResult()));
+				}
+				else {
+					evt.setResult(SFHealthRegen.this.getConfig().filteredSatRegen.determineResult(evt.player, evt.getResult()));
 				}
 			}
 		};
@@ -32,5 +44,20 @@ public final class SFHealthRegen extends FeatureBase<SFConfigHealthRegen> {
 	@Override
 	protected SFConfigHealthRegen getConfig() {
 		return ModConfig.features.regen;
+	}
+	
+	@Override
+	protected String[] getDimensionListFromConfig() {
+		return this.getConfig().dimList;
+	}
+
+	@Override
+	protected FilterListType getFilterListTypeFromConfig() {
+		return this.getConfig().listType;
+	}
+	
+	@Override
+	protected String getName() {
+		return "Health Regen Rules";
 	}
 }

@@ -58,6 +58,7 @@ public class SFTinkerIntegration implements IIntegratable {
 	@Override
 	public boolean integrate(FMLInitializationEvent evt) {
 		MoltenExhaustium.init();
+		MoltenExhaustium.getTooltipHandler().register();
 		proxy.init();
 		return true;
 	}

@@ -12,6 +12,7 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.features.SFFeatureConfigCategory;
 import yeelp.scalingfeast.config.items.SFItemConfigCategory;
 import yeelp.scalingfeast.config.modules.SFModuleConfigCategory;
+import yeelp.scalingfeast.features.SFFeatures;
 import yeelp.scalingfeast.hud.DrawUtils;
 
 @Config(modid = ModConsts.MOD_ID)
@@ -199,6 +200,7 @@ public class ModConfig {
 				ConfigManager.sync(ModConsts.MOD_ID, Config.Type.INSTANCE);
 				DrawUtils.updateColours();
 				DrawUtils.updateTextColours();
+				SFFeatures.update();
 			}
 		}
 	}
