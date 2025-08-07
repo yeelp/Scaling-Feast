@@ -25,6 +25,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import slimeknights.tconstruct.library.Util;
@@ -81,7 +82,8 @@ public final class MoltenExhaustium extends FluidMolten {
 			if(!(stack.getItem() instanceof UniversalBucket)) {
 				return;
 			}
-			if(!(((UniversalBucket) stack.getItem()).getFluid(stack).getFluid() instanceof MoltenExhaustium)) {
+			FluidStack fluidStack = ((UniversalBucket) stack.getItem()).getFluid(stack);
+			if(fluidStack == null || !(fluidStack.getFluid() instanceof MoltenExhaustium)) {
 				return;
 			}
 			addTooltipInfo(evt.getToolTip(), 1);
