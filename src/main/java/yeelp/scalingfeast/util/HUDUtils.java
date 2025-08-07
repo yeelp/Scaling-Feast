@@ -175,15 +175,22 @@ public class HUDUtils {
 	private static FoodValues getFoodValuesForBlockBeingLookedAt(EntityPlayer player, int hunger, int max) {
 		RayTraceResult lookedAt = Minecraft.getMinecraft().objectMouseOver;
 		BlockPos pos;
-		if(lookedAt.typeOfHit.equals(RayTraceResult.Type.BLOCK) && (pos = lookedAt.getBlockPos()) != null) {
-			Block block = player.getEntityWorld().getBlockState(pos).getBlock();
-			if(block instanceof IEdibleBlock) {
-				if(hunger < max) {
-					if(block instanceof HeartyFeastBlock) {
-						((HeartyFeastBlock) block).setFoodValuesForPlayer(player);
-					}
-					return AppleCoreAPI.accessor.getFoodValuesForPlayer(new ItemStack(AppleCoreAPI.registry.getItemFromEdibleBlock(block)), player);
+		if(lookedAt == null) {
+			return null;
+		}
+		if(!lookedAt.typeOfHit.equals(RayTraceResult.Type.BLOCK)) {
+			return null;
+		}
+		if((pos = lookedAt.getBlockPos()) == null) {
+			return null;
+		}
+		Block block = player.getEntityWorld().getBlockState(pos).getBlock();
+		if(block instanceof IEdibleBlock) {
+			if(hunger < max) {
+				if(block instanceof HeartyFeastBlock) {
+					((HeartyFeastBlock) block).setFoodValuesForPlayer(player);
 				}
+				return AppleCoreAPI.accessor.getFoodValuesForPlayer(new ItemStack(AppleCoreAPI.registry.getItemFromEdibleBlock(block)), player);
 			}
 		}
 		return null;
