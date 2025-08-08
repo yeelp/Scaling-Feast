@@ -85,6 +85,7 @@ public enum InfoStringsDrawables implements IDrawable {
 		int hunger = player.getFoodStats().getFoodLevel();
 		int max = AppleCoreAPI.accessor.getMaxHunger(player);
 		this.drawString(mc, player, left, top, hunger, max);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPopMatrix();
 	}
 	
