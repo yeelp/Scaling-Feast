@@ -62,9 +62,12 @@ public class EnchantmentGluttony extends SFEnchantmentBase {
 		return Optional.of(new Handler() {
 			@SubscribeEvent(priority = EventPriority.LOW, receiveCanceled = true)
 			public void getPlayerSpecificFoodValues(FoodEvent.GetPlayerFoodValues evt) {
+				if(evt.player == null) { 
+					// Player can apparently be null, according to AppleCore.
+					return;
+				}
 				int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.gluttony, evt.player);
-				if(level != 0 && evt.player != null) // Player can apparently be null, according to AppleCore.
-				{
+				if(level != 0) {
 					float mod = (1 + 0.5f * level);
 					FoodValues foodvals = evt.foodValues;
 					int newHunger = (int) (foodvals.hunger * mod);
