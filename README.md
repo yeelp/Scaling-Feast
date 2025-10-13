@@ -4,7 +4,7 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X8X5G4LPG) [![Patreon](https://i.imgur.com/JkRflNx.png)](https://www.patreon.com/join/Yeelp)
 
-(Supporting me on Ko-fi or Petreon helps me develop mods full time!)
+(Supporting me on Ko-fi or Patreon helps me develop mods full time!)
 
 [![](https://img.shields.io/modrinth/dt/OYZ3QMMT?style=flat&logo=modrinth&label=Modrinth%20Downloads&color=00af5c)](https://modrinth.com/mod/distinct-damage-descriptions)
 [![](https://img.shields.io/curseforge/dt/370995?style=flat&logo=curseforge&logoColor=f16436&label=CurseForge%20Downloads&color=f16436)](https://www.curseforge.com/minecraft/mc-mods/scaling-feast)
