@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.handlers;
+package yeelp.scalingfeast.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -17,7 +17,7 @@ public enum GUIIcons {
 	
 	private final ResourceLocation loc;
 	
-	private GUIIcons(ResourceLocation loc) {
+	GUIIcons(ResourceLocation loc) {
 		this.loc = loc;
 	}
 	

@@ -73,7 +73,7 @@ public interface SFCapabilityBase<T extends NBTBase> extends ICapabilitySerializ
 		}
 
 		@Override
-		public Cap call() throws Exception {
+		public Cap call() {
 			return this.sup.get();
 		}
 	}
@@ -85,7 +85,8 @@ public interface SFCapabilityBase<T extends NBTBase> extends ICapabilitySerializ
 	 * @param factorySup a Supplier that generates default instances
 	 */
 	static <NBT extends NBTBase, C extends SFCapabilityBase<NBT>> void register(Class<C> capClass, Class<NBT> nbtClass, Supplier<C> factorySup) {
-		CapabilityManager.INSTANCE.register(capClass, new SFCapStorage<NBT, C>(nbtClass), new SFCapFactory<NBT, C>(factorySup));
+        //noinspection Convert2Diamond
+        CapabilityManager.INSTANCE.register(capClass, new SFCapStorage<NBT, C>(nbtClass), new SFCapFactory<NBT, C>(factorySup));
 	}
 	
 	/**

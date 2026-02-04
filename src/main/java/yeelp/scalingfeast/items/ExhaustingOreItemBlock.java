@@ -1,12 +1,7 @@
 package yeelp.scalingfeast.items;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.common.collect.ImmutableList;
-
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -19,6 +14,11 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import yeelp.scalingfeast.blocks.ExhaustingOreBlock;
 import yeelp.scalingfeast.blocks.ExhaustingOreBlock.RockType;
 
+import javax.annotation.Nonnull;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+
 public final class ExhaustingOreItemBlock extends ExhaustingItemBlockBase {
 
 	private static final ITextComponent SPLASH = new TextComponentTranslation("tooltips.scalingfeast.exhaustingore.info1").setStyle(new Style().setColor(TextFormatting.GREEN));
@@ -28,7 +28,7 @@ public final class ExhaustingOreItemBlock extends ExhaustingItemBlockBase {
 	}
 
 	@Override
-	protected Optional<String> getUnlocalizedMetadataNameFromState(IBlockState state) {
+	protected Optional<String> getUnlocalizedMetadataNameFromState(@Nonnull IBlockState state) {
 		return Optional.of(state.getValue(ExhaustingOreBlock.ROCK_TYPE).toString().toLowerCase(Locale.CANADA));
 	}
 
@@ -42,13 +42,14 @@ public final class ExhaustingOreItemBlock extends ExhaustingItemBlockBase {
 		return damage;
 	}
 
-	public final Map<Integer, ModelResourceLocation> getMetadataModels() {
+	public Map<Integer, ModelResourceLocation> getMetadataModels() {
 		final ResourceLocation loc = ForgeRegistries.BLOCKS.getKey(this.block);
 		final String namePrefix = ExhaustingOreBlock.ROCK_TYPE.getName();
-		final Map<Integer, ModelResourceLocation> map = new HashMap<Integer, ModelResourceLocation>();
+		final Map<Integer, ModelResourceLocation> map = Maps.newHashMap();
 		for(RockType r : ExhaustingOreBlock.ROCK_TYPE.getAllowedValues()) {
 			int meta = this.block.getMetaFromState(this.block.getDefaultState().withProperty(ExhaustingOreBlock.ROCK_TYPE, r));
 			String nameSuffix = ExhaustingOreBlock.ROCK_TYPE.getName(r);
+			@SuppressWarnings("DataFlowIssue")
 			ModelResourceLocation model = new ModelResourceLocation(loc, namePrefix + "=" + nameSuffix);
 			map.put(meta, model);
 		}

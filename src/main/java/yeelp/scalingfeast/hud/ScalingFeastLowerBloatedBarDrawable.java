@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
-import yeelp.scalingfeast.handlers.GUIIcons;
 import yeelp.scalingfeast.util.Colour;
 
 public final class ScalingFeastLowerBloatedBarDrawable extends AbstractScalingFeastBloatedBarDrawable {
@@ -27,7 +26,7 @@ public final class ScalingFeastLowerBloatedBarDrawable extends AbstractScalingFe
 
 	@Override
 	protected float getAmountToDraw(EntityPlayer player, FoodStats stats) {
-		return ModConsts.VANILLA_MAX_HUNGER / 2;
+		return ModConsts.VANILLA_MAX_HUNGER / 2.0f;
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public final class ScalingFeastLowerBloatedBarDrawable extends AbstractScalingFe
 	}
 
 	@Override
-	protected int getBaseVCoord(EntityPlayer player) {
+	protected int getBloatedBaseVCoord(EntityPlayer player) {
 		return AbstractScalingFeastBloatedBarDrawable.V_COORD_COLOURED_OVERLAY;
 	}
 

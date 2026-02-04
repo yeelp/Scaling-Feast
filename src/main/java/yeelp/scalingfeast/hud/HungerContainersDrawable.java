@@ -2,8 +2,6 @@ package yeelp.scalingfeast.hud;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
-import squeek.applecore.api.AppleCoreAPI;
-import yeelp.scalingfeast.ModConsts;
 
 public final class HungerContainersDrawable extends AbstractVanillaStatBarDrawable {
 
@@ -16,7 +14,7 @@ public final class HungerContainersDrawable extends AbstractVanillaStatBarDrawab
 
 	@Override
 	protected float getAmountToDraw(EntityPlayer player, FoodStats stats) {
-		return (int) Math.ceil(Math.min(ModConsts.VANILLA_MAX_HUNGER, AppleCoreAPI.accessor.getMaxHunger(player))/2.0f);
+		return DrawUtils.getContainerCount(player);
 	}
 
 	@Override

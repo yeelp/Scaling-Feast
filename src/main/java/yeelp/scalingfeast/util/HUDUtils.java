@@ -1,15 +1,6 @@
 package yeelp.scalingfeast.util;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Queue;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import squeek.applecore.api.AppleCoreAPI;
@@ -30,21 +20,46 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.items.ExhaustingApple;
 import yeelp.scalingfeast.items.HeartyShankItem;
 
-public class HUDUtils {
-	public static class AdvancedInfo implements Iterable<Iterable<Tuple<String, Integer>>> {
-		final List<Tuple<String, Integer>> hStrings, sStrings;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
-		AdvancedInfo(Collection<Tuple<String, Integer>> hStrings, Collection<Tuple<String, Integer>> sStrings) {
-			this.hStrings = new LinkedList<Tuple<String, Integer>>(hStrings);
-			this.sStrings = new LinkedList<Tuple<String, Integer>>(sStrings);
+public class HUDUtils {
+	public static final class ColouredString {
+		private final String text;
+		private final Integer colour;
+
+		ColouredString(@Nonnull String text, @Nullable Integer colour) {
+			this.text = text;
+			this.colour = colour;
+		}
+
+		@Nonnull
+		public String getText() {
+			return this.text;
+		}
+
+		@Nonnull
+		public OptionalInt getColour() {
+			return colour == null ? OptionalInt.empty() : OptionalInt.of(this.colour);
+		}
+	}
+
+	public static class AdvancedInfo implements Iterable<Iterable<ColouredString>> {
+		final List<ColouredString> hStrings, sStrings;
+
+		AdvancedInfo(Collection<ColouredString> hStrings, Collection<ColouredString> sStrings) {
+			this.hStrings = Lists.newLinkedList(hStrings);
+			this.sStrings = Lists.newLinkedList(sStrings);
 		}
 
 		@Override
-		public Iterator<Iterable<Tuple<String, Integer>>> iterator() {
+		@Nonnull
+		public Iterator<Iterable<ColouredString>> iterator() {
 			return new AdvancedIterator();
 		}
 
-		private class AdvancedIterator implements Iterator<Iterable<Tuple<String, Integer>>> {
+		private class AdvancedIterator implements Iterator<Iterable<ColouredString>> {
 			private byte index;
 
 			AdvancedIterator() {
@@ -57,7 +72,7 @@ public class HUDUtils {
 			}
 
 			@Override
-			public Iterable<Tuple<String, Integer>> next() {
+			public Iterable<ColouredString> next() {
 				switch(this.index++) {
 					case 0:
 						return AdvancedInfo.this.hStrings;
@@ -72,7 +87,7 @@ public class HUDUtils {
 
 	private static final List<Class<?>> EDIBLE_CLASSES = Lists.newArrayList(ItemFood.class, IEdible.class);
 
-	public static AdvancedInfo getAdvancedInfoString(EntityPlayer player) {
+    public static AdvancedInfo getAdvancedInfoString(EntityPlayer player) {
 		int hunger = player.getFoodStats().getFoodLevel();
 		float sat = player.getFoodStats().getSaturationLevel();
 		int max = AppleCoreAPI.accessor.getMaxHunger(player);
@@ -116,8 +131,8 @@ public class HUDUtils {
 			if(deltaSat != 0) {
 				satAddition = String.format("%+.1f", deltaSat);
 			}
-			int deltaMaxH = 0;
-			float deltaMaxS = 0.0f;
+			int deltaMaxH;
+			float deltaMaxS;
 			if(isHeartyShank) {
 				deltaMaxH = ModConfig.items.shank.inc;
 				short hardHungerCap = ScalingFeastAPI.accessor.getHungerHardCap();
@@ -127,7 +142,7 @@ public class HUDUtils {
 				maxAddition = String.format("+%d", deltaMaxH);
 				float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
 				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max + ModConfig.items.shank.inc);
-				deltaMaxS = (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat;
+				deltaMaxS = Math.min(scaledSat, hardSatCap) - maxSat;
 				maxSatAddition = String.format("+%.1f", deltaMaxS);
 				if(maxSatAddition.equals("+0.0")) {
 					maxSatAddition = "";
@@ -141,7 +156,7 @@ public class HUDUtils {
 				maxAddition = String.format("%d", deltaMaxH);
 				float hardSatCap = ScalingFeastAPI.accessor.getSaturationHardCap();
 				float scaledSat = ScalingFeastAPI.accessor.getSaturationScaling().clampSaturation(max - ModConfig.items.shank.inc);
-				deltaMaxS = (scaledSat < hardSatCap ? scaledSat : hardSatCap) - maxSat;
+				deltaMaxS = Math.min(scaledSat, hardSatCap) - maxSat;
 				maxSatAddition = String.format("%.1f", deltaMaxS);
 				if(maxSatAddition.equals("0.0")) {
 					maxSatAddition = "";
@@ -150,18 +165,18 @@ public class HUDUtils {
 				satAddition = String.format("%+.1f", (maxSat + deltaMaxS) - sat);
 			}
 		}
-		Queue<Tuple<String, Integer>> hQ = new LinkedList<Tuple<String, Integer>>();
-		Queue<Tuple<String, Integer>> sQ = new LinkedList<Tuple<String, Integer>>();
-		hQ.add(new Tuple<String, Integer>(String.format("%d", hunger), null));
-		hQ.add(new Tuple<String, Integer>(foodAddition, hColour));
-		hQ.add(new Tuple<String, Integer>("/", null));
-		hQ.add(new Tuple<String, Integer>(String.format("%d", max), null));
-		hQ.add(new Tuple<String, Integer>(maxAddition, null));
-		sQ.add(new Tuple<String, Integer>(String.format("%.1f", sat), null));
-		sQ.add(new Tuple<String, Integer>(satAddition, sColour));
-		sQ.add(new Tuple<String, Integer>("/", null));
-		sQ.add(new Tuple<String, Integer>(String.format("%.1f", maxSat), null));
-		sQ.add(new Tuple<String, Integer>(maxSatAddition, null));
+		Queue<ColouredString> hQ = Lists.newLinkedList();
+		Queue<ColouredString> sQ = Lists.newLinkedList();
+		hQ.add(new ColouredString(String.format("%d", hunger), null));
+		hQ.add(new ColouredString(foodAddition, hColour));
+		hQ.add(new ColouredString("/", null));
+		hQ.add(new ColouredString(String.format("%d", max), null));
+		hQ.add(new ColouredString(maxAddition, null));
+		sQ.add(new ColouredString(String.format("%.1f", sat), null));
+		sQ.add(new ColouredString(satAddition, sColour));
+		sQ.add(new ColouredString("/", null));
+		sQ.add(new ColouredString(String.format("%.1f", maxSat), null));
+		sQ.add(new ColouredString(maxSatAddition, null));
 		return new AdvancedInfo(hQ, sQ);
 	}
 
@@ -174,16 +189,13 @@ public class HUDUtils {
 
 	private static FoodValues getFoodValuesForBlockBeingLookedAt(EntityPlayer player, int hunger, int max) {
 		RayTraceResult lookedAt = Minecraft.getMinecraft().objectMouseOver;
-		BlockPos pos;
 		if(lookedAt == null) {
 			return null;
 		}
 		if(!lookedAt.typeOfHit.equals(RayTraceResult.Type.BLOCK)) {
 			return null;
 		}
-		if((pos = lookedAt.getBlockPos()) == null) {
-			return null;
-		}
+		BlockPos pos = lookedAt.getBlockPos();
 		Block block = player.getEntityWorld().getBlockState(pos).getBlock();
 		if(block instanceof IEdibleBlock) {
 			if(hunger < max) {

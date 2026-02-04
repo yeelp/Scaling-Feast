@@ -8,9 +8,9 @@ public enum SaturationScaling {
 	HALF_HUNGER(2.0f),
 	QUARTER_HUNGER(4.0f);
 
-	private float divisor;
+	private final float divisor;
 
-	private SaturationScaling(float divisor) {
+	SaturationScaling(float divisor) {
 		this.divisor = divisor;
 	}
 

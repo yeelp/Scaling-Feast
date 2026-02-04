@@ -1,12 +1,14 @@
 package yeelp.scalingfeast.potion;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 
+@ParametersAreNonnullByDefault
 public class PotionDeficiency extends PotionBase {
 	public PotionDeficiency() {
 		super(true, 0x570d0d, -1, -1, true);

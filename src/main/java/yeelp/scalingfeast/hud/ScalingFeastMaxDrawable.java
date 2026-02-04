@@ -11,7 +11,6 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.MaxColourStyle;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.TrackerStyle;
-import yeelp.scalingfeast.handlers.GUIIcons;
 import yeelp.scalingfeast.util.Colour;
 
 public final class ScalingFeastMaxDrawable extends AbstractDrawable {
@@ -38,20 +37,21 @@ public final class ScalingFeastMaxDrawable extends AbstractDrawable {
 		int hunger = stats.getFoodLevel();
 		int x = left - maxIndex * 8 - 9;
 		int y = top + DrawUtils.getJitterAmount()[maxIndex];
+		int v = MAX_V_COORD + ModConfig.hud.iconSet.getVOffset();
 		short alpha = (short) (255 * (hunger > ModConsts.VANILLA_MAX_HUNGER * (Math.ceil(max / 20.0f) - 1) || hunger == 0 ? 1.0f : ModConfig.hud.maxOutlineTransparency)); 
 		short starveTicks = ScalingFeastAPI.accessor.getSFFoodStats(player).getStarvationTrackerCount();
 		Colour maxColour = getMaxColour(starveTicks);
 		if(ModConfig.hud.maxColourStyle == MaxColourStyle.CUSTOM) {
 			//blend start and end colours if tick > 0, otherwise only use start colour
 			if(starveTicks > 0) {
-				AbstractDrawable.drawIcon(mc, x, y, MAX_U_COORD, MAX_V_COORD, maxColour, alpha);
+				AbstractDrawable.drawIcon(mc, x, y, MAX_U_COORD, v, maxColour, alpha);
 			}
 			maxColour = new Colour(ModConfig.hud.maxColourStart);
 			int lossFreq = ModConfig.features.starve.tracker.lossFreq;
 			float blendRatio = starveTicks + 1 < lossFreq ? ((float) lossFreq - starveTicks) / lossFreq : 0;
-			alpha *= blendRatio;
+			alpha *= (short) blendRatio;
 		}
-		AbstractDrawable.drawIcon(mc, x, y, MAX_U_COORD, MAX_V_COORD, maxColour, alpha);
+		AbstractDrawable.drawIcon(mc, x, y, MAX_U_COORD, v, maxColour, alpha);
 		GUIIcons.unbindSFGUIIcons(mc);
 	}
 	

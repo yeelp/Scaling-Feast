@@ -10,6 +10,7 @@ public abstract class SFSingleValueCapabilityFloat implements SFSingleValueCapab
 		this.val = 0.0f;
 	}
 
+	@SuppressWarnings("unused")
 	public SFSingleValueCapabilityFloat(float val) {
 		this.val = val;
 	}

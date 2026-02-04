@@ -1,8 +1,6 @@
 package yeelp.scalingfeast.blocks;
 
-import java.util.Arrays;
-import java.util.Locale;
-
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -15,6 +13,12 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import yeelp.scalingfeast.ModConsts;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Arrays;
+import java.util.Locale;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public final class ExhaustingOreBlock extends ExhaustionIncreasingBlock {
 	public static final PropertyEnum<RockType> ROCK_TYPE = PropertyEnum.create("type", RockType.class);
 	
@@ -42,7 +46,7 @@ public final class ExhaustingOreBlock extends ExhaustionIncreasingBlock {
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({"deprecation", "DeprecatedIsStillUsed"})
 	@Deprecated
 	@Override
 	public IBlockState getStateFromMeta(int meta) {

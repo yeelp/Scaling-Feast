@@ -28,6 +28,7 @@ public interface IStarvationOperations {
 	/**
 	 * Reset both the tracker and the counter.
 	 */
+	@SuppressWarnings("unused")
 	void resetStarvationStats();
 
 	/**

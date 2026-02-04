@@ -16,6 +16,8 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigStarvation;
 import yeelp.scalingfeast.handlers.Handler;
 
+import javax.annotation.Nonnull;
+
 public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> {
 
 	static final class PiercingStarvation extends DamageSource {
@@ -35,17 +37,19 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 		}
 
 		@Override
+		@Nonnull
 		public ITextComponent getDeathMessage(EntityLivingBase entityLivingBaseIn) {
 			return new TextComponentTranslation("message.scalingfeast.starvationDeath", entityLivingBaseIn.getName());
 		}
 	}
 	
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 			
 			@SubscribeEvent
-			public final void onGetStarveTickPeriod(GetStarveTickPeriod evt) {
+			public void onGetStarveTickPeriod(GetStarveTickPeriod evt) {
 				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
 					return;
 				}
@@ -54,7 +58,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			}
 			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
-			public final void onStarve(Starve evt) {
+			public void onStarve(Starve evt) {
 				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
 					return;
 				}
@@ -85,7 +89,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			}
 			
 			@SubscribeEvent
-			public final void onFoodStatsAddition(FoodStatsAddition evt) {
+			public void onFoodStatsAddition(FoodStatsAddition evt) {
 				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
 					return;
 				}
@@ -99,7 +103,7 @@ public final class SFStarvationFeatures extends FeatureBase<SFConfigStarvation> 
 			}
 			
 			@SubscribeEvent(priority = EventPriority.LOWEST)
-			public final void onExhaution(ExhaustionAddition evt) {
+			public void onExhaustion(ExhaustionAddition evt) {
 				if(!SFStarvationFeatures.this.isInValidDimension(evt.player)) {
 					return;
 				}

@@ -33,6 +33,7 @@ public interface SFSingleValueCapability<T extends Number, NBT extends NBTBase> 
 	 * Decrement the tracked value by a certain amount
 	 * @param amount amount to decrement
 	 */
+	@SuppressWarnings("unused")
 	void dec(T amount);
 	
 	/**

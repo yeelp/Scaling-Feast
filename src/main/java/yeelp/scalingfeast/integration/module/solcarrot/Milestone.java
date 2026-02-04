@@ -8,7 +8,7 @@ package yeelp.scalingfeast.integration.module.solcarrot;
  *
  */
 public abstract class Milestone<N extends Number> {
-	private int target;
+	private final int target;
 
 	/**
 	 * Build a new milestone
@@ -33,7 +33,7 @@ public abstract class Milestone<N extends Number> {
 			}
 		}
 		catch(NumberFormatException e) {
-			throw e;
+			throw new RuntimeException(e);
 		}
 	}
 

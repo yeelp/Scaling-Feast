@@ -31,11 +31,11 @@ public final class TraitTorporic extends AbstractArmorTrait {
 		}
 	}
 	
-	private static final boolean getTraitTriggerState(EntityPlayer player) {
+	private static boolean getTraitTriggerState(EntityPlayer player) {
 		return getPersistedTag(player).getBoolean(KEY);
 	}
 	
-	private static final NBTTagCompound getPersistedTag(EntityPlayer player) {
+	private static NBTTagCompound getPersistedTag(EntityPlayer player) {
 		NBTTagCompound tag = player.getEntityData();
 		NBTTagCompound persistTag;
 		if(tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {

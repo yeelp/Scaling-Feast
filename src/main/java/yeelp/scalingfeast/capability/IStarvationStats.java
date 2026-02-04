@@ -58,13 +58,13 @@ public interface IStarvationStats extends SFCapabilityBase<NBTTagCompound> {
 	
 	/**
 	 * Get the current tracker for tracking current starvation penalties.
-	 * @return
+	 * @return The tracker ICountable
 	 */
 	ICountable getTracker();
 	
 	/**
 	 * Get the current counter for how many times this player has starved in a row.
-	 * @return
+	 * @return The counter ICountable
 	 */
 	ICountable getCounter();
 	

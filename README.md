@@ -6,7 +6,7 @@
 
 (Supporting me on Ko-fi or Patreon helps me develop mods full time!)
 
-[![](https://img.shields.io/modrinth/dt/OYZ3QMMT?style=flat&logo=modrinth&label=Modrinth%20Downloads&color=00af5c)](https://modrinth.com/mod/distinct-damage-descriptions)
+[![](https://img.shields.io/modrinth/dt/OYZ3QMMT?style=flat&logo=modrinth&label=Modrinth%20Downloads&color=00af5c)](https://modrinth.com/mod/scaling-feast)
 [![](https://img.shields.io/curseforge/dt/370995?style=flat&logo=curseforge&logoColor=f16436&label=CurseForge%20Downloads&color=f16436)](https://www.curseforge.com/minecraft/mc-mods/scaling-feast)
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/yeelp/Scaling-Feast/total?style=flat&logo=github&label=GitHub%20Downloads&color=white)](https://github.com/yeelp/Scaling-Feast/releases) 
 [![Discord](https://img.shields.io/discord/750481601107853373?style=flat&logo=discord&logoColor=white&color=5662f6)](https://discord.gg/hwzWdXQ)
@@ -31,7 +31,7 @@ from inside the directory.
 
 If you want to contribute, make sure you know how to get and setup the latest Forge MDK for Minecraft 1.12.2. Then, clone this repository, navigate to that directory, much like before, and execute
 ```
-gradlew setupDecompWorkspace
+gradlew build
 ```
 Then, finish the usual Forge modding setup. 
 

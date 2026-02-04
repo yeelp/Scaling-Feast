@@ -23,9 +23,9 @@ public enum BloatedInfoStringDrawables implements IDrawable {
 		}
 	};
 
-	private String name;
+	private final String name;
 	
-	private BloatedInfoStringDrawables() {
+	BloatedInfoStringDrawables() {
 		this.name = String.format("sf_bloat_info_%s", this.name().toLowerCase());
 	}
 	

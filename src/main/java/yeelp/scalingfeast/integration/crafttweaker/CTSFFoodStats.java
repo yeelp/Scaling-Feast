@@ -3,7 +3,6 @@ package yeelp.scalingfeast.integration.crafttweaker;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.player.IPlayer;
-import net.minecraft.entity.player.EntityPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenSetter;
@@ -12,13 +11,12 @@ import yeelp.scalingfeast.api.impl.SFFoodStats;
 
 @ZenClass("mods.scalingfeast.SFStats")
 @ZenRegister
+@SuppressWarnings("unused")
 public class CTSFFoodStats {
-	private final EntityPlayer player;
 	private final SFFoodStats sfstats;
 
 	public CTSFFoodStats(IPlayer ctplayer) {
-		this.player = CraftTweakerMC.getPlayer(ctplayer);
-		this.sfstats = ScalingFeastAPI.accessor.getSFFoodStats(this.player);
+		this.sfstats = ScalingFeastAPI.accessor.getSFFoodStats(CraftTweakerMC.getPlayer(ctplayer));
 	}
 
 	@ZenGetter("bloatedHungerAmount")

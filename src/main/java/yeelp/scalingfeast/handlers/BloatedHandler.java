@@ -1,9 +1,6 @@
 package yeelp.scalingfeast.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.FoodStats;
@@ -14,11 +11,13 @@ import squeek.applecore.api.hunger.ExhaustionEvent;
 import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
-import yeelp.scalingfeast.capability.impl.BloatedHunger;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class BloatedHandler extends Handler {
 
-	private static final Map<UUID, Integer> DELAY = new HashMap<UUID, Integer>();
+	private static final Map<UUID, Integer> DELAY = Maps.newHashMap();
 	private static final int TIME_THRESHOLD = 30;
 
 	@SuppressWarnings("static-method")
@@ -61,7 +60,7 @@ public class BloatedHandler extends Handler {
 		// If server side player has bloated amount, sync to client right away so it
 		// shows in HUD.
 		if(evt.player instanceof EntityPlayerMP && ScalingFeastAPI.accessor.getSFFoodStats(evt.player).getBloatedHungerAmount() > 0) {
-			evt.player.getCapability(BloatedHunger.cap, null).sync(evt.player);
+			ScalingFeastAPI.accessor.getSFFoodStats(evt.player).syncCapabilities(SFFoodStats.BLOATED_SYNC_FLAG);
 		}
 	}
 
@@ -71,7 +70,7 @@ public class BloatedHandler extends Handler {
 		// If player has bloated hunger, sync it with the server every 30 ticks to
 		// prevent desync.
 		if(!evt.player.world.isRemote && DELAY.compute(evt.player.getPersistentID(), (uuid, i) -> i == null ? 1 : (i + 1) % TIME_THRESHOLD) == 0 && ScalingFeastAPI.accessor.getSFFoodStats(evt.player).getBloatedHungerAmount() > 0) {
-			evt.player.getCapability(BloatedHunger.cap, null).sync(evt.player);
+			ScalingFeastAPI.accessor.getSFFoodStats(evt.player).syncCapabilities(SFFoodStats.BLOATED_SYNC_FLAG);
 		}
 	}
 }

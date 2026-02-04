@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
+import yeelp.scalingfeast.integration.IIntegratable;
 
 /**
  * A skeleton implementation of a module for toggleable integration
@@ -23,7 +24,7 @@ public abstract class AbstractModule<Config> implements IIntegratable {
 
 	final class ModuleHandler extends Handler {
 		@SubscribeEvent
-		public final void onPlayerJoinWorld(final EntityJoinWorldEvent evt) {
+		public void onPlayerJoinWorld(final EntityJoinWorldEvent evt) {
 			if(evt.getEntity() instanceof EntityPlayerMP && AbstractModule.this.enabled()) {
 				EntityPlayerMP player = (EntityPlayerMP) evt.getEntity();
 				AbstractModule.this.processPlayerUpdate(player);
@@ -31,7 +32,7 @@ public abstract class AbstractModule<Config> implements IIntegratable {
 		}
 
 		@SubscribeEvent
-		public final void onPostConfigChanged(final ConfigChangedEvent.PostConfigChangedEvent evt) {
+		public void onPostConfigChanged(final ConfigChangedEvent.PostConfigChangedEvent evt) {
 			if(evt.getModID().equals(ModConsts.MOD_ID)) {
 				boolean configUpdated = AbstractModule.this.updateFromConfig();
 				if(evt.isWorldRunning()) {

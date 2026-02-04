@@ -6,17 +6,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class PotionBloated extends PotionBase {
 	public PotionBloated() {
 		super(false, 0xffff00, 2, 0, false);
 		this.setRegistryName("bloated");
 		this.setPotionName("effect.bloated");
 		this.setBeneficial();
-	}
-
-	@Override
-	public boolean hasStatusIcon() {
-		return false;
 	}
 
 	@Override

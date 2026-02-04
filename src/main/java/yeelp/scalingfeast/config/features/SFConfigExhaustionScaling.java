@@ -13,8 +13,8 @@ public final class SFConfigExhaustionScaling {
 	
 	@Name("Base Exhaustion per Second")
 	@Comment({"The amount of exhaustion gained after breaking a block is this value times the amount of seconds it took to break the block.",
-		"Instaminning results in only receiving 1/20th of this value in exhaustion.",
-		"The default value results in receiving the same amount of exhaustion in vanilla when breaking a block, but ONLY when instaminned."})
+		"Instamining results in only receiving 1/20th of this value in exhaustion.",
+		"The default value results in receiving the same amount of exhaustion in vanilla when breaking a block, but ONLY when instamined."})
 	@RangeDouble(min = 0.00001)
 	public float baseExhaustionRate = 0.1f;
 	

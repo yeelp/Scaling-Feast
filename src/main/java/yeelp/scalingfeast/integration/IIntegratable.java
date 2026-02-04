@@ -1,4 +1,4 @@
-package yeelp.scalingfeast.integration.module;
+package yeelp.scalingfeast.integration;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -36,5 +36,7 @@ public interface IIntegratable {
 	 * Is this module enabled?
 	 * @return true if enabled.
 	 */
-	boolean enabled();
+	default boolean enabled() {
+		return true;
+	}
 }

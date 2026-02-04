@@ -7,14 +7,17 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigHealthRegen;
 import yeelp.scalingfeast.handlers.Handler;
 
+import javax.annotation.Nonnull;
+
 public final class SFHealthRegen extends FeatureBase<SFConfigHealthRegen> {
 
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 			
 			@SubscribeEvent
-			public final void onHungerRegen(AllowRegen evt) {
+			public void onHungerRegen(AllowRegen evt) {
 				if(!evt.player.shouldHeal()) {
 					return;
 				}
@@ -27,7 +30,7 @@ public final class SFHealthRegen extends FeatureBase<SFConfigHealthRegen> {
 			}
 			
 			@SubscribeEvent
-			public final void onSaturatedRegen(AllowSaturatedRegen evt) {
+			public void onSaturatedRegen(AllowSaturatedRegen evt) {
 				if(!evt.player.shouldHeal()) {
 					return;
 				}

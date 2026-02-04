@@ -38,9 +38,9 @@ public final class SFSOLCarrotConfigCategory {
 	@Name("Food Efficiency Milestones")
 	@Comment({
 			"A list of pairs delimited by a colon, m:r, of milestones and milestone rewards.",
-			"Identical to regular milestones, however instead of granting the player bonus hunger, these food efficiency milstones increase a player's food efficiency attribute by r when they eat m unique food items, which changes a player's exhaustion rate.",
+			"Identical to regular milestones, however instead of granting the player bonus hunger, these food efficiency milestones increase a player's food efficiency attribute by r when they eat m unique food items, which changes a player's exhaustion rate.",
 			"Use positive values to DECREASE the rate of exhaustion, and use negative values to INCREASE the rate of exhaustion."})
-	public String[] foodEfficiencyMilstones = {
+	public String[] foodEfficiencyMilestones = {
 			"20:0.05",
 			"40:0.05",
 			"60:0.05"};
@@ -51,7 +51,7 @@ public final class SFSOLCarrotConfigCategory {
 	
 	@Name("Food Efficiency Milestone Reward Type")
 	@Comment({"Set the type of reward for Food Efficiency Milestones",
-		"STACK_ADDITVELY - Multiplies the base Food Efficiency by the sum of this milestone reward plus any other Food Efficieny attribute modifiers. So, it stacks with other modifiers additively",
+		"STACK_ADDITIVELY - Multiplies the base Food Efficiency by the sum of this milestone reward plus any other Food Efficiency attribute modifiers. So, it stacks with other modifiers additively",
 		"STACK_MULTIPLICATIVELY - Multiplies the base Food Efficiency by this milestone reward independently of other modifiers. So, it stacks with other modifiers multiplicatively."})
 	public FoodEfficiencyOperations foodEfficiencyMilestoneType = FoodEfficiencyOperations.STACK_MULTIPLICATIVELY;
 }

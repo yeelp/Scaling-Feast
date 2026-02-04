@@ -5,7 +5,7 @@ plugins {
 }
 
 version = mod_version
-group = mod_id
+group = "yeelp.${mod_id}"
 base.archivesName = mod_id
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
@@ -63,12 +63,14 @@ dependencies {
     implementation fg.deobf("CraftTweaker2:ZenScript:4.1.20.674")
 }
 
+import org.apache.tools.ant.filters.ReplaceTokens;
+
 processResources {
     var replaceProperties = [
             'mod_id': mod_id,
             'mod_name': mod_name,
-            'version': mod_version,
-            'mcversion': minecraft_version,
+            'mod_version': mod_version,
+            'minecraft_version': minecraft_version,
             'mod_description': mod_description,
             'mod_author': mod_author
     ]
@@ -78,6 +80,13 @@ processResources {
     filesMatching('mcmod.info') {
         expand replaceProperties
     }
+}
+
+task processSources(type: Sync) {
+    from sourceSets.main.java
+    inputs.property 'version', project.version
+    filter(ReplaceTokens, tokens:[version: version.toString()])
+    into 'build/src'
 }
 
 jar {
@@ -92,6 +101,10 @@ jar {
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+
+compileJava {
+    source = processSources.outputs
 }
 
 java {

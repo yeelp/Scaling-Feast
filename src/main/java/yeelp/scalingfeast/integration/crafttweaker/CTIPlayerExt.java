@@ -7,6 +7,7 @@ import stanhebben.zenscript.annotations.ZenGetter;
 
 @ZenExpansion("crafttweaker.player.IPlayer")
 @ZenRegister
+@SuppressWarnings("unused")
 public class CTIPlayerExt {
 	@ZenGetter("sfStats")
 	public static CTSFFoodStats getSFStats(IPlayer player) {

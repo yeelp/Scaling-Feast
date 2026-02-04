@@ -3,7 +3,6 @@ package yeelp.scalingfeast.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import yeelp.scalingfeast.handlers.GUIIcons;
 import yeelp.scalingfeast.util.Colour;
 
 /**

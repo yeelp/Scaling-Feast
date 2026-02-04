@@ -2,7 +2,7 @@ package yeelp.scalingfeast.api;
 
 /**
  * A simple interface that lists operations that can be performed on bloated hunger.
- * 
+ * <br>
  * This merely defers calls to the capability and syncs with the server when needed.
  * @author Yeelp
  *
@@ -37,5 +37,6 @@ public interface IBloatedHungerOperations {
 	/**
 	 * Remove all bloated hunger.
 	 */
+	@SuppressWarnings("unused")
 	void revokeAllBloatedHunger();
 }

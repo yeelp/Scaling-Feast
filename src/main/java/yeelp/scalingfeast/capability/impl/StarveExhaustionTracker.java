@@ -7,6 +7,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.network.StarveExhaustMessage;
 
+import javax.annotation.Nonnull;
+
 public class StarveExhaustionTracker extends SFSingleValueCapabilityFloat implements IStarveExhaustionTracker {
 	
 	@CapabilityInject(IStarveExhaustionTracker.class)
@@ -17,13 +19,13 @@ public class StarveExhaustionTracker extends SFSingleValueCapabilityFloat implem
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
 		return capability == cap;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		return this.hasCapability(capability, facing) ? cap.<T>cast(this) : null;
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+		return this.hasCapability(capability, facing) ? cap.cast(this) : null;
 	}
 
 	@Override

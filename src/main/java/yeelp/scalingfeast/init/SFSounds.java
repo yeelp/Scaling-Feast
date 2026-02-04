@@ -1,10 +1,7 @@
 package yeelp.scalingfeast.init;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
@@ -14,9 +11,12 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.PacketHandler;
 import yeelp.scalingfeast.network.SoundMessage;
 
+import java.util.List;
+import java.util.Map;
+
 public final class SFSounds {
-	private static final Map<String, SoundEvent> SOUND_MAP = new HashMap<String, SoundEvent>();
-	private static final List<String> ID_LIST = new ArrayList<String>();
+	private static final Map<String, SoundEvent> SOUND_MAP = Maps.newHashMap();
+	private static final List<String> ID_LIST = Lists.newArrayList();
 	
 	public static final SoundEvent HUNGER_INCREASE = createSound("hunger_increase");
 	public static final SoundEvent HUNGER_DECREASE = createSound("hunger_decrease");
@@ -25,14 +25,14 @@ public final class SFSounds {
 		SOUND_MAP.values().forEach(ForgeRegistries.SOUND_EVENTS::register);
 	}
 	
-	public static boolean playSound(EntityPlayer player, SoundEvent name, float vol, float pitch) {
+	public static void playSound(EntityPlayer player, SoundEvent name, float vol, float pitch) {
 		if(player instanceof EntityPlayerMP) {
-			PacketHandler.INSTANCE.sendTo(new SoundMessage(encodeSoundID(name.getRegistryName().toString()), vol, pitch), (EntityPlayerMP) player);
+            //noinspection DataFlowIssue
+            PacketHandler.INSTANCE.sendTo(new SoundMessage(encodeSoundID(name.getRegistryName().toString()), vol, pitch), (EntityPlayerMP) player);
 		}
 		else {
 			player.playSound(name, vol, pitch);
 		}
-		return true;
 	}
 	
 	public static String decodeSoundID(byte id) {
@@ -49,7 +49,7 @@ public final class SFSounds {
 		throw new RuntimeException("Can't encode Scaling Feast sound ID "+id);
 	}
 			
-	private static final SoundEvent createSound(String id) {
+	private static SoundEvent createSound(String id) {
 		ResourceLocation loc = new ResourceLocation(ModConsts.MOD_ID, id);
 		SoundEvent sound = new SoundEvent(loc).setRegistryName(loc);
 		SOUND_MAP.put(id, sound);

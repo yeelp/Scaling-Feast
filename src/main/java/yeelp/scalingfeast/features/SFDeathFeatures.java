@@ -12,14 +12,17 @@ import yeelp.scalingfeast.config.features.SFConfigDeath;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
+import javax.annotation.Nonnull;
+
 public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
 
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 
 			@SubscribeEvent
-			public final void onDeath(PlayerEvent.Clone evt) {
+			public void onDeath(PlayerEvent.Clone evt) {
 				if(!evt.isWasDeath()) {
 					return;
 				}
@@ -32,7 +35,7 @@ public final class SFDeathFeatures extends FeatureBase<SFConfigDeath> {
 					double currDeathPenalty = SFBuiltInModifiers.MaxHungerModifiers.DEATH.getModifierValueForPlayer(player);
 					sfstats.applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.DEATH.createModifier(currDeathPenalty + MathHelper.clamp(-config.maxLossAmount, config.maxLossLowerBound - maxHunger, 0)));
 				}
-				// Stat Persistance
+				// Stat Persistence
 				int respawningHunger = getConfig().respawningStats.getRespawningHunger(evt.getOriginal(), evt.getEntityPlayer());
 				float respawningSat = getConfig().respawningStats.getRespawningSaturation(evt.getOriginal(), evt.getEntityPlayer());
 				AppleCoreAPI.mutator.setHunger(player, respawningHunger);

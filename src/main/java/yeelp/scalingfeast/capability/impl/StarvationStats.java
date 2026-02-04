@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import yeelp.scalingfeast.capability.IStarvationStats;
 import yeelp.scalingfeast.network.StarvationStatsMessage;
 
+import javax.annotation.Nonnull;
+
 public final class StarvationStats implements IStarvationStats {
 
 	@CapabilityInject(IStarvationStats.class)
@@ -42,7 +44,7 @@ public final class StarvationStats implements IStarvationStats {
 		}
 	}
 	
-	private ICountable tracker, counter;
+	private final ICountable tracker, counter;
 
 	public StarvationStats() {
 		this.counter = new Counter();
@@ -55,12 +57,12 @@ public final class StarvationStats implements IStarvationStats {
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
 		return capability == cap;
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		return this.hasCapability(capability, facing) ? cap.cast(this) : null;
 	}
 

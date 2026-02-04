@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import slimeknights.mantle.client.book.repository.FileRepository;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import yeelp.scalingfeast.init.SFItems;
-import yeelp.scalingfeast.integration.module.IIntegratable;
+import yeelp.scalingfeast.integration.IIntegratable;
 import yeelp.scalingfeast.integration.tic.tinkers.SFTinkerIntegration;
 
 public final class SFConarmIntegration implements IIntegratable {
@@ -43,11 +43,6 @@ public final class SFConarmIntegration implements IIntegratable {
 
 	@Override
 	public boolean postIntegrate(FMLPostInitializationEvent evt) {
-		return true;
-	}
-
-	@Override
-	public boolean enabled() {
 		return true;
 	}
 }

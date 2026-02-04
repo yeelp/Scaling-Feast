@@ -3,8 +3,11 @@ package yeelp.scalingfeast.blocks;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Maps;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockCake;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyInteger;
@@ -33,6 +36,7 @@ import yeelp.scalingfeast.init.SFPotion;
  * @author Yeelp
  *
  */
+@MethodsReturnNonnullByDefault
 public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 
 	/**
@@ -50,21 +54,21 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 		}
 
 		@Override
-		public int getHealAmount(ItemStack stack) {
+		public int getHealAmount(@Nonnull ItemStack stack) {
 			return this.fv.hunger;
 		}
 
 		@Override
-		public float getSaturationModifier(ItemStack stack) {
+		public float getSaturationModifier(@Nonnull ItemStack stack) {
 			return this.fv.saturationModifier;
 		}
 	}
 
 	public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 6);
-	private static HashMap<UUID, FoodValues> users = new HashMap<UUID, FoodValues>();
+	private static final HashMap<UUID, FoodValues> USERS = Maps.newHashMap();
 	private boolean alwaysEdible = false;
 	private int food = 1;
-	private static final float sat = 0.5f;
+	private static final float SAT = 0.25f;
 
 	public HeartyFeastBlock() {
 		this.blockSoundType = SoundType.CLOTH;
@@ -74,28 +78,28 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 	}
 
 	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-		ItemStack stack = new ItemStack(SFItems.heartyfeastitem);
-		return stack;
+	public ItemStack getItem(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+		return new ItemStack(SFItems.heartyfeastitem);
 	}
 
 	@Override
-	public FoodValues getFoodValues(ItemStack itemStack) {
-		return new FoodValues(this.food, sat);
+	public FoodValues getFoodValues(@Nonnull ItemStack itemStack) {
+		return new FoodValues(this.food, SAT);
 	}
 
 	@Override
 	public void setEdibleAtMaxHunger(boolean value) {
 		this.alwaysEdible = value;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public boolean isEdibleAtMaxHunger() {
 		return this.alwaysEdible;
 	}
 
 	@Override
-	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		users.put(player.getUniqueID(), this.setFoodValuesForPlayer(player));
+	public boolean onBlockActivated(@Nullable World world, @Nullable BlockPos pos, @Nullable IBlockState state, EntityPlayer player, @Nullable EnumHand hand, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ) {
+		USERS.put(player.getUniqueID(), this.setFoodValuesForPlayer(player));
 		return this.eat(world, pos, state, player);
 	}
 
@@ -115,12 +119,12 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 	}
 
 	private void onEatenCompatibility(ItemStack itemStack, EntityPlayer player) {
-		player.getFoodStats().addStats(new HeartyFeastSlice(this, users.get(player.getUniqueID())), itemStack);
+		player.getFoodStats().addStats(new HeartyFeastSlice(this, USERS.get(player.getUniqueID())), itemStack);
 		int dur = ModConfig.items.feast.heartyFeastEffectDuration;
 		if(dur > 0) {
 			player.addPotionEffect(new PotionEffect(SFPotion.ironstomach, dur));
 		}
-		users.remove(player.getUniqueID());
+		USERS.remove(player.getUniqueID());
 	}
 	
 	public FoodValues setFoodValuesForPlayer(EntityPlayer player) {
@@ -134,6 +138,6 @@ public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 	}
 	
 	public static FoodValues getFoodValuesFor(EntityPlayer player) {
-		return new FoodValues(MathHelper.clamp(AppleCoreAPI.accessor.getMaxHunger(player) / 7, 1, getCap()), sat);
+		return new FoodValues(MathHelper.clamp(AppleCoreAPI.accessor.getMaxHunger(player) / 7, 1, getCap()), SAT);
 	}
 }

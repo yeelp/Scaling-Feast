@@ -1,5 +1,6 @@
 package yeelp.scalingfeast.api.impl;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.math.MathHelper;
@@ -10,17 +11,21 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.lib.SaturationScaling;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastMutator {
 	INSTANCE;
 
-	private ScalingFeastAPIImpl() {
+	ScalingFeastAPIImpl() {
 		ScalingFeastAPI.accessor = this;
 		ScalingFeastAPI.mutator = this;
 	}
 
-	/******************************/
+	/*==========*/
 	/* ACCESSOR */
-	/******************************/
+	/*==========*/
 
 	@Override
 	public SaturationScaling getSaturationScaling() {
@@ -47,9 +52,9 @@ public enum ScalingFeastAPIImpl implements IScalingFeastAccessor, IScalingFeastM
 		return AppleCoreAPI.accessor.getMaxHunger(player) > ModConfig.features.starve.tracker.starveLowerCap;
 	}
 
-	/*****************************/
+	/*=========*/
 	/* MUTATOR */
-	/*****************************/
+	/*=========*/
 
 	@Override
 	public void capPlayerHunger(EntityPlayer player) {

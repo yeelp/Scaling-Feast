@@ -8,14 +8,14 @@ public final class SFOreDict {
 
 	public static final String SUFFIX = "Exhausting";
 
-	public static final void init() {
+	public static void init() {
 		oredict(SFItems.exhaustingNugget, "nugget");
 		oredict(SFItems.exhaustingIngot, "ingot");
 		oredict(SFItems.exhaustingBlock, "block");
 		OreDictionary.registerOre("ore" + SUFFIX, new ItemStack(SFItems.exhaustingOre, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
-	private static final void oredict(Item i, String type) {
+	private static void oredict(Item i, String type) {
 		OreDictionary.registerOre(type + SUFFIX, i);
 	}
 }

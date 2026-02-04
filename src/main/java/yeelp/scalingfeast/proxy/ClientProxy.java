@@ -3,6 +3,7 @@ package yeelp.scalingfeast.proxy;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
 import yeelp.scalingfeast.init.SFItems;
 
+@SuppressWarnings("unused")
 public final class ClientProxy extends Proxy {
 	@Override
 	public void preInit() {
@@ -16,7 +17,8 @@ public final class ClientProxy extends Proxy {
 		new HUDOverlayHandler().register();
 	}
 
-	@Override
+	@SuppressWarnings("EmptyMethod")
+    @Override
 	public void postInit() {
 		super.postInit();
 	}	

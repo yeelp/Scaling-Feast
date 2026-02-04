@@ -1,15 +1,16 @@
 package yeelp.scalingfeast.hud;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Tuple;
+import org.lwjgl.opengl.GL11;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.InfoStyle;
 import yeelp.scalingfeast.util.HUDUtils;
+import yeelp.scalingfeast.util.HUDUtils.ColouredString;
+
+import java.util.function.IntSupplier;
 
 public enum InfoStringsDrawables implements IDrawable {
 	SIMPLE {
@@ -19,28 +20,18 @@ public enum InfoStringsDrawables implements IDrawable {
 		}
 	},
 	ADVANCED {
+
 		@Override
 		public void drawString(Minecraft mc, EntityPlayer player, int left, int top, int hunger, int max) {
 			float sat = player.getFoodStats().getSaturationLevel();
 			float y = (top + 4.5f) / 0.5f;
 			boolean drawingSat = false;
-			for(Iterable<Tuple<String, Integer>> it : HUDUtils.getAdvancedInfoString(player)) {
+			for(Iterable<ColouredString> it : HUDUtils.getAdvancedInfoString(player)) {
+				IntSupplier supplier = drawingSat ? () -> DrawUtils.getSaturationTextColour(sat) : () -> getColour(hunger, max);
 				float x = (left + 1) / 0.5f;
-				for(Tuple<String, Integer> t : it) {
-					int colour;
-					if(t.getSecond() == null) {
-						if(drawingSat) {
-							colour = DrawUtils.getSaturationTextColour(sat);
-						}
-						else {
-							colour = getColour(hunger, max);
-						}
-					}
-					else {
-						colour = t.getSecond().intValue();
-					}
-					mc.fontRenderer.drawStringWithShadow(t.getFirst(), x, y, colour);
-					x += mc.fontRenderer.getStringWidth(t.getFirst());
+				for(ColouredString t : it) {
+					mc.fontRenderer.drawStringWithShadow(t.getText(), x, y, t.getColour().orElseGet(supplier));
+					x += mc.fontRenderer.getStringWidth(t.getText());
 				}
 				if(!ModConfig.hud.drawSaturation) {
 					break;
@@ -53,7 +44,7 @@ public enum InfoStringsDrawables implements IDrawable {
 	
 	private final String name;
 	
-	private InfoStringsDrawables() {
+	InfoStringsDrawables() {
 		this.name = String.format("sf_info_%s", this.name().toLowerCase());
 	}
 

@@ -8,9 +8,9 @@ package yeelp.scalingfeast.util;
  *
  */
 public class Colour {
-	private byte r;
-	private byte g;
-	private byte b;
+	private final byte r;
+	private final byte g;
+	private final byte b;
 
 	/**
 	 * Build a Colour using a hex string. This constructor assumes a String of just
@@ -31,7 +31,6 @@ public class Colour {
 			this.b = Integer.valueOf(Integer.parseInt(hex.substring(4, 6), 16)).byteValue();
 		}
 		catch(NumberFormatException e) {
-			e.printStackTrace();
 			throw new IllegalArgumentException(hex + " isn't a valid hex String for Colour!");
 		}
 	}

@@ -24,7 +24,7 @@ public final class ScalingFeastStarvationTrackerDrawable extends AbstractScaling
 	@Override
 	protected float getAmountToDraw(EntityPlayer player, FoodStats stats) {
 		int max = Math.min(ModConsts.VANILLA_MAX_HUNGER, AppleCoreAPI.accessor.getMaxHunger(player));
-		return ((max / (ModConfig.features.starve.tracker.lossFreq - 1)) * ScalingFeastAPI.accessor.getSFFoodStats(player).getStarvationTrackerCount())/2.0f;
+		return ((max / (ModConfig.features.starve.tracker.lossFreq - 1.0f)) * ScalingFeastAPI.accessor.getSFFoodStats(player).getStarvationTrackerCount())/2.0f;
 	}
 
 	@Override

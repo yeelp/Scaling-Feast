@@ -10,9 +10,12 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigHungerDamage;
 import yeelp.scalingfeast.handlers.Handler;
 
+import javax.annotation.Nonnull;
+
 public final class SFHungerDamage extends FeatureBase<SFConfigHungerDamage> {
 
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 			@SubscribeEvent

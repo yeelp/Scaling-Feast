@@ -12,5 +12,6 @@ public final class SFConfigHeartyFeast {
 	
 	@Name("Hearty Feast Effect Duration")
 	@Comment("Hearty Feast will grant an Iron Stomach I effect for the specified duration (in ticks; 20 ticks per second) when a slice is eaten. Set to 0 to have no effect be applied.")
+	@RangeInt(min = 0)
 	public int heartyFeastEffectDuration = 1200;
 }

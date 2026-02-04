@@ -17,6 +17,8 @@ import yeelp.scalingfeast.items.HeartyFeastItem;
 import yeelp.scalingfeast.items.HeartyShankItem;
 import yeelp.scalingfeast.items.IronAppleItem;
 
+import java.util.Objects;
+
 public class SFItems {
 	public static ItemFood heartyshank;
 	public static ItemFood ironapple;
@@ -67,6 +69,6 @@ public class SFItems {
 	}
 
 	private static void registerRender(Item i, String variant) {
-		ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(i.getRegistryName(), variant));
+		ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(Objects.requireNonNull(i.getRegistryName()), variant));
 	}
 }

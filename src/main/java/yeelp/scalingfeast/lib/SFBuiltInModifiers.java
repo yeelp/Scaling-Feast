@@ -32,7 +32,7 @@ public final class SFBuiltInModifiers {
 			
 			private final BuiltInModifier.Operation op;
 			
-			private FoodEfficiencyOperations(BuiltInModifier.Operation op) {
+			FoodEfficiencyOperations(BuiltInModifier.Operation op) {
 				this.op = op;
 			}
 			
@@ -43,10 +43,10 @@ public final class SFBuiltInModifiers {
 	}
 		
 	public static abstract class BuiltInModifier {
-		enum Operation {
+		public enum Operation {
 			ADD,
 			MULTIPLY,
-			PERCENT_MULTIPLY;
+			PERCENT_MULTIPLY
 		}
 		
 		enum Attribute {
@@ -55,7 +55,7 @@ public final class SFBuiltInModifiers {
 			
 			private final BiFunction<SFFoodStats, UUID, Optional<AttributeModifier>> modifierExtractor;
 
-			private Attribute(BiFunction<SFFoodStats, UUID, Optional<AttributeModifier>> modifierExtractor) {
+			Attribute(BiFunction<SFFoodStats, UUID, Optional<AttributeModifier>> modifierExtractor) {
 				this.modifierExtractor = modifierExtractor;
 			}
 			

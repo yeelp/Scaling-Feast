@@ -3,6 +3,7 @@ package yeelp.scalingfeast.init;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
@@ -26,7 +27,7 @@ public class SFPotion {
 	public static Potion hungerminus;
 	public static Potion softstomach;
 	public static Potion deficiency;
-	public static final Map<Potion, Map<String, PotionType>> POTION_TYPES = new HashMap<Potion, Map<String, PotionType>>();
+	public static final Map<Potion, Map<String, PotionType>> POTION_TYPES = Maps.newHashMap();
 
 	public static void init() {
 		metabolism = new PotionMetabolism();
@@ -40,10 +41,8 @@ public class SFPotion {
 		ForgeRegistries.POTIONS.registerAll(metabolism, ironstomach, bloated, hungerplus, hungerminus, softstomach, deficiency);
 
 		if(ModConfig.items.enablePotions) {
-			PotionType deficiencyPotion = new PotionType(new PotionEffect[] {
-					new PotionEffect(deficiency, 1, 3)});
-			PotionType deficiencyStrongPotion = new PotionType(new PotionEffect[] {
-					new PotionEffect(deficiency, 1, 7)});
+			PotionType deficiencyPotion = new PotionType(new PotionEffect(deficiency, 1, 3));
+			PotionType deficiencyStrongPotion = new PotionType(new PotionEffect(deficiency, 1, 7));
 
 			registerPotionType(metabolism, 120, "metabolism", 0, 1);
 			registerPotionType(ironstomach, 150, "ironstomach", 0, 1);
@@ -54,7 +53,7 @@ public class SFPotion {
 			deficiencyPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "deficiency"));
 			deficiencyStrongPotion.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, "deficiency_strong"));
 			ForgeRegistries.POTION_TYPES.registerAll(deficiencyPotion, deficiencyStrongPotion);
-			HashMap<String, PotionType> map = new HashMap<String, PotionType>(4);
+			HashMap<String, PotionType> map = Maps.newHashMap();
 			map.put("base", deficiencyPotion);
 			map.put("strong", deficiencyStrongPotion);
 			POTION_TYPES.put(deficiency, map);
@@ -62,16 +61,13 @@ public class SFPotion {
 	}
 
 	private static void registerPotionType(Potion p, int baseDuration, String rootName, int baseAmplifier, int strongAmplifier) {
-		PotionType normal = new PotionType(new PotionEffect[] {
-				new PotionEffect(p, baseDuration * 20, baseAmplifier)});
-		PotionType extended = new PotionType(new PotionEffect[] {
-				new PotionEffect(p, 2 * baseDuration * 20, baseAmplifier)});
-		PotionType strong = new PotionType(new PotionEffect[] {
-				new PotionEffect(p, baseDuration / 2 * 20, strongAmplifier)});
+		PotionType normal = new PotionType(new PotionEffect(p, baseDuration * 20, baseAmplifier));
+		PotionType extended = new PotionType(new PotionEffect(p, 2 * baseDuration * 20, baseAmplifier));
+		PotionType strong = new PotionType(new PotionEffect(p, baseDuration / 2 * 20, strongAmplifier));
 		normal.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName));
 		extended.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName + "_extended"));
 		strong.setRegistryName(new ResourceLocation(ModConsts.MOD_ID, rootName + "_strong"));
-		HashMap<String, PotionType> map = new HashMap<String, PotionType>(4);
+		HashMap<String, PotionType> map = Maps.newHashMap();
 		map.put("base", normal);
 		map.put("strong", strong);
 		map.put("extended", extended);

@@ -56,7 +56,7 @@ public class EnchantmentEternalFeast extends SFEnchantmentBase {
 			@SubscribeEvent
 			public void onKillEvent(LivingDeathEvent evt) {
 				Entity entity = evt.getSource().getTrueSource();
-				if(entity != null && entity instanceof EntityPlayer) {
+				if(entity instanceof EntityPlayer) {
 					EntityPlayer player = (EntityPlayer) entity;
 					int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.eternalfeast, player);
 					if(level != 0) {

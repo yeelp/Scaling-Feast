@@ -1,11 +1,14 @@
 package yeelp.scalingfeast.network;
 
 import java.io.IOException;
+import java.util.Arrays;
 
+import com.google.common.base.Functions;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.capabilities.Capability;
+import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.capability.IStarvationStats;
 import yeelp.scalingfeast.capability.impl.StarvationStats;
 
@@ -21,14 +24,14 @@ public class StarvationStatsMessage extends AbstractCapabilityMessage<NBTTagComp
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		NBTTagCompound readTag = new NBTTagCompound();
 		try {
-			readTag = new PacketBuffer(buf).readCompoundTag();
+            //noinspection DataFlowIssue
+            this.deserializeNBT(new PacketBuffer(buf).readCompoundTag());
 		}
 		catch(IOException e) {
-			e.printStackTrace();
+			Arrays.stream(e.getStackTrace()).map(Functions.toStringFunction()).forEach(ScalingFeast::err);
+			throw new RuntimeException(e);
 		}
-		this.deserializeNBT(readTag);
 	}
 
 	@Override

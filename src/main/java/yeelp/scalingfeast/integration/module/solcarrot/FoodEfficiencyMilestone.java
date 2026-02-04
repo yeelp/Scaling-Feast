@@ -3,7 +3,7 @@ package yeelp.scalingfeast.integration.module.solcarrot;
 public class FoodEfficiencyMilestone extends Milestone<Float> {
 	private float reward;
 
-	public FoodEfficiencyMilestone(String milestone) throws NumberFormatException, IllegalArgumentException {
+	public FoodEfficiencyMilestone(String milestone) throws IllegalArgumentException {
 		super(milestone);
 	}
 

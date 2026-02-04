@@ -1,8 +1,5 @@
 package yeelp.scalingfeast;
 
-import org.apache.logging.log4j.Logger;
-
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,7 +8,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import yeelp.scalingfeast.ModConsts.IntegrationIds;
+import org.apache.logging.log4j.Logger;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.blocks.ExhaustionIncreasingBlock;
 import yeelp.scalingfeast.capability.IBloatedHunger;
@@ -20,18 +17,8 @@ import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.command.SFCommand;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.features.SFFeatures;
-import yeelp.scalingfeast.handlers.BloatedHandler;
-import yeelp.scalingfeast.handlers.CapabilityHandler;
-import yeelp.scalingfeast.handlers.GenericHandler;
-import yeelp.scalingfeast.handlers.LootTableInjector;
-import yeelp.scalingfeast.handlers.PacketHandler;
-import yeelp.scalingfeast.helpers.AppleSkinHelper;
-import yeelp.scalingfeast.init.SFAttributes;
-import yeelp.scalingfeast.init.SFEnchantments;
-import yeelp.scalingfeast.init.SFOreDict;
-import yeelp.scalingfeast.init.SFPotion;
-import yeelp.scalingfeast.init.SFRecipes;
-import yeelp.scalingfeast.init.SFSounds;
+import yeelp.scalingfeast.handlers.*;
+import yeelp.scalingfeast.init.*;
 import yeelp.scalingfeast.integration.ModIntegrationKernel;
 import yeelp.scalingfeast.items.IItemDescribable;
 import yeelp.scalingfeast.lib.worldgen.OreGenerator;
@@ -85,14 +72,6 @@ public class ScalingFeast {
 		new BloatedHandler().register();
 		new ExhaustionIncreasingBlock.ExhaustionHandler().register();
 		SFFeatures.init();
-		if(Loader.isModLoaded(IntegrationIds.APPLESKIN_ID)) {
-			try {
-				AppleSkinHelper.init();
-			}
-			catch(ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
 		ModIntegrationKernel.init(event);
 		info("Scaling Feast initialization complete!");
 	}
@@ -121,9 +100,10 @@ public class ScalingFeast {
 	 * 
 	 * @param msg message to log
 	 */
+	@SuppressWarnings("unused")
 	public static void debug(String msg) {
 		if(ModConfig.debug) {
-			logger.info("[SCALING FEAST (DEBUG)] " + msg);
+			logger.info("[SCALING FEAST (DEBUG)] {}", msg);
 		}
 	}
 
@@ -133,7 +113,7 @@ public class ScalingFeast {
 	 * @param msg message to log
 	 */
 	public static void info(String msg) {
-		logger.info("[SCALING FEAST] " + msg);
+		logger.info("[SCALING FEAST] {}", msg);
 	}
 
 	/**
@@ -142,7 +122,7 @@ public class ScalingFeast {
 	 * @param msg message to log
 	 */
 	public static void warn(String msg) {
-		logger.warn("[SCALING FEAST] " + msg);
+		logger.warn("[SCALING FEAST] {}", msg);
 	}
 
 	/**
@@ -151,7 +131,7 @@ public class ScalingFeast {
 	 * @param msg message to log
 	 */
 	public static void err(String msg) {
-		logger.error("[SCALING FEAST] " + msg);
+		logger.error("[SCALING FEAST] {}", msg);
 	}
 
 	/**
@@ -160,6 +140,6 @@ public class ScalingFeast {
 	 * @param msg message to log
 	 */
 	public static void fatal(String msg) {
-		logger.fatal("[SCALING FEAST] " + msg);
+		logger.fatal("[SCALING FEAST] {}", msg);
 	}
 }

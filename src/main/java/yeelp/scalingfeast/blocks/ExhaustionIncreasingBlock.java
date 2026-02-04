@@ -1,6 +1,7 @@
 package yeelp.scalingfeast.blocks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -18,7 +19,7 @@ public abstract class ExhaustionIncreasingBlock extends Block {
 	public final static class ExhaustionHandler extends Handler {
 		@SuppressWarnings("static-method")
 		@SubscribeEvent(priority = EventPriority.LOWEST)
-		public final void onExhaustion(ExhaustionAddition evt) {
+		public void onExhaustion(ExhaustionAddition evt) {
 			Block block = evt.player.world.getBlockState(evt.player.getPosition().down()).getBlock();
 			if(evt.player.onGround && block instanceof ExhaustionIncreasingBlock) {
 				evt.deltaExhaustion *= ((ExhaustionIncreasingBlock) block).getExhaustionIncreaseMultiplier(evt.player);
@@ -32,10 +33,9 @@ public abstract class ExhaustionIncreasingBlock extends Block {
 	
 	
 	@Override
+	@ParametersAreNonnullByDefault
 	public final void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-		if(player != null) {
-			player.addExhaustion(this.getAddedExhaustionOnBlockBreak(player));
-		}
+		player.addExhaustion(this.getAddedExhaustionOnBlockBreak(player));
 		super.onBlockHarvested(worldIn, pos, state, player);
 	}
 

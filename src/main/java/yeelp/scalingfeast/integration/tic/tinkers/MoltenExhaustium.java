@@ -37,6 +37,10 @@ import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.integration.tic.TiCConsts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public final class MoltenExhaustium extends FluidMolten {
 	private static final Map<Potion, Integer> POTION_EFFECTS = Maps.newHashMap();
 	private static final int POTION_DURATION = 200;
@@ -67,7 +71,7 @@ public final class MoltenExhaustium extends FluidMolten {
 		return new BucketTooltipHandler();
 	}
 	
-	protected static final Optional<Potion> getPotionEffect(World world) {
+	private static Optional<Potion> getPotionEffect(World world) {
 		Map.Entry<Potion, Integer> selected = null;
 		Iterator<Map.Entry<Potion, Integer>> it = POTION_EFFECTS.entrySet().iterator();
 		for(int i = world.rand.nextInt(100); i >= 0 && it.hasNext(); i -= (selected = it.next()).getValue());
@@ -90,7 +94,7 @@ public final class MoltenExhaustium extends FluidMolten {
 		}
 	}
 	
-	protected static void addTooltipInfo(List<String> tooltip, int index) {
+	private static void addTooltipInfo(List<String> tooltip, int index) {
 		String text = DESC.getFormattedText();
 		if(index >= tooltip.size()) {
 			tooltip.add(text);
@@ -100,7 +104,7 @@ public final class MoltenExhaustium extends FluidMolten {
 		}
 	}
 	
-	protected static void addTooltipInfo(List<String> tooltip) {
+	private static void addTooltipInfo(List<String> tooltip) {
 		addTooltipInfo(tooltip, tooltip.size());
 	}
 	
@@ -137,7 +141,7 @@ public final class MoltenExhaustium extends FluidMolten {
 		}
 		
 		@Override
-		public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 			MoltenExhaustium.addTooltipInfo(tooltip);
 			super.addInformation(stack, worldIn, tooltip, flagIn);
 		}

@@ -13,15 +13,18 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.features.SFConfigExhaustionScaling;
 import yeelp.scalingfeast.handlers.Handler;
 
+import javax.annotation.Nonnull;
+
 public final class SFExhaustionScaling extends FeatureBase<SFConfigExhaustionScaling> {
 
 	private static final int TICKS_PER_SECOND = 20;
 	
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 			@SubscribeEvent(priority = EventPriority.LOWEST)
-			public final void onExhaustingAction(ExhaustingAction evt) {
+			public void onExhaustingAction(ExhaustingAction evt) {
 				if(!SFExhaustionScaling.this.isInValidDimension(evt.player)) {
 					return;
 				}
@@ -31,7 +34,7 @@ public final class SFExhaustionScaling extends FeatureBase<SFConfigExhaustionSca
 			}
 			
 			@SubscribeEvent
-			public final void onBlockBreak(BreakEvent evt) {
+			public void onBlockBreak(BreakEvent evt) {
 				EntityPlayer player;
 				if(!SFExhaustionScaling.this.isInValidDimension((player = evt.getPlayer()))) {
 					return;

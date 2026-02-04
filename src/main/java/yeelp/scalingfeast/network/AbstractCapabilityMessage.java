@@ -39,6 +39,7 @@ public abstract class AbstractCapabilityMessage<NBT extends NBTBase, Cap extends
 		
 		public void handle(Msg msg, MessageContext ctx) {
 			EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
+			//noinspection DataFlowIssue
 			player.getCapability(this.getCapabilityInstance(), null).deserializeNBT(msg.serializeNBT());
 		}
 		

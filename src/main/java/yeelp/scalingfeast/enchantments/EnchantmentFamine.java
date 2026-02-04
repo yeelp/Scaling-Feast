@@ -1,10 +1,6 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.common.collect.Sets;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
@@ -21,6 +17,10 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The Famine Enchantment. Entities struck with this enchantment suffer a hunger
@@ -56,7 +56,7 @@ public class EnchantmentFamine extends SFEnchantmentBase {
 	@Override
 	protected Optional<Handler> getEnchantmentHandler() {
 		return Optional.of(new Handler() {
-			private final Set<UUID> fullSwing = new HashSet<UUID>();
+			private final Set<UUID> fullSwing = Sets.newHashSet();
 			@SubscribeEvent
 			public void onSwing(AttackEntityEvent evt) {
 				if(evt.getEntityPlayer().getCooledAttackStrength(0) == 1.0f) {
@@ -75,8 +75,8 @@ public class EnchantmentFamine extends SFEnchantmentBase {
 				int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.famine, (EntityLivingBase) source);
 				if(level != 0) {
 					if(!(defender instanceof EntityPlayer)) {
-						int wlevel = (level < 3 ? 0 : 1);
-						defender.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 15 * 20, wlevel));
+						int weaknessLevel = (level < 3 ? 0 : 1);
+						defender.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 15 * 20, weaknessLevel));
 					}
 					else {
 						boolean canPlayerUseFamine = false;

@@ -1,22 +1,22 @@
 package yeelp.scalingfeast.hud;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.init.SFPotion;
 import yeelp.scalingfeast.util.Colour;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public abstract class DrawUtils {
@@ -33,7 +33,7 @@ public abstract class DrawUtils {
 	private static int satColour = 0xffff55, satColourEmpty = 0x555555;
 	
 	public static void calculateJitterAmount(int updateCounter, EntityPlayer player) {
-		RNG.setSeed(updateCounter * 70643);
+		RNG.setSeed(updateCounter * 70643L);
 		FoodStats stats = player.getFoodStats();
 		int foodLevel = stats.getFoodLevel();
 		float satLevel = stats.getSaturationLevel();
@@ -61,38 +61,36 @@ public abstract class DrawUtils {
 		return jitter;
 	}
 
-	private static final void colourize(String[] colours, List<Colour> lst, List<Colour> fallback) {
+	private static void colourize(String[] colours, List<Colour> lst, List<Colour> fallback) {
 		lst.clear();
 		Arrays.stream(colours).map(String::trim).filter(Predicates.not(String::isEmpty)).map(Colour::new).forEach(lst::add);
-		if(lst.size() == 0) {
+		if(lst.isEmpty()) {
 			lst.addAll(fallback);
 		}
 	}
 	
 	private static List<Colour> colourizeFallback(String...strings) {
-		return Arrays.stream(strings).collect(Lists::newArrayList, (l, s) -> l.add(new Colour(s)), (l1, l2) -> l1.addAll(l2));
+		return Arrays.stream(strings).collect(Lists::newArrayList, (l, s) -> l.add(new Colour(s)), List::addAll);
 	}
 
-	public static final void updateColours() {
+	public static void updateColours() {
 		colourize(ModConfig.hud.Hcolours, HUNGER_COLOURS, HUNGER_COLOURS_FALLBACK);
 		colourize(ModConfig.hud.Scolours, SAT_COLOURS, SAT_COLOURS_FALLBACK);
 		colourize(ModConfig.hud.Bcolours, BLOAT_COLOURS, BLOAT_COLOURS_FALLBACK);
 	}
 	
-	public static final void updateTextColours() {
+	public static void updateTextColours() {
 		try {
 			satColour = Integer.decode("0x" + ModConfig.hud.satTextColour);
 		}
 		catch(NumberFormatException e) {
 			ScalingFeast.err("Error setting saturation text colour! " + "0x" + ModConfig.hud.satTextColour + " isn't a valid colour!");
-			e.printStackTrace();
 		}
 		try {
 			satColourEmpty = Integer.decode("0x" + ModConfig.hud.satTextColourEmpty);
 		}
 		catch(NumberFormatException e) {
 			ScalingFeast.err("Error setting empty saturation text colour! " + "0x" + ModConfig.hud.satTextColourEmpty + " isn't a valid colour!");
-			e.printStackTrace();
 		}
 	}
 	
@@ -114,23 +112,27 @@ public abstract class DrawUtils {
 	}
 	
 	static Colour getHungerColour(int hunger) {
-		return getColourForBar(Math.max(intToIndex(hunger) + (ModConfig.hud.replaceVanilla ? 0 : -1), 0), HUNGER_COLOURS);
+		return getColourForBar(Math.max(intToIndex(hunger) + (ModConfig.hud.replaceVanilla || ModConfig.hud.iconSet.isCustom() ? 0 : -1), 0), HUNGER_COLOURS);
 	}
 	
-	static final Colour getBloatedColour(int bloat) {
+	static Colour getBloatedColour(int bloat) {
 		return getColourForBar(intToIndex(bloat), BLOAT_COLOURS);
 	}
 	
-	static final Colour getSaturationColour(float sat) {
+	static Colour getSaturationColour(float sat) {
 		return getColourForBar((int)((sat/20) - 0.001f), SAT_COLOURS);
 	}
 	
-	static final int getSaturationTextColour(float sat) {
+	static int getSaturationTextColour(float sat) {
 		return sat > 0 ? satColour : satColourEmpty;
 	}
 	
-	private static final int intToIndex(int a) {
+	private static int intToIndex(int a) {
 		//use max sat const to upcast to float
 		return (int) ((a/ModConsts.VANILLA_MAX_SAT) - 0.01f);
+	}
+
+	static float getContainerCount(EntityPlayer player) {
+		return (int) Math.ceil(Math.min(ModConsts.VANILLA_MAX_HUNGER, AppleCoreAPI.accessor.getMaxHunger(player))/2.0f);
 	}
 }

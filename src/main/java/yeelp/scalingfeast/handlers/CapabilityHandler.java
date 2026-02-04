@@ -8,7 +8,10 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.api.ScalingFeastAPI;
+import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.capability.IStarvationStats;
+import yeelp.scalingfeast.capability.IStarvationStats.ICountable;
 import yeelp.scalingfeast.capability.impl.BloatedHunger;
 import yeelp.scalingfeast.capability.impl.StarvationStats;
 import yeelp.scalingfeast.capability.impl.StarveExhaustionTracker;
@@ -31,19 +34,19 @@ public class CapabilityHandler extends Handler {
 	public void onClone(PlayerEvent.Clone evt) {
 		EntityPlayer oldPlayer = evt.getOriginal();
 		EntityPlayer newPlayer = evt.getEntityPlayer();
-		oldPlayer.getCapability(StarveExhaustionTracker.cap, null).sync(newPlayer);
+		byte flags = SFFoodStats.STARVE_EXHAUSTION_SYNC_FLAG;
 		IStarvationStats starveStats = oldPlayer.getCapability(StarvationStats.cap, null);
-		if(evt.isWasDeath()) {
-			starveStats.getCounter().reset();
-			if(ModConfig.features.starve.tracker.doesFreqReset) {
-				starveStats.getTracker().reset();
+		if(starveStats != null) {
+			ICountable counter = starveStats.getCounter(), tracker = starveStats.getTracker();
+			if(evt.isWasDeath()) {
+				counter.reset();
+				if(ModConfig.features.starve.tracker.doesFreqReset) {
+					tracker.reset();
+				}
 			}
+			flags |= (tracker.get() != 0 || counter.get() != 0 ? SFFoodStats.STARVE_STATS_SYNC_FLAG : 0);
 		}
-		else {
-			oldPlayer.getCapability(BloatedHunger.cap, null).sync(newPlayer);
-		}
-		if(starveStats.getCounter().get() != 0 || starveStats.getTracker().get() != 0) {
-			starveStats.sync(newPlayer);			
-		}
+		flags |= evt.isWasDeath() ? SFFoodStats.BLOATED_SYNC_FLAG : 0;
+		ScalingFeastAPI.accessor.getSFFoodStats(newPlayer).syncFrom(flags, ScalingFeastAPI.accessor.getSFFoodStats(oldPlayer));
 	}
 }

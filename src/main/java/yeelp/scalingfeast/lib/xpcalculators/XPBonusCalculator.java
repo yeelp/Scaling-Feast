@@ -25,7 +25,7 @@ public interface XPBonusCalculator {
 		
 		/**
 		 * Has the passed value exceeded the target threshold
-		 * @param val
+		 * @param val value to check
 		 * @return true if yes, false if no.
 		 */
 		boolean reachedTarget(int val) {
@@ -70,7 +70,7 @@ public interface XPBonusCalculator {
 
 	/**
 	 * Set a new list of milestones
-	 * @param lst
+	 * @param lst list of milestones
 	 */
 	void setMilestoneList(List<XPMilestone> lst);
 }

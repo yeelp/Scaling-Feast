@@ -22,6 +22,11 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.init.SFSounds;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public final class ExhaustingApple extends ItemFood {
 
 	private static final ITextComponent SPLASH = new TextComponentTranslation("tooltips.scalingfeast.exhaustingapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
@@ -36,7 +41,7 @@ public final class ExhaustingApple extends ItemFood {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(SPLASH.getFormattedText());
 		tooltip.add(INFO.getFormattedText());
 		super.addInformation(stack, worldIn, tooltip, flagIn);
@@ -48,6 +53,7 @@ public final class ExhaustingApple extends ItemFood {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		if(entityLiving instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entityLiving;

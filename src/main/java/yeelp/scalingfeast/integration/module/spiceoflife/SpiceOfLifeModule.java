@@ -1,16 +1,8 @@
 package yeelp.scalingfeast.integration.module.spiceoflife;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -38,6 +30,8 @@ import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.integration.module.AbstractModule;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
+import java.util.*;
+
 public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigCategory> {
 
 	private boolean usingFoodGroups;
@@ -53,16 +47,16 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 	 *
 	 */
 	private static final class FoodEatenInstance {
-		private static final Map<Integer, FoodEatenInstance> pool = new HashMap<Integer, FoodEatenInstance>();
+		private static final Map<Integer, FoodEatenInstance> POOL = Maps.newHashMap();
 
-		private int id;
+		private final int id;
 
 		private FoodEatenInstance(int id) {
 			this.id = id;
 		}
 
 		static FoodEatenInstance get(squeek.spiceoflife.foodtracker.FoodEaten food) {
-			return pool.computeIfAbsent(getID(food), (k) -> new FoodEatenInstance(k));
+			return POOL.computeIfAbsent(getID(food), FoodEatenInstance::new);
 		}
 
 		/**
@@ -71,7 +65,7 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 		 * is guaranteed to not clash. And that is because we can add it to the object
 		 * pool if it is a new ID and use that to count distinct food items eaten.
 		 * 
-		 * @param food
+		 * @param food food item.
 		 * @return The ID
 		 */
 		private static int getID(squeek.spiceoflife.foodtracker.FoodEaten food) {
@@ -139,7 +133,7 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 	protected Handler getHandler() {
 		return new Handler() {
 			@SubscribeEvent(priority = EventPriority.LOWEST)
-			public final void onFoodEaten(FoodEaten evt) {
+			public void onFoodEaten(FoodEaten evt) {
 				if(SpiceOfLifeModule.this.enabled() && SpiceOfLifeModule.applicableToFoodHistory() && !evt.player.world.isRemote) {
 					SpiceOfLifeModule.this.updatePlayer(evt.player);
 				}
@@ -147,14 +141,14 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 
 			@SideOnly(Side.CLIENT)
 			@SubscribeEvent
-			public final void onTooltip(ItemTooltipEvent evt) {
-				if(SpiceOfLifeModule.this.enabled() && SpiceOfLifeModule.applicableToFoodHistory() && evt.getItemStack() != null && evt.getEntityPlayer() != null && evt.getItemStack().getItem() instanceof ItemFood) {
+			public void onTooltip(ItemTooltipEvent evt) {
+				if(SpiceOfLifeModule.this.enabled() && SpiceOfLifeModule.applicableToFoodHistory() && evt.getEntityPlayer() != null && evt.getItemStack().getItem() instanceof ItemFood) {
 					SpiceOfLifeModule.this.getTooltipTypeForItem(evt.getItemStack(), evt.getEntityPlayer()).getTooltipText().ifPresent(evt.getToolTip()::add);
 				}
 			}
 
 			@SubscribeEvent(priority = EventPriority.HIGHEST)
-			public final void onClone(Clone evt) {
+			public void onClone(Clone evt) {
 				if(SpiceOfLifeModule.this.enabled() && SpiceOfLifeModule.applicableToFoodHistory() && (!evt.isWasDeath() || squeek.spiceoflife.ModConfig.FOOD_HISTORY_PERSISTS_THROUGH_DEATH)) {
 					ScalingFeastAPI.accessor.getSFFoodStats(evt.getEntityPlayer()).applyMaxHungerModifier(SFBuiltInModifiers.MaxHungerModifiers.SPICE_OF_LIFE.createModifier(SFBuiltInModifiers.MaxHungerModifiers.SPICE_OF_LIFE.getModifierValueForPlayer(evt.getOriginal())));
 				}
@@ -238,10 +232,10 @@ public final class SpiceOfLifeModule extends AbstractModule<SFSpiceOfLifeConfigC
 			final int startCount = queue.size() == squeek.spiceoflife.ModConfig.FOOD_HISTORY_LENGTH ? 1 : 0;
 			// new list is needed so simulated food eaten doesn't actually get added to
 			// actual food queue
-			List<squeek.spiceoflife.foodtracker.FoodEaten> simulatedNewQueue = new LinkedList<squeek.spiceoflife.foodtracker.FoodEaten>(queue.subList(startCount, queue.size()));
+			List<squeek.spiceoflife.foodtracker.FoodEaten> simulatedNewQueue = Lists.newLinkedList(queue.subList(startCount, queue.size()));
 			simulatedNewQueue.add(new squeek.spiceoflife.foodtracker.FoodEaten(stack, player));
 			if(this.usingFoodGroups) {
-				HashSet<FoodGroup> oldGroups = simulatedNewQueue.stream().filter((f) -> f.itemStack != ItemStack.EMPTY).collect(HashSet<FoodGroup>::new, (s, f) -> s.addAll(f.getFoodGroups()), Set<FoodGroup>::addAll);
+				HashSet<FoodGroup> oldGroups = simulatedNewQueue.stream().filter((f) -> f.itemStack != ItemStack.EMPTY).collect(HashSet::new, (s, f) -> s.addAll(f.getFoodGroups()), Set::addAll);
 				Set<FoodGroup> newGroups = FoodGroupRegistry.getFoodGroupsForFood(stack);
 				newCount = Sets.union(newGroups, oldGroups).size();
 				oldPenalty = this.getPenaltyWithFoodGroups(history);

@@ -35,7 +35,8 @@ public abstract class AbstractXPBonusCalculator implements XPBonusCalculator {
 	public void setMilestoneList(List<XPMilestone> lst) {
 		this.milestones = lst;
 	}
-	
+
+	@SuppressWarnings("unused")
 	protected final List<XPMilestone> getMilestones() {
 		return this.milestones;
 	}

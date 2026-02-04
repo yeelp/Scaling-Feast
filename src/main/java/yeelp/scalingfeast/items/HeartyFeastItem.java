@@ -1,11 +1,7 @@
 package yeelp.scalingfeast.items;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +14,9 @@ import squeek.applecore.api.food.FoodValues;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 import yeelp.scalingfeast.config.ModConfig;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Hearty Feast cake block item
@@ -45,7 +44,7 @@ public class HeartyFeastItem extends ItemBlock implements IItemDescribable {
 
 	@Override
 	public Collection<String> getDescription(EntityPlayer player) {
-		List<String> tooltips = new LinkedList<String>(ImmutableList.of(SPLASH.getFormattedText(), INFO.getFormattedText()));
+		List<String> tooltips = Lists.newLinkedList(ImmutableList.of(SPLASH.getFormattedText(), INFO.getFormattedText()));
 		if(ModConfig.items.feast.heartyFeastCap >= 0) {
 			tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyfeast.cap", ModConfig.items.feast.heartyFeastCap).setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText());
 		}

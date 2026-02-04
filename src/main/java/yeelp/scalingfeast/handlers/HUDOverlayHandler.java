@@ -1,12 +1,6 @@
 package yeelp.scalingfeast.handlers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,24 +14,9 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.DisplayStyle;
 import yeelp.scalingfeast.config.ModConfig.HUDCategory.TrackerStyle;
-import yeelp.scalingfeast.hud.BloatedContainersDrawable;
-import yeelp.scalingfeast.hud.BloatedInfoStringDrawables;
-import yeelp.scalingfeast.hud.DrawUtils;
-import yeelp.scalingfeast.hud.ExhaustionDrawable;
-import yeelp.scalingfeast.hud.HungerContainersDrawable;
-import yeelp.scalingfeast.hud.IDrawable;
-import yeelp.scalingfeast.hud.InfoStringsDrawables;
-import yeelp.scalingfeast.hud.ScalingFeastBloatedBarMeatDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastLowerBloatedBarDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastLowerHungerBarDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastLowerSaturationBarDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastMaxDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastStarvationTrackerDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastUpperBloatedBarDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastUpperHungerBarDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastUpperSaturationBarDrawable;
-import yeelp.scalingfeast.hud.ScalingFeastVanillaHungerOverrideDrawable;
-import yeelp.scalingfeast.hud.VanillaHungerDrawable;
+import yeelp.scalingfeast.hud.*;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class HUDOverlayHandler extends Handler {
@@ -45,18 +24,10 @@ public class HUDOverlayHandler extends Handler {
 	private static final IDrawable MAX_DRAWABLE = new ScalingFeastMaxDrawable();
 	private static final IDrawable STARVATION_DRAWABLE = new ScalingFeastStarvationTrackerDrawable();
 	private static final List<IDrawable> VANILLA_DRAWABLES = Lists.newArrayList(new HungerContainersDrawable(), new VanillaHungerDrawable());
+	private static final List<IDrawable> CUSTOM_DRAWABLES = Lists.newArrayList(new CustomContainersDrawable(), new CustomHungerBarBaseDrawable(), new CustomHungerBarFirstBarDrawable());
 	private static final List<IDrawable> HUNGER_DRAWABLES = Lists.newArrayList(new ScalingFeastVanillaHungerOverrideDrawable(), new ScalingFeastLowerHungerBarDrawable(), new ScalingFeastUpperHungerBarDrawable());
 	private static final List<IDrawable> SATURATION_DRAWABLES = Lists.newArrayList(new ScalingFeastLowerSaturationBarDrawable(), new ScalingFeastUpperSaturationBarDrawable());
 	private static final List<IDrawable> BLOATED_DRAWABLES = Lists.newArrayList(new BloatedContainersDrawable(), new ScalingFeastBloatedBarMeatDrawable(), new ScalingFeastLowerBloatedBarDrawable(), new ScalingFeastUpperBloatedBarDrawable());
-	private static final List<IDrawable> ALWAYS_DRAWN_DRAWABLES;
-	
-	static {
-		Builder<IDrawable> builder = Stream.builder();
-		builder.add(EXHAUSTION_UNDERLAY);
-		VANILLA_DRAWABLES.forEach(builder::add);
-		HUNGER_DRAWABLES.forEach(builder::add);
-		ALWAYS_DRAWN_DRAWABLES = builder.build().collect(Collectors.toList());
-	}
 	
 	public HUDOverlayHandler() {
 		DrawUtils.updateColours();
@@ -82,8 +53,10 @@ public class HUDOverlayHandler extends Handler {
 				final int top = res.getScaledHeight() - offset;
 				// Calculate the random jitter amount beforehand and pass it to the draw methods
 				DrawUtils.calculateJitterAmount(mc.ingameGUI.getUpdateCounter(), player);
-				// If we have AppleSkin, we need to redraw the whole exhaustion bar.
-				drawDrawables(ALWAYS_DRAWN_DRAWABLES, mc, player, left, top);
+				// If we have AppleSkin/LemonSkin, we need to redraw the whole exhaustion bar.
+				EXHAUSTION_UNDERLAY.draw(mc, player, left, top);
+				drawDrawables(ModConfig.hud.iconSet.isCustom() ? CUSTOM_DRAWABLES : VANILLA_DRAWABLES, mc, player, left, top);
+				drawDrawables(HUNGER_DRAWABLES, mc, player, left, top);
 				if(ModConfig.hud.drawSaturation) {
 					drawDrawables(SATURATION_DRAWABLES, mc, player, left, top);
 				}
@@ -91,7 +64,7 @@ public class HUDOverlayHandler extends Handler {
 				if(ModConfig.hud.trackerStyle == TrackerStyle.SATURATION && ModConfig.features.starve.tracker.lossFreq > 1) {
 					STARVATION_DRAWABLE.draw(mc, player, left, top);
 				}
-				InfoStringsDrawables.getInfoDrawable().draw(mc, player, left, top);;
+				InfoStringsDrawables.getInfoDrawable().draw(mc, player, left, top);
 				
 				int bloatedAmount = ScalingFeastAPI.accessor.getSFFoodStats(player).getBloatedHungerAmount();
 				if(bloatedAmount > 0) {

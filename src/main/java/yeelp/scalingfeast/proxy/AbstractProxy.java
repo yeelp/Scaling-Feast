@@ -15,5 +15,6 @@ public abstract class AbstractProxy {
 	/**
 	 * post initialization
 	 */
+	@SuppressWarnings("EmptyMethod")
 	public abstract void postInit();
 }

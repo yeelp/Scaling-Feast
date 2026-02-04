@@ -2,7 +2,9 @@ package yeelp.scalingfeast.items;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -29,6 +31,7 @@ import yeelp.scalingfeast.init.SFPotion;
  * @author Yeelp
  *
  */
+@ParametersAreNonnullByDefault
 public class EnchantedIronAppleItem extends ItemFood {
 	private static final ITextComponent TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
 	private static final ITextComponent INFO1 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info1").setStyle(new Style().setColor(TextFormatting.GRAY));
@@ -57,6 +60,7 @@ public class EnchantedIronAppleItem extends ItemFood {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		int gluttonyLevel = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.gluttony, entityLiving);
 		float mod = (1 + 0.5f * gluttonyLevel);

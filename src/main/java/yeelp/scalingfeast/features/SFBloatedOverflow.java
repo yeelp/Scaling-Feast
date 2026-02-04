@@ -12,14 +12,17 @@ import yeelp.scalingfeast.config.features.SFConfigBloatedOverflow;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFPotion;
 
+import javax.annotation.Nonnull;
+
 public final class SFBloatedOverflow extends FeatureBase<SFConfigBloatedOverflow> {
 
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 
 			@SubscribeEvent
-			public final void onFoodStatsAddition(FoodStatsAddition evt) {
+			public void onFoodStatsAddition(FoodStatsAddition evt) {
 				SFConfigBloatedOverflow config = SFBloatedOverflow.this.getConfig();
 				if(!config.doBloatedOverflow) {
 					return;

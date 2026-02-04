@@ -10,12 +10,12 @@ public final class SFFeatures {
 														 					  new SFXPBonuses(),
 														 					  new SFStarvationFeatures(),
 														 					  new SFExhaustionScaling());
-	public static final void init() {
+	public static void init() {
 		FEATURES.forEach((f) -> f.getFeatureHandler().register());
 		update();
 	}
 	
-	public static final void update() {
+	public static void update() {
 		FEATURES.forEach(FeatureBase::update);
 	}
 }

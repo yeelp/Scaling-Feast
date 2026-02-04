@@ -28,7 +28,11 @@ import yeelp.scalingfeast.lib.SFBuiltInModifiers;
  *
  */
 public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, IBloatedHungerOperations, IStarvationOperations, IStarveExhaustTrackerOperations {
-	
+
+	public static final byte BLOATED_SYNC_FLAG = 0b1;
+	public static final byte STARVE_EXHAUSTION_SYNC_FLAG = 0b10;
+	public static final byte STARVE_STATS_SYNC_FLAG = 0b100;
+
 	private static final class Caps {
 		private IBloatedHunger bloat;
 		private IStarveExhaustionTracker starveExhaustTracker;
@@ -194,5 +198,25 @@ public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, I
 		IStarveExhaustionTracker exhaustTracker = this.caps.getStarvationExhaustionTrackerCapability();
 		exhaustTracker.reset();
 		exhaustTracker.sync(this.player);
+	}
+
+	private void sync(byte flags, EntityPlayer target) {
+		if((flags | BLOATED_SYNC_FLAG) > 0) {
+			this.caps.getBloatedHungerCapability().sync(target);
+		}
+		if((flags | STARVE_EXHAUSTION_SYNC_FLAG) > 0) {
+			this.caps.getStarvationExhaustionTrackerCapability().sync(target);
+		}
+		if((flags | STARVE_STATS_SYNC_FLAG) > 0) {
+			this.caps.getStarvationStatsCapability().sync(target);
+		}
+	}
+
+	public void syncCapabilities(byte flags) {
+		this.sync(flags, this.player);
+	}
+
+	public void syncFrom(byte flags, SFFoodStats from) {
+		from.sync(flags, this.player);
 	}
 }

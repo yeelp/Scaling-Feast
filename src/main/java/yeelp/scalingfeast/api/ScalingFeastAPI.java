@@ -15,7 +15,8 @@ public abstract class ScalingFeastAPI {
 	/**
 	 * Initialize the API
 	 */
-	public static final void init() {
+	@SuppressWarnings("ResultOfMethodCallIgnored")
+    public static void init() {
 		ScalingFeastAPIImpl.values();
 	}
 }

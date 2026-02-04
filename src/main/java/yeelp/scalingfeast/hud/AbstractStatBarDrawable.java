@@ -1,13 +1,12 @@
 package yeelp.scalingfeast.hud;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.FoodStats;
-import yeelp.scalingfeast.handlers.GUIIcons;
 import yeelp.scalingfeast.util.Colour;
+
+import javax.annotation.Nullable;
 
 /**
  * A drawable stat bar component
@@ -71,7 +70,7 @@ public abstract class AbstractStatBarDrawable extends AbstractDrawable {
 	 * The base v coord on the texture map that will be drawn. May depend on player
 	 * state.
 	 * 
-	 * @param player
+	 * @param player player.
 	 * @return the v coord on the texture map to start from.
 	 */
 	protected abstract int getBaseVCoord(EntityPlayer player);

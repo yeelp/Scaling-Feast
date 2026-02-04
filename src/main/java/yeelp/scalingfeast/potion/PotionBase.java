@@ -9,15 +9,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConsts;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Base class to derive potions from.
  * 
  * @author Yeelp
  *
  */
+@ParametersAreNonnullByDefault
 public abstract class PotionBase extends Potion {
 	private static final ResourceLocation POTIONS = new ResourceLocation(ModConsts.MOD_ID, "textures/gui/potioneffects/potionicons.png");
-	private boolean isInstant;
+	private final boolean isInstant;
 
 	/**
 	 * Build a new Potion

@@ -23,7 +23,8 @@ public enum SurfaceWorldGenCriterion {
 	SPECIFIC {
 		@Override
 		public boolean generateHere(BlockPos pos, World world) {
-			return Arrays.stream(ModConfig.general.worldGen.specificValidBiomes).anyMatch(world.provider.getBiomeProvider().getBiome(pos).getRegistryName().toString()::equals);
+            //noinspection DataFlowIssue
+            return Arrays.asList(ModConfig.general.worldGen.specificValidBiomes).contains(world.provider.getBiomeProvider().getBiome(pos).getRegistryName().toString());
 		}
 	};
 	

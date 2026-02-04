@@ -11,6 +11,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public final class ExhaustingIngot extends Item {
 	private static final ITextComponent INFO = new TextComponentTranslation("tooltips.scalingfeast.exhaustingingot.info");
 	
@@ -21,7 +25,7 @@ public final class ExhaustingIngot extends Item {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(INFO.getFormattedText());
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}

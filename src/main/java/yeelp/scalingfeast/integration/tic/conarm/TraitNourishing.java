@@ -27,7 +27,7 @@ public final class TraitNourishing extends AbstractArmorTrait {
 	}
 	
 	@SubscribeEvent
-	public final void onPlayerTick(PlayerTickEvent evt) {
+	public void onPlayerTick(PlayerTickEvent evt) {
 		if(evt.phase == Phase.END && evt.side == Side.SERVER) {
 			EntityPlayer player = evt.player;
 			SFFoodStats sfstats = ScalingFeastAPI.accessor.getSFFoodStats(player);

@@ -37,7 +37,7 @@ public interface IDrawable {
 	/**
 	 * Should this Drawable be drawn based on current player state?
 	 * 
-	 * @param player the player who's client is drawing
+	 * @param player the player whose client is drawing
 	 * @return true if this drawable is to be drawn.
 	 */
 	boolean shouldDraw(EntityPlayer player);

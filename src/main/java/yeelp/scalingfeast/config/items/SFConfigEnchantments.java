@@ -43,5 +43,5 @@ public final class SFConfigEnchantments {
 	@Name("Global Sensitivity")
 	@Comment("If true, the Curse of Sensitivity will be disabled, but the effects will apply to all players at all times, regardless if you have the curse or not.")
 	@RequiresMcRestart
-	public boolean globalSensitvity = false;
+	public boolean globalSensitivity = false;
 }

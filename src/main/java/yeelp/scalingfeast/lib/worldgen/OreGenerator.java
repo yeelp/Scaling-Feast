@@ -58,6 +58,9 @@ public final class OreGenerator implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+		if(!ModConfig.general.worldGen.exhaustingOreRestrictions.canGenerateHere(world.provider)) {
+			return;
+		}
 		if(world.provider instanceof WorldProviderHell) {
 			new PosIterator(30, chunkX, chunkZ, 0, 128, random).forEachRemaining((p) -> this.exhaustingNetherrack.generate(world, random, p));
 		}

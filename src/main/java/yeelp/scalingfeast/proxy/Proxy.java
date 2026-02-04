@@ -12,11 +12,11 @@ public class Proxy extends AbstractProxy {
 
 	@Override
 	public void init() {
-		return;
+		//nothing
 	}
 
 	@Override
 	public void postInit() {
-		return;
+		//nothing
 	}
 }

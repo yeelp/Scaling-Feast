@@ -11,14 +11,17 @@ import yeelp.scalingfeast.lib.xpcalculators.FoodEfficiencyXPBonusCalculator;
 import yeelp.scalingfeast.lib.xpcalculators.MaxHungerXPBonusCalculator;
 import yeelp.scalingfeast.lib.xpcalculators.XPBonusCalculator;
 
+import javax.annotation.Nonnull;
+
 public final class SFXPBonuses extends FeatureBase<SFConfigXPBonuses> {
 
 	@Override
+	@Nonnull
 	public Handler getFeatureHandler() {
 		return new Handler() {
 
 			@SubscribeEvent
-			public final void onConfigChanged(final PostConfigChangedEvent evt) {
+			public void onConfigChanged(final PostConfigChangedEvent evt) {
 				if(evt.getModID().equals(ModConsts.MOD_ID)) {
 					MaxHungerXPBonusCalculator.getInstance().setMilestoneList(XPBonusCalculator.createNewListOfMilestones(SFXPBonuses.this.getConfig().maxHungerRewards));
 					FoodEfficiencyXPBonusCalculator.getInstance().setMilestoneList(XPBonusCalculator.createNewListOfMilestones(SFXPBonuses.this.getConfig().efficiencyRewards));
@@ -26,7 +29,7 @@ public final class SFXPBonuses extends FeatureBase<SFConfigXPBonuses> {
 			}
 
 			@SubscribeEvent
-			public final void onPlayerTick(PlayerTickEvent evt) {
+			public void onPlayerTick(PlayerTickEvent evt) {
 				MaxHungerXPBonusCalculator.getInstance().applyXPBonus(evt.player);
 				FoodEfficiencyXPBonusCalculator.getInstance().applyXPBonus(evt.player);
 			}

@@ -53,7 +53,7 @@ public final class SFRecipes {
 			addBrewingRecipes(PotionTypes.THICK, SFPotion.metabolism, SFItems.heartyshank);
 			addBrewingRecipes(PotionTypes.THICK, SFPotion.hungerminus, SFItems.exhaustingNugget);
 			addBrewingRecipes(PotionTypes.THICK, SFPotion.deficiency, SFItems.exhaustingpotato);
-			INVERSIONS.forEach((p1, p2) -> addBrewingInversions(p1, p2));
+			INVERSIONS.forEach(SFRecipes::addBrewingInversions);
 			//create brewing inversions for deficiency potion, but only if we can find a registered saturation potion type.
 			Deque<PotionType> saturationPotions = ForgeRegistries.POTION_TYPES.getValues().stream().filter((p) -> {
 				List<PotionEffect> effects = p.getEffects();
@@ -65,7 +65,7 @@ public final class SFRecipes {
 			//collect to deque so we can sort by amplifier and have the weakest and strongest saturation potions to invert out two deficiency potions to.
 			//we technically don't know if there will be more than 2 registered saturation potions.
 			//this ensures the weakest and strongest potions get inverted.
-			if(saturationPotions.size() > 0) {
+			if(!saturationPotions.isEmpty()) {
 				Iterator<PotionType> deficiencyPotions = SFPotion.POTION_TYPES.get(SFPotion.deficiency).values().stream().sorted(sortByAmplifier).iterator();
 				//if there is only 1 saturation potion, our first and last calls will retrieve the same object and be limited down to 1 with the distinct call.
 				Stream.of(saturationPotions.getFirst(), saturationPotions.getLast()).distinct().forEach((pt) -> {
@@ -78,7 +78,8 @@ public final class SFRecipes {
 		}
 	}
 
-	private static void addBrewingRecipes(PotionType base, Potion result, Item baseIng) {
+	@SuppressWarnings("SameParameterValue")
+    private static void addBrewingRecipes(PotionType base, Potion result, Item baseIng) {
 		Map<String, PotionType> types = SFPotion.POTION_TYPES.get(result);
 		SFPotion.POTION_TYPES.get(result).forEach((s, p) -> {
 			Item ing = baseIng;

@@ -48,7 +48,7 @@ public class CurseSensitivity extends SFEnchantmentBase {
 			public void onFoodStatsAddition(FoodEvent.FoodStatsAddition evt) {
 				EntityPlayer player = evt.player;
 				int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.sensitivityCurse, player);
-				if(level != 0 || ModConfig.items.enchants.globalSensitvity) {
+				if(level != 0 || ModConfig.items.enchants.globalSensitivity) {
 					int overflow = (evt.foodValuesToBeAdded.hunger + player.getFoodStats().getFoodLevel()) - AppleCoreAPI.accessor.getMaxHunger(player);
 					if(overflow > 0) {
 						if(overflow > 256) {
@@ -63,12 +63,12 @@ public class CurseSensitivity extends SFEnchantmentBase {
 
 	@Override
 	public boolean enabled() {
-		return ModConfig.items.enchants.enableSensitivity && !ModConfig.items.enchants.globalSensitvity;
+		return ModConfig.items.enchants.enableSensitivity && !ModConfig.items.enchants.globalSensitivity;
 	}
 
 	@Override
 	public boolean shouldRegisterHandlerAnyway() {
-		return ModConfig.items.enchants.globalSensitvity;
+		return ModConfig.items.enchants.globalSensitivity;
 	}
 	
 	

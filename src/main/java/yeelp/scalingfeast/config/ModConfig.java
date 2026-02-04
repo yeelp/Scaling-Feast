@@ -14,6 +14,7 @@ import yeelp.scalingfeast.config.items.SFItemConfigCategory;
 import yeelp.scalingfeast.config.modules.SFModuleConfigCategory;
 import yeelp.scalingfeast.features.SFFeatures;
 import yeelp.scalingfeast.hud.DrawUtils;
+import yeelp.scalingfeast.hud.IconSet;
 
 @Config(modid = ModConsts.MOD_ID)
 public class ModConfig {
@@ -48,27 +49,27 @@ public class ModConfig {
 	public static class HUDCategory {
 		public enum DisplayStyle {
 			OVERLAY,
-			DEFAULT;
+			DEFAULT
 		}
 
 		public enum InfoStyle {
 			SIMPLE,
-			ADVANCED;
+			ADVANCED
 		}
 
 		public enum OverlayStyle {
 			DEFAULT,
-			REVERSED;
+			REVERSED
 		}
 
 		public enum MaxColourStyle {
 			DEFAULT,
-			CUSTOM;
+			CUSTOM
 		}
 
 		public enum TrackerStyle {
 			MAX_COLOUR,
-			SATURATION;
+			SATURATION
 		}
 
 		@Name("Display Style")
@@ -81,8 +82,8 @@ public class ModConfig {
 		@Name("Info Style")
 		@Comment({
 				"The text to display to the right of the hunger bar",
-				"If set to SIMPLE, the text \'xb/B\' will be shown, where b is the number of hunger bars you currently have and B is the number of hunger bars you will have when at your max",
-				"If set to ADVANCED the texts \'x/X\' and \'Y\' will be shown, stacked on top of on another, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
+				"If set to SIMPLE, the text 'xb/B' will be shown, where b is the number of hunger bars you currently have and B is the number of hunger bars you will have when at your max",
+				"If set to ADVANCED the texts 'x/X' and 'Y' will be shown, stacked on top of on another, where x is your current food level, X is your max food level, and Y is your saturation (Only if Draw Saturation is set to true)."})
 		public InfoStyle infoStyle = InfoStyle.SIMPLE;
 
 		@Name("Overlay Style")
@@ -100,11 +101,19 @@ public class ModConfig {
 		@Comment({
 				"The style for tracking starvation.",
 				"If set to MAX_COLOUR, the max outline colour will change depending on how many times you've taken starvation damage. The colours used depend on Max Outline Colour Style.",
-				"If set to SATURATION, then only when the hunger bar is empty, each starvation damage will cause a \'saturation bar\' to fill up over your hunger bar more and more. once full, taking starvation damage will decrease your max hunger."})
+				"If set to SATURATION, then only when the hunger bar is empty, each starvation damage will cause a 'saturation bar' to fill up over your hunger bar more and more. once full, taking starvation damage will decrease your max hunger."})
 		public TrackerStyle trackerStyle = TrackerStyle.MAX_COLOUR;
 
+		@Name("Icon Style")
+		@Comment({
+				"The style of icons Scaling Feast uses for drawing hunger.",
+				"SHANKS: The default Minecraft hunger icons.",
+				"CARROTS: Carrot hunger icons. With this enabled, Replace Vanilla Hunger does nothing; this always replaces the vanilla hunger bar with coloured ones. (There is no vanilla hunger bar using carrot icons!)"
+		})
+		public IconSet iconSet = IconSet.SHANKS;
+
 		@Name("Max Outline Transparency")
-		@Comment("How transparent should the max outline be when a player's hunger is not on the same \'layer\' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
+		@Comment("How transparent should the max outline be when a player's hunger is not on the same 'layer' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
 		@RangeDouble(min = 0.0, max = 1.0)
 		public double maxOutlineTransparency = 0.5;
 
@@ -133,7 +142,7 @@ public class ModConfig {
 		public int infoYOffset = 0;
 
 		@Name("Draw Saturation?")
-		@Comment("If set to false, Scaling Feast will make no attempt to provide any information to the player about thier vanilla or extended saturation.")
+		@Comment("If set to false, Scaling Feast will make no attempt to provide any information to the player about their vanilla or extended saturation.")
 		public boolean drawSaturation = true;
 
 		@Name("Replace Vanilla Hunger")
@@ -144,7 +153,7 @@ public class ModConfig {
 		@Comment({
 				"A List of hex colours for the coloured shanks. Each entry is of the form XXXXXX, where X is a hexadecimal digit",
 				"This only has an effect if Display Style is set to OVERLAY.",
-				"If the number of \'rows\' of hunger bars exceed the length of this list, it will wrap around to the beginning.",
+				"If the number of 'rows' of hunger bars exceed the length of this list, it will wrap around to the beginning.",
 				"If any invalid hex string is entered, it will be ignored."})
 		public String[] Hcolours = {
 				"ff9d00",
@@ -159,7 +168,7 @@ public class ModConfig {
 		@Comment({
 				"A List of hex colours for the coloured outline of the shanks for saturation. Each entry is of the form XXXXXX, where X is a hexadecimal digit",
 				"This only has an effect if Display Style is set to OVERLAY.",
-				"If the number of \'rows\' of saturation exceed the length of this list, it will wrap around to the beginning.",
+				"If the number of 'rows' of saturation exceed the length of this list, it will wrap around to the beginning.",
 				"If any invalid hex string is entered, it will be ignored."})
 		public String[] Scolours = {
 				"d70000",
@@ -173,7 +182,7 @@ public class ModConfig {
 		@Name("Bloated Overlay Colours")
 		@Comment({
 				"A List of hex colours for coloured shanks a player receives while under the Bloated effect. Each entry is of the form XXXXXX, where X is a hexadecimal digit",
-				"If the number of \'rows\' of bloated shanks exceed the length of this list, it will wrap around to the beginning.",
+				"If the number of 'rows' of bloated shanks exceed the length of this list, it will wrap around to the beginning.",
 				"If any invalid hex string is entered, it will be ignored."})
 		public String[] Bcolours = {
 				"ffff6e",

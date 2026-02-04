@@ -36,7 +36,7 @@ public final class SFConfigStarvation {
 	})
 	public FilterListType listType = FilterListType.BLACKLIST;
 
-	public final class TrackerCategory {
+	public static final class TrackerCategory {
 		@Name("Decrease Amount on Starvation")
 		@Comment("The amount of max hunger to lose when starving, in half shanks. If set to 0, max hunger will never drop when starving")
 		@RangeInt(min = 0, max = Short.MAX_VALUE)
@@ -70,9 +70,9 @@ public final class SFConfigStarvation {
 
 	}
 
-	public final class DynamicCategory {
+	public static final class DynamicCategory {
 		@Name("Dynamic Starvation")
-		@Comment("If true, Scaling Feast will remember how much exhaustion a player has received since going to zero hunger. Then, Scaling Feast will increase starvation damage proprtional to the amount of food points a player would have lost if they weren't starving. In addition, a player's Starvation Tracker, as described in the Tracker settings, will be increased multiple times in accordance to the amount of extra starvation damage received.")
+		@Comment("If true, Scaling Feast will remember how much exhaustion a player has received since going to zero hunger. Then, Scaling Feast will increase starvation damage proportional to the amount of food points a player would have lost if they weren't starving. In addition, a player's Starvation Tracker, as described in the Tracker settings, will be increased multiple times in accordance to the amount of extra starvation damage received.")
 		public boolean doDynamicStarvation = false;
 
 		@Name("Dynamic Starvation is Unblockable")
@@ -87,7 +87,7 @@ public final class SFConfigStarvation {
 		public int bonusStarveDamageMult = 1;
 	}
 
-	public final class CounterCategory {
+	public static final class CounterCategory {
 		@Name("Starvation Scaling")
 		@Comment({
 				"How Scaling Feast computes additional starvation damage per starve hit. Some functions may require additional arguments. Every value computed by this feature is added to the original damage, and the bonus damage is bounded below at 0.",
@@ -97,7 +97,7 @@ public final class SFConfigStarvation {
 				"CONSTANT - Inflicts additional damage with the function: f(x) = d",
 				"POLYNOMIAL - Inflicts additional damage with the function: f(x) = a(x + b)^c + d",
 				"LOGARITHMIC - Inflicts additional damage with the function: f(x) = alog_b(x + c) + d. log_b is logarithm with base b.",
-				"EXPONENTIONAL - Inflicts additional damage with the function: f(x) = ab^(cx+d)."})
+				"EXPONENTIAL - Inflicts additional damage with the function: f(x) = ab^(cx + d)."})
 		public StarvationScaling starveScaling = StarvationScaling.NONE;
 		
 		@Name("Starvation Scaling is unblockable")

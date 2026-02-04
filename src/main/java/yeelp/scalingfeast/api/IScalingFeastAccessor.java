@@ -1,8 +1,11 @@
 package yeelp.scalingfeast.api;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.lib.SaturationScaling;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Collection of ways to get various properties from Scaling Feast
@@ -10,6 +13,8 @@ import yeelp.scalingfeast.lib.SaturationScaling;
  * @author Yeelp
  *
  */
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public interface IScalingFeastAccessor {
 	
 	/**
@@ -37,8 +42,9 @@ public interface IScalingFeastAccessor {
 	/**
 	 * Get the saturation cap for a specific player. That is, The highest amount of
 	 * saturation they can ever have.
-	 * 
-	 * @return
+	 *
+	 * @param player player to check
+	 * @return The highest amount of saturation this player can have.
 	 */
 	float getPlayerSaturationCap(EntityPlayer player);
 
@@ -52,7 +58,7 @@ public interface IScalingFeastAccessor {
 	
 	/**
 	 * Get SFFoodStats for a player. SFFoodStats contains information about the player's food related capabilities and attributes.
-	 * @param player
+	 * @param player player to get sf stats for
 	 * @return A lazy SFFoodStats container. The actual capabilities and attributes are only fetched when needed and stored in this instance. All changes to this instance are synced to the server when needed.
 	 */
 	default SFFoodStats getSFFoodStats(EntityPlayer player) {

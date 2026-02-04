@@ -19,6 +19,8 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 
+import javax.annotation.Nonnull;
+
 /**
  * The Fasting Enchantment. This enchantment reduces exhaustion by 10% per
  * level.
@@ -49,7 +51,7 @@ public class EnchantmentFasting extends SFEnchantmentBase {
 	}
 
 	@Override
-	public boolean canApplyTogether(Enchantment ench) {
+	public boolean canApplyTogether(@Nonnull Enchantment ench) {
 		return super.canApplyTogether(ench) && ench != SFEnchantments.gluttony;
 	}
 

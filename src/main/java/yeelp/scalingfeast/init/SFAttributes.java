@@ -18,8 +18,8 @@ import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
 public final class SFAttributes extends Handler {
-	public static final IAttribute FOOD_EFFICIENCY = new RangedAttribute((IAttribute) null, "scalingfeast.foodEfficiency", 1.0, -2048.0, 2048.0).setShouldWatch(true);
-	public static final IAttribute MAX_HUNGER_MOD = new RangedAttribute((IAttribute) null, "scalingfeast.maxHungerMod", 1.0, -2048.0, 2048.0).setShouldWatch(true);
+	public static final IAttribute FOOD_EFFICIENCY = new RangedAttribute(null, "scalingfeast.foodEfficiency", 1.0, -2048.0, 2048.0).setShouldWatch(true);
+	public static final IAttribute MAX_HUNGER_MOD = new RangedAttribute(null, "scalingfeast.maxHungerMod", 1.0, -2048.0, 2048.0).setShouldWatch(true);
 
 	@SuppressWarnings("static-method")
 	@SubscribeEvent

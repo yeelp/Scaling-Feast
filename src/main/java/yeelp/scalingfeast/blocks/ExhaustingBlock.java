@@ -8,6 +8,9 @@ import net.minecraft.world.IBlockAccess;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class ExhaustingBlock extends ExhaustionIncreasingBlock {
 
 	public ExhaustingBlock() {
@@ -20,16 +23,17 @@ public class ExhaustingBlock extends ExhaustionIncreasingBlock {
 	}
 
 	@Override
-	float getExhaustionIncreaseMultiplier(EntityPlayer player) {
+	float getExhaustionIncreaseMultiplier(@Nonnull EntityPlayer player) {
 		return 2.0f;
 	}
 
 	@Override
-	protected float getAddedExhaustionOnBlockBreak(EntityPlayer player) {
+	protected float getAddedExhaustionOnBlockBreak(@Nonnull EntityPlayer player) {
 		return AppleCoreAPI.accessor.getMaxExhaustion(player) / 4.0f;
 	}
 
 	@Override
+	@ParametersAreNonnullByDefault
 	public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon) {
 		return true;
 	}

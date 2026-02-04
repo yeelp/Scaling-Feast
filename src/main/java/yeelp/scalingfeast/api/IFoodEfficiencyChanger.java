@@ -15,13 +15,13 @@ public interface IFoodEfficiencyChanger {
 
 	/**
 	 * Get the food efficiency attribute for the player.
-	 * @return
+	 * @return The Food Efficiency attribute instance.
 	 */
 	IAttributeInstance getFoodEfficiencyModifierAttribute();
 	
 	/**
 	 * Apply a modifier to the food efficiency attribute
-	 * @param mod the built in modifier to apply
+	 * @param modifier the built-in modifier to apply
 	 */
 	default void applyFoodEfficiencyModifier(AttributeModifier modifier) {
 		IAttributeInstance instance = this.getFoodEfficiencyModifierAttribute();
@@ -32,7 +32,7 @@ public interface IFoodEfficiencyChanger {
 	}
 	
 	/**
-	 * Get a built in modifier for the food efficiency attribute
+	 * Get a built-in modifier for the food efficiency attribute
 	 * @param type the type to get.
 	 * @return An Optional describing the result; the AttributeModifier if it exists, or {@link Optional#empty()}
 	 */

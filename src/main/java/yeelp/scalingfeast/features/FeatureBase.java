@@ -13,6 +13,7 @@ public abstract class FeatureBase<Config> {
 	private static final String IS_NUMBER_REGEX = "-?\\d+";
 
 	private int[] dimensionList;
+
 	@Nonnull
 	public abstract Handler getFeatureHandler();
 	

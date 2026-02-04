@@ -13,7 +13,7 @@ public final class PacketHandler {
 	public static final SimpleNetworkWrapper INSTANCE = new SimpleNetworkWrapper(ModConsts.MOD_ID);
 	public static int id = 0;
 
-	public static final void init() {
+	public static void init() {
 		INSTANCE.registerMessage(StarvationStatsMessage.getMessageHandler(), StarvationStatsMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(SatSyncMessage.Handler.class, SatSyncMessage.class, id++, Side.CLIENT);
 		INSTANCE.registerMessage(BloatedHungerMessage.getMessageHandler(), BloatedHungerMessage.class, id++, Side.CLIENT);

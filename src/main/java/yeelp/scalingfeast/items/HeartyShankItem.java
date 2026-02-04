@@ -1,10 +1,6 @@
 package yeelp.scalingfeast.items;
 
-import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -24,12 +20,19 @@ import yeelp.scalingfeast.init.SFSounds;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.text.DecimalFormat;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Hearty Shank food item. Eating it increases max hunger
  * 
  * @author Yeelp
  *
  */
+@ParametersAreNonnullByDefault
 public class HeartyShankItem extends ItemFood implements IItemDescribable {
 	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info1").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
 	private static final String AT_MAX_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.atmax").setStyle(new Style().setColor(TextFormatting.RED).setBold(true)).getFormattedText();
@@ -50,6 +53,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		if(entityLiving instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entityLiving;
@@ -58,7 +62,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 				double currentShankBonus = getCurrentShankBonus(player);
 				double currentStarvePenalty = getCurrentStarvePenalty(player);
 				double currentDeathPenalty = getCurrentDeathPenalty(player);
-				List<AttributeModifier> newMods = new LinkedList<AttributeModifier>();
+				List<AttributeModifier> newMods = Lists.newLinkedList();
 				double overflow = currentStarvePenalty + ModConfig.items.shank.inc;
 				double newStarvePenalty = Math.min(overflow, 0.0);
 				overflow = currentDeathPenalty + Math.max(overflow, 0);
@@ -85,7 +89,7 @@ public class HeartyShankItem extends ItemFood implements IItemDescribable {
 
 	@Override
 	public Collection<String> getDescription(EntityPlayer player) {
-		List<String> tooltips = new LinkedList<String>();
+		List<String> tooltips = Lists.newLinkedList();
 		tooltips.add(TEXT_SPLASH);
 		if(canConsumeForMaxHunger(player)) {
 			tooltips.add(new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info2", formatter.format(getUseBonus(player) / 2.0f)).setStyle(new Style().setColor(TextFormatting.GRAY)).getFormattedText());

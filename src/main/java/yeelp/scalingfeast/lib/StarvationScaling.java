@@ -56,23 +56,23 @@ public enum StarvationScaling {
 	
 	public abstract float compute(int x);
 	
-	protected static final float a() {
+	protected static float a() {
 		return getConfigRoot().a;
 	}
 	
-	protected static final float b() {
+	protected static float b() {
 		return getConfigRoot().b;
 	}
 	
-	protected static final float c() {
+	protected static float c() {
 		return getConfigRoot().c;
 	}
 	
-	protected static final float d() {
+	protected static float d() {
 		return getConfigRoot().d;
 	}
 	
-	private static final SFConfigStarvation.CounterCategory getConfigRoot() {
+	private static SFConfigStarvation.CounterCategory getConfigRoot() {
 		return ModConfig.features.starve.counter;
 	}
 }

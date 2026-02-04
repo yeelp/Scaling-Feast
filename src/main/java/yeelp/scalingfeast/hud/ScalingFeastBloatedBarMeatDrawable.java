@@ -3,7 +3,6 @@ package yeelp.scalingfeast.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
-import yeelp.scalingfeast.handlers.GUIIcons;
 import yeelp.scalingfeast.util.Colour;
 
 public final class ScalingFeastBloatedBarMeatDrawable extends AbstractScalingFeastBloatedBarDrawable {
@@ -33,7 +32,7 @@ public final class ScalingFeastBloatedBarMeatDrawable extends AbstractScalingFea
 	}
 
 	@Override
-	protected int getBaseVCoord(EntityPlayer player) {
+	protected int getBloatedBaseVCoord(EntityPlayer player) {
 		return AbstractScalingFeastBloatedBarDrawable.V_COORD_MEAT_PART;
 	}
 

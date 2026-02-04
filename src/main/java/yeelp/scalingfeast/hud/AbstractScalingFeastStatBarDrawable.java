@@ -3,7 +3,7 @@ package yeelp.scalingfeast.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.ModConsts;
-import yeelp.scalingfeast.handlers.GUIIcons;
+import yeelp.scalingfeast.config.ModConfig;
 
 public abstract class AbstractScalingFeastStatBarDrawable extends AbstractStatBarDrawable {
 
@@ -30,17 +30,17 @@ public abstract class AbstractScalingFeastStatBarDrawable extends AbstractStatBa
 	}
 	
 	@Override
-	protected final int getBaseVCoord(EntityPlayer player) {
-		return this.v;
+	protected int getBaseVCoord(EntityPlayer player) {
+		return this.v + ModConfig.hud.iconSet.getVOffset();
 	}
 
 	@Override
 	protected final int jitterIndexOffset(EntityPlayer player) {
 		return 0;
 	}
-	
-	protected static final float getIconCountForTopmostBar(float amount) {
-		return Math.min(ModConsts.VANILLA_MAX_SAT, (((amount - 1) % ModConsts.VANILLA_MAX_HUNGER) + 1))/2.0f;
+
+	protected static float getIconCountForTopmostBar(float amount) {
+		return Math.min(ModConsts.VANILLA_MAX_SAT, (((amount - 0.5f) % ModConsts.VANILLA_MAX_HUNGER) + 0.5f))/2.0f;
 	}
 
 }

@@ -21,9 +21,7 @@ import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 public final class TraitExhausting extends AbstractTraitLeveled {
 
-	private static final List<Potion> effects = Arrays.asList(new Potion[] {
-			MobEffects.WEAKNESS,
-			MobEffects.SLOWNESS});
+	private static final List<Potion> effects = Arrays.asList(MobEffects.WEAKNESS, MobEffects.SLOWNESS);
 
 	public TraitExhausting(int level) {
 		super("exhausting", TiCConsts.EXHAUSTING_COLOUR, 3, level);

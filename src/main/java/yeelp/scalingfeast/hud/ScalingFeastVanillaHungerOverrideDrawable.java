@@ -14,7 +14,7 @@ public final class ScalingFeastVanillaHungerOverrideDrawable extends AbstractSca
 
 	@Override
 	public boolean shouldDraw(EntityPlayer player) {
-		return ModConfig.hud.replaceVanilla && player.getFoodStats().getFoodLevel() < ModConsts.VANILLA_MAX_HUNGER;
+		return ModConfig.hud.replaceVanilla && player.getFoodStats().getFoodLevel() < ModConsts.VANILLA_MAX_HUNGER && !ModConfig.hud.iconSet.isCustom();
 	}
 
 	@Override

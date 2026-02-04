@@ -28,16 +28,16 @@ public class LootTableInjector extends Handler {
 				"simple_dungeon",
 				"stronghold_crossing",
 				"woodland_mansion"};
-		private static ResourceLocation[] tables = new ResourceLocation[INJECTED_TABLES.length];
+		private static final ResourceLocation[] TABLES = new ResourceLocation[INJECTED_TABLES.length];
 		static {
 			Arrays.sort(INJECTED_TABLES);
 			for(int i = 0; i < INJECTED_TABLES.length; i++) {
-				tables[i] = new ResourceLocation(ModConsts.MOD_ID, "chests/" + INJECTED_TABLES[i]);
+				TABLES[i] = new ResourceLocation(ModConsts.MOD_ID, "chests/" + INJECTED_TABLES[i]);
 			}
 		}
 
 		static void registerTables() {
-			for(ResourceLocation loc : tables) {
+			for(ResourceLocation loc : TABLES) {
 				LootTableList.register(loc);
 			}
 		}
@@ -52,7 +52,7 @@ public class LootTableInjector extends Handler {
 		}
 
 		private static ResourceLocation getResourceLocation(String id) {
-			return tables[Arrays.binarySearch(INJECTED_TABLES, id)];
+			return TABLES[Arrays.binarySearch(INJECTED_TABLES, id)];
 		}
 	}
 
@@ -77,13 +77,12 @@ public class LootTableInjector extends Handler {
 				case "woodland_mansion":
 					evt.getTable().addPool(SFLootTables.getLootPool(table));
 				default:
-					return;
+					break;
 			}
 		}
-		// If this happens, then clearly the loot table name didn't begin with
-		// "minecraft:chests/", so it's not a loot table we care about. Ignore.
 		catch(IndexOutOfBoundsException e) {
-			return;
+			// If this happens, then clearly the loot table name didn't begin with
+			// "minecraft:chests/", so it's not a loot table we care about. Ignore.
 		}
 	}
 }

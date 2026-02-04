@@ -19,12 +19,12 @@ import slimeknights.tconstruct.library.utils.HarvestLevels;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
 import yeelp.scalingfeast.init.SFItems;
 import yeelp.scalingfeast.init.SFOreDict;
-import yeelp.scalingfeast.integration.module.IIntegratable;
+import yeelp.scalingfeast.integration.IIntegratable;
 import yeelp.scalingfeast.integration.tic.TiCConsts;
 import yeelp.scalingfeast.integration.tic.tinkers.proxy.TiCClientProxy;
 import yeelp.scalingfeast.integration.tic.tinkers.proxy.TiCProxy;
 
-public class SFTinkerIntegration implements IIntegratable {
+public final class SFTinkerIntegration implements IIntegratable {
 
 	public static final AbstractTrait EXHAUSTING_1 = new TraitExhausting(1), EXHAUSTING_2 = new TraitExhausting(2);
 	public static final AbstractTrait FEASTING = new TraitFeasting();
@@ -33,7 +33,7 @@ public class SFTinkerIntegration implements IIntegratable {
 	public static MoltenExhaustium moltenExhaustion = new MoltenExhaustium();
 	public static BlockMolten moltenBlock;
 
-	private static TiCProxy proxy = getSidedProxy(FMLCommonHandler.instance().getSide());
+	private static final TiCProxy PROXY = getSidedProxy(FMLCommonHandler.instance().getSide());
 
 	static {
 		FluidRegistry.registerFluid(moltenExhaustion);
@@ -51,7 +51,7 @@ public class SFTinkerIntegration implements IIntegratable {
 		exhaustium.addTrait(EXHAUSTING_1);
 		exhaustium.setRepresentativeItem(SFItems.exhaustingIngot);
 		TinkerRegistry.integrate(new MaterialIntegration(exhaustium, moltenExhaustion, SFOreDict.SUFFIX)).toolforge().preInit();
-		proxy.preInit();
+		PROXY.preInit();
 		return true;
 	}
 
@@ -59,27 +59,17 @@ public class SFTinkerIntegration implements IIntegratable {
 	public boolean integrate(FMLInitializationEvent evt) {
 		MoltenExhaustium.init();
 		MoltenExhaustium.getTooltipHandler().register();
-		proxy.init();
+		PROXY.init();
 		return true;
 	}
 
 	@Override
 	public boolean postIntegrate(FMLPostInitializationEvent evt) {
-		proxy.postInit();
-		return true;
-	}
-
-	@Override
-	public boolean enabled() {
+		PROXY.postInit();
 		return true;
 	}
 
 	private static TiCProxy getSidedProxy(Side side) {
-		switch(side) {
-			case CLIENT:
-				return new TiCClientProxy();
-			default:
-				return new TiCProxy();
-		}
+		return side == Side.CLIENT ? new TiCClientProxy() : new TiCProxy();
 	}
 }

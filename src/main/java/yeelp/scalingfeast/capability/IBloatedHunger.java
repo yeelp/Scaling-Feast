@@ -18,9 +18,9 @@ public interface IBloatedHunger extends SFSingleValueCapability<Short, NBTTagSho
 	 * @return the leftover amount that could not be deducted. If this returns a
 	 *         positive short, then this bloated amount is zero.
 	 */
-	public short deductBloatedAmount(short amount);
+	short deductBloatedAmount(short amount);
 	
-	public static void register() {
+	static void register() {
 		SFCapabilityBase.register(IBloatedHunger.class, NBTTagShort.class, BloatedHunger::new);
 	}
 }

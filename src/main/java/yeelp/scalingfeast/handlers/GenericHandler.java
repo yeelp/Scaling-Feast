@@ -1,10 +1,6 @@
 package yeelp.scalingfeast.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -18,25 +14,25 @@ import squeek.applecore.api.hunger.ExhaustionEvent;
 import squeek.applecore.api.hunger.HungerEvent;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
-import yeelp.scalingfeast.helpers.AppleSkinHelper;
 import yeelp.scalingfeast.init.SFAttributes;
+import yeelp.scalingfeast.integration.ModIntegrationKernel;
 import yeelp.scalingfeast.network.SatSyncMessage;
 
+import java.util.Map;
+import java.util.UUID;
+
 public class GenericHandler extends Handler {
-	private static final Map<UUID, Float> satLevels = new HashMap<UUID, Float>();
+	private static final Map<UUID, Float> satLevels = Maps.newHashMap();
+	private static Boolean hasSkinIntegration;
 
 	@SuppressWarnings("static-method")
 	@SubscribeEvent
 	public void onGetMaxHunger(HungerEvent.GetMaxHunger evt) {
 		EntityPlayer player = evt.player;
-		IAttributeInstance maxHunger;
 		if(player == null) {
 			return;
 		}
-		else if((maxHunger = player.getEntityAttribute(SFAttributes.MAX_HUNGER_MOD)) == null) {
-			return;
-		}
-		evt.maxHunger += maxHunger.getAttributeValue();
+		evt.maxHunger += (int) player.getEntityAttribute(SFAttributes.MAX_HUNGER_MOD).getAttributeValue();
 		evt.maxHunger = Math.max(1, evt.maxHunger);
 	}
 	
@@ -54,8 +50,8 @@ public class GenericHandler extends Handler {
 		if(foodEfficiency < 1) {
 			foodEfficiency = -1.0 / (foodEfficiency - 2);
 		}
-		double reduction = 1.0f / foodEfficiency;
-		evt.deltaExhaustion *= reduction < 0 ? 0 : reduction;
+		double reduction = 1.0 / foodEfficiency;
+		evt.deltaExhaustion *= (float) (reduction < 0 ? 0.0f : reduction);
 	}
 
 	@SuppressWarnings("static-method")
@@ -63,17 +59,18 @@ public class GenericHandler extends Handler {
 	public void onLivingUpdate(LivingUpdateEvent evt) {
 		// AppleSkin will do this for us, no point in duplicating behaviour if it's
 		// loaded.
-		if(AppleSkinHelper.isLoaded() || !(evt.getEntity() instanceof EntityPlayerMP)) {
+		if(hasSkinIntegration == null) {
+			hasSkinIntegration = ModIntegrationKernel.getCurrentSkinIntegration().isPresent();
+		}
+		if(hasSkinIntegration || !(evt.getEntity() instanceof EntityPlayerMP)) {
 			return;
 		}
 		EntityPlayerMP player = (EntityPlayerMP) evt.getEntity();
 		float currSatLevel = player.getFoodStats().getSaturationLevel();
 		// we use the wrapper class to simplify the case where satLevels.get returns
 		// null
-		// However, we should use Float.floatValue() when comparing to the primitive
-		// float currSatLevel.
 		Float lastSatLevel = satLevels.get(player.getUniqueID());
-		if(lastSatLevel == null || lastSatLevel.floatValue() != currSatLevel) {
+		if(lastSatLevel == null || lastSatLevel != currSatLevel) {
 			PacketHandler.INSTANCE.sendTo(new SatSyncMessage(currSatLevel), player);
 			satLevels.put(player.getUniqueID(), currSatLevel);
 		}

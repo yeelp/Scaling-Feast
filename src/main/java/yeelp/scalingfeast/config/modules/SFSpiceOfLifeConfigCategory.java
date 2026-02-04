@@ -21,8 +21,8 @@ public class SFSpiceOfLifeConfigCategory {
 
 	@Name("Penalty")
 	@Comment({
-			"If the number of unique entires in a player's food history is less than Required Amount, that player will lose this much max hunger for every unique entry missing.",
-			"For example, if a player has 3 unique entires and the required amount is 5, they will lose (5-3)*(penalty) max hunger"})
+			"If the number of unique entries in a player's food history is less than Required Amount, that player will lose this much max hunger for every unique entry missing.",
+			"For example, if a player has 3 unique entries and the required amount is 5, they will lose (5-3)*(penalty) max hunger"})
 	@RangeInt(min = 1, max = Short.MAX_VALUE)
 	public int penalty = 2;
 }

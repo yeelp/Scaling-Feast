@@ -17,7 +17,7 @@ public final class SFConfigXPBonuses {
 	
 	@Name("Food Efficiency Bonus Type")
 	@Comment({"Set the type of bonus for Food Efficiency",
-		"STACK_ADDITIVELY - Multiplies the base Food Efficiency by the sum of this bonus plus any other Food Efficieny attribute modifiers. So, it stacks with other modifiers additively",
+		"STACK_ADDITIVELY - Multiplies the base Food Efficiency by the sum of this bonus plus any other Food Efficiency attribute modifiers. So, it stacks with other modifiers additively",
 		"STACK_MULTIPLICATIVELY - Multiplies the base Food Efficiency by this bonus independently of other modifiers. So, it stacks with other modifiers multiplicatively."})
 	public FoodEfficiencyOperations foodEfficiencyBonusType = FoodEfficiencyOperations.STACK_MULTIPLICATIVELY;
 
@@ -33,12 +33,12 @@ public final class SFConfigXPBonuses {
 	@Name("Food Efficiency XP Rewards")
 	@Comment({
 			"A list of values x:b, where x is the player's XP, and b is the Food Efficiency Bonus (or penalty, can set negative values) this player receives.",
-			"A player will get ALL bonus that their XP threshold surpasses. The way the XP argument is interpreted is set in the Food Efficiency Bonus option."})
+			"A player will get ALL bonuses that their XP threshold surpasses. The way the XP argument is interpreted is set in the Food Efficiency Bonus option."})
 	public String[] efficiencyRewards = {};
 
 	@Name("Max Hunger XP Rewards")
 	@Comment({
 			"A list of values x:b, where x is the player's XP, and b is the Max Hunger Bonus (or penalty, can set negative values) this player receives.",
-			"A player will get ALL bonus that their XP threshold surpasses. The way the XP argument is interpreted is set in the Max Hunger Bonus option."})
+			"A player will get ALL bonuses that their XP threshold surpasses. The way the XP argument is interpreted is set in the Max Hunger Bonus option."})
 	public String[] maxHungerRewards = {};
 }

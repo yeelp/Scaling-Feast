@@ -6,6 +6,8 @@ import net.minecraft.util.FoodStats;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 
+import javax.annotation.Nonnull;
+
 /**
  * The Metabolism effect. This regens hunger over time.
  * 
@@ -21,7 +23,7 @@ public class PotionMetabolism extends PotionBase {
 	}
 
 	@Override
-	public void performEffect(EntityLivingBase entity, int amplifier) {
+	public void performEffect(@Nonnull EntityLivingBase entity, int amplifier) {
 		if(entity instanceof EntityPlayer && !entity.world.isRemote) {
 			EntityPlayer player = (EntityPlayer) entity;
 			FoodStats fs = player.getFoodStats();

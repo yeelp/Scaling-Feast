@@ -20,7 +20,7 @@ public final class ScalingFeastLowerHungerBarDrawable extends AbstractScalingFea
 
 	@Override
 	protected float getAmountToDraw(EntityPlayer player, FoodStats stats) {
-		return ModConsts.VANILLA_MAX_HUNGER/2;
+		return ModConsts.VANILLA_MAX_HUNGER / 2.0f;
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class CurseDeprivation extends SFEnchantmentBase {
 			public void onGetStarvationRate(StarvationEvent.GetStarveTickPeriod evt) {
 				int level = EnchantmentHelper.getMaxEnchantmentLevel(SFEnchantments.deprivationCurse, evt.player);
 				if(level != 0) {
-					evt.starveTickPeriod /= 2.0f;
+					evt.starveTickPeriod /= 2;
 				}
 			}
 		});

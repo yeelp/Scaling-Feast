@@ -7,7 +7,8 @@ import yeelp.scalingfeast.proxy.AbstractProxy;
 
 public class TiCProxy extends AbstractProxy {
 
-	@Override
+	@SuppressWarnings("DataFlowIssue")
+    @Override
 	public void preInit() {
 		ForgeRegistries.BLOCKS.register(SFTinkerIntegration.moltenBlock);
 		ForgeRegistries.ITEMS.register(new ItemBlock(SFTinkerIntegration.moltenBlock).setRegistryName(SFTinkerIntegration.moltenBlock.getRegistryName()));

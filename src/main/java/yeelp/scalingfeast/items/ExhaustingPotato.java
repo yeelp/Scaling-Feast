@@ -15,6 +15,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.ModConsts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class ExhaustingPotato extends ItemFood {
 	private static final ITextComponent SPLASH = new TextComponentTranslation("tooltips.scalingfeast.exhaustingpotato.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
 	private static final ITextComponent INFO = new TextComponentTranslation("tooltips.scalingfeast.exhaustingpotato.info");
@@ -28,7 +32,7 @@ public class ExhaustingPotato extends ItemFood {
 	}
 	
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(SPLASH.getFormattedText());
 		tooltip.add(INFO.getFormattedText());
 		super.addInformation(stack, worldIn, tooltip, flagIn);
