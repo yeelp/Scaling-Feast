@@ -2,6 +2,9 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.minecraftforge.gradle' version "${forge_gradle_version}"
+    id 'org.spongepowered.mixin' version "${mixin_gradle_version}"
+    id 'wtf.gofancy.fancygradle' version "${fancy_gradle_version}"
+    id 'com.github.johnrengelman.shadow' version "${shadow_version}"
 }
 
 version = mod_version
@@ -53,14 +56,35 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("applecore:AppleCore:1.12.2-3.4.0+356.64453:api")
-    implementation fg.deobf("curse.maven:spiceoflife-220811:2571951")
-    implementation fg.deobf("curse.maven:spiceoflifecarrotedition-277616:2731062")
-    implementation fg.deobf("curse.maven:conarm-287683:3174535")
-    implementation fg.deobf("slimeknights.mantle:Mantle:1.12-1.3.3.55")
-    implementation fg.deobf("slimeknights:TConstruct:1.12.2-2.13.0.183")
-    implementation fg.deobf("CraftTweaker2:CraftTweaker2-API:4.1.20.674")
-    implementation fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.674")
-    implementation fg.deobf("CraftTweaker2:ZenScript:4.1.20.674")
+    compileOnly fg.deobf("curse.maven:spiceoflife-220811:2571951")
+    compileOnly fg.deobf("curse.maven:spiceoflifecarrotedition-277616:2731062")
+    compileOnly fg.deobf("curse.maven:conarm-287683:3174535")
+    compileOnly fg.deobf("curse.maven:appleskin-248787:2987247")
+    compileOnly fg.deobf("curse.maven:lemonskin-1337144:7397823")
+    compileOnly fg.deobf("slimeknights.mantle:Mantle:1.12-1.3.3.55")
+    compileOnly fg.deobf("slimeknights:TConstruct:1.12.2-2.13.0.183")
+    compileOnly fg.deobf("CraftTweaker2:CraftTweaker2-API:4.1.20.674")
+    compileOnly fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.674")
+    compileOnly fg.deobf("CraftTweaker2:ZenScript:4.1.20.674")
+    compileOnly fg.deobf("curse.maven:fermiumbooter-968474:5672830")
+
+    shadow 'io.github.llamalad7:mixinextras-common:0.3.5'
+
+    shadow 'org.spongepowered:mixin:0.8.7'
+    annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
+}
+
+mixin {
+    add sourceSets.main, "mixins.${mod_id}.refmap.json"
+}
+
+fancyGradle {
+    patches {
+        resources
+        coremods
+        asm
+        mergetool
+    }
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens;
@@ -92,15 +116,21 @@ task processSources(type: Sync) {
 jar {
     manifest {
         attributes([
-                'Specification-Title'     : mod_name,
-                'Specification-Vendor'    : mod_author,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : mod_name,
-                'Implementation-Vendor'   : mod_author,
-                'Implementation-Version'  : mod_version,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                'Specification-Title'        : mod_name,
+                'Specification-Vendor'       : mod_author,
+                'Specification-Version'      : '1',
+                'Implementation-Title'       : mod_name,
+                'Implementation-Vendor'      : mod_author,
+                'Implementation-Version'     : mod_version,
+                'Implementation-Timestamp'   : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "FMLCorePlugin"              : "${mixin_loader_class}",
+                "FMLCorePluginContainsFMLMod": "true",
+                "ForceLoadAsMod"             : "true",
+                "TweakClass"                 : "org.spongepowered.asm.launch.MixinTweaker",
+                "TweakOrder"                 : 0,
         ])
     }
+    archiveClassifier.set('THIN')
 }
 
 compileJava {
@@ -111,4 +141,40 @@ java {
     withSourcesJar()
 }
 
+shadowJar {
+    configurations = [project.configurations.shadow]
+    mergeServiceFiles()
+
+    exclude 'org/spongepowered/asm/launch/MixinLaunchPlugin*'
+    exclude 'org/spongepowered/asm/launch/MixinTransformationService*'
+    exclude 'org/spongepowered/asm/launch/platform/container/ContainerHandleModLauncherEx*'
+
+    exclude 'LICENSE.txt'
+
+    archiveClassifier.set('')
+}
+
+reobf {
+    shadowJar{}
+}
+
+task signJars(dependsOn: reobfShadowJar) {
+    doLast {
+        signJar(jar.archivePath)
+        signJar(shadowJar.archivePath)
+    }
+}
+
+def signJar(path) {
+    def alias = project.property("$alias")
+    def keyStore = project.property("$keyStore")
+    def storePass = project.property("$storePass")
+    def exec_line = "jarsigner -keystore " + "$keyStore" + " -storepass " + "$storePass" + " " + path + " " + "$alias"
+    exec_line.execute()
+}
+
+build.dependsOn(shadowJar)
 jar.finalizedBy('reobfJar')
+reobfShadowJar.doLast {
+    signJar(shadowJar.archivePath)
+}

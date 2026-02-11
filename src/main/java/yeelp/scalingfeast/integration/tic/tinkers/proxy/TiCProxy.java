@@ -24,4 +24,8 @@ public class TiCProxy extends AbstractProxy {
 		//no-op
 	}
 
+	@Override
+	public void handleFingerprintViolation() {
+		//do nothing
+	}
 }

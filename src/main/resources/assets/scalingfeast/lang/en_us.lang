@@ -10,6 +10,24 @@ commands.scalingfeast.command.numerr=Amount must be in range %s0, %s]
 commands.scalingfeast.command.notnum=Argument %s was not a number.
 commands.scalingfeast.command.success=Success! Set %s for player %s to %s.
 
+######################
+# FINGER PRINT STUFF #
+######################
+
+fingerprint.scalingfeast.ignore=Ignore this, I know what I'm doing!
+fingerprint.scalingfeast.curseforge=Open mod page on CurseForge
+fingerprint.scalingfeast.modrinth=Open mod page on Modrinth
+fingerprint.scalingfeast.close=Close game
+fingerprint.scalingfeast.info0=Scaling Feast had a fingerprint mismatch!
+fingerprint.scalingfeast.info1=This likely means that this mod's code has been altered in a way the original author,
+fingerprint.scalingfeast.info2=, is not aware of.
+fingerprint.scalingfeast.info3=This could mean the mod has been hastily tampered with by a third party.
+fingerprint.scalingfeast.info4=If you have altered Scaling Feast's code, then you should be expecting this message.
+fingerprint.scalingfeast.info5=In which case, you can ignore this message.
+fingerprint.scalingfeast.info6=If you opt to ignore this message, it will not be shown again for this version.
+fingerprint.scalingfeast.info7=You can go to the official mod pages for this mod to download it if you got it from somewhere else.
+fingerprint.scalingfeast.info8=The official sites this mod is hosted on are CurseForge, Modrinth, and the mod's own GitHub repository.
+
 #################
 # DEATH MESSAGE #
 #################

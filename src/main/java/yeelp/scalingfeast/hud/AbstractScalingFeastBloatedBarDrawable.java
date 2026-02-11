@@ -22,7 +22,7 @@ public abstract class AbstractScalingFeastBloatedBarDrawable extends AbstractSta
 
 	@Override
 	protected final int getBaseVCoord(EntityPlayer player) {
-		return this.getBloatedBaseVCoord(player) + ModConfig.hud.iconSet.getVOffset();
+		return this.getBloatedBaseVCoord(player) + ModConfig.hud.bloatedSet.getVOffset();
 	}
 
 	protected abstract int getBloatedBaseVCoord(EntityPlayer player);

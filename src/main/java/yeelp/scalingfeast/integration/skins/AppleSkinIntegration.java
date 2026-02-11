@@ -1,17 +1,18 @@
 package yeelp.scalingfeast.integration.skins;
 
-import java.lang.reflect.Field;
+import net.minecraft.client.Minecraft;
+import squeek.appleskin.ModConfig;
+import squeek.appleskin.client.HUDOverlayHandler;
 
 public final class AppleSkinIntegration extends AbstractFruitSkinIntegration {
     public static AppleSkinIntegration instance;
-    private Field shouldDrawExhaustion;
 
     public static AppleSkinIntegration getInstance() {
         return instance == null ? instance = new AppleSkinIntegration() : instance;
     }
 
     public AppleSkinIntegration() {
-        super("squeek", "HUDOverlayHandler");
+
     }
 
     @Override
@@ -20,13 +21,12 @@ public final class AppleSkinIntegration extends AbstractFruitSkinIntegration {
     }
 
     @Override
-    protected boolean doSpecificPreInit() throws ClassNotFoundException, NoSuchFieldException {
-        this.shouldDrawExhaustion = this.getClass(MODCONFIG).getDeclaredField(SHOW_EXHAUSTION_UNDERLAY);
-        return true;
+    protected void callDrawExhaustion(float exhaustion, Minecraft mc, int left, int top, float alpha) {
+        HUDOverlayHandler.drawExhaustionOverlay(exhaustion, mc, left, top, alpha);
     }
 
     @Override
-    protected boolean shouldDrawExhaustion() throws IllegalAccessException {
-        return this.shouldDrawExhaustion.getBoolean(null);
+    protected boolean shouldDrawExhaustion() {
+        return ModConfig.SHOW_FOOD_EXHAUSTION_UNDERLAY;
     }
 }

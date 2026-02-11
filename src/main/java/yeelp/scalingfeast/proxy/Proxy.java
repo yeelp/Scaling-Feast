@@ -19,4 +19,9 @@ public class Proxy extends AbstractProxy {
 	public void postInit() {
 		//nothing
 	}
+
+	@Override
+	public void handleFingerprintViolation() {
+		//nothing for server side
+	}
 }

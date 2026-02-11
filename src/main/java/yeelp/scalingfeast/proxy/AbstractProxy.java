@@ -17,4 +17,6 @@ public abstract class AbstractProxy {
 	 */
 	@SuppressWarnings("EmptyMethod")
 	public abstract void postInit();
+
+	public abstract void handleFingerprintViolation();
 }

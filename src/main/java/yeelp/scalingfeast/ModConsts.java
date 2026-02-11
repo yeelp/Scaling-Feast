@@ -20,5 +20,6 @@ public interface ModConsts {
 		String TCONSTRUCT_ID = "tconstruct";
 		String CONARM_ID = "conarm";
 		String SOLCARROT_ID = "solcarrot";
+		String FERMIUM_ID = "fermiumbooter";
 	}
 }

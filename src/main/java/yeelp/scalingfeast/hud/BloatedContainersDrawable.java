@@ -20,7 +20,7 @@ public final class BloatedContainersDrawable extends AbstractScalingFeastBloated
 
 	@Override
 	protected void bindTexture(Minecraft mc) {
-		if(ModConfig.hud.iconSet.isCustom()) {
+		if(ModConfig.hud.bloatedSet.isCustom()) {
 			GUIIcons.bindSFGUIIcons(mc);
 		}
 		else {
@@ -35,7 +35,7 @@ public final class BloatedContainersDrawable extends AbstractScalingFeastBloated
 
 	@Override
 	protected int getBaseUCoord(EntityPlayer player) {
-		if(ModConfig.hud.iconSet.isCustom()) {
+		if(ModConfig.hud.bloatedSet.isCustom()) {
 			return (player.isPotionActive(MobEffects.HUNGER)) ? 27 : 0;
 		}
 		return HungerContainersDrawable.U_COORD_BASE + (player.isPotionActive(MobEffects.HUNGER) ? HungerContainersDrawable.HUNGER_EFFECT_U_COORD_OFFSET : 0);
@@ -44,7 +44,7 @@ public final class BloatedContainersDrawable extends AbstractScalingFeastBloated
 	@Override
 	protected int getBloatedBaseVCoord(EntityPlayer player) {
 		//because using vanilla texture map, subtract the icon set v offset. It will be added by the superclass and "canceled out".
-		return (ModConfig.hud.iconSet.isCustom() ? ModConfig.hud.iconSet.getContainerVCoord() : AbstractVanillaStatBarDrawable.V_COORD_BASE) - ModConfig.hud.iconSet.getVOffset();
+		return (ModConfig.hud.bloatedSet.isCustom() ? ModConfig.hud.bloatedSet.getContainerVCoord() : AbstractVanillaStatBarDrawable.V_COORD_BASE) - ModConfig.hud.bloatedSet.getVOffset();
 	}
 
 	@Override

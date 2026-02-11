@@ -3,10 +3,7 @@ package yeelp.scalingfeast;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
@@ -20,16 +17,21 @@ import yeelp.scalingfeast.features.SFFeatures;
 import yeelp.scalingfeast.handlers.*;
 import yeelp.scalingfeast.init.*;
 import yeelp.scalingfeast.integration.ModIntegrationKernel;
+import yeelp.scalingfeast.integration.OptionalMixinLoader;
 import yeelp.scalingfeast.items.IItemDescribable;
 import yeelp.scalingfeast.lib.worldgen.OreGenerator;
 import yeelp.scalingfeast.potion.PotionExhaustion;
 import yeelp.scalingfeast.proxy.Proxy;
 
-@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies = "required-after:applecore@[3.4.0,)")
+import java.io.File;
+
+@Mod(modid = ModConsts.MOD_ID, name = ModConsts.MOD_NAME, version = ModConsts.MOD_VERSION, dependencies = "required-after:applecore@[3.4.0,)", certificateFingerprint = "3114a3e1038120ee58038ff5a4cda0cf7d46bed0")
 public class ScalingFeast {
 	public static Logger logger;
 	@SidedProxy(clientSide = ModConsts.CLIENT_PROXY, serverSide = ModConsts.SERVER_PROXY)
 	public static Proxy proxy;
+	private static boolean fingerprintViolation;
+	private static File configDirectory;
 
 	/**
 	 * Scaling Feast pre initialization
@@ -40,7 +42,15 @@ public class ScalingFeast {
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
 		ScalingFeastAPI.init();
+		info(String.format("Scaling Feast is version %s", ModConsts.MOD_VERSION));
+		if(OptionalMixinLoader.wasFermiumBooterPresent()) {
+			info("Scaling Feast loaded optional mixins with Fermium Booter!");
+		}
 		ModIntegrationKernel.load();
+		configDirectory = event.getModConfigurationDirectory();
+		if(fingerprintViolation) {
+			proxy.handleFingerprintViolation();
+		}
 		proxy.preInit();
 		SFOreDict.init();
 		new SFAttributes().register();
@@ -95,6 +105,17 @@ public class ScalingFeast {
 		event.registerServerCommand(new SFCommand());
 	}
 
+	@SuppressWarnings("static-method")
+	@EventHandler
+	public void fingerprintViolation(FMLFingerprintViolationEvent event) {
+		if(event.isDirectory()) {
+			debug("Fingerprint doesn't matter in dev environment");
+		}
+		else {
+			fingerprintViolation = true;
+		}
+	}
+
 	/**
 	 * Log a message at the info level only when in debug mode
 	 * 
@@ -141,5 +162,9 @@ public class ScalingFeast {
 	 */
 	public static void fatal(String msg) {
 		logger.fatal("[SCALING FEAST] {}", msg);
+	}
+
+	public static File getModConfigDirectory() {
+		return configDirectory;
 	}
 }

@@ -65,7 +65,7 @@ public final class ModIntegrationKernel {
 
 	public static Optional<AbstractFruitSkinIntegration> getCurrentSkinIntegration() {
 		for(AbstractFruitSkinIntegration integration : ImmutableList.of(LemonSkinIntegration.getInstance(), AppleSkinIntegration.getInstance())) {
-			if(loadedIntegrations.contains(integration) && integration.isLoaded()) {
+			if(loadedIntegrations.contains(integration)) {
 				return Optional.of(integration);
 			}
 		}

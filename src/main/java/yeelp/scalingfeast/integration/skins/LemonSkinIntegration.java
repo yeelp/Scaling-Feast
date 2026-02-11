@@ -1,20 +1,18 @@
 package yeelp.scalingfeast.integration.skins;
 
-import yeelp.scalingfeast.ScalingFeast;
-
-import java.lang.reflect.Field;
+import net.minecraft.client.Minecraft;
+import ua.myxazaur.lemonskin.ModConfig;
+import ua.myxazaur.lemonskin.client.HUDOverlayRenderer;
 
 public final class LemonSkinIntegration extends AbstractFruitSkinIntegration {
     public static LemonSkinIntegration instance;
-    private Object clientCat;
-    private Field shouldDrawExhaustion;
 
     public static LemonSkinIntegration getInstance() {
         return instance == null ? instance = new LemonSkinIntegration() : instance;
     }
 
     public LemonSkinIntegration() {
-        super("ua.myxazaur", "HUDOverlayRenderer");
+
     }
 
     @Override
@@ -23,19 +21,12 @@ public final class LemonSkinIntegration extends AbstractFruitSkinIntegration {
     }
 
     @Override
-    protected boolean doSpecificPreInit() throws ClassNotFoundException, NoSuchFieldException {
-        try {
-            this.clientCat = this.getClass(MODCONFIG).getDeclaredField("CLIENT").get(null);
-            this.shouldDrawExhaustion = this.getClass(MODCONFIG + "$ClientCategory").getDeclaredField(SHOW_EXHAUSTION_UNDERLAY);
-            return true;
-        } catch(IllegalAccessException e) {
-            ScalingFeast.fatal("Unable to retrieve LemonSkin config!");
-            throw new RuntimeException(e);
-        }
+    protected boolean shouldDrawExhaustion() {
+        return ModConfig.CLIENT.SHOW_FOOD_EXHAUSTION_UNDERLAY;
     }
 
     @Override
-    protected boolean shouldDrawExhaustion() throws IllegalAccessException {
-        return this.shouldDrawExhaustion.getBoolean(this.clientCat);
+    protected void callDrawExhaustion(float exhaustion, Minecraft mc, int left, int top, float alpha) {
+        HUDOverlayRenderer.drawExhaustionOverlay(exhaustion, mc, left, top, alpha);
     }
 }

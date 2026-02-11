@@ -112,6 +112,14 @@ public class ModConfig {
 		})
 		public IconSet iconSet = IconSet.SHANKS;
 
+		@Name("Bloated Icon Style")
+		@Comment({
+				"The style of icons Scaling Feast uses when drawing bloated hunger.",
+				"SHANKS: The default Minecraft hunger icons.",
+				"CARROTS: Carrot hunger icons."
+		})
+		public IconSet bloatedSet = IconSet.SHANKS;
+
 		@Name("Max Outline Transparency")
 		@Comment("How transparent should the max outline be when a player's hunger is not on the same 'layer' as it, or not starving. 1.0 if completely solid, 0.0 if completely transparent")
 		@RangeDouble(min = 0.0, max = 1.0)

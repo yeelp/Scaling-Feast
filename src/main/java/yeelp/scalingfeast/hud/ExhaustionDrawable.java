@@ -31,7 +31,7 @@ public final class ExhaustionDrawable extends AbstractDrawable {
 
 	@Override
 	protected void draw(Minecraft mc, EntityPlayer player, FoodStats stats, int left, int top) {
-		this.err = !this.currentIntegration.drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 0);
+		this.currentIntegration.drawExhaustion(AppleCoreAPI.accessor.getExhaustion(player), mc, left, top, 0);
 	}
 
 }
