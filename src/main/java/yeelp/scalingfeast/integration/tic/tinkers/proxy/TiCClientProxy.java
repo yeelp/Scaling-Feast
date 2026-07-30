@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import yeelp.scalingfeast.ModConsts;
+import yeelp.scalingfeast.integration.tic.tinkers.MoltenExhaustium;
 import yeelp.scalingfeast.integration.tic.tinkers.SFTinkerIntegration;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,6 +27,12 @@ public class TiCClientProxy extends TiCProxy {
 		ModelBakery.registerItemVariants(item);
 		ModelLoader.setCustomMeshDefinition(item, StateMapper.INSTANCE);
 		ModelLoader.setCustomStateMapper(fluidBlock, StateMapper.INSTANCE);
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		MoltenExhaustium.getTooltipHandler().register();
 	}
 
 	@MethodsReturnNonnullByDefault

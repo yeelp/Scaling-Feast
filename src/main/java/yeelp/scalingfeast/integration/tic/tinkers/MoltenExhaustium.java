@@ -1,15 +1,7 @@
 package yeelp.scalingfeast.integration.tic.tinkers;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -28,6 +20,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.Util;
 import slimeknights.tconstruct.library.fluid.FluidMolten;
 import slimeknights.tconstruct.smeltery.block.BlockMolten;
@@ -39,12 +33,12 @@ import yeelp.scalingfeast.integration.tic.TiCConsts;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.*;
 
 @ParametersAreNonnullByDefault
 public final class MoltenExhaustium extends FluidMolten {
 	private static final Map<Potion, Integer> POTION_EFFECTS = Maps.newHashMap();
 	private static final int POTION_DURATION = 200;
-	private static final ITextComponent DESC = new TextComponentTranslation("tooltips.scalingfeast.exhaustion_fluid.desc").setStyle(new Style().setColor(TextFormatting.RED));
 	static final Set<UUID> AFFECTED_PLAYERS = Sets.newHashSet();
 	
 	static void init() {
@@ -66,8 +60,9 @@ public final class MoltenExhaustium extends FluidMolten {
 	BlockMolten getBlockMolten() {
 		return this.new BlockMoltenExhaustium();
 	}
-	
-	static BucketTooltipHandler getTooltipHandler() {
+
+	@SideOnly(Side.CLIENT)
+	public static Handler getTooltipHandler() {
 		return new BucketTooltipHandler();
 	}
 	
@@ -79,6 +74,9 @@ public final class MoltenExhaustium extends FluidMolten {
 	}
 	
 	static final class BucketTooltipHandler extends Handler {
+
+		private static final ITextComponent DESC = new TextComponentTranslation("tooltips.scalingfeast.exhaustion_fluid.desc").setStyle(new Style().setColor(TextFormatting.RED));
+
 		@SuppressWarnings("static-method")
 		@SubscribeEvent
 		public void onTooltip(ItemTooltipEvent evt) {
@@ -92,31 +90,32 @@ public final class MoltenExhaustium extends FluidMolten {
 			}
 			addTooltipInfo(evt.getToolTip(), 1);
 		}
-	}
-	
-	private static void addTooltipInfo(List<String> tooltip, int index) {
-		String text = DESC.getFormattedText();
-		if(index >= tooltip.size()) {
-			tooltip.add(text);
+
+		private static void addTooltipInfo(List<String> tooltip, int index) {
+			String text = DESC.getFormattedText();
+			if(index >= tooltip.size()) {
+				tooltip.add(text);
+			}
+			else {
+				tooltip.add(index, DESC.getFormattedText());
+			}
 		}
-		else {
-			tooltip.add(index, DESC.getFormattedText());			
+
+		private static void addTooltipInfo(List<String> tooltip) {
+			addTooltipInfo(tooltip, tooltip.size());
 		}
+
 	}
-	
-	private static void addTooltipInfo(List<String> tooltip) {
-		addTooltipInfo(tooltip, tooltip.size());
-	}
-	
+
 	public final class BlockMoltenExhaustium extends BlockMolten {
-		
+
 		public BlockMoltenExhaustium() {
 			super(MoltenExhaustium.this);
 			String name = "molten_" + MoltenExhaustium.this.getName();
 			this.setTranslationKey(name);
 			this.setRegistryName(ModConsts.MOD_ID, name);
 		}
-		
+
 		@Override
 		public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
 			super.onEntityCollision(worldIn, pos, state, entityIn);
@@ -139,10 +138,11 @@ public final class MoltenExhaustium extends FluidMolten {
 				MoltenExhaustium.AFFECTED_PLAYERS.add(player.getUniqueID());
 			});
 		}
-		
+
 		@Override
+		@SideOnly(Side.CLIENT)
 		public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-			MoltenExhaustium.addTooltipInfo(tooltip);
+			BucketTooltipHandler.addTooltipInfo(tooltip);
 			super.addInformation(stack, worldIn, tooltip, flagIn);
 		}
 	}

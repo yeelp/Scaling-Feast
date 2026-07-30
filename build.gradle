@@ -169,8 +169,8 @@ def signJar(path) {
     def alias = project.property("$alias")
     def keyStore = project.property("$keyStore")
     def storePass = project.property("$storePass")
-    def exec_line = "jarsigner -keystore " + "$keyStore" + " -storepass " + "$storePass" + " " + path + " " + "$alias"
-    exec_line.execute()
+    def exec_line = "$jarsigner" + " -keystore " + "$keyStore" + " -storepass " + "$storePass" + " " + path + " " + "$alias"
+    println exec_line.execute().text
 }
 
 build.dependsOn(shadowJar)
