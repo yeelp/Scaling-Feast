@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.items;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +23,7 @@ import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public final class ExhaustingApple extends ItemFood {

@@ -1,10 +1,5 @@
 package yeelp.scalingfeast.lib;
 
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
@@ -12,6 +7,11 @@ import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier.Attribute;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier.Operation;
+
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public final class SFBuiltInModifiers {
 	public static final class MaxHungerModifiers {

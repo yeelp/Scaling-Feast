@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.Optional;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -17,6 +15,7 @@ import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * The Gluttony Enchantment. This enchantment increases food values by 50% per

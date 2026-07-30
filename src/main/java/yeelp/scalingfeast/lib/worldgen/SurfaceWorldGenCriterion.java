@@ -1,10 +1,10 @@
 package yeelp.scalingfeast.lib.worldgen;
 
-import java.util.Arrays;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import yeelp.scalingfeast.config.ModConfig;
+
+import java.util.Arrays;
 
 public enum SurfaceWorldGenCriterion {
 	EXTREME_CONDITIONS {

@@ -1,11 +1,10 @@
 package yeelp.scalingfeast.integration.tic.conarm;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
-
 import slimeknights.tconstruct.library.modifiers.IToolMod;
 import yeelp.scalingfeast.init.SFEnchantments;
+
+import java.util.Set;
 
 public final class ModifierGluttony extends AbstractSFArmorModifier {
 

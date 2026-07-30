@@ -1,18 +1,8 @@
 package yeelp.scalingfeast.init;
 
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
@@ -26,6 +16,10 @@ import net.minecraft.potion.PotionType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import yeelp.scalingfeast.blocks.ExhaustingOreBlock;
 import yeelp.scalingfeast.config.ModConfig;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class SFRecipes {
 	

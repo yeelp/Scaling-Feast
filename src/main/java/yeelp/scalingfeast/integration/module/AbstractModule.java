@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.integration.module;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -13,6 +11,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.integration.IIntegratable;
+
+import java.util.List;
 
 /**
  * A skeleton implementation of a module for toggleable integration

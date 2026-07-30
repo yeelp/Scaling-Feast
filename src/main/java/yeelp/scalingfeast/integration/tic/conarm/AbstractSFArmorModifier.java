@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.integration.tic.conarm;
 
-import java.util.Set;
-
 import c4.conarm.lib.modifiers.ArmorModifierTrait;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLiving;
@@ -11,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import slimeknights.tconstruct.library.modifiers.IToolMod;
 import slimeknights.tconstruct.library.utils.ToolBuilder;
 import yeelp.scalingfeast.enchantments.SFEnchantmentBase;
+
+import java.util.Set;
 
 public abstract class AbstractSFArmorModifier extends ArmorModifierTrait {
 

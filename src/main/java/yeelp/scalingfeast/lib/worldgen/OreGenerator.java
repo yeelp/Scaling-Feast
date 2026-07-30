@@ -1,10 +1,6 @@
 package yeelp.scalingfeast.lib.worldgen;
 
-import java.util.Iterator;
-import java.util.Random;
-
 import com.google.common.collect.Iterators;
-
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +14,9 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import yeelp.scalingfeast.blocks.ExhaustingOreBlock;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.init.SFBlocks;
+
+import java.util.Iterator;
+import java.util.Random;
 
 public final class OreGenerator implements IWorldGenerator {
 	

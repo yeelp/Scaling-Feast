@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.Optional;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +12,8 @@ import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
+
+import java.util.Optional;
 
 public class CurseSensitivity extends SFEnchantmentBase {
 	public CurseSensitivity() {

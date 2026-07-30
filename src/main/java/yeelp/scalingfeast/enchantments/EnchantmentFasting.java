@@ -1,8 +1,5 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -20,6 +17,8 @@ import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * The Fasting Enchantment. This enchantment reduces exhaustion by 10% per

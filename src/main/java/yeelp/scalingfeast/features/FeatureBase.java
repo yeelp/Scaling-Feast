@@ -1,12 +1,11 @@
 package yeelp.scalingfeast.features;
 
-import java.util.Arrays;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.handlers.Handler;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 public abstract class FeatureBase<Config> {
 	

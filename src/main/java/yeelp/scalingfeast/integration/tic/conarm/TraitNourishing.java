@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.integration.tic.conarm;
 
-import java.util.UUID;
-
 import c4.conarm.common.armor.utils.ArmorHelper;
 import c4.conarm.lib.traits.AbstractArmorTrait;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -15,6 +13,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.api.impl.SFFoodStats;
 import yeelp.scalingfeast.integration.tic.TiCConsts;
+
+import java.util.UUID;
 
 public final class TraitNourishing extends AbstractArmorTrait {
 	

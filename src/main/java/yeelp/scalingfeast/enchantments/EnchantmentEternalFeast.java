@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.Optional;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
@@ -13,6 +11,8 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
+
+import java.util.Optional;
 
 /**
  * The Eternal Feast enchantment.

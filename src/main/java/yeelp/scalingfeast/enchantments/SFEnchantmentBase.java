@@ -1,12 +1,12 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.Optional;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.handlers.Handler;
+
+import java.util.Optional;
 
 public abstract class SFEnchantmentBase extends Enchantment {
 	

@@ -1,8 +1,5 @@
 package yeelp.scalingfeast.init;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -11,13 +8,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.ModConfig;
-import yeelp.scalingfeast.potion.PotionBloated;
-import yeelp.scalingfeast.potion.PotionDeficiency;
-import yeelp.scalingfeast.potion.PotionHungerMinus;
-import yeelp.scalingfeast.potion.PotionHungerPlus;
-import yeelp.scalingfeast.potion.PotionIronStomach;
-import yeelp.scalingfeast.potion.PotionMetabolism;
-import yeelp.scalingfeast.potion.PotionSoftStomach;
+import yeelp.scalingfeast.potion.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SFPotion {
 	public static Potion metabolism;

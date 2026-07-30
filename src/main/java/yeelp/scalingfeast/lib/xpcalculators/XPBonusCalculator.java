@@ -1,15 +1,14 @@
 package yeelp.scalingfeast.lib.xpcalculators;
 
+import com.google.common.collect.ImmutableList;
+import net.minecraft.entity.player.EntityPlayer;
+import yeelp.scalingfeast.ScalingFeast;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.entity.player.EntityPlayer;
-import yeelp.scalingfeast.ScalingFeast;
 
 public interface XPBonusCalculator {
 

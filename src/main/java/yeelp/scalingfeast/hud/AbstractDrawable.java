@@ -1,17 +1,16 @@
 package yeelp.scalingfeast.hud;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import yeelp.scalingfeast.util.Colour;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Skeletal drawable. Also contains a couple useful static methods for children.

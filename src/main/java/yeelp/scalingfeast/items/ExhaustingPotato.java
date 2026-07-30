@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.items;
 
-import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,10 +11,13 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConsts;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class ExhaustingPotato extends ItemFood {
@@ -30,14 +31,15 @@ public class ExhaustingPotato extends ItemFood {
 		this.setTranslationKey(ModConsts.MOD_ID + ".exhaustingpotato");
 		this.setCreativeTab(CreativeTabs.FOOD);
 	}
-	
+
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		tooltip.add(SPLASH.getFormattedText());
 		tooltip.add(INFO.getFormattedText());
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
-	
+
 	@Override
 	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {
 		if(worldIn.isRemote) {

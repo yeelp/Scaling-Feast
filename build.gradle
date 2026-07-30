@@ -130,6 +130,9 @@ jar {
                 "TweakOrder"                 : 0,
         ])
     }
+    from("LICENSE") {
+        rename { "${it}_${base.archivesBaseName}" }
+    }
     archiveClassifier.set('THIN')
 }
 

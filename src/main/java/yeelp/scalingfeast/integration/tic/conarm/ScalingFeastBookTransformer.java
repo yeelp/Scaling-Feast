@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.integration.tic.conarm;
 
-import java.util.Optional;
-
 import c4.conarm.lib.book.content.ContentArmorModifier;
 import slimeknights.mantle.client.book.BookTransformer;
 import slimeknights.mantle.client.book.data.BookData;
@@ -10,6 +8,8 @@ import slimeknights.mantle.client.book.data.SectionData;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.book.content.ContentListing;
 import slimeknights.tconstruct.library.modifiers.IModifier;
+
+import java.util.Optional;
 
 public final class ScalingFeastBookTransformer extends BookTransformer {
 

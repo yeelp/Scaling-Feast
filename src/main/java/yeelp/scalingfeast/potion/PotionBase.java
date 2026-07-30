@@ -13,9 +13,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Base class to derive potions from.
- * 
- * @author Yeelp
  *
+ * @author Yeelp
  */
 @ParametersAreNonnullByDefault
 public abstract class PotionBase extends Potion {
@@ -24,7 +23,7 @@ public abstract class PotionBase extends Potion {
 
 	/**
 	 * Build a new Potion
-	 * 
+	 *
 	 * @param badEffectIn is the effect bad?
 	 * @param colour      colour of the particles
 	 * @param x           icon index x
@@ -43,6 +42,7 @@ public abstract class PotionBase extends Potion {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean hasStatusIcon() {
 		return false;
 	}

@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.enchantments;
 
-import java.util.Optional;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -10,6 +8,8 @@ import squeek.applecore.api.hunger.StarvationEvent;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.handlers.Handler;
 import yeelp.scalingfeast.init.SFEnchantments;
+
+import java.util.Optional;
 
 public class CurseDeprivation extends SFEnchantmentBase {
 	public CurseDeprivation() {

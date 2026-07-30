@@ -1,9 +1,6 @@
 package yeelp.scalingfeast.items;
 
-import java.util.Optional;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.text.ITextComponent;
@@ -12,6 +9,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public final class ExhaustingBlockItem extends ExhaustingItemBlockBase {
 

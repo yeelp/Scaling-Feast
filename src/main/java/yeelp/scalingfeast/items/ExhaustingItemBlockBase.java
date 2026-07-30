@@ -1,19 +1,20 @@
 package yeelp.scalingfeast.items;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public abstract class ExhaustingItemBlockBase extends ItemBlock {
@@ -32,12 +33,13 @@ public abstract class ExhaustingItemBlockBase extends ItemBlock {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		this.getTooltipStrings().forEach(tooltip::add);
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 
 	protected abstract Optional<String> getUnlocalizedMetadataNameFromState(IBlockState state);
-	
+
 	protected abstract Iterable<String> getTooltipStrings();
 }

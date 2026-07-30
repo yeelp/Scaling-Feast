@@ -4,6 +4,8 @@ import com.google.common.base.Functions;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.handlers.HUDOverlayHandler;
@@ -28,6 +30,7 @@ public final class ClientProxy extends Proxy {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void init() {
 		super.init();
 		new HUDOverlayHandler().register();
@@ -59,6 +62,7 @@ public final class ClientProxy extends Proxy {
 			private boolean openedOnce = false;
 
 			@SubscribeEvent
+			@SideOnly(Side.CLIENT)
 			public void onGuiOpen(GuiOpenEvent evt) {
 				if(!this.openedOnce && evt.getGui() instanceof GuiMainMenu) {
 					this.openedOnce = true;

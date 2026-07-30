@@ -1,8 +1,5 @@
 package yeelp.scalingfeast.blocks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +10,9 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import squeek.applecore.api.hunger.ExhaustionEvent.ExhaustionAddition;
 import yeelp.scalingfeast.handlers.Handler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 public abstract class ExhaustionIncreasingBlock extends Block {
 

@@ -1,9 +1,5 @@
 package yeelp.scalingfeast.integration.tic.tinkers;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +14,10 @@ import slimeknights.tconstruct.library.traits.AbstractTraitLeveled;
 import slimeknights.tconstruct.library.utils.TinkerUtil;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.integration.tic.TiCConsts;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public final class TraitExhausting extends AbstractTraitLeveled {
 

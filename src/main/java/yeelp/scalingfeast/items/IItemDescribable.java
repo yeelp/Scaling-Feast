@@ -1,7 +1,5 @@
 package yeelp.scalingfeast.items;
 
-import java.util.Collection;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -9,6 +7,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.handlers.Handler;
+
+import java.util.Collection;
 
 /**
  * Used for items that have player sensitive descriptions.

@@ -1,8 +1,5 @@
 package yeelp.scalingfeast.capability;
 
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
@@ -13,6 +10,9 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import yeelp.scalingfeast.handlers.PacketHandler;
+
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 /**
  * Base Capability for Scaling Feast

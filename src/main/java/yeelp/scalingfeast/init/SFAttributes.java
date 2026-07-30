@@ -1,7 +1,6 @@
 package yeelp.scalingfeast.init;
 
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;

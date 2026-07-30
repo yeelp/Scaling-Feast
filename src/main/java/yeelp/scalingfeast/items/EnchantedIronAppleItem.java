@@ -1,11 +1,5 @@
 package yeelp.scalingfeast.items;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -24,12 +18,16 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+
 /**
  * The Enchanted Iron Apple which gives the Iron Stomach effect and a Metabolism
  * effect when eaten.
- * 
- * @author Yeelp
  *
+ * @author Yeelp
  */
 @ParametersAreNonnullByDefault
 public class EnchantedIronAppleItem extends ItemFood {
@@ -46,6 +44,7 @@ public class EnchantedIronAppleItem extends ItemFood {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
 		return true;
 	}

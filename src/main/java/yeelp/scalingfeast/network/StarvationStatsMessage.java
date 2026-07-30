@@ -1,8 +1,5 @@
 package yeelp.scalingfeast.network;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.google.common.base.Functions;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,6 +8,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import yeelp.scalingfeast.ScalingFeast;
 import yeelp.scalingfeast.capability.IStarvationStats;
 import yeelp.scalingfeast.capability.impl.StarvationStats;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 public class StarvationStatsMessage extends AbstractCapabilityMessage<NBTTagCompound, IStarvationStats> {
 	

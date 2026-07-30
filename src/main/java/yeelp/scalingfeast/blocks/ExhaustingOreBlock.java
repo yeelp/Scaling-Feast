@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConsts;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,7 +23,7 @@ import java.util.Locale;
 @MethodsReturnNonnullByDefault
 public final class ExhaustingOreBlock extends ExhaustionIncreasingBlock {
 	public static final PropertyEnum<RockType> ROCK_TYPE = PropertyEnum.create("type", RockType.class);
-	
+
 	public enum RockType implements IStringSerializable {
 		STONE,
 		NETHERRACK;
@@ -31,7 +33,7 @@ public final class ExhaustingOreBlock extends ExhaustionIncreasingBlock {
 			return this.toString().toLowerCase(Locale.CANADA);
 		}
 	}
-	
+
 	public ExhaustingOreBlock() {
 		super(Material.ROCK);
 		this.setRegistryName("exhaustingore");
@@ -42,6 +44,7 @@ public final class ExhaustingOreBlock extends ExhaustionIncreasingBlock {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}

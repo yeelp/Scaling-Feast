@@ -1,9 +1,8 @@
 package yeelp.scalingfeast.hud;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.opengl.GL11;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;

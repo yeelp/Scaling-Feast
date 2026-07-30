@@ -1,11 +1,5 @@
 package yeelp.scalingfeast.items;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -23,6 +17,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.init.SFEnchantments;
 import yeelp.scalingfeast.init.SFPotion;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 /**
  * Iron Apple. Eating it restores some health and regens hunger over time.

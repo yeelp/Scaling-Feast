@@ -1,13 +1,13 @@
 package yeelp.scalingfeast.lib.xpcalculators;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers.BuiltInModifier;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public abstract class AbstractXPBonusCalculator implements XPBonusCalculator {
 

@@ -1,10 +1,10 @@
 package yeelp.scalingfeast.api;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * An interface for altering max hunger.

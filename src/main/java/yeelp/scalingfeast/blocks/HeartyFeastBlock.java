@@ -1,11 +1,5 @@
 package yeelp.scalingfeast.blocks;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Maps;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockCake;
@@ -29,6 +23,11 @@ import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.init.SFItems;
 import yeelp.scalingfeast.init.SFPotion;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * The Hearty Feast Block. The hunger restored scales to a player's max hunger

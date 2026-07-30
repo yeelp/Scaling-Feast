@@ -1,8 +1,8 @@
 package yeelp.scalingfeast.lib.xpcalculators;
 
-import java.util.OptionalInt;
-
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.OptionalInt;
 
 public enum XPBonusType {
 	NONE {

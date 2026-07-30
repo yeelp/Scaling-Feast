@@ -1,16 +1,8 @@
 package yeelp.scalingfeast.init;
 
 import com.google.common.collect.ImmutableList;
-
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import yeelp.scalingfeast.enchantments.CurseDeprivation;
-import yeelp.scalingfeast.enchantments.CurseLaziness;
-import yeelp.scalingfeast.enchantments.CurseSensitivity;
-import yeelp.scalingfeast.enchantments.EnchantmentEternalFeast;
-import yeelp.scalingfeast.enchantments.EnchantmentFamine;
-import yeelp.scalingfeast.enchantments.EnchantmentFasting;
-import yeelp.scalingfeast.enchantments.EnchantmentGluttony;
-import yeelp.scalingfeast.enchantments.SFEnchantmentBase;
+import yeelp.scalingfeast.enchantments.*;
 
 /**
  * Initialize all the enchantments

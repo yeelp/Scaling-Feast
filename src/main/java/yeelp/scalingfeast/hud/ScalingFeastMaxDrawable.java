@@ -1,10 +1,9 @@
 package yeelp.scalingfeast.hud;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
+import org.lwjgl.opengl.GL11;
 import squeek.applecore.api.AppleCoreAPI;
 import yeelp.scalingfeast.ModConsts;
 import yeelp.scalingfeast.api.ScalingFeastAPI;

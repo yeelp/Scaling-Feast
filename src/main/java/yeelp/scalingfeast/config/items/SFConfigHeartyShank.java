@@ -1,10 +1,6 @@
 package yeelp.scalingfeast.config.items;
 
-import net.minecraftforge.common.config.Config.Comment;
-import net.minecraftforge.common.config.Config.Name;
-import net.minecraftforge.common.config.Config.RangeDouble;
-import net.minecraftforge.common.config.Config.RangeInt;
-import net.minecraftforge.common.config.Config.RequiresMcRestart;
+import net.minecraftforge.common.config.Config.*;
 
 public final class SFConfigHeartyShank {
 	@Name("Hearty Shank Hunger Value")

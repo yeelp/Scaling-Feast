@@ -6,16 +6,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import yeelp.scalingfeast.config.ModConfig;
-import yeelp.scalingfeast.items.EnchantedIronAppleItem;
-import yeelp.scalingfeast.items.ExhaustingApple;
-import yeelp.scalingfeast.items.ExhaustingBlockItem;
-import yeelp.scalingfeast.items.ExhaustingIngot;
-import yeelp.scalingfeast.items.ExhaustingNugget;
-import yeelp.scalingfeast.items.ExhaustingOreItemBlock;
-import yeelp.scalingfeast.items.ExhaustingPotato;
-import yeelp.scalingfeast.items.HeartyFeastItem;
-import yeelp.scalingfeast.items.HeartyShankItem;
-import yeelp.scalingfeast.items.IronAppleItem;
+import yeelp.scalingfeast.items.*;
 
 import java.util.Objects;
 

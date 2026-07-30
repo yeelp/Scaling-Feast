@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import org.apache.logging.log4j.Logger;
 import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.blocks.ExhaustionIncreasingBlock;
@@ -108,7 +109,7 @@ public class ScalingFeast {
 	@SuppressWarnings("static-method")
 	@EventHandler
 	public void fingerprintViolation(FMLFingerprintViolationEvent event) {
-		if(event.isDirectory()) {
+		if(event.isDirectory() || FMLLaunchHandler.isDeobfuscatedEnvironment()) {
 			debug("Fingerprint doesn't matter in dev environment");
 		}
 		else {
