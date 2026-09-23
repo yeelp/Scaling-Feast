@@ -33,7 +33,7 @@ import java.util.List;
  *
  */
 @ParametersAreNonnullByDefault
-public class HeartyShankItem extends ItemFood implements IItemDescribable {
+public final class HeartyShankItem extends ItemFood implements IItemDescribable {
 	private static final String TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.info1").setStyle(new Style().setColor(TextFormatting.GOLD)).getFormattedText();
 	private static final String AT_MAX_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.atmax").setStyle(new Style().setColor(TextFormatting.RED).setBold(true)).getFormattedText();
 	private static final String NO_BONUS_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyshank.nobonus").setStyle(new Style().setColor(TextFormatting.RED)).getFormattedText();

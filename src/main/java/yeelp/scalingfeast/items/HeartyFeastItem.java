@@ -24,7 +24,7 @@ import java.util.List;
  * @author Yeelp
  *
  */
-public class HeartyFeastItem extends ItemBlock implements IItemDescribable {
+public final class HeartyFeastItem extends ItemBlock implements IItemDescribable {
 
 	private static final ITextComponent SPLASH = new TextComponentTranslation("tooltips.scalingfeast.heartyfeast.splash");
 	private static final ITextComponent INFO = new TextComponentTranslation("tooltips.scalingfeast.heartyfeast.info");

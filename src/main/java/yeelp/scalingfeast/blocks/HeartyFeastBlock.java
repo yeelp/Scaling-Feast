@@ -36,7 +36,7 @@ import java.util.UUID;
  *
  */
 @MethodsReturnNonnullByDefault
-public class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
+public final class HeartyFeastBlock extends BlockCake implements IEdibleBlock {
 
 	/**
 	 * Proxy food item when eating feast

@@ -29,7 +29,7 @@ import java.util.UUID;
  * @author Yeelp
  *
  */
-public class EnchantmentFamine extends SFEnchantmentBase {
+public final class EnchantmentFamine extends SFEnchantmentBase {
 	/**
 	 * Create a new Fasting Enchantment
 	 */

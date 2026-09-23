@@ -6,7 +6,7 @@ package yeelp.scalingfeast.integration.module.solcarrot;
  * @author Yeelp
  *
  */
-public class MaxHungerMilestone extends Milestone<Short> {
+public final class MaxHungerMilestone extends Milestone<Short> {
 	private short milestoneReward;
 
 	/**

@@ -17,7 +17,7 @@ import yeelp.scalingfeast.hud.DrawUtils;
 import yeelp.scalingfeast.hud.IconSet;
 
 @Config(modid = ModConsts.MOD_ID)
-public class ModConfig {
+public final class ModConfig {
 	@Name("General")
 	@Comment("These settings modify the base behaviour of Scaling Feast")
 	public static final SFGeneralConfigCategory general = new SFGeneralConfigCategory();

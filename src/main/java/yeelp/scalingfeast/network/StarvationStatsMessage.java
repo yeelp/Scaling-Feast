@@ -12,7 +12,7 @@ import yeelp.scalingfeast.capability.impl.StarvationStats;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class StarvationStatsMessage extends AbstractCapabilityMessage<NBTTagCompound, IStarvationStats> {
+public final class StarvationStatsMessage extends AbstractCapabilityMessage<NBTTagCompound, IStarvationStats> {
 	
 	public StarvationStatsMessage() {
 		

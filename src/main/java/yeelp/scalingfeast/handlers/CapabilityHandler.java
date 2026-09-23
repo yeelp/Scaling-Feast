@@ -17,7 +17,7 @@ import yeelp.scalingfeast.capability.impl.StarvationStats;
 import yeelp.scalingfeast.capability.impl.StarveExhaustionTracker;
 import yeelp.scalingfeast.config.ModConfig;
 
-public class CapabilityHandler extends Handler {
+public final class CapabilityHandler extends Handler {
 
 	@SuppressWarnings("static-method")
 	@SubscribeEvent

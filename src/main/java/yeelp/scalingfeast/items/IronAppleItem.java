@@ -30,7 +30,7 @@ import java.util.List;
  *
  */
 @ParametersAreNonnullByDefault
-public class IronAppleItem extends ItemFood {
+public final class IronAppleItem extends ItemFood {
 	private static final ITextComponent TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.ironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
 	private static final ITextComponent INFO = new TextComponentTranslation("tooltips.scalingfeast.ironapple.info").setStyle(new Style().setColor(TextFormatting.GRAY));
 

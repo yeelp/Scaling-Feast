@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SFCommand extends CommandBase {
+public final class SFCommand extends CommandBase {
 
 	private static final String[] COMMAND_LIST = new String[] {
 			"setMax",

@@ -9,7 +9,7 @@ import yeelp.scalingfeast.network.BloatedHungerMessage;
 
 import javax.annotation.Nonnull;
 
-public class BloatedHunger extends SFSingleValueCapabilityShort implements IBloatedHunger {
+public final class BloatedHunger extends SFSingleValueCapabilityShort implements IBloatedHunger {
 
 	@CapabilityInject(IBloatedHunger.class)
 	public static Capability<IBloatedHunger> cap = null;
@@ -66,6 +66,7 @@ public class BloatedHunger extends SFSingleValueCapabilityShort implements IBloa
 	}
 
 	@Override
+	@SuppressWarnings("ReturnOfNull")
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		return this.hasCapability(capability, facing) ? cap.cast(this) : null;
 	}

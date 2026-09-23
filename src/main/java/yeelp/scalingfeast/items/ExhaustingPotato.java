@@ -20,7 +20,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class ExhaustingPotato extends ItemFood {
+public final class ExhaustingPotato extends ItemFood {
 	private static final ITextComponent SPLASH = new TextComponentTranslation("tooltips.scalingfeast.exhaustingpotato.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
 	private static final ITextComponent INFO = new TextComponentTranslation("tooltips.scalingfeast.exhaustingpotato.info");
 

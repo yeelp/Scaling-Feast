@@ -5,7 +5,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import yeelp.scalingfeast.capability.IStarveExhaustionTracker;
 import yeelp.scalingfeast.capability.impl.StarveExhaustionTracker;
 
-public class StarveExhaustMessage extends AbstractCapabilityMessageFloat<IStarveExhaustionTracker> {
+public final class StarveExhaustMessage extends AbstractCapabilityMessageFloat<IStarveExhaustionTracker> {
 
 	public StarveExhaustMessage() {
 

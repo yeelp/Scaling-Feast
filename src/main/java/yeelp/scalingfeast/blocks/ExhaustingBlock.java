@@ -11,7 +11,7 @@ import yeelp.scalingfeast.ModConsts;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class ExhaustingBlock extends ExhaustionIncreasingBlock {
+public final class ExhaustingBlock extends ExhaustionIncreasingBlock {
 
 	public ExhaustingBlock() {
 		super(Material.IRON);

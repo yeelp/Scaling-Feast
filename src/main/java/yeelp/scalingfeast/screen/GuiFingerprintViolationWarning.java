@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class GuiFingerprintViolationWarning extends GuiScreen {
+public final class GuiFingerprintViolationWarning extends GuiScreen {
     private final GuiScreen parent;
     private String url;
     private static final int BUTTON_SPACING = 24;

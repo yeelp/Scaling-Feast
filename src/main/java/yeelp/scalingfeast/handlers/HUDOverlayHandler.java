@@ -19,7 +19,7 @@ import yeelp.scalingfeast.hud.*;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class HUDOverlayHandler extends Handler {
+public final class HUDOverlayHandler extends Handler {
 	private static final IDrawable EXHAUSTION_UNDERLAY = new ExhaustionDrawable();
 	private static final IDrawable MAX_DRAWABLE = new ScalingFeastMaxDrawable();
 	private static final IDrawable STARVATION_DRAWABLE = new ScalingFeastStarvationTrackerDrawable();
@@ -54,7 +54,9 @@ public class HUDOverlayHandler extends Handler {
 				// Calculate the random jitter amount beforehand and pass it to the draw methods
 				DrawUtils.calculateJitterAmount(mc.ingameGUI.getUpdateCounter(), player);
 				// If we have AppleSkin/LemonSkin, we need to redraw the whole exhaustion bar.
-				EXHAUSTION_UNDERLAY.draw(mc, player, left, top);
+				if(EXHAUSTION_UNDERLAY.shouldDraw(player)) {
+					EXHAUSTION_UNDERLAY.draw(mc, player, left, top);
+				}
 				drawDrawables(ModConfig.hud.iconSet.isCustom() ? CUSTOM_DRAWABLES : VANILLA_DRAWABLES, mc, player, left, top);
 				drawDrawables(HUNGER_DRAWABLES, mc, player, left, top);
 				if(ModConfig.hud.drawSaturation) {

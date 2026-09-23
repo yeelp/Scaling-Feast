@@ -1,6 +1,6 @@
 package yeelp.scalingfeast.integration.module.solcarrot;
 
-public class FoodEfficiencyMilestone extends Milestone<Float> {
+public final class FoodEfficiencyMilestone extends Milestone<Float> {
 	private float reward;
 
 	public FoodEfficiencyMilestone(String milestone) throws IllegalArgumentException {

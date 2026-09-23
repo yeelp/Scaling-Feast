@@ -9,7 +9,7 @@ import yeelp.scalingfeast.network.StarveExhaustMessage;
 
 import javax.annotation.Nonnull;
 
-public class StarveExhaustionTracker extends SFSingleValueCapabilityFloat implements IStarveExhaustionTracker {
+public final class StarveExhaustionTracker extends SFSingleValueCapabilityFloat implements IStarveExhaustionTracker {
 	
 	@CapabilityInject(IStarveExhaustionTracker.class)
 	public static Capability<IStarveExhaustionTracker> cap = null;
@@ -23,7 +23,8 @@ public class StarveExhaustionTracker extends SFSingleValueCapabilityFloat implem
 		return capability == cap;
 	}
 
-	@Override
+	@SuppressWarnings("ReturnOfNull")
+    @Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		return this.hasCapability(capability, facing) ? cap.cast(this) : null;
 	}

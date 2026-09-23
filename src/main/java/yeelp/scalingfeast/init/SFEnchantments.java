@@ -10,7 +10,7 @@ import yeelp.scalingfeast.enchantments.*;
  * @author Yeelp
  *
  */
-public class SFEnchantments {
+public final class SFEnchantments {
 	public static SFEnchantmentBase fasting = new EnchantmentFasting();
 	public static SFEnchantmentBase gluttony = new EnchantmentGluttony();
 	public static SFEnchantmentBase famine = new EnchantmentFamine();

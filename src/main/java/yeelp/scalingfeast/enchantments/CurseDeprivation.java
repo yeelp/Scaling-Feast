@@ -11,7 +11,7 @@ import yeelp.scalingfeast.init.SFEnchantments;
 
 import java.util.Optional;
 
-public class CurseDeprivation extends SFEnchantmentBase {
+public final class CurseDeprivation extends SFEnchantmentBase {
 	public CurseDeprivation() {
 		super("deprivationcurse", Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});

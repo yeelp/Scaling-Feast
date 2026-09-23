@@ -6,7 +6,7 @@ import yeelp.scalingfeast.blocks.ExhaustingBlock;
 import yeelp.scalingfeast.blocks.ExhaustingOreBlock;
 import yeelp.scalingfeast.blocks.HeartyFeastBlock;
 
-public class SFBlocks {
+public final class SFBlocks {
 	public static Block heartyfeast;
 	public static ExhaustingOreBlock exhaustingOre;
 	public static ExhaustingBlock exhaustingBlock;

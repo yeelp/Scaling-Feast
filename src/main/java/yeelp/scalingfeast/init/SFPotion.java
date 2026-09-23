@@ -13,7 +13,7 @@ import yeelp.scalingfeast.potion.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SFPotion {
+public final class SFPotion {
 	public static Potion metabolism;
 	public static Potion ironstomach;
 	public static Potion bloated;

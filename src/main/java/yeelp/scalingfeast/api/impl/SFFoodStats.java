@@ -22,7 +22,7 @@ import yeelp.scalingfeast.lib.SFBuiltInModifiers;
  * @author Yeelp
  *
  */
-public class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, IBloatedHungerOperations, IStarvationOperations, IStarveExhaustTrackerOperations {
+public final class SFFoodStats implements IMaxHungerChanger, IFoodEfficiencyChanger, IBloatedHungerOperations, IStarvationOperations, IStarveExhaustTrackerOperations {
 
 	public static final byte BLOATED_SYNC_FLAG = 0b1;
 	public static final byte STARVE_EXHAUSTION_SYNC_FLAG = 0b10;

@@ -9,7 +9,7 @@ import yeelp.scalingfeast.ModConsts;
 
 import java.util.Arrays;
 
-public class LootTableInjector extends Handler {
+public final class LootTableInjector extends Handler {
 	private static final String MC_CHEST_PREFIX = "minecraft:chests/";
 	private static final int PREFIX_LENGTH = MC_CHEST_PREFIX.length();
 

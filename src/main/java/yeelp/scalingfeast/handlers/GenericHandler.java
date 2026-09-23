@@ -21,7 +21,7 @@ import yeelp.scalingfeast.network.SatSyncMessage;
 import java.util.Map;
 import java.util.UUID;
 
-public class GenericHandler extends Handler {
+public final class GenericHandler extends Handler {
 	private static final Map<UUID, Float> satLevels = Maps.newHashMap();
 	private static Boolean hasSkinIntegration;
 

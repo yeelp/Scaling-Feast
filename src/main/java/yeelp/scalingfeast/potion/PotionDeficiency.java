@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class PotionDeficiency extends PotionBase {
+public final class PotionDeficiency extends PotionBase {
 	public PotionDeficiency() {
 		super(true, 0x570d0d, -1, -1, true);
 		this.setRegistryName("deficiency");

@@ -6,7 +6,7 @@ package yeelp.scalingfeast.potion;
  * @author Yeelp
  *
  */
-public class PotionIronStomach extends PotionExhaustion {
+public final class PotionIronStomach extends PotionExhaustion {
 
 	public PotionIronStomach() {
 		super(0xCCCCCC, 0, 0, -0.2f);

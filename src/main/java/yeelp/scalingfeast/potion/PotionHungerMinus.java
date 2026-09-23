@@ -2,7 +2,7 @@ package yeelp.scalingfeast.potion;
 
 import yeelp.scalingfeast.init.SFAttributes;
 
-public class PotionHungerMinus extends PotionBase {
+public final class PotionHungerMinus extends PotionBase {
 	public static double modifier = -1;
 
 	public PotionHungerMinus() {

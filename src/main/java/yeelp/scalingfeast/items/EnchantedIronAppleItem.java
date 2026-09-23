@@ -30,7 +30,7 @@ import java.util.List;
  * @author Yeelp
  */
 @ParametersAreNonnullByDefault
-public class EnchantedIronAppleItem extends ItemFood {
+public final class EnchantedIronAppleItem extends ItemFood {
 	private static final ITextComponent TEXT_SPLASH = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.splash").setStyle(new Style().setColor(TextFormatting.GOLD));
 	private static final ITextComponent INFO1 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info1").setStyle(new Style().setColor(TextFormatting.GRAY));
 	private static final ITextComponent INFO2 = new TextComponentTranslation("tooltips.scalingfeast.enchantedironapple.info2").setStyle(new Style().setColor(TextFormatting.GRAY));

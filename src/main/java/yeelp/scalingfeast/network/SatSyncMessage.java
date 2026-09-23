@@ -15,7 +15,7 @@ import squeek.applecore.api.AppleCoreAPI;
  * @author Yeelp
  *
  */
-public class SatSyncMessage implements IMessage {
+public final class SatSyncMessage implements IMessage {
 	private float saturationLevel;
 
 	/**
@@ -52,6 +52,7 @@ public class SatSyncMessage implements IMessage {
 	public static class Handler implements IMessageHandler<SatSyncMessage, IMessage> {
 
 		@Override
+		@SuppressWarnings("ReturnOfNull")
 		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(SatSyncMessage message, MessageContext ctx) {
 			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));

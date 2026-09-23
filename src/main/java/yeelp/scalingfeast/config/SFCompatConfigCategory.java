@@ -3,7 +3,7 @@ package yeelp.scalingfeast.config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 
-public class SFCompatConfigCategory {
+public final class SFCompatConfigCategory {
 	@Name("Enable Compatibility Settings")
 	@Comment({
 			"If true, Scaling Feast will try to fire a RenderGameOverlay.Post event with ElementType.FOOD for mods that may use that event.",

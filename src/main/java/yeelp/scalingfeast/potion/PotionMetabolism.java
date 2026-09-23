@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  * @author Yeelp
  *
  */
-public class PotionMetabolism extends PotionBase {
+public final class PotionMetabolism extends PotionBase {
 	public PotionMetabolism() {
 		super(false, 0xF0B78C, 1, 0, false);
 		this.setRegistryName("metabolism");

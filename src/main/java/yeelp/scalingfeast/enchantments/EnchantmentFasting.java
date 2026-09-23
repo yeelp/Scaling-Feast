@@ -27,7 +27,7 @@ import java.util.UUID;
  * @author Yeelp
  *
  */
-public class EnchantmentFasting extends SFEnchantmentBase {
+public final class EnchantmentFasting extends SFEnchantmentBase {
 
 	static final UUID FASTING_MOD_UUID = UUID.fromString("33c7ebac-21ef-476f-8f95-6ab9a1cb3a14");
 

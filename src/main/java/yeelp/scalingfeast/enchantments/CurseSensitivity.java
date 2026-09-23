@@ -15,7 +15,7 @@ import yeelp.scalingfeast.init.SFPotion;
 
 import java.util.Optional;
 
-public class CurseSensitivity extends SFEnchantmentBase {
+public final class CurseSensitivity extends SFEnchantmentBase {
 	public CurseSensitivity() {
 		super("sensitivitycurse", Rarity.UNCOMMON, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});

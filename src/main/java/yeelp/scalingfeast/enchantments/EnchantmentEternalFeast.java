@@ -20,7 +20,7 @@ import java.util.Optional;
  * @author Yeelp
  *
  */
-public class EnchantmentEternalFeast extends SFEnchantmentBase {
+public final class EnchantmentEternalFeast extends SFEnchantmentBase {
 	/**
 	 * Create a new Eternal Feast enchantment. This enchantment restores hunger
 	 * every time the user kills an entity.

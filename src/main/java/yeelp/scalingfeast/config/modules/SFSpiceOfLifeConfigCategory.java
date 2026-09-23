@@ -4,7 +4,7 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RangeInt;
 
-public class SFSpiceOfLifeConfigCategory {
+public final class SFSpiceOfLifeConfigCategory {
 
 	@Name("Enabled")
 	@Comment("Set to true to enable the Spice Of Life module. This module will only work when NOT using time based queues or hunger based queues in Spice of Life")

@@ -6,7 +6,7 @@ import yeelp.scalingfeast.api.ScalingFeastAPI;
 import yeelp.scalingfeast.config.ModConfig;
 import yeelp.scalingfeast.lib.SFBuiltInModifiers;
 
-public class FoodEfficiencyXPBonusCalculator extends AbstractXPBonusCalculator {
+public final class FoodEfficiencyXPBonusCalculator extends AbstractXPBonusCalculator {
 	
 	private static FoodEfficiencyXPBonusCalculator instance;
 	

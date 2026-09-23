@@ -11,7 +11,7 @@ import yeelp.scalingfeast.capability.impl.BloatedHunger;
  * @author Yeelp
  *
  */
-public class BloatedHungerMessage extends AbstractCapabilityMessageShort<IBloatedHunger> {
+public final class BloatedHungerMessage extends AbstractCapabilityMessageShort<IBloatedHunger> {
 
 	public BloatedHungerMessage() {
 

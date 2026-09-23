@@ -8,7 +8,7 @@ import yeelp.scalingfeast.lib.SaturationScaling;
 import yeelp.scalingfeast.lib.worldgen.OreGenRestrictions;
 import yeelp.scalingfeast.lib.worldgen.SurfaceWorldGenCriterion;
 
-public class SFGeneralConfigCategory {
+public final class SFGeneralConfigCategory {
 	@Name("Global Cap")
 	@Comment({
 			"The highest extended hunger the player can have.",

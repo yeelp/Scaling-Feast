@@ -11,7 +11,7 @@ import yeelp.scalingfeast.init.SFEnchantments;
 
 import java.util.Optional;
 
-public class CurseLaziness extends SFEnchantmentBase {
+public final class CurseLaziness extends SFEnchantmentBase {
 	public CurseLaziness() {
 		super("lazinesscurse", Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[] {
 				EntityEquipmentSlot.CHEST});

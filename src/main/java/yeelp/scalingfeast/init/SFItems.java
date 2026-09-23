@@ -10,7 +10,7 @@ import yeelp.scalingfeast.items.*;
 
 import java.util.Objects;
 
-public class SFItems {
+public final class SFItems {
 	public static ItemFood heartyshank;
 	public static ItemFood ironapple;
 	public static ItemFood enchantedironapple;

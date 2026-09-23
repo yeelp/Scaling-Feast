@@ -15,7 +15,7 @@ import yeelp.scalingfeast.api.impl.SFFoodStats;
 import java.util.Map;
 import java.util.UUID;
 
-public class BloatedHandler extends Handler {
+public final class BloatedHandler extends Handler {
 
 	private static final Map<UUID, Integer> DELAY = Maps.newHashMap();
 	private static final int TIME_THRESHOLD = 30;

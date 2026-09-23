@@ -7,7 +7,7 @@ package yeelp.scalingfeast.util;
  * @author Yeelp
  *
  */
-public class Colour {
+public final class Colour {
 	private final byte r;
 	private final byte g;
 	private final byte b;

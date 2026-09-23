@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 @Name("ScalingFeast-OptionalMixinLoader")
 @SortingIndex(-5000)
 @SuppressWarnings("unused")
-public class OptionalMixinLoader {
+public final class OptionalMixinLoader {
 
     private static final String MIXIN_FILE = "mixin.scalingfeast.json";
     private static final Map<String, Supplier<IOptionalMixinProvider>> PROVIDERS = Maps.newHashMap();

@@ -24,7 +24,7 @@ import java.util.Optional;
  * @author Yeelp
  *
  */
-public class EnchantmentGluttony extends SFEnchantmentBase {
+public final class EnchantmentGluttony extends SFEnchantmentBase {
 	/**
 	 * Create a new Gluttony Enchantment
 	 */

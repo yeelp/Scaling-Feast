@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class HUDUtils {
+public final class HUDUtils {
 	public static final class ColouredString {
 		private final String text;
 		private final Integer colour;
@@ -187,6 +187,7 @@ public class HUDUtils {
 		}).findFirst().orElse(null);
 	}
 
+	@Nullable
 	private static FoodValues getFoodValuesForBlockBeingLookedAt(EntityPlayer player, int hunger, int max) {
 		RayTraceResult lookedAt = Minecraft.getMinecraft().objectMouseOver;
 		if(lookedAt == null) {
