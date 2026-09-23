@@ -62,6 +62,7 @@ public final class StarvationStats implements IStarvationStats {
 	}
 
 	@Override
+	@SuppressWarnings("ReturnOfNull")
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 		return this.hasCapability(capability, facing) ? cap.cast(this) : null;
 	}
